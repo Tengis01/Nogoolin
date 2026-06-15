@@ -1,0 +1,1945 @@
+# ============================================================
+# Document: docs/06-api-spec.yaml
+# Project: Nogoolin — Premium Religious Product Catalog Platform
+# Version: 1.0.0
+# Status: Draft
+# Author: Tengis (Solo Developer)
+# Last Updated: June 2026
+# Depends On: docs/02-requirements.md, docs/03-use-cases.md,
+#             docs/04-er-diagram.md, docs/05-sequence-diagrams.md
+#
+# Changelog
+# | Version | Date       | Type  | Description       |
+# |---------|------------|-------|--------------------|
+# | 1.0.0   | June 2026  | MAJOR | Initial version. Covers public catalog
+# |         |            |       | (categories, products, multi-script
+# |         |            |       | search FR-PUB-014), inquiries, admin
+# |         |            |       | products/categories/media/inquiries/
+# |         |            |       | settings/audit, and future order
+# |         |            |       | endpoints (W priority, gated by
+# |         |            |       | delivery_enabled).
+# ============================================================
+openapi: 3.0.3
+info:
+  title: Nogoolin API
+  description: |
+    REST API for Nogoolin — Premium Religious Product Catalog Platform.
+
+    Layered architecture: Controller → Service → Repository.
+    Base path: /api/v1/
+
+    ## Changelog
+
+    | Version | Date | Type | Description |
+    |---|---|---|---|
+    | 1.0.0 | June 2026 | MAJOR | Initial version. Covers public catalog (categories, products, multi-script search FR-PUB-014), inquiries, admin products/categories/media/inquiries/settings/audit, and future order endpoints (W priority, gated by `delivery_enabled`). |
+  version: 1.0.0
+  contact:
+    name: Tengis (Solo Developer)
+
+servers:
+  - url: https://api.nogoolin.mn/api/v1
+    description: Production (Railway)
+  - url: http://localhost:3001/api/v1
+    description: Local development
+
+tags:
+  - name: Categories
+    description: Public category browsing
+  - name: Products
+    description: Public product catalog, search, 360° model
+  - name: Inquiries
+    description: Customer inquiry submission
+  - name: Settings
+    description: Public settings (delivery toggle status)
+  - name: Admin - Products
+  - name: Admin - Categories
+  - name: Admin - Media
+  - name: Admin - Inquiries
+  - name: Admin - Settings
+  - name: Admin - Audit
+  - name: Orders (Future)
+
+security:
+  - {}
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT access token (15 min expiry, FR-AUTH-005, NFR-SEC-013)
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 50
+        default: 12
+
+  schemas:
+    # ── Enums ──────────────────────────────────────
+    ProductStatus:
+      type: string
+      enum: [draft, published, archived]
+    StockStatus:
+      type: string
+      enum: [in_stock, out_of_stock, pre_order]
+    InquiryStatus:
+      type: string
+      enum: [new, contacted, closed]
+    UserRole:
+      type: string
+      enum: [customer, admin, delivery_staff]
+
+    # ── Core Entities ──────────────────────────────
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Бурхан зурагнууд"
+        slug:
+          type: string
+          example: "buddha-statues"
+        description:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CategoryInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+          description: Auto-generated from name if omitted (FR-CAT-005)
+        description:
+          type: string
+        sort_order:
+          type: integer
+          default: 0
+
+    CategoryPatchInput:
+      type: object
+      description: |
+        Partial update payload for `PATCH /admin/categories/{id}`.
+        All fields are optional (UC-ADM-008, FR-CAT-002, FR-CAT-003, FR-CAT-006).
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        sort_order:
+          type: integer
+        is_active:
+          type: boolean
+          description: "Set to false to deactivate (FR-CAT-003)"
+
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        image_url:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        category_id:
+          type: string
+          format: uuid
+        category:
+          $ref: '#/components/schemas/Category'
+        name:
+          type: string
+          example: "Ногоон Дарь Эх"
+        name_en:
+          type: string
+          nullable: true
+          example: "Green Tara"
+          description: "FR-PUB-013, v1.2.0"
+        slug:
+          type: string
+          example: "nogoon-dar-eh"
+        price:
+          type: number
+          format: decimal
+        short_description:
+          type: string
+          nullable: true
+        full_description:
+          type: string
+          nullable: true
+        usage_instruction:
+          type: string
+          nullable: true
+          description: Markdown content (FR-PROD-010)
+        status:
+          $ref: '#/components/schemas/ProductStatus'
+        stock_status:
+          $ref: '#/components/schemas/StockStatus'
+        is_featured:
+          type: boolean
+        model_3d_url:
+          type: string
+          format: uri
+          nullable: true
+          description: "GLB URL for 360° viewer (FR-PUB-011)"
+        search_tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+          example: ["nogoon dar eh", "green tara", "tara statue"]
+          description: "FR-PUB-013, v1.2.0"
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ProductInput:
+      type: object
+      required: [name, category_id, price]
+      properties:
+        name:
+          type: string
+        name_en:
+          type: string
+        category_id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+          description: Auto-generated if omitted (FR-PROD-007)
+        price:
+          type: number
+        short_description:
+          type: string
+        full_description:
+          type: string
+        usage_instruction:
+          type: string
+        status:
+          $ref: '#/components/schemas/ProductStatus'
+        stock_status:
+          $ref: '#/components/schemas/StockStatus'
+        is_featured:
+          type: boolean
+        search_tags:
+          type: array
+          items:
+            type: string
+
+    ProductPatchInput:
+      type: object
+      description: |
+        Partial update payload for `PATCH /admin/products/{id}`.
+        All fields are optional — only included fields are updated
+        (UC-ADM-003, UC-ADM-004, FR-PUB-015, SEQ-005).
+      properties:
+        name:
+          type: string
+        name_en:
+          type: string
+        category_id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        price:
+          type: number
+        short_description:
+          type: string
+        full_description:
+          type: string
+        usage_instruction:
+          type: string
+        status:
+          $ref: '#/components/schemas/ProductStatus'
+        stock_status:
+          $ref: '#/components/schemas/StockStatus'
+        is_featured:
+          type: boolean
+        model_3d_url:
+          type: string
+          format: uri
+          nullable: true
+          description: "Set after GLB upload (SEQ-005), or null to remove (UC-ADM-006)"
+        search_tags:
+          type: array
+          items:
+            type: string
+          description: "Admin-managed multi-script tags (FR-PUB-015)"
+
+    Inquiry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+          nullable: true
+        product:
+          $ref: '#/components/schemas/Product'
+        customer_name:
+          type: string
+        phone:
+          type: string
+        message:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/InquiryStatus'
+        created_at:
+          type: string
+          format: date-time
+
+    InquiryInput:
+      type: object
+      required: [customer_name, phone]
+      properties:
+        customer_name:
+          type: string
+          minLength: 2
+        phone:
+          type: string
+          pattern: '^[0-9+\s-]{8,15}$'
+        message:
+          type: string
+        product_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    PublicSettings:
+      type: object
+      properties:
+        delivery_enabled:
+          type: boolean
+          description: "FR-PUB-009, FR-PUB-010"
+
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        admin_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+          example: "DELIVERY_TOGGLE"
+        entity_type:
+          type: string
+          example: "product"
+        entity_id:
+          type: string
+          format: uuid
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    # ── Pagination ─────────────────────────────────
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+
+    ProductListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    # ── Error ──────────────────────────────────────
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Order placement is currently disabled"
+        code:
+          type: string
+          example: "DELIVERY_DISABLED"
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ValidationError:
+      description: Request body failed Zod validation (NFR-SEC-003)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid JWT (NFR-SEC-009)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Authenticated but not admin role (FR-AUTH-009)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests (NFR-SEC-002, FR-INQ-007)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+paths:
+  # ════════════════════════════════════════════════
+  # CATEGORIES (Public)
+  # ════════════════════════════════════════════════
+  /categories:
+    get:
+      tags: [Categories]
+      summary: List active categories
+      description: |
+        Returns all categories where `is_active = true`, ordered by `sort_order`.
+        Ref: FR-CAT-007, FR-PUB-005
+      security: []
+      responses:
+        '200':
+          description: List of active categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+              example:
+                data:
+                  - id: "8f14e45f-ceea-4c4a-b0b1-000000000001"
+                    name: "Бурхан зурагнууд"
+                    slug: "buddha-statues"
+                    description: "Шашны зурагнууд"
+                    sort_order: 1
+                    is_active: true
+                    created_at: "2026-06-01T00:00:00Z"
+                    updated_at: "2026-06-01T00:00:00Z"
+
+  /categories/{slug}:
+    get:
+      tags: [Categories]
+      summary: Get category by slug
+      description: Ref FR-PUB-008. Used to resolve `/categories/[slug]` page metadata.
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Category'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ════════════════════════════════════════════════
+  # PRODUCTS (Public)
+  # ════════════════════════════════════════════════
+  /products:
+    get:
+      tags: [Products]
+      summary: List published products
+      description: |
+        Returns paginated `published` products. Supports filtering and
+        multi-script search (Cyrillic/Latin/English).
+
+        Ref: FR-PUB-001, FR-PUB-002, FR-PROD-012, FR-PROD-013,
+        FR-PUB-014 (SEQ-003 multi-script search)
+
+        **Search behavior (FR-PUB-014):**
+        - If `search` param is Cyrillic or English → searched as-is against
+          `name`, `name_en`, `search_tags` using PostgreSQL full-text search.
+        - If `search` param is detected as Latin-transliterated Mongolian →
+          transliterated to Cyrillic before querying (in addition to the
+          original term), so both forms are matched.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: category_id
+          in: query
+          description: Filter by category UUID (FR-PROD-012)
+          schema:
+            type: string
+            format: uuid
+        - name: category_slug
+          in: query
+          description: Filter by category slug (convenience alternative to category_id)
+          schema:
+            type: string
+        - name: stock_status
+          in: query
+          schema:
+            $ref: '#/components/schemas/StockStatus'
+        - name: is_featured
+          in: query
+          description: Filter featured products (FR-PROD-006, FR-PUB-006)
+          schema:
+            type: boolean
+        - name: search
+          in: query
+          description: |
+            Multi-script search query. Examples:
+            - Cyrillic: `Ногоон Дарь Эх`
+            - Latin (transliterated): `nogoon dar eh`
+            - English: `green tara`
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [newest, price_asc, price_desc]
+            default: newest
+      responses:
+        '200':
+          description: Paginated product list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+              example:
+                data:
+                  - id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                    category_id: "8f14e45f-ceea-4c4a-b0b1-000000000001"
+                    name: "Ногоон Дарь Эх"
+                    name_en: "Green Tara"
+                    slug: "nogoon-dar-eh"
+                    price: 145000
+                    short_description: "Гар хийцийн хүрэл шарын товруу"
+                    status: published
+                    stock_status: in_stock
+                    is_featured: true
+                    model_3d_url: "https://xxxx.supabase.co/storage/v1/object/public/model-assets/nogoon-dar-eh.glb"
+                    search_tags: ["nogoon dar eh", "green tara", "tara statue"]
+                    images:
+                      - id: "8f14e45f-ceea-4c4a-b0b1-000000000101"
+                        product_id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                        image_url: "https://xxxx.supabase.co/storage/v1/object/public/product-images/nogoon-dar-eh-1.webp"
+                        alt_text: "Ногоон Дарь Эх — урд талаас"
+                        sort_order: 0
+                        created_at: "2026-06-01T00:00:00Z"
+                    created_at: "2026-06-01T00:00:00Z"
+                    updated_at: "2026-06-01T00:00:00Z"
+                meta:
+                  page: 1
+                  limit: 12
+                  total: 1
+                  total_pages: 1
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /products/{slug}:
+    get:
+      tags: [Products]
+      summary: Get product detail by slug
+      description: |
+        Returns full product detail including images and 3D model URL.
+        Only returns products with `status = published`.
+
+        Ref: FR-PUB-003, FR-PUB-004, FR-PUB-011, UC-G-004, UC-G-005
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "nogoon-dar-eh"
+      responses:
+        '200':
+          description: Product found and published
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '404':
+          description: |
+            No published product exists with this slug
+            (UC-G-004 Alternative Flow — Product Not Found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Product not found"
+                code: "PRODUCT_NOT_FOUND"
+
+  # ════════════════════════════════════════════════
+  # SETTINGS (Public)
+  # ════════════════════════════════════════════════
+  /settings/public:
+    get:
+      tags: [Settings]
+      summary: Get public settings (delivery toggle status)
+      description: |
+        Returns settings safe for public/frontend consumption.
+        Used by frontend to conditionally show/hide cart, checkout,
+        and order placement UI.
+
+        Ref: FR-PUB-009, FR-PUB-010, FR-SET-006
+      security: []
+      responses:
+        '200':
+          description: Public settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PublicSettings'
+              example:
+                data:
+                  delivery_enabled: false
+
+  # ════════════════════════════════════════════════
+  # INQUIRIES (Public submission)
+  # ════════════════════════════════════════════════
+  /inquiries:
+    post:
+      tags: [Inquiries]
+      summary: Submit a product inquiry
+      description: |
+        Allows a guest (unauthenticated) to submit an inquiry about a
+        product, or a general contact inquiry (`product_id` omitted).
+
+        Validation occurs on both frontend and backend (NFR-SEC-003).
+
+        Rate limited to **3 submissions per IP per hour** (FR-INQ-007).
+        Saved with status `new` by default (FR-INQ-003).
+
+        Ref: UC-G-007, FR-INQ-001 to FR-INQ-007, SEQ-002
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryInput'
+            example:
+              customer_name: "Бат-Эрдэнэ"
+              phone: "99112233"
+              message: "Энэ бүтээгдэхүүн одоо байгаа эсэх, хэрхэн авах вэ?"
+              product_id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+      responses:
+        '201':
+          description: Inquiry created successfully with status `new`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Inquiry'
+              example:
+                data:
+                  id: "8f14e45f-ceea-4c4a-b0b1-000000000201"
+                  product_id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                  customer_name: "Бат-Эрдэнэ"
+                  phone: "99112233"
+                  message: "Энэ бүтээгдэхүүн одоо байгаа эсэх, хэрхэн авах вэ?"
+                  status: new
+                  created_at: "2026-06-13T10:00:00Z"
+        '400':
+          description: |
+            Validation failure — required fields empty or phone number
+            format invalid (UC-G-007 Alternative Flow — Validation Failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: |
+            Rate limit exceeded — more than 3 submissions from the same IP
+            within the past hour (UC-G-007 Exception Flow)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Too many submissions. Please try again later."
+                code: "RATE_LIMIT_EXCEEDED"
+
+  # ════════════════════════════════════════════════
+  # ADMIN: PRODUCTS
+  # ════════════════════════════════════════════════
+  /admin/products:
+    get:
+      tags: [Admin - Products]
+      summary: List all products (admin view)
+      description: |
+        Returns products of any status (`draft`, `published`, `archived`)
+        for the admin product management table.
+
+        Ref: FR-ADM-004
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ProductStatus'
+        - name: category_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: search
+          in: query
+          description: Search by name (admin search, single-script ok)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated product list (all statuses)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Admin - Products]
+      summary: Create a new product
+      description: |
+        Creates a product with status `draft` by default. Slug is
+        auto-generated from `name` if not provided (FR-PROD-007).
+        A product must belong to exactly one category (FR-PROD-008).
+
+        Writes an audit log entry on success (FR-AUD-001).
+
+        Ref: UC-ADM-002, FR-PROD-001 to FR-PROD-008
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+            example:
+              name: "Ногоон Дарь Эх"
+              name_en: "Green Tara"
+              category_id: "8f14e45f-ceea-4c4a-b0b1-000000000001"
+              price: 145000
+              short_description: "Гар хийцийн хүрэл шарын товруу"
+              full_description: "Дэлгэрэнгүй тайлбар..."
+              usage_instruction: "## Хэрэглэх заавар\n1. ..."
+              status: draft
+              stock_status: in_stock
+              is_featured: false
+              search_tags: ["nogoon dar eh", "green tara", "tara statue"]
+      responses:
+        '201':
+          description: Product created with status `draft`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          description: |
+            Validation failure — required fields empty or price not a
+            valid number (UC-ADM-002 Alternative Flow — Validation Error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/products/{id}:
+    patch:
+      tags: [Admin - Products]
+      summary: Update a product
+      description: |
+        Updates one or more product fields, including `status`
+        (draft/published/archived — FR-PROD-003, FR-PROD-004),
+        `stock_status`, `is_featured`, `model_3d_url`, and `search_tags`
+        (FR-PUB-015).
+
+        Writes an audit log entry on success (FR-AUD-001).
+        Used for: general edits (UC-ADM-003), publish/archive
+        (UC-ADM-004), 3D model URL update after upload (SEQ-005).
+
+        Ref: FR-PROD-002, FR-PROD-006, FR-PUB-015, UC-ADM-003, UC-ADM-004
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPatchInput'
+            examples:
+              publish:
+                summary: Publish a draft product (UC-ADM-004)
+                value:
+                  status: published
+              archive:
+                summary: Archive a published product (UC-ADM-004)
+                value:
+                  status: archived
+              update_tags:
+                summary: Admin edits search tags (FR-PUB-015)
+                value:
+                  search_tags: ["nogoon dar eh", "green tara", "tara statue", "ногоон дарь эх хүрэл"]
+              set_model_url:
+                summary: Set 3D model URL after GLB upload (SEQ-005)
+                value:
+                  model_3d_url: "https://xxxx.supabase.co/storage/v1/object/public/model-assets/nogoon-dar-eh.glb"
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Admin - Products]
+      summary: Delete (archive) a product
+      description: |
+        Default behavior is soft-delete: sets `status = archived`
+        (FR-PROD-011). Hard delete requires `?hard=true` and explicit
+        confirmation on the client side (confirmation dialog, FR-ADM-008).
+
+        Writes an audit log entry on success.
+
+        Ref: FR-PROD-011, FR-ADM-008
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: hard
+          in: query
+          description: |
+            If `true`, permanently deletes the product and its images
+            (cascade). If `false` or omitted, soft-delete (archive).
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '204':
+          description: Product archived or permanently deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ════════════════════════════════════════════════
+  # ADMIN: CATEGORIES
+  # ════════════════════════════════════════════════
+  /admin/categories:
+    post:
+      tags: [Admin - Categories]
+      summary: Create a new category
+      description: |
+        Creates a category with `is_active = true`. Slug is
+        auto-generated and uniqueness-checked — if a duplicate slug
+        would result, a numeric suffix is appended
+        (e.g. `incense-2`, UC-ADM-007 Exception Flow).
+
+        Writes an audit log entry on success.
+
+        Ref: UC-ADM-007, FR-CAT-001, FR-CAT-005
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryInput'
+            example:
+              name: "Хүж"
+              description: "Уламжлалт шашны хүж"
+              sort_order: 2
+      responses:
+        '201':
+          description: Category created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Category'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/categories/{id}:
+    patch:
+      tags: [Admin - Categories]
+      summary: Update or deactivate a category
+      description: |
+        Updates category fields. Setting `is_active = false`
+        (FR-CAT-003) immediately hides the category — and its
+        products' category filter — from the public site.
+
+        Ref: UC-ADM-008, FR-CAT-002, FR-CAT-003, FR-CAT-006
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryPatchInput'
+            examples:
+              deactivate:
+                summary: Deactivate category (FR-CAT-003)
+                value:
+                  is_active: false
+      responses:
+        '200':
+          description: Category updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Category'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Admin - Categories]
+      summary: Delete a category
+      description: |
+        Only allowed if the category has **no products assigned**
+        (FR-CAT-004). Otherwise returns `409 Conflict`.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Category deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: |
+            Category has one or more products assigned and cannot
+            be deleted (FR-CAT-004)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Category has products assigned and cannot be deleted"
+                code: "CATEGORY_NOT_EMPTY"
+
+  # ════════════════════════════════════════════════
+  # ADMIN: MEDIA — PRODUCT IMAGES
+  # ════════════════════════════════════════════════
+  /admin/products/{id}/images:
+    post:
+      tags: [Admin - Media]
+      summary: Upload product image(s)
+      description: |
+        Uploads one or more images to Supabase Storage
+        (`product-images` bucket) and creates `product_images` records.
+
+        Validation occurs on both client and server (FR-MEDIA-003):
+        - Allowed types: `jpg`, `jpeg`, `png`, `webp`
+        - Max size: 5MB per file (FR-MEDIA-002)
+
+        Invalid files in a batch are rejected individually; valid files
+        proceed (UC-ADM-005 Alternative Flow).
+
+        The first image (lowest `sort_order`) is treated as the
+        primary/thumbnail image (FR-MEDIA-005).
+
+        Ref: UC-ADM-005, FR-MEDIA-001 to FR-MEDIA-006
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: One or more image files (jpg, jpeg, png, webp; max 5MB each)
+                alt_texts:
+                  type: array
+                  items:
+                    type: string
+                  description: |
+                    Optional alt text per file, same order as `files`.
+                    Defaults to filename if omitted (NFR-SEO-009).
+      responses:
+        '201':
+          description: Images uploaded and `product_images` records created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductImage'
+                  rejected:
+                    type: array
+                    description: Files that failed validation (not uploaded)
+                    items:
+                      type: object
+                      properties:
+                        filename:
+                          type: string
+                        reason:
+                          type: string
+              example:
+                data:
+                  - id: "8f14e45f-ceea-4c4a-b0b1-000000000102"
+                    product_id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                    image_url: "https://xxxx.supabase.co/storage/v1/object/public/product-images/nogoon-dar-eh-2.webp"
+                    alt_text: "Ногоон Дарь Эх — хажуу талаас"
+                    sort_order: 1
+                    created_at: "2026-06-13T10:05:00Z"
+                rejected:
+                  - filename: "huge-photo.png"
+                    reason: "File exceeds 5MB limit"
+        '400':
+          description: |
+            All files invalid (wrong type or oversized) —
+            UC-ADM-005 Alternative Flow — Invalid File
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          description: |
+            Supabase Storage upload failed (network error) —
+            UC-ADM-005 Exception Flow — Upload Failure.
+            No database record is created for the failed file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/products/{id}/images/{imageId}:
+    patch:
+      tags: [Admin - Media]
+      summary: Update image sort order or alt text
+      description: |
+        Allows reordering images (FR-MEDIA-005) — the image with the
+        lowest `sort_order` becomes the primary/thumbnail.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sort_order:
+                  type: integer
+                alt_text:
+                  type: string
+      responses:
+        '200':
+          description: Image record updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProductImage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Admin - Media]
+      summary: Delete a product image
+      description: |
+        Deletes the file from Supabase Storage and removes the
+        `product_images` record.
+
+        Ref: FR-MEDIA-006
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Image deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ════════════════════════════════════════════════
+  # ADMIN: MEDIA — 3D MODEL (GLB)
+  # ════════════════════════════════════════════════
+  /admin/products/{id}/model:
+    post:
+      tags: [Admin - Media]
+      summary: Upload 3D model (GLB/GLTF)
+      description: |
+        Uploads a Draco-compressed GLB/GLTF file to Supabase Storage
+        (`model-assets` bucket) and updates `products.model_3d_url`.
+
+        **Pre-upload workflow (FR-MEDIA-010, offline):**
+        1. Photograph product (white background, multi-angle)
+        2. Generate GLB via Meshy AI (~20 min)
+        3. Compress via `gltf-pipeline --draco.compressionLevel 10`
+           (target ≤ 5MB, FR-MEDIA-011)
+
+        **Validation (server + client, FR-MEDIA-008/009):**
+        - Allowed types: `.glb`, `.gltf` only
+        - Max size: 10MB (post-compression target is ≤5MB)
+        - Filename sanitized + unique storage path generated
+
+        If a model already exists for this product, it is overwritten
+        (UC-ADM-006 Alternative Flow — Replace Existing Model).
+
+        Writes an audit log entry: `action: MODEL_UPLOAD`.
+
+        Ref: UC-ADM-006, FR-MEDIA-007 to FR-MEDIA-011, SEQ-005
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product UUID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: GLB or GLTF file, max 10MB
+      responses:
+        '200':
+          description: |
+            Model uploaded; `products.model_3d_url` updated.
+            Returns the updated product.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+              example:
+                data:
+                  id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                  model_3d_url: "https://xxxx.supabase.co/storage/v1/object/public/model-assets/nogoon-dar-eh-a1b2c3.glb"
+        '400':
+          description: |
+            Invalid file type (not .glb/.gltf) or exceeds 10MB —
+            UC-ADM-006 client/server validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          description: Supabase Storage upload failed (network error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags: [Admin - Media]
+      summary: Remove 3D model
+      description: |
+        Deletes the GLB file from Supabase Storage and sets
+        `products.model_3d_url` to `null`.
+
+        Ref: UC-ADM-006 Alternative Flow — Remove Model
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: "Model removed; product returned with `model_3d_url: null`"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ════════════════════════════════════════════════
+  # ADMIN: INQUIRIES
+  # ════════════════════════════════════════════════
+  /admin/inquiries:
+    get:
+      tags: [Admin - Inquiries]
+      summary: List all inquiries
+      description: |
+        Returns all inquiries, sorted by newest first.
+        Supports filtering by status.
+
+        Ref: UC-ADM-009, FR-INQ-004, FR-INQ-006
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          description: Filter by inquiry status (FR-INQ-006)
+          schema:
+            $ref: '#/components/schemas/InquiryStatus'
+      responses:
+        '200':
+          description: Paginated inquiry list, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Inquiry'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+              example:
+                data:
+                  - id: "8f14e45f-ceea-4c4a-b0b1-000000000201"
+                    product_id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                    product:
+                      id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                      name: "Ногоон Дарь Эх"
+                      slug: "nogoon-dar-eh"
+                    customer_name: "Бат-Эрдэнэ"
+                    phone: "99112233"
+                    message: "Энэ бүтээгдэхүүн одоо байгаа эсэх?"
+                    status: new
+                    created_at: "2026-06-13T10:00:00Z"
+                meta:
+                  page: 1
+                  limit: 12
+                  total: 1
+                  total_pages: 1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/inquiries/{id}/status:
+    patch:
+      tags: [Admin - Inquiries]
+      summary: Update inquiry status
+      description: |
+        Updates inquiry status through the lifecycle:
+        `new` → `contacted` → `closed`.
+
+        Writes an audit log entry on success.
+
+        Ref: UC-ADM-010, FR-INQ-005
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  $ref: '#/components/schemas/InquiryStatus'
+            example:
+              status: contacted
+      responses:
+        '200':
+          description: Inquiry status updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Inquiry'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ════════════════════════════════════════════════
+  # ADMIN: SETTINGS (DELIVERY TOGGLE)
+  # ════════════════════════════════════════════════
+  /admin/settings:
+    get:
+      tags: [Admin - Settings]
+      summary: Get all system settings
+      description: |
+        Returns all key-value settings, including `delivery_enabled`,
+        for the admin settings page.
+
+        Ref: FR-ADM-007, FR-SET-001
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: All system settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    additionalProperties: true
+                    example:
+                      delivery_enabled: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/settings/delivery:
+    patch:
+      tags: [Admin - Settings]
+      summary: Toggle delivery enabled/disabled
+      description: |
+        Updates the `delivery_enabled` setting. Only an admin may
+        call this endpoint (FR-SET-003).
+
+        **Effects when enabling (`true`):**
+        - Frontend shows cart/checkout/order UI (FR-SET-005)
+        - `POST /orders` is no longer rejected (FR-SET-004, UC-SYS-002)
+
+        **Effects when disabling (`false`):**
+        - Frontend hides cart/checkout/order UI
+        - `POST /orders` is rejected with HTTP 403 (FR-SET-004)
+        - Existing orders are unaffected (UC-ADM-011)
+
+        The change is reflected in `GET /settings/public` within
+        60 seconds (FR-SET-006).
+
+        Always writes an audit log entry:
+        `action: DELIVERY_TOGGLE`, `metadata: { from, to }`
+        (FR-SET-007, FR-AUD-005).
+
+        A failed (non-admin) attempt also writes a
+        `UNAUTHORIZED_ACCESS` audit log entry (UC-ADM-011 Exception Flow).
+
+        Ref: UC-ADM-011, UC-SYS-002, UC-SYS-003,
+        FR-SET-001 to FR-SET-007, FR-AUD-005, SEQ-004
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [delivery_enabled]
+              properties:
+                delivery_enabled:
+                  type: boolean
+            example:
+              delivery_enabled: true
+      responses:
+        '200':
+          description: Setting updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PublicSettings'
+              example:
+                data:
+                  delivery_enabled: true
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: |
+            Non-admin user attempted this endpoint. A failed-access
+            audit log entry is written (UC-ADM-011 Exception Flow).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ════════════════════════════════════════════════
+  # ADMIN: AUDIT LOG
+  # ════════════════════════════════════════════════
+  /admin/audit-logs:
+    get:
+      tags: [Admin - Audit]
+      summary: View audit log
+      description: |
+        Returns audit log entries, sorted by newest first.
+        Entries are append-only — no PATCH/DELETE endpoints exist
+        for this resource by design (FR-AUD-003).
+
+        Ref: UC-ADM-012, FR-AUD-001, FR-AUD-002, FR-AUD-004
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: entity_type
+          in: query
+          description: Filter by entity type, e.g. `product`, `system_settings`
+          schema:
+            type: string
+        - name: action
+          in: query
+          description: Filter by action, e.g. `DELIVERY_TOGGLE`, `PRODUCT_PUBLISH`
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated audit log, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLog'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+              example:
+                data:
+                  - id: "8f14e45f-ceea-4c4a-b0b1-000000000301"
+                    admin_id: "8f14e45f-ceea-4c4a-b0b1-00000000ad01"
+                    action: "DELIVERY_TOGGLE"
+                    entity_type: "system_settings"
+                    entity_id: null
+                    metadata:
+                      from: false
+                      to: true
+                    created_at: "2026-06-13T10:10:00Z"
+                meta:
+                  page: 1
+                  limit: 12
+                  total: 1
+                  total_pages: 1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ════════════════════════════════════════════════
+  # ORDERS (Future — W priority)
+  # Gated by system_settings.delivery_enabled
+  # NOT ACTIVATED IN MVP — defined for architectural
+  # completeness per NFR-SCA-003
+  # ════════════════════════════════════════════════
+  /orders:
+    post:
+      tags: [Orders (Future)]
+      summary: "(Future) Place an order"
+      description: |
+        NOT ACTIVE IN MVP. Defined for architectural completeness.
+
+        Requires authentication (`customer` role). Before creating the
+        order, the system checks `system_settings.delivery_enabled`:
+
+        - If `false` → returns `403 Forbidden` with
+          `{ error: "Order placement is currently disabled" }`
+          (FR-SET-004, FR-ORD-008, UC-SYS-002, enforced regardless
+          of frontend state)
+        - If `true` → creates an `orders` record (`status: pending`)
+          and corresponding `order_items` records
+
+        Ref: UC-F-001, FR-ORD-001 to FR-ORD-004, FR-ORD-008,
+        FR-SET-004, SEQ-006
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items, address, phone]
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [product_id, quantity]
+                    properties:
+                      product_id:
+                        type: string
+                        format: uuid
+                      quantity:
+                        type: integer
+                        minimum: 1
+                address:
+                  type: string
+                phone:
+                  type: string
+            example:
+              items:
+                - product_id: "8f14e45f-ceea-4c4a-b0b1-000000000010"
+                  quantity: 1
+              address: "Улаанбаатар, Сүхбаатар дүүрэг, ..."
+              phone: "99112233"
+      responses:
+        '201':
+          description: Order created with status `pending`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      customer_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum: [pending, confirmed, delivering, completed, cancelled]
+                      total_amount:
+                        type: number
+                      created_at:
+                        type: string
+                        format: date-time
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: |
+            `delivery_enabled = false` — order placement disabled at
+            the API level regardless of how the request was made.
+
+            Ref: FR-SET-004, FR-ORD-008, UC-SYS-002
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Order placement is currently disabled"
+                code: "DELIVERY_DISABLED"
+
+  /orders/me:
+    get:
+      tags: [Orders (Future)]
+      summary: "(Future) View own order history"
+      description: |
+        NOT ACTIVE IN MVP. Defined for architectural completeness.
+
+        Returns the authenticated customer's own orders, newest first.
+        A customer can only access their own orders — enforced via
+        ownership check at the service layer (IDOR prevention,
+        NFR-SEC-010).
+
+        Ref: UC-F-002, FR-ORD-007
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Paginated list of the authenticated customer's orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        status:
+                          type: string
+                          enum: [pending, confirmed, delivering, completed, cancelled]
+                        total_amount:
+                          type: number
+                        created_at:
+                          type: string
+                          format: date-time
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: |
+            `delivery_enabled = false` — order features fully disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ── Admin Order Management (Future, W) ──────────
+  /admin/orders:
+    get:
+      tags: [Orders (Future)]
+      summary: "(Future) List all orders (admin)"
+      description: |
+        NOT ACTIVE IN MVP.
+
+        Ref: FR-ORD-005
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, confirmed, delivering, completed, cancelled]
+      responses:
+        '200':
+          description: Paginated list of all orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /admin/orders/{id}/status:
+    patch:
+      tags: [Orders (Future)]
+      summary: "(Future) Update order status"
+      description: |
+        NOT ACTIVE IN MVP.
+
+        Ref: FR-ORD-004, FR-ORD-005
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [pending, confirmed, delivering, completed, cancelled]
+      responses:
+        '200':
+          description: Order status updated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /admin/orders/{id}/assign-delivery:
+    post:
+      tags: [Orders (Future)]
+      summary: "(Future) Assign delivery staff to order"
+      description: |
+        NOT ACTIVE IN MVP. Requires `delivery_staff` role
+        to exist (FR-AUTH-008 reserved for future use).
+
+        Ref: FR-ORD-006
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [delivery_staff_id]
+              properties:
+                delivery_staff_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Delivery assignment created
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
