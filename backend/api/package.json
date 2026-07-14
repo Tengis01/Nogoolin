@@ -1,0 +1,6 @@
+{
+  "name": "@nogoolin/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nogoolin REST API (Fastify + TypeScript, port 3001, Controller → Service → Repository) — skeleton, not yet initialized"
+}

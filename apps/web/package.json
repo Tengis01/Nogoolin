@@ -1,0 +1,6 @@
+{
+  "name": "@nogoolin/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nogoolin public web catalog + admin panel (Next.js) — skeleton, not yet initialized"
+}
