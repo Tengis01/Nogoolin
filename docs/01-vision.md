@@ -2,10 +2,10 @@
 
 **Document:** `docs/01-vision.md`  
 **Project:** Nogoolin — Premium Religious Product Catalog Platform  
-**Version:** 1.2.0  
+**Version:** 1.4.0  
 **Status:** Draft  
 **Author:** Tengis (Solo Developer)  
-**Last Updated:** June 2026
+**Last Updated:** July 2026
 
 ---
 
@@ -13,6 +13,8 @@
 
 | Version | Date | Type | Description |
 |---|---|---|---|
+| 1.4.0 | July 2026 | MINOR | Replaced Flutter with React Native + Expo for mobile; unified TypeScript across web, API, and mobile |
+| 1.3.0 | June 2026 | MINOR | Replaced Express.js with Fastify; updated backend framework, plugin stack, and security layer references |
 | 1.2.0 | June 2026 | MINOR | Added multi-script search (Cyrillic/Latin/English) to value proposition and MVP scope |
 | 1.1.0 | June 2026 | MINOR | Added 360° product viewer to value proposition, MVP scope (web + admin + mobile); updated Non-Goals; replaced Blender assumption with Meshy AI; added visual image search to Phase 6+ roadmap |
 | 1.0.0 | June 2026 | MAJOR | Initial version |
@@ -194,20 +196,23 @@ The MVP is defined as: **Phase 1 through Phase 3** of the development roadmap.
 - Inquiry inbox and status management
 - Delivery toggle setting
 
-**Mobile App (Flutter)**
-- Rive-based opening animation
+**Mobile App (React Native + Expo)**
+- Rive-based opening animation (`@rive-app/react-native`, new Nitro runtime)
 - Home page
 - Product listing with category filter
 - Product detail page
-- **360° interactive 3D model viewer** using `model_viewer_plus`; fallback to image gallery
+- **360° interactive 3D model viewer** — Phase 3 POC (`expo-gl` or WebView `model-viewer`); fallback to image gallery
 - Product inquiry form
+- Expo prebuild/CNG + dev client (Expo Go is not sufficient: Rive and native Google sign-in require native modules)
+- EAS Build / Submit / Update for build, store submission, and OTA JS updates
 
-**Backend API (Express.js + TypeScript)**
+**Backend API (Fastify + TypeScript)**
 - REST API at `/api/v1/`
-- Layered architecture: Controller → Service → Repository
+- Official Fastify TypeScript boilerplate as starting point
+- Layered architecture: Controller (route handlers) → Service → Repository
 - Supabase PostgreSQL + Supabase Auth + Supabase Storage
 - JWT authentication with role-based access (admin / customer)
-- 4-layer security: Cloudflare WAF → Helmet/CORS/rate-limit → JWT/RBAC → RLS
+- 4-layer security: Cloudflare WAF → @fastify/helmet / @fastify/cors / @fastify/rate-limit → JWT/RBAC → RLS
 
 ### MVP Exclusions
 
@@ -231,7 +236,7 @@ The following are explicitly **out of scope** and will **not** be built, now or 
 | Real-time chat or live support | Adds complexity without proportional value at this stage |
 | Payment gateway integration | Dependent on business licensing and delivery readiness |
 | Microservices architecture | Unjustified infrastructure overhead for a solo developer |
-| Heavy real-time 3D on mobile (custom renderer) | `model_viewer_plus` covers the need; custom Three.js/flutter_gl is not production-ready |
+| Heavy real-time 3D on mobile (custom renderer) | A lightweight viewer (`expo-gl` or WebView `model-viewer`, Phase 3 POC) covers the need; a custom native 3D renderer is not justified |
 | Complex delivery staff tracking app | Future phase only |
 | Visual image search (camera → find product) | Planned for Phase 6+; requires pgvector + embedding pipeline; catalog must be populated first |
 | Multi-language support | Mongolia-first; English may be added later |
@@ -291,7 +296,7 @@ The following are explicitly **out of scope** and will **not** be built, now or 
 | Vercel free tier is sufficient for web | Standard Next.js deployment limits |
 | Meshy AI produces acceptable GLB quality from product photos | Tested on similar object types; white background + multi-angle photos required |
 | GLB files can be compressed under 5MB via gltf-pipeline Draco | Required for acceptable web load time |
-| Mongolian users primarily access via mobile | Mobile-responsive and Flutter app are high priority |
+| Mongolian users primarily access via mobile | Mobile-responsive web and the React Native app are high priority |
 
 ### Business Assumptions
 

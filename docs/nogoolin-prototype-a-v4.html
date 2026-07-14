@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ногоолин — Prototype A v4</title>
+<!-- ============================================================
+     НОГООЛИН — Prototype A v4  (Intro + агшдаг hero + цагаан каталог)
+     Түгжсэн spec:
+     · Хөдөлгөөн v2 — камер баруун дээрээс ганц нум, дараа нь зогсонги
+     · Палитр v4 — 3A харанхуй интро + цагаан каталог, гүргэм шар
+     · Агшдаг hero — "Эхлэх" дармагц 100vh→35vh, бурхан баруун тийш
+       (камерын хажуугийн шилжилт), зүүн талд текст
+     · 3D placeholder orb — Ногоон Дарь Эх GLB Phase 3-т ирнэ
+     ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root{
+  /* интро (3A) */
+  --n-bg0:#245842; --n-bg1:#1B4634;
+  --n-text:#F5F2E6; --n-muted:#A9C7B4;
+  --saff:#F2C94C;
+  --n-line:rgba(242,201,76,.32);
+  /* каталог (цагаан) */
+  --paper:#FFFFFF; --paper-alt:#F6F8F5;
+  --ink:#17352A; --muted:#6B7D72;
+  --act:#0BB555; --act-text:#042F1C;
+  --saff-deep:#A9861B;
+  --hair:rgba(20,56,42,.12);
+  --disp:'Cormorant Garamond',serif;
+  --body:'Manrope',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;}
+body.lock{height:100vh;overflow:hidden;}
+button{font-family:var(--body);cursor:pointer;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 34px;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:.04em;transition:all .3s ease;border:1px solid transparent;text-decoration:none;}
+.btn-act{background:var(--act);color:var(--act-text);}
+.btn-act:hover{background:#12C963;box-shadow:0 0 30px rgba(11,181,85,.35);transform:translateY(-1px);}
+.btn-ghost-dark{background:transparent;color:var(--n-text);border:1px solid var(--n-line);}
+.btn-ghost-dark:hover{border-color:var(--saff);color:#fff;}
+.btn-ghost-light{background:transparent;color:var(--ink);border:1px solid var(--hair);}
+.btn-ghost-light:hover{border-color:var(--act);color:var(--act);}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;}
+
+/* ================= HERO (нэг Three.js scene) ================= */
+#hero{position:relative;height:100vh;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,var(--n-bg0) 0%,var(--n-bg1) 78%);}
+#hero canvas{display:block;width:100%!important;height:100%!important;}
+.hero-ui{position:absolute;inset:0;pointer-events:none;}
+.hero-ui>*{pointer-events:auto;}
+
+#mark{position:absolute;top:26px;left:5vw;display:flex;align-items:center;gap:10px;color:var(--saff);font-family:var(--disp);font-size:19px;font-weight:600;letter-spacing:.12em;}
+#mark b{color:var(--n-text);font-weight:600;}
+
+#skip{position:absolute;top:24px;right:5vw;padding:9px 22px;border-radius:999px;background:rgba(20,48,37,.5);backdrop-filter:blur(8px);border:1px solid var(--n-line);color:var(--n-muted);font-size:13px;letter-spacing:.06em;transition:all .3s;}
+#skip:hover{color:var(--n-text);border-color:var(--saff);}
+
+#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+.spin{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(242,201,76,.2);border-top-color:var(--saff);animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loading span{font-size:13px;color:var(--n-muted);letter-spacing:.14em;}
+
+#introTitle{position:absolute;left:0;right:0;bottom:0;padding:16vh 24px 9vh;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;background:linear-gradient(to top,rgba(20,48,37,.85) 0%,rgba(20,48,37,.3) 55%,transparent 100%);transition:opacity .5s;}
+#introTitle.hide{opacity:0;pointer-events:none;}
+#introTitle .eyebrow{color:var(--saff);}
+#introTitle h1{font-family:var(--disp);font-weight:600;font-size:clamp(44px,8vw,84px);letter-spacing:.14em;color:var(--n-text);line-height:1;}
+#introTitle h1 em{font-style:normal;color:var(--saff);}
+.fadeup{opacity:0;transform:translateY(22px);animation:fadeup .9s ease forwards;}
+.d1{animation-delay:.1s}.d2{animation-delay:.32s}.d3{animation-delay:.58s}
+@keyframes fadeup{to{opacity:1;transform:translateY(0);}}
+
+#protoNote{position:absolute;bottom:16px;left:5vw;font-size:11px;color:var(--n-muted);opacity:.55;letter-spacing:.04em;}
+
+/* hero copy — агшсаны дараа зүүн талд */
+#heroCopy{position:absolute;left:5vw;top:50%;transform:translateY(-40%);max-width:min(48%,560px);opacity:0;transition:opacity .7s ease .15s,transform .7s ease .15s;display:flex;flex-direction:column;gap:14px;}
+#heroCopy.show{opacity:1;transform:translateY(-50%);}
+#heroCopy .eyebrow{color:var(--saff);}
+#heroCopy h2{font-family:var(--disp);font-weight:600;font-size:clamp(22px,3.2vw,42px);line-height:1.12;color:var(--n-text);letter-spacing:.01em;}
+#heroCopy .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;}
+#heroCopy .btn{padding:11px 26px;font-size:13.5px;}
+
+/* nav — home үед hero дээгүүр давхарлана */
+#nav{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:18px 5vw;opacity:0;transition:opacity .6s ease .3s;pointer-events:none;}
+#nav.show{opacity:1;pointer-events:auto;}
+#nav .links{display:flex;gap:32px;}
+#nav a{color:var(--n-muted);text-decoration:none;font-size:14px;font-weight:500;letter-spacing:.04em;transition:color .25s;}
+#nav a:hover,#nav a.on{color:var(--saff);}
+
+/* WebGL fallback */
+#hero.fallback .fb-halo{position:absolute;right:8vw;top:50%;transform:translateY(-50%);color:var(--saff);opacity:.55;}
+
+/* ================= ЦАГААН КАТАЛОГ ================= */
+main{background:var(--paper);}
+.section{max-width:1200px;margin:0 auto;padding:64px 5vw;}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:34px;}
+.sec-head h2{font-family:var(--disp);font-size:clamp(26px,3.2vw,38px);font-weight:600;letter-spacing:.02em;color:var(--ink);}
+.sec-head a{color:var(--act);font-size:14px;text-decoration:none;letter-spacing:.05em;white-space:nowrap;font-weight:600;}
+.sec-head a:hover{color:#079247;}
+
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
+.cat{background:var(--paper);border:1px solid var(--hair);border-radius:16px;padding:26px 20px;display:flex;flex-direction:column;gap:12px;transition:all .3s ease;text-align:left;}
+.cat:hover{border-color:var(--act);transform:translateY(-3px);box-shadow:0 14px 34px rgba(23,53,42,.08);}
+.cat svg{color:var(--act);}
+.cat b{font-size:16px;font-weight:600;color:var(--ink);letter-spacing:.02em;}
+.cat span{font-size:12px;color:var(--muted);}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:20px;}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:18px;overflow:hidden;transition:all .35s ease;text-align:left;padding:0;}
+.card:hover{border-color:var(--act);transform:translateY(-4px);box-shadow:0 20px 44px rgba(23,53,42,.1);}
+.card-img{position:relative;aspect-ratio:4/3.4;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.card-img svg{transition:transform .5s ease;color:var(--saff-deep);opacity:.4;}
+.card:hover .card-img svg{transform:scale(1.08) rotate(6deg);}
+.card-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:7px;}
+.tag{align-self:flex-start;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--act);background:rgba(11,181,85,.09);padding:4px 10px;border-radius:999px;}
+.card-body b{font-size:15.5px;font-weight:600;color:var(--ink);line-height:1.4;}
+.price{font-family:var(--disp);font-size:20px;font-weight:700;color:var(--saff-deep);letter-spacing:.03em;}
+
+.strip{background:var(--paper-alt);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);}
+.strip-in{max-width:1200px;margin:0 auto;padding:46px 5vw;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:34px;}
+.strip-item{display:flex;gap:16px;align-items:flex-start;}
+.strip-item svg{color:var(--act);flex-shrink:0;margin-top:2px;}
+.strip-item b{display:block;font-size:15px;margin-bottom:5px;color:var(--ink);}
+.strip-item span{font-size:13.5px;color:var(--muted);line-height:1.65;}
+
+footer{max-width:1200px;margin:0 auto;padding:40px 5vw 54px;}
+.footer-in{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;border-top:1px solid var(--hair);padding-top:34px;}
+.footer-in .logo{display:flex;align-items:center;gap:10px;color:var(--saff-deep);font-family:var(--disp);font-weight:600;font-size:18px;letter-spacing:.12em;}
+.footer-in .logo b{color:var(--ink);}
+.footer-links{display:flex;gap:26px;align-items:center;}
+.footer-links a,.footer-links button{background:none;border:none;color:var(--muted);font-size:13px;text-decoration:none;letter-spacing:.03em;transition:color .25s;padding:0;}
+.footer-links a:hover,.footer-links button:hover{color:var(--act);}
+footer small{color:var(--muted);font-size:12.5px;letter-spacing:.03em;}
+
+@media(max-width:880px){
+  #nav .links{display:none;}
+  #heroCopy{max-width:88%;top:auto;bottom:20px;transform:translateY(10px);}
+  #heroCopy.show{transform:translateY(0);}
+  #heroCopy h2{font-size:clamp(19px,5.5vw,26px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .fadeup{animation:none;opacity:1;transform:none;}
+  .card:hover,.cat:hover,.btn-act:hover{transform:none;}
+  html{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body class="lock">
+
+<!-- ============ HERO — нэг Three.js scene, агшдаг ============ -->
+<div id="hero">
+  <div id="canvasHost" style="position:absolute;inset:0;"></div>
+
+  <div class="hero-ui">
+    <div id="mark">
+      <svg width="24" height="24" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><circle cx="50" cy="50" r="34" stroke="currentColor" stroke-opacity=".9" stroke-width="2.4" stroke-dasharray="2.5 5"/><circle cx="50" cy="50" r="21" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2"/></svg>
+      <b>НОГООЛИН</b>
+    </div>
+
+    <nav id="nav">
+      <span></span>
+      <div class="links">
+        <a href="#" class="on" onclick="return false;">Нүүр</a>
+        <a href="#catalog">Бүтээгдэхүүн</a>
+        <a href="#catalog">Ангилал</a>
+        <a href="#" onclick="return false;">Бидний тухай</a>
+      </div>
+    </nav>
+
+    <button id="skip">Алгасах →</button>
+
+    <div id="loading"><div class="spin"></div><span>АЧААЛЖ БАЙНА</span></div>
+
+    <div id="introTitle" style="display:none;">
+      <p class="eyebrow fadeup d1">Сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах</p>
+      <h1 class="fadeup d2">НОГОО<em>ЛИН</em></h1>
+      <div class="fadeup d3" style="margin-top:10px;">
+        <button class="btn btn-act" id="enterBtn">Эхлэх</button>
+      </div>
+    </div>
+
+    <div id="heroCopy">
+      <p class="eyebrow">Шашны бүтээгдэхүүний цахим лавлах</p>
+      <h2>Сүсэг бишрэлд зориулсан сонгомол бүтээгдэхүүн</h2>
+      <div class="row">
+        <a class="btn btn-act" href="#catalog">Каталог үзэх</a>
+        <a class="btn btn-ghost-dark" href="#catalog">Ангилал</a>
+      </div>
+    </div>
+
+    <div id="protoNote">Prototype A v4 · 3D placeholder — Ногоон Дарь Эх GLB (Phase 3)</div>
+
+    <div class="fb-halo" style="display:none;">
+      <svg width="260" height="260" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><circle cx="50" cy="50" r="34" stroke="currentColor" stroke-opacity=".9" stroke-width="2.4" stroke-dasharray="2.5 5"/><circle cx="50" cy="50" r="21" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ЦАГААН КАТАЛОГ ============ -->
+<main>
+  <section class="section" id="catalog" style="padding-bottom:20px;">
+    <div class="sec-head">
+      <h2>Ангилал</h2>
+      <a href="#" onclick="return false;">Бүгдийг харах →</a>
+    </div>
+    <div class="cats" id="cats"></div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head">
+      <h2>Онцлох бүтээгдэхүүн</h2>
+      <a href="#" onclick="return false;">Каталог руу →</a>
+    </div>
+    <div class="grid" id="products"></div>
+  </section>
+
+  <section class="strip">
+    <div class="strip-in" id="strip"></div>
+  </section>
+
+  <footer>
+    <div class="footer-in">
+      <div class="logo">
+        <svg width="20" height="20" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><circle cx="50" cy="50" r="34" stroke="currentColor" stroke-opacity=".9" stroke-width="2.4" stroke-dasharray="2.5 5"/></svg>
+        <b>НОГООЛИН</b>
+      </div>
+      <div class="footer-links">
+        <a href="#catalog">Бүтээгдэхүүн</a>
+        <a href="#" onclick="return false;">Холбоо барих</a>
+        <button id="replayBtn">Интро дахин үзэх</button>
+      </div>
+      <small>© 2026 Ногоолин · Prototype A v4</small>
+    </div>
+  </footer>
+</main>
+
+<script>
+/* ================= контент ================= */
+const HALO='<svg width="{s}" height="{s}" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="currentColor" stroke-opacity=".45" stroke-width="1.6"/><circle cx="50" cy="50" r="34" stroke="currentColor" stroke-opacity=".9" stroke-width="2.4" stroke-dasharray="2.5 5"/><circle cx="50" cy="50" r="21" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2"/></svg>';
+const halo=s=>HALO.replaceAll('{s}',s);
+
+const CATS=[
+ ["Хүж",14,"M12 3c2 3.5-1.5 5 0 8 1.5-1 2.5-2.5 2.5-4.5C16.5 8 18 10 18 13a6 6 0 0 1-12 0c0-4 3.5-6 6-10z"],
+ ["Эрх",9,"M12 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM6 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM8.5 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"],
+ ["Зул",7,"M12 3s3 3.2 3 5.5S13.5 12 12 12s-3-1.2-3-3.5S12 3 12 3zm-5 12h10l-1 6H8l-1-6z"],
+ ["Хадаг",5,"M4 7c3-2 5 2 8 0s5-2 8 0v10c-3 2-5-2-8 0s-5 2-8 0V7z"],
+ ["Бурхан шүтээн",11,"M12 3a3 3 0 0 1 3 3c0 1.3-.8 2.4-2 2.8V10h3l1 4h-2l-.5 7h-5L9 14H7l1-4h3V8.8A3 3 0 0 1 12 3z"],
+ ["Ном судар",6,"M4 5h7v14H4zM13 5h7v14h-7zM11 5v14M13 5v14"]
+];
+const PRODUCTS=[
+ ["Занданмодны хүж — 108 ширхэг","45,000₮","Хүж","#F1F6F1"],
+ ["Зандан модон эрх (108 ширхэг)","120,000₮","Эрх","#F6F4EC"],
+ ["Ногоон Дарь Эхийн тангка","380,000₮","Бурхан шүтээн","#EEF5F1"],
+ ["Шар торгон хадаг","15,000₮","Хадаг","#F8F4E8"]
+];
+const STRIP=[
+ ["Хэрэглэх заавартай","Бүтээгдэхүүн бүр уламжлалын дагуу зөв хэрэглэх заавартай.","M5 4h11l3 3v13H5V4z M9 10h6 M9 14h6"],
+ ["Чанарын баталгаа","Шалгарсан эх сурвалжаас сонгосон, дээд зэрэглэлийн бүтээгдэхүүн.","M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9L9.5 8 12 3z"],
+ ["Хүсэлт илгээх","Сонирхсон бүтээгдэхүүндээ бүртгэлгүйгээр шууд хүсэлт үлдээнэ.","M4 5h16v11H8l-4 4V5z M8 9h8 M8 12h5"]
+];
+document.getElementById('cats').innerHTML=CATS.map(([n,c,d])=>`
+ <button class="cat">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="${d}" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  <b>${n}</b><span>${c} бүтээгдэхүүн</span>
+ </button>`).join('');
+document.getElementById('products').innerHTML=PRODUCTS.map(([n,p,t,bg])=>`
+ <button class="card">
+  <div class="card-img" style="background:radial-gradient(ellipse at 50% 42%, ${bg} 0%, #fff 95%);">${halo(120)}</div>
+  <div class="card-body"><span class="tag">${t}</span><b>${n}</b><span class="price">${p}</span></div>
+ </button>`).join('');
+document.getElementById('strip').innerHTML=STRIP.map(([b,s,d])=>`
+ <div class="strip-item">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="${d}" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  <div><b>${b}</b><span>${s}</span></div>
+ </div>`).join('');
+
+/* ================= 3D hero — нэг scene, агшдаг ================= */
+const hero=document.getElementById('hero');
+const host=document.getElementById('canvasHost');
+const ui={skip:document.getElementById('skip'),loading:document.getElementById('loading'),
+ title:document.getElementById('introTitle'),copy:document.getElementById('heroCopy'),
+ nav:document.getElementById('nav'),note:document.getElementById('protoNote'),
+ fb:document.querySelector('.fb-halo'),enter:document.getElementById('enterBtn')};
+
+const REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SHRUNK=()=>window.innerWidth<700?42:35;   /* vh */
+const SHIFT=()=>window.innerWidth<700?-1.15:-2.1; /* бурхан баруун тийш = камер зүүн тийш */
+
+let phase='loading';       /* loading|playing|ready|morph|home */
+let tAcc=0, playStart=0, morphT=0;
+let renderer=null,scene,camera,key,rim,haloMesh,pGeo;
+const N=360, DUR=5.0, MDUR=1.1;
+
+const ss=x=>{const t=Math.max(0,Math.min(1,x));return t*t*t*(t*(t*6-15)+10);};
+
+function buildScene(){
+  renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(hero.clientWidth,hero.clientHeight);
+  renderer.setClearColor(0x1B4634);
+  host.appendChild(renderer.domElement);
+
+  scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(0x1B4634,9,27);
+  camera=new THREE.PerspectiveCamera(42,hero.clientWidth/hero.clientHeight,0.1,100);
+
+  const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(1.45,1.85,0.35,56),
+    new THREE.MeshStandardMaterial({color:0x173F30,roughness:.92,metalness:.1}));
+  pedestal.position.y=.175;scene.add(pedestal);
+
+  /* placeholder orb — гүргэм-алтлаг металл (→ Дарь Эх GLB) */
+  const orb=new THREE.Mesh(new THREE.IcosahedronGeometry(1.12,2),
+    new THREE.MeshStandardMaterial({color:0xD9AB3F,metalness:.85,roughness:.3,emissive:0x2A2008}));
+  orb.position.y=1.5;scene.add(orb);
+  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(1.24,1),
+    new THREE.MeshBasicMaterial({color:0xF2C94C,wireframe:true,transparent:true,opacity:.12}));
+  wire.position.y=1.5;scene.add(wire);
+
+  haloMesh=new THREE.Mesh(new THREE.TorusGeometry(2.15,.014,16,140),
+    new THREE.MeshBasicMaterial({color:0xF2C94C,transparent:true,opacity:.85}));
+  haloMesh.position.set(0,1.5,-.55);scene.add(haloMesh);
+
+  const ground=new THREE.Mesh(new THREE.CircleGeometry(30,48),
+    new THREE.MeshStandardMaterial({color:0x143528,roughness:1}));
+  ground.rotation.x=-Math.PI/2;scene.add(ground);
+
+  const pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){const r=1.5+Math.random()*5.5,a=Math.random()*Math.PI*2;
+    pos[i*3]=Math.cos(a)*r;pos[i*3+1]=Math.random()*6;pos[i*3+2]=Math.sin(a)*r;}
+  pGeo=new THREE.BufferGeometry();
+  pGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(pGeo,new THREE.PointsMaterial({color:0xF2C94C,size:.035,
+    transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+  scene.add(new THREE.AmbientLight(0x2A5643,.8));
+  key=new THREE.PointLight(0xFFE9B0,1.25,60);key.position.set(6,7,5);scene.add(key);
+  rim=new THREE.PointLight(0x3FC98A,.9,50);rim.position.set(-5.5,3,-4.5);scene.add(rim);
+}
+
+/* нэг нум (arc) + morph-ийн хажуугийн шилжилт нэг функцэд */
+function placeCamera(arcT,mE){
+  const e=ss(arcT);
+  const az=0.85*(1-e);                 /* 0.85 → 0 */
+  const r=(16+(6.2-16)*e) - 0.9*mE;    /* morph үед бага зэрэг ойртоно */
+  const y=(7.5+(2.2-7.5)*e) - 0.35*mE;
+  const off=SHIFT()*mE;                /* камер зүүн → бурхан баруун */
+  camera.position.set(r*Math.sin(az)+off,y,r*Math.cos(az));
+  camera.lookAt(off,1.4,0);
+}
+function resize3d(){
+  if(!renderer)return;
+  camera.aspect=hero.clientWidth/hero.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(hero.clientWidth,hero.clientHeight);
+}
+
+function setPhase(p){
+  phase=p;
+  ui.loading.style.display=p==='loading'?'flex':'none';
+  ui.skip.style.display=(p==='loading'||p==='playing')?'block':'none';
+  ui.title.style.display=(p==='ready'||p==='morph')?'flex':'none';
+  ui.title.classList.toggle('hide',p==='morph');
+  ui.copy.classList.toggle('show',p==='home');
+  ui.nav.classList.toggle('show',p==='home');
+  ui.note.style.display=p==='home'?'none':'block';
+  document.body.classList.toggle('lock',p!=='home');
+}
+
+function instantHome(){
+  morphT=MDUR;
+  hero.style.height=SHRUNK()+'vh';
+  if(renderer){resize3d();placeCamera(1,1);}
+  setPhase('home');
+}
+function startReplay(){
+  window.scrollTo({top:0,behavior:'auto'});
+  hero.style.height='100vh';
+  morphT=0;
+  if(!renderer||REDUCED){instantHome();return;}
+  resize3d();
+  playStart=tAcc;
+  setPhase('playing');
+}
+
+/* ---- init ---- */
+let webgl=true;
+try{buildScene();}catch(e){webgl=false;}
+
+if(!webgl){
+  hero.classList.add('fallback');
+  ui.fb.style.display='block';
+  instantHome();
+}else if(REDUCED){
+  instantHome();
+}else{
+  setPhase('loading');
+  placeCamera(0,0);
+  setTimeout(()=>{if(phase==='loading'){playStart=tAcc;setPhase('playing');}},900);
+}
+
+ui.skip.addEventListener('click',instantHome);
+ui.enter.addEventListener('click',()=>{if(phase==='ready'){morphT=0;setPhase('morph');}});
+document.getElementById('replayBtn').addEventListener('click',startReplay);
+window.addEventListener('resize',()=>{if(phase==='home')hero.style.height=SHRUNK()+'vh';resize3d();});
+
+/* ---- loop ---- */
+if(webgl){
+  const clock=new THREE.Clock();
+  (function animate(){
+    requestAnimationFrame(animate);
+    const dt=Math.min(clock.getDelta(),.05);
+    tAcc+=dt;
+
+    /* орчны амьсгал — бүх фазад (бурхан өөрөө хөдөлгөөнгүй) */
+    key.intensity=1.15+.18*Math.sin(tAcc*.7);
+    rim.intensity=.85+.12*Math.sin(tAcc*.5+1.6);
+    haloMesh.material.opacity=.78+.07*Math.sin(tAcc*.9);
+    const arr=pGeo.attributes.position.array;
+    for(let i=0;i<N;i++){arr[i*3+1]+=.0035;if(arr[i*3+1]>6)arr[i*3+1]=0;}
+    pGeo.attributes.position.needsUpdate=true;
+
+    if(phase==='playing'){
+      const t=(tAcc-playStart)/DUR;
+      placeCamera(Math.min(t,1),0);
+      if(t>=1)setPhase('ready');
+    }else if(phase==='ready'){
+      placeCamera(1,0);
+    }else if(phase==='morph'){
+      morphT+=dt;
+      const e=ss(Math.min(morphT/MDUR,1));
+      hero.style.height=(100-(100-SHRUNK())*e)+'vh';
+      resize3d();
+      placeCamera(1,e);
+      if(morphT>=MDUR)setPhase('home');
+    }else if(phase==='home'){
+      placeCamera(1,1);
+    }
+    renderer.render(scene,camera);
+  })();
+}
+</script>
+</body>
+</html>
