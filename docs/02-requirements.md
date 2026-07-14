@@ -2,10 +2,10 @@
 
 **Document:** `docs/02-requirements.md`  
 **Project:** Nogoolin — Premium Religious Product Catalog Platform  
-**Version:** 1.2.0  
+**Version:** 1.4.0  
 **Status:** Draft  
 **Author:** Tengis (Solo Developer)  
-**Last Updated:** June 2026  
+**Last Updated:** July 2026  
 **Depends On:** [`docs/01-vision.md`](./01-vision.md)
 
 ---
@@ -14,6 +14,8 @@
 
 | Version | Date | Type | Description |
 |---|---|---|---|
+| 1.4.0 | July 2026 | MINOR | Replaced Flutter with React Native + Expo: updated FR-3D-010, FR-MOB-001, FR-MOB-008 (Zustand), FR-MOB-009 (fetch + supabase-js), FR-MOB-010 (3D viewer Phase 3 POC), NFR-COM-003/004; scope and assumptions updated |
+| 1.3.0 | June 2026 | MINOR | Updated NFR-SEC-002, NFR-SEC-006, NFR-SEC-007, NFR-MAIN-001 to reflect Fastify plugin/hook system replacing Express middleware |
 | 1.2.0 | June 2026 | MINOR | Added `name_en` and `search_tags` to FR-PROD-001; added FR-PUB-013 (multi-script search fields), FR-PUB-014 (Cyrillic/Latin/English unified search), FR-PUB-015 (admin tag management) |
 | 1.1.0 | June 2026 | MINOR | Added `model_3d_url` to FR-PROD-001; upgraded FR-MEDIA-007/008 S→M; added FR-MEDIA-010 (Meshy AI workflow), FR-MEDIA-011 (Draco compression); added FR-PUB-011 (360° viewer + fallback), FR-PUB-012 (image search, C); added FR-MOB-010 (model_viewer_plus); updated constraints and assumptions for Meshy AI |
 | 1.0.0 | June 2026 | MAJOR | Initial version |
@@ -63,8 +65,8 @@ This document specifies the functional and non-functional requirements for the N
 This document covers:
 - The public-facing web catalog (Next.js)
 - The admin panel (Next.js `/admin`)
-- The Flutter mobile application
-- The Express.js REST API backend
+- The React Native + Expo mobile application
+- The Fastify + TypeScript REST API backend
 - Supabase PostgreSQL data layer
 
 ### 1.3 Requirement Naming Convention
@@ -261,7 +263,7 @@ NFR-[MODULE]-[NUMBER]  → Non-Functional Requirement
 | FR-3D-007 | The system shall respect the OS-level `prefers-reduced-motion` setting and skip or reduce the animation accordingly. | M |
 | FR-3D-008 | The 3D intro shall only autoplay on the first visit. Subsequent visits shall skip directly to the home page or show a minimal version. | S |
 | FR-3D-009 | The GLB/GLTF model used in the intro shall not exceed 5MB after optimization. | M |
-| FR-3D-010 | The Flutter mobile app shall display a Rive-based opening animation on launch. | M |
+| FR-3D-010 | The React Native mobile app shall display a Rive-based opening animation on launch using `@rive-app/react-native`. | M |
 | FR-3D-011 | The Rive animation shall transition into the home screen upon completion or user tap. | M |
 
 ---
@@ -270,16 +272,16 @@ NFR-[MODULE]-[NUMBER]  → Non-Functional Requirement
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-MOB-001 | The Flutter app shall support Android (API level 21+) and iOS (iOS 13+). | M |
+| FR-MOB-001 | The React Native + Expo app shall support Android (API level 24+) and iOS (iOS 15.1+), per current Expo SDK minimums. | M |
 | FR-MOB-002 | The app shall display the product listing with category filter. | M |
 | FR-MOB-003 | The app shall display the product detail page with images, price, description, usage instructions, and a 360° 3D model viewer if `model_3d_url` is present. | M |
 | FR-MOB-004 | The app shall allow a guest to submit a product inquiry. | M |
 | FR-MOB-005 | The app shall consume the same REST API as the web frontend. | M |
 | FR-MOB-006 | The app shall handle network errors gracefully and show user-friendly error messages. | M |
 | FR-MOB-007 | The app shall cache product listing data for offline viewing of previously loaded products. | C |
-| FR-MOB-008 | The app shall use Riverpod for state management. | M |
-| FR-MOB-009 | The app shall use Dio for all HTTP requests. | M |
-| FR-MOB-010 | The app shall use the `model_viewer_plus` Flutter package to render the interactive 360° 3D model viewer on the product detail page. If no GLB file is available for a product, the image gallery shall be shown as a fallback. | M |
+| FR-MOB-008 | The app shall use Zustand for state management (same library as the web app). | M |
+| FR-MOB-009 | The app shall use `fetch` and the `supabase-js` SDK for all HTTP and data requests (no separate HTTP client library). | M |
+| FR-MOB-010 | The app shall render the interactive 360° 3D model viewer on the product detail page using `expo-gl` or a WebView-based `model-viewer` (approach to be validated by a Phase 3 POC). If no GLB file is available for a product, the image gallery shall be shown as a fallback. | M |
 
 ---
 
@@ -334,12 +336,12 @@ NFR-[MODULE]-[NUMBER]  → Non-Functional Requirement
 | ID | Requirement | Priority |
 |---|---|---|
 | NFR-SEC-001 | All data in transit shall be encrypted via HTTPS (TLS 1.2 minimum, TLS 1.3 preferred). | M |
-| NFR-SEC-002 | The API shall implement rate limiting: 100 requests per 15 minutes per IP for general endpoints; 5 requests per 15 minutes for auth endpoints. | M |
+| NFR-SEC-002 | The API shall implement rate limiting using `@fastify/rate-limit`: 100 requests per 15 minutes per IP for general endpoints; 5 requests per 15 minutes for auth endpoints; 3 requests per hour for the inquiry endpoint. | M |
 | NFR-SEC-003 | The API shall validate all request bodies using Zod schemas before processing. | M |
 | NFR-SEC-004 | The API shall use parameterized queries or an ORM at all times. Raw SQL string interpolation is forbidden. | M |
 | NFR-SEC-005 | All database secrets, API keys, and OAuth credentials shall be stored as environment variables. No secrets shall appear in the codebase. | M |
-| NFR-SEC-006 | The API shall implement CORS, restricting allowed origins to the web app domain and admin domain. | M |
-| NFR-SEC-007 | The API shall use the Helmet.js middleware for setting secure HTTP headers. | M |
+| NFR-SEC-006 | The API shall use `@fastify/cors`, restricting allowed origins to the web app domain and admin domain. | M |
+| NFR-SEC-007 | The API shall use the `@fastify/helmet` plugin for setting secure HTTP headers. | M |
 | NFR-SEC-008 | Supabase Row Level Security (RLS) shall be enabled on all tables. | M |
 | NFR-SEC-009 | All admin routes shall verify both authentication (valid JWT) and authorization (admin role) before processing the request. | M |
 | NFR-SEC-010 | All order and inquiry routes shall verify ownership before returning or modifying data (IDOR prevention). | M |
@@ -377,12 +379,12 @@ NFR-[MODULE]-[NUMBER]  → Non-Functional Requirement
 
 | ID | Requirement | Priority |
 |---|---|---|
-| NFR-MAIN-001 | The backend shall follow a strict 3-layer architecture: Controller → Service → Repository. Business logic shall not appear in controllers. Database queries shall not appear in services. | M |
+| NFR-MAIN-001 | The backend shall use the official Fastify TypeScript boilerplate and follow a strict 3-layer architecture: Controller (Fastify route handlers) → Service → Repository. Business logic shall not appear in route handlers. Database queries shall not appear in services. | M |
 | NFR-MAIN-002 | The codebase shall use TypeScript throughout (web, API, shared types). | M |
 | NFR-MAIN-003 | Shared types and validation schemas shall live in shared packages within the monorepo. | M |
 | NFR-MAIN-004 | The monorepo shall use conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`. | M |
 | NFR-MAIN-005 | GitHub Actions CI/CD pipelines shall be configured for web, API, and mobile build/deploy workflows. | M |
-| NFR-MAIN-006 | The API shall be containerized using a Docker multi-stage build on `node:20-alpine`. The container shall run as a non-root user. | M |
+| NFR-MAIN-006 | The API shall be containerized using a Docker multi-stage build on `node:20-alpine`, starting from the official Fastify TypeScript boilerplate. The container shall run as a non-root user. | M |
 | NFR-MAIN-007 | Database changes shall be managed through versioned migration files in `supabase/migrations/`. | M |
 | NFR-MAIN-008 | All environment-specific configuration shall be externalized via `.env` files. A `.env.example` file shall be kept up-to-date. | M |
 
@@ -422,8 +424,8 @@ NFR-[MODULE]-[NUMBER]  → Non-Functional Requirement
 |---|---|---|
 | NFR-COM-001 | The web app shall function correctly on the latest stable versions of Chrome, Firefox, Safari, and Edge. | M |
 | NFR-COM-002 | The web app shall be fully responsive and usable on screen widths from 375px (iPhone SE) to 1440px (desktop). | M |
-| NFR-COM-003 | The Flutter app shall support Android API level 21 (Android 5.0) and above. | M |
-| NFR-COM-004 | The Flutter app shall support iOS 13 and above. | M |
+| NFR-COM-003 | The React Native app shall support Android API level 24 (Android 7.0) and above, per current Expo SDK minimums. | M |
+| NFR-COM-004 | The React Native app shall support iOS 15.1 and above, per current Expo SDK minimums. | M |
 | NFR-COM-005 | The API shall return `Content-Type: application/json` for all responses. | M |
 | NFR-COM-006 | All API dates shall be returned in ISO 8601 format (UTC). | M |
 
@@ -450,7 +452,7 @@ NFR-[MODULE]-[NUMBER]  → Non-Functional Requirement
 | Business operations are not delivery-ready at launch time | Delivery toggle remains off; no impact on catalog MVP |
 | Product photography is available before Phase 2 | Product listing pages will be incomplete or require placeholder images |
 | Admin user has basic computer literacy | Onboarding documentation or tutorial flow may be required |
-| Mongolian users primarily use mobile devices (Android dominant) | Flutter priority remains correct; no architecture change needed |
+| Mongolian users primarily use mobile devices (Android dominant) | React Native mobile priority remains correct; no architecture change needed |
 | No payment processing is needed for MVP | If required sooner than expected, a payment gateway integration will need to be planned |
 | Meshy AI generates acceptable quality GLB models from product photos | If quality is insufficient for certain products, Blender manual modeling will be required as fallback for those products only |
 | Product photos for Meshy AI input are taken against a white background with multiple angles and good lighting | If photo quality is poor, Meshy AI output quality will degrade; photography guidelines must be provided to the content team |

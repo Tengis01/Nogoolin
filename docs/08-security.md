@@ -2,10 +2,10 @@
 
 **Document:** `docs/08-security.md`  
 **Project:** Nogoolin — Premium Religious Product Catalog Platform  
-**Version:** 1.0.0  
+**Version:** 1.2.0  
 **Status:** Draft  
 **Author:** Tengis (Solo Developer)  
-**Last Updated:** June 2026  
+**Last Updated:** July 2026  
 **Depends On:** [`docs/02-requirements.md`](./02-requirements.md), [`docs/04-er-diagram.md`](./04-er-diagram.md), [`docs/05-sequence-diagrams.md`](./05-sequence-diagrams.md), [`docs/06-api-spec.yaml`](./06-api-spec.yaml)
 
 ---
@@ -14,6 +14,8 @@
 
 | Version | Date | Type | Description |
 |---|---|---|---|
+| 1.2.0 | July 2026 | MINOR | Mobile platform updated Flutter → React Native + Expo: client references, secure storage notes (expo-secure-store), OAuth flow (@react-native-google-signin), shared Zod schemas on mobile, CI/CD workflow name |
+| 1.1.0 | June 2026 | MINOR | Layer 2 rewritten for Fastify plugin/hook system; replaced Express middleware chain with @fastify/helmet, @fastify/cors, @fastify/rate-limit, @fastify/multipart, @fastify/cookie, @fastify/auth; updated auth middleware to onRequest hooks; updated file upload section |
 | 1.0.0 | June 2026 | MAJOR | Initial version. Formalizes the 4-layer defense-in-depth model referenced throughout requirements (NFR-SEC-001 to NFR-SEC-013) and SEQ-004, with concrete RLS policies, threat checklist, and pre-launch security checklist. |
 
 ---
@@ -23,7 +25,7 @@
 1. [Overview](#1-overview)
 2. [Defense-in-Depth Architecture](#2-defense-in-depth-architecture)
 3. [Layer 1: Cloudflare WAF](#3-layer-1-cloudflare-waf)
-4. [Layer 2: Express Middleware](#4-layer-2-express-middleware)
+4. [Layer 2: Fastify Plugins & Hooks](#4-layer-2-fastify-plugins--hooks)
 5. [Layer 3: JWT Authentication & RBAC](#5-layer-3-jwt-authentication--rbac)
 6. [Layer 4: Supabase Row Level Security](#6-layer-4-supabase-row-level-security)
 7. [Input Validation Strategy](#7-input-validation-strategy)
@@ -56,8 +58,8 @@ this document is the **single source of truth** for:
 Covers security for:
 - Public web (Next.js)
 - Admin panel (Next.js `/admin`)
-- Flutter mobile app
-- Express.js REST API (`/api/v1/`)
+- React Native + Expo mobile app
+- Fastify + TypeScript REST API (`/api/v1/`)
 - Supabase PostgreSQL (RLS), Auth, and Storage
 
 ### 1.3 Security Philosophy
@@ -81,7 +83,7 @@ security layers before touching data. Each layer assumes the previous layer
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Client (Next.js Web / Admin / Flutter Mobile)                    │
+│  Client (Next.js Web / Admin / React Native Mobile)               │
 └───────────────────────────┬───────────────────────────────────────┘
                               │ HTTPS (TLS 1.2+, NFR-SEC-001)
                               ▼
@@ -94,11 +96,11 @@ security layers before touching data. Each layer assumes the previous layer
 └───────────────────────────┬───────────────────────────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  LAYER 2 — Express Middleware                                     │
-│  • Helmet.js (secure headers, NFR-SEC-007)                        │
-│  • CORS (allowlist: web + admin domains, NFR-SEC-006)             │
-│  • express-rate-limit (per-route, NFR-SEC-002)                    │
-│  • Zod request validation (NFR-SEC-003)                           │
+│  LAYER 2 — Fastify Plugins & Hooks                               │
+│  • @fastify/helmet (secure headers, NFR-SEC-007)                  │
+│  • @fastify/cors (allowlist: web + admin domains, NFR-SEC-006)    │
+│  • @fastify/rate-limit (per-route config, NFR-SEC-002)            │
+│  • Zod preHandler hook (NFR-SEC-003)                              │
 └───────────────────────────┬───────────────────────────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -122,7 +124,7 @@ security layers before touching data. Each layer assumes the previous layer
 | Layer | Stops | Does NOT stop | If this layer fails... |
 |---|---|---|---|
 | 1. Cloudflare WAF | Volumetric DDoS, known exploit signatures, bot traffic | Application logic bugs, valid-looking malicious requests | Layer 2 rate limiting + Layer 3 auth still apply |
-| 2. Express Middleware | Malformed/oversized requests, missing headers, route-level abuse | Authenticated user abusing their own permissions | Layer 3 auth still required; Layer 4 RLS still enforced |
+| 2. Fastify Plugins & Hooks | Malformed/oversized requests, missing headers, route-level abuse | Authenticated user abusing their own permissions | Layer 3 auth still required; Layer 4 RLS still enforced |
 | 3. JWT/RBAC | Unauthenticated access to admin routes, expired tokens | A bug in RLS policy logic | Layer 4 RLS is the final backstop |
 | 4. Supabase RLS | Direct data access bypassing app logic, IDOR, cross-tenant leakage | Nothing below this — **last line of defense** | N/A — this is the floor |
 
@@ -135,8 +137,8 @@ admin-only mutation:
 ```
 PATCH /api/v1/admin/settings/delivery
   → Layer 1: Cloudflare WAF check
-  → Layer 2: Helmet, CORS, rate limit
-  → Layer 3: Verify JWT + role == 'admin'
+  → Layer 2: @fastify/helmet, @fastify/cors, @fastify/rate-limit, Zod preHandler
+  → Layer 3: Verify JWT + role == 'admin' (onRequest hooks)
   → Layer 4: RLS-checked UPDATE on system_settings
   → Audit log entry written (FR-AUD-005)
 ```
@@ -167,7 +169,7 @@ application infrastructure.
 | Minimum TLS Version | 1.2 | TLS 1.3 preferred where supported |
 | WAF — Managed Rules | OWASP Core Rule Set (Cloudflare Managed Ruleset) | Free tier includes core managed rules |
 | Bot Fight Mode | On | Free tier; mitigates basic bot traffic against `/api/v1/inquiries` |
-| Rate Limiting (Edge) | Coarse IP-based rule on `/api/v1/*` | Backstop above Express rate limiting (Layer 2) |
+| Rate Limiting (Edge) | Coarse IP-based rule on `/api/v1/*` | Backstop above Fastify rate limiting (Layer 2) |
 | Browser Integrity Check | On | Blocks requests with malformed/missing headers common in scripted attacks |
 | Page Rules — Cache | Bypass cache for `/api/*` and `/admin/*` | Prevents stale or sensitive admin responses being cached at edge |
 
@@ -177,7 +179,7 @@ Cloudflare is the **outermost** layer and is intentionally kept simple:
 
 - It does **not** know about user roles, JWTs, or `delivery_enabled`
 - It does **not** replace per-route rate limiting (Layer 2) — Cloudflare's
-  free-tier rate limiting is coarse (IP + path), while `express-rate-limit`
+  free-tier rate limiting is coarse (IP + path), while `@fastify/rate-limit`
   enforces the precise limits in NFR-SEC-002 (e.g. 5 req/15min on auth routes
   specifically)
 - It is **not** a substitute for input validation — a request that passes
@@ -191,33 +193,41 @@ Cloudflare is the **outermost** layer and is intentionally kept simple:
 
 ---
 
-## 4. Layer 2: Express Middleware
+## 4. Layer 2: Fastify Plugins & Hooks
 
 **Ref:** NFR-SEC-002, NFR-SEC-003, NFR-SEC-006, NFR-SEC-007
 
-This layer runs inside the Express.js + TypeScript API, before any
-controller logic executes. It is implemented as a middleware chain applied
-globally (in `app.ts`) plus per-route middleware for stricter limits.
+This layer runs inside the Fastify + TypeScript API, before any route handler
+logic executes. Security concerns are handled through Fastify's **plugin system**
+(registered at startup) and **hook system** (`onRequest`, `preHandler`) applied
+globally or per-route. This replaces the previous Express middleware chain.
 
-### 4.1 Helmet.js — Secure Headers (NFR-SEC-007)
+The official Fastify TypeScript boilerplate (`fastify-cli`) is the starting point,
+with security plugins registered in `src/plugins/` following Fastify's recommended
+encapsulation pattern.
+
+### 4.1 @fastify/helmet — Secure Headers (NFR-SEC-007)
 
 ```typescript
-// apps/api/src/middleware/security.ts
-import helmet from 'helmet';
+// apps/api/src/plugins/helmet.ts
+import fp from 'fastify-plugin'
+import helmet from '@fastify/helmet'
+import { FastifyInstance } from 'fastify'
 
-export const securityHeaders = helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      imgSrc: ["'self'", 'https://*.supabase.co', 'data:'],
-      connectSrc: ["'self'", 'https://*.supabase.co'],
-      // GLB models and product images served from Supabase Storage CDN
-      mediaSrc: ["'self'", 'https://*.supabase.co'],
+export default fp(async (fastify: FastifyInstance) => {
+  await fastify.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", 'https://*.supabase.co', 'data:'],
+        connectSrc: ["'self'", 'https://*.supabase.co'],
+        mediaSrc: ["'self'", 'https://*.supabase.co'],
+      },
     },
-  },
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow GLB/image fetch from web origin
-  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
-});
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+  })
+})
 ```
 
 | Header | Value | Purpose |
@@ -228,70 +238,84 @@ export const securityHeaders = helmet({
 | `Content-Security-Policy` | restrictive, allows Supabase Storage | Mitigates XSS via injected scripts |
 | `Referrer-Policy` | `no-referrer-when-downgrade` | Default Helmet behavior, sufficient for MVP |
 
-### 4.2 CORS Configuration (NFR-SEC-006)
+### 4.2 @fastify/cors (NFR-SEC-006)
 
 ```typescript
-// apps/api/src/middleware/cors.ts
-import cors from 'cors';
+// apps/api/src/plugins/cors.ts
+import fp from 'fastify-plugin'
+import cors from '@fastify/cors'
+import { FastifyInstance } from 'fastify'
 
 const ALLOWED_ORIGINS = [
-  'https://nogoolin.mn',          // public web
-  'https://admin.nogoolin.mn',    // admin panel (or nogoolin.mn/admin)
-  'http://localhost:3000',        // local dev only — removed in production env
-];
+  'https://nogoolin.mn',
+  'https://www.nogoolin.mn',
+  'http://localhost:3000', // local dev only — stripped in production env
+]
 
-export const corsMiddleware = cors({
-  origin: (origin, callback) => {
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // required for httpOnly cookie-based auth
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-});
+export default fp(async (fastify: FastifyInstance) => {
+  await fastify.register(cors, {
+    origin: (origin, cb) => {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        cb(null, true)
+      } else {
+        cb(new Error('Not allowed by CORS'), false)
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  })
+})
 ```
 
-> **Note:** The Flutter mobile app does not send an `Origin` header in the
+> **Note:** The React Native mobile app does not send an `Origin` header in the
 > same way browsers do, so CORS does not restrict mobile API access — mobile
 > requests are authenticated via Layer 3 (JWT) instead. CORS exists
 > specifically to prevent **browser-based** cross-origin abuse of cookies.
 
-### 4.3 Rate Limiting (NFR-SEC-002)
+### 4.3 @fastify/rate-limit (NFR-SEC-002)
 
-Two tiers of `express-rate-limit`, applied per route group:
+`@fastify/rate-limit` is registered globally for the general limit and overridden
+per route for stricter thresholds. This is cleaner than Express's approach because
+rate limit config lives directly on the route definition.
 
 ```typescript
-// apps/api/src/middleware/rateLimit.ts
-import rateLimit from 'express-rate-limit';
+// apps/api/src/plugins/rateLimit.ts
+import fp from 'fastify-plugin'
+import rateLimit from '@fastify/rate-limit'
+import { FastifyInstance } from 'fastify'
 
-// General API endpoints: 100 req / 15 min per IP
-export const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many requests. Please try again later.', code: 'RATE_LIMIT_EXCEEDED' },
-});
+export default fp(async (fastify: FastifyInstance) => {
+  // Global default: 100 req / 15 min per IP
+  await fastify.register(rateLimit, {
+    max: 100,
+    timeWindow: '15 minutes',
+    errorResponseBuilder: () => ({
+      error: 'Too many requests. Please try again later.',
+      code: 'RATE_LIMIT_EXCEEDED',
+    }),
+  })
+})
 
-// Auth endpoints: 5 req / 15 min per IP (stricter — UC-A-001 Exception Flow)
-export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many sign-in attempts. Please wait.', code: 'RATE_LIMIT_EXCEEDED' },
-});
+// Per-route override examples:
 
-// Inquiry endpoint: 3 req / hour per IP (FR-INQ-007, UC-G-007 Exception Flow)
-export const inquiryLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 3,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many submissions. Please try again later.', code: 'RATE_LIMIT_EXCEEDED' },
-});
+// Auth routes — 5 req / 15 min (UC-A-001 Exception Flow)
+fastify.post('/auth/sign-in', {
+  config: { rateLimit: { max: 5, timeWindow: '15 minutes' } },
+}, signInHandler)
+
+// Inquiry — 3 req / hour (FR-INQ-007, UC-G-007 Exception Flow)
+fastify.post('/inquiries', {
+  config: {
+    rateLimit: {
+      max: 3,
+      timeWindow: '1 hour',
+      errorResponseBuilder: () => ({
+        error: 'Too many submissions. Please try again later.',
+        code: 'RATE_LIMIT_EXCEEDED',
+      }),
+    },
+  },
+}, inquiryHandler)
 ```
 
 | Route group | Limit | Window | Requirement |
@@ -305,38 +329,45 @@ export const inquiryLimiter = rateLimit({
 > must move to a shared store (e.g. Redis) — noted as a Phase 6+
 > consideration, not an MVP blocker given the expected traffic.
 
-### 4.4 Zod Request Validation (NFR-SEC-003)
+### 4.4 Zod Request Validation — preHandler Hook (NFR-SEC-003)
 
-Every controller validates `req.body`, `req.query`, and `req.params` against
-a Zod schema **before** calling the service layer. Validation schemas live in
-`packages/validation-schemas/` (shared with frontend for client-side
-validation, per `NFR-MAIN-003`).
+Every route validates `request.body`, `request.query`, and `request.params`
+via a Zod `preHandler` hook **before** the route handler executes. Schemas live
+in `packages/validation-schemas/` shared with the frontend (NFR-MAIN-003).
 
 ```typescript
 // packages/validation-schemas/src/inquiry.schema.ts
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const inquiryInputSchema = z.object({
   customer_name: z.string().min(2),
   phone: z.string().regex(/^[0-9+\s-]{8,15}$/),
   message: z.string().optional(),
   product_id: z.string().uuid().nullable().optional(),
-});
+})
 
-// apps/api/src/middleware/validate.ts
-export const validateBody = (schema: z.ZodSchema) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse(req.body);
+// apps/api/src/hooks/validate.ts
+import { FastifyRequest, FastifyReply } from 'fastify'
+import { ZodSchema } from 'zod'
+
+export const validateBody = (schema: ZodSchema) =>
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    const result = schema.safeParse(request.body)
     if (!result.success) {
-      return res.status(400).json({
+      reply.code(400).send({
         error: 'Validation failed',
         code: 'VALIDATION_ERROR',
         details: result.error.flatten(),
-      });
+      })
+      return
     }
-    req.body = result.data; // use parsed/typed data downstream
-    next();
-  };
+    request.body = result.data // use parsed/typed data downstream
+  }
+
+// Usage on a route:
+fastify.post('/inquiries', {
+  preHandler: validateBody(inquiryInputSchema),
+}, inquiryHandler)
 ```
 
 This middleware directly implements the `400` responses defined throughout
@@ -345,14 +376,16 @@ This middleware directly implements the `400` responses defined throughout
 
 ### 4.5 Layer 2 Summary Table
 
-| Middleware | Library | Requirement | Applied to |
+| Plugin / Hook | Package | Requirement | Applied to |
 |---|---|---|---|
-| Secure headers | `helmet` | NFR-SEC-007 | All routes (global) |
-| CORS | `cors` | NFR-SEC-006 | All routes (global) |
-| General rate limit | `express-rate-limit` | NFR-SEC-002 | All `/api/v1/*` (global) |
-| Auth rate limit | `express-rate-limit` | NFR-SEC-002 | Auth-related routes |
-| Inquiry rate limit | `express-rate-limit` | FR-INQ-007 | `POST /inquiries` |
-| Body/query validation | `zod` | NFR-SEC-003 | Per-route, before service layer |
+| Secure headers | `@fastify/helmet` | NFR-SEC-007 | Global plugin |
+| CORS | `@fastify/cors` | NFR-SEC-006 | Global plugin |
+| General rate limit | `@fastify/rate-limit` | NFR-SEC-002 | Global plugin default |
+| Auth rate limit | `@fastify/rate-limit` | NFR-SEC-002 | Per-route config override |
+| Inquiry rate limit | `@fastify/rate-limit` | FR-INQ-007 | Per-route config override |
+| Body/query validation | `zod` + `preHandler` | NFR-SEC-003 | Per-route preHandler hook |
+| File upload | `@fastify/multipart` | FR-MEDIA-003 | Per-route plugin |
+| Cookie parsing | `@fastify/cookie` | NFR-SEC-013 | Global plugin |
 
 ---
 
@@ -371,8 +404,8 @@ or unauthorized request.
 
 | Token | Lifetime | Storage | Rotation |
 |---|---|---|---|
-| Access token (JWT) | 15 minutes | httpOnly cookie (web/admin) / secure storage (Flutter) | Not rotated — short-lived by design |
-| Refresh token | 7 days | httpOnly cookie (web/admin) / secure storage (Flutter) | **Rotated on every use** (FR-AUTH-006) |
+| Access token (JWT) | 15 minutes | httpOnly cookie (web/admin) / `expo-secure-store` (mobile) | Not rotated — short-lived by design |
+| Refresh token | 7 days | httpOnly cookie (web/admin) / `expo-secure-store` (mobile) | **Rotated on every use** (FR-AUTH-006) |
 
 ```
 ┌──────────────┐   sign in    ┌──────────────┐
@@ -411,85 +444,112 @@ or unauthorized request.
 > The first admin account is bootstrapped manually (see
 > [`09-deployment.md`](./09-deployment.md) for the exact procedure).
 
-### 5.4 Middleware Implementation
+### 5.4 Hook Implementation
 
 ```typescript
-// apps/api/src/middleware/auth.ts
-import { Request, Response, NextFunction } from 'express';
-import { createClient } from '@supabase/supabase-js';
+// apps/api/src/hooks/auth.ts
+import { FastifyRequest, FastifyReply } from 'fastify'
+import { createClient } from '@supabase/supabase-js'
+import { auditLogRepo } from '../repositories/auditLog.repo'
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY! // server-side only, never exposed to client
-);
+)
 
-export interface AuthedRequest extends Request {
-  user?: { id: string; role: 'customer' | 'admin' | 'delivery_staff' };
+declare module 'fastify' {
+  interface FastifyRequest {
+    user?: { id: string; role: 'customer' | 'admin' | 'delivery_staff' }
+  }
 }
 
 /**
- * Verifies the JWT (signature + expiry) and attaches the user + role
- * to the request. Returns 401 if the token is missing or invalid.
- * Ref: NFR-SEC-009
+ * onRequest hook — verifies JWT signature + expiry, attaches user + role.
+ * Returns 401 if token is missing or invalid. Ref: NFR-SEC-009
  */
-export async function requireAuth(req: AuthedRequest, res: Response, next: NextFunction) {
-  const token = req.cookies['sb-access-token'] ?? req.headers.authorization?.replace('Bearer ', '');
+export async function requireAuth(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  const token =
+    request.cookies['sb-access-token'] ??
+    request.headers.authorization?.replace('Bearer ', '')
 
   if (!token) {
-    return res.status(401).json({ error: 'Missing access token', code: 'UNAUTHORIZED' });
+    reply.code(401).send({ error: 'Missing access token', code: 'UNAUTHORIZED' })
+    return
   }
 
-  const { data, error } = await supabase.auth.getUser(token);
+  const { data, error } = await supabase.auth.getUser(token)
   if (error || !data.user) {
-    return res.status(401).json({ error: 'Invalid or expired token', code: 'UNAUTHORIZED' });
+    reply.code(401).send({ error: 'Invalid or expired token', code: 'UNAUTHORIZED' })
+    return
   }
 
   const { data: profile } = await supabase
     .from('users')
     .select('id, role')
     .eq('id', data.user.id)
-    .single();
+    .single()
 
-  req.user = { id: data.user.id, role: profile?.role ?? 'customer' };
-  next();
+  request.user = { id: data.user.id, role: profile?.role ?? 'customer' }
 }
 
 /**
- * Requires requireAuth() to have run first.
- * Returns 403 if the authenticated user is not an admin.
- * Ref: FR-AUTH-009
+ * onRequest hook — requires requireAuth to have run first.
+ * Returns 403 if authenticated user is not admin. Ref: FR-AUTH-009
  */
-export function requireAdmin(req: AuthedRequest, res: Response, next: NextFunction) {
-  if (req.user?.role !== 'admin') {
-    return res.status(403).json({ error: 'Admin access required', code: 'FORBIDDEN' });
+export async function requireAdmin(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  if (request.user?.role !== 'admin') {
+    // fire-and-forget audit entry; never blocks the 403 response
+    auditLogRepo.log({
+      admin_id: request.user?.id ?? null,
+      action: 'UNAUTHORIZED_ACCESS',
+      entity_type: 'route',
+      entity_id: null,
+      metadata: { attempted_route: request.url, method: request.method },
+    }).catch(() => {})
+
+    reply.code(403).send({ error: 'Admin access required', code: 'FORBIDDEN' })
   }
-  next();
 }
 ```
 
-### 5.5 Applying the Middleware
+### 5.5 Applying Hooks to Routes
 
 Per [`06-api-spec.yaml`](./06-api-spec.yaml), every `/admin/*` route requires
-both checks (NFR-SEC-009: "verify both authentication AND authorization
-before processing"):
+both checks (NFR-SEC-009). In Fastify, this is done via scoped plugin
+encapsulation — hooks declared inside a scoped `register` only apply to
+routes within that scope:
 
 ```typescript
 // apps/api/src/routes/admin/products.routes.ts
-import { Router } from 'express';
-import { requireAuth, requireAdmin } from '../../middleware/auth';
-import { validateBody } from '../../middleware/validate';
-import { productInputSchema, productPatchSchema } from '@nogoolin/validation-schemas';
+import { FastifyInstance } from 'fastify'
+import { requireAuth, requireAdmin } from '../../hooks/auth'
+import { validateBody } from '../../hooks/validate'
+import { productInputSchema, productPatchSchema } from '@nogoolin/validation-schemas'
+import * as adminProductController from '../../controllers/admin/product.controller'
 
-const router = Router();
+export default async function productAdminRoutes(fastify: FastifyInstance) {
+  // onRequest hooks apply to ALL routes in this scoped plugin
+  fastify.addHook('onRequest', requireAuth)
+  fastify.addHook('onRequest', requireAdmin)
 
-router.use(requireAuth, requireAdmin); // applies to ALL routes below
+  fastify.get('/', adminProductController.list)
 
-router.get('/', adminProductController.list);
-router.post('/', validateBody(productInputSchema), adminProductController.create);
-router.patch('/:id', validateBody(productPatchSchema), adminProductController.update);
-router.delete('/:id', adminProductController.remove);
+  fastify.post('/', {
+    preHandler: validateBody(productInputSchema),
+  }, adminProductController.create)
 
-export default router;
+  fastify.patch('/:id', {
+    preHandler: validateBody(productPatchSchema),
+  }, adminProductController.update)
+
+  fastify.delete('/:id', adminProductController.remove)
+}
 ```
 
 Public routes apply **no** auth middleware at all (`security: []` in the API
@@ -497,9 +557,9 @@ spec) — e.g. `GET /products`, `GET /categories`, `POST /inquiries`.
 
 ### 5.6 OAuth & PKCE (FR-AUTH-002, FR-AUTH-004)
 
-| Aspect | Web (Next.js) | Mobile (Flutter) |
+| Aspect | Web (Next.js) | Mobile (React Native + Expo) |
 |---|---|---|
-| Flow | PKCE via `supabase-js` `signInWithOAuth` | Native `signInWithIdToken` (FR-AUTH-002) — **not** WebView |
+| Flow | PKCE via `supabase-js` `signInWithOAuth` | Native `signInWithIdToken` via `@react-native-google-signin` (FR-AUTH-002) — **not** WebView |
 | Why PKCE | Prevents authorization code interception (no client secret in browser) | Native flow avoids WebView cookie/session issues entirely |
 | Trigger | `UC-A-002` (SEQ-001) | Same Supabase trigger fires server-side regardless of client |
 
@@ -554,7 +614,7 @@ first migration (NFR-SEC-008), including the future-only tables (`orders`,
 | `authenticated` | Customer (or Admin) | Valid Supabase Auth JWT, `auth.uid()` available |
 | `service_role` | Backend API (server-side only) | Service role key — **bypasses RLS entirely**, used only for trusted server operations (e.g. audit log writes, triggers) |
 
-> The Express API uses the **`authenticated`** context (forwarding the
+> The Fastify API uses the **`authenticated`** context (forwarding the
 > user's JWT to Supabase) for normal CRUD, so RLS is enforced even for
 > requests that pass through the backend. The `service_role` key is reserved
 > for operations that must bypass RLS by design (audit log inserts,
@@ -781,7 +841,7 @@ CREATE POLICY "inquiries_update_admin"
 
 > **Rate limiting reminder:** `inquiries_insert_anyone` allows any anon
 > request to insert. The 3-per-hour-per-IP limit (FR-INQ-007) is enforced
-> at **Layer 2** (`express-rate-limit`), not RLS — Postgres has no concept
+> at **Layer 2** (`@fastify/rate-limit`), not RLS — Postgres has no concept
 > of "requests per IP." RLS here only ensures inserted rows are well-formed
 > (`status = 'new'`).
 
@@ -806,7 +866,7 @@ CREATE POLICY "orders_select_own_or_admin"
 
 -- FR-ORD-001: customer can create an order for themselves only.
 -- NOTE: delivery_enabled check (FR-SET-004, UC-SYS-002) is enforced at
--- the SERVICE LAYER (Express), not in this policy. RLS enforces ownership;
+-- the SERVICE LAYER (Fastify route handler → service), not in this policy. RLS enforces ownership;
 -- service layer enforces feature activation. Deliberate separation.
 CREATE POLICY "orders_insert_own"
   ON public.orders FOR INSERT
@@ -918,14 +978,14 @@ Input validation happens at **two points**, both using the same Zod schemas
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  CLIENT-SIDE (Next.js forms, Flutter forms)                       │
-│  • Same Zod schema (web) / Dart equivalent (mobile)               │
+│  CLIENT-SIDE (Next.js forms, React Native forms)                  │
+│  • Same shared Zod schema on web AND mobile (validation-schemas)  │
 │  • Immediate UX feedback — NOT a security boundary                │
 │  • Can always be bypassed (browser devtools, modified app)        │
 └───────────────────────────┬───────────────────────────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  SERVER-SIDE (Express Controller — Layer 2)                       │
+│  SERVER-SIDE (Fastify preHandler Hook — Layer 2)                  │
 │  • SAME Zod schema, re-validated unconditionally                  │
 │  • THIS is the security boundary (NFR-SEC-003)                    │
 │  • Client validation failing ≠ server validation skipped          │
@@ -993,7 +1053,7 @@ const { data } = await supabase
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ 1. CLIENT (browser/Flutter)                                       │
+│ 1. CLIENT (browser/React Native)                                  │
 │    • Check file extension + size before upload                   │
 │    • UX only — does not stop a crafted multipart request          │
 └──────────────────────────┬─────────────────────────────────────┘
@@ -1022,46 +1082,49 @@ const { data } = await supabase
 ### 8.3 Implementation
 
 ```typescript
-// apps/api/src/middleware/upload.ts
-import multer from 'multer';
-import { randomUUID } from 'crypto';
-import path from 'path';
+// apps/api/src/plugins/upload.ts
+import fp from 'fastify-plugin'
+import multipart from '@fastify/multipart'
+import { randomUUID } from 'crypto'
+import path from 'path'
+import { FastifyInstance } from 'fastify'
 
-const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MODEL_EXTENSIONS = ['.glb', '.gltf'];
-const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MODEL_EXTENSIONS = ['.glb', '.gltf']
+const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
 
-export const imageUpload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // FR-MEDIA-002
-  fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (!IMAGE_MIME_TYPES.includes(file.mimetype) || !IMAGE_EXTENSIONS.includes(ext)) {
-      return cb(new Error('INVALID_FILE_TYPE'));
-    }
-    cb(null, true);
-  },
-});
+export default fp(async (fastify: FastifyInstance) => {
+  await fastify.register(multipart, {
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB hard ceiling; per-route logic enforces tighter limits
+    },
+  })
+})
 
-export const modelUpload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // FR-MEDIA-008
-  fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (!MODEL_EXTENSIONS.includes(ext)) {
-      return cb(new Error('INVALID_FILE_TYPE'));
-    }
-    cb(null, true);
-  },
-});
+export function validateImageFile(
+  mimetype: string,
+  filename: string,
+  maxBytes = 5 * 1024 * 1024
+): void {
+  const ext = path.extname(filename).toLowerCase()
+  if (!IMAGE_MIME_TYPES.includes(mimetype) || !IMAGE_EXTENSIONS.includes(ext)) {
+    throw new Error('INVALID_FILE_TYPE')
+  }
+}
+
+export function validateModelFile(filename: string): void {
+  const ext = path.extname(filename).toLowerCase()
+  if (!MODEL_EXTENSIONS.includes(ext)) {
+    throw new Error('INVALID_FILE_TYPE')
+  }
+}
 
 export function buildStoragePath(
   productId: string,
-  originalName: string,
-  bucket: 'product-images' | 'model-assets'
-) {
-  const ext = path.extname(originalName).toLowerCase();
-  return `${productId}/${randomUUID()}${ext}`;
+  originalName: string
+): string {
+  const ext = path.extname(originalName).toLowerCase()
+  return `${productId}/${randomUUID()}${ext}`
 }
 ```
 
@@ -1099,7 +1162,7 @@ GET /api/v1/orders/{order-id-belonging-to-customer-B}
 
 | Layer | Mechanism |
 |---|---|
-| Service layer (Express) | Explicit `WHERE customer_id = req.user.id` in every repository query |
+| Service layer (Fastify) | Explicit `WHERE customer_id = req.user.id` in every repository query |
 | RLS (§6.11) | `orders_select_own_or_admin` policy: `customer_id = auth.uid() OR is_admin()` |
 
 Even if the service layer query forgets the `customer_id` filter, RLS still
@@ -1181,19 +1244,21 @@ Failed `requireAdmin()` checks write their audit entry from **within Layer 3
 middleware itself**, using the `service_role` key:
 
 ```typescript
-export function requireAdmin(req: AuthedRequest, res: Response, next: NextFunction) {
-  if (req.user?.role !== 'admin') {
+export async function requireAdmin(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  if (request.user?.role !== 'admin') {
     auditLogRepo.log({
-      admin_id: req.user?.id ?? null,
+      admin_id: request.user?.id ?? null,
       action: 'UNAUTHORIZED_ACCESS',
       entity_type: 'route',
       entity_id: null,
-      metadata: { attempted_route: req.originalUrl, method: req.method },
-    }).catch(() => {}); // fire-and-forget, never blocks the 403 response
+      metadata: { attempted_route: request.url, method: request.method },
+    }).catch(() => {}) // fire-and-forget, never blocks the 403 response
 
-    return res.status(403).json({ error: 'Admin access required', code: 'FORBIDDEN' });
+    reply.code(403).send({ error: 'Admin access required', code: 'FORBIDDEN' })
   }
-  next();
 }
 ```
 
@@ -1208,7 +1273,7 @@ export function requireAdmin(req: AuthedRequest, res: Response, next: NextFuncti
 | Secret | Used by | Where stored (production) | Where stored (local dev) |
 |---|---|---|---|
 | `SUPABASE_URL` | API, Web | Railway + Vercel env vars | `.env` (gitignored) |
-| `SUPABASE_ANON_KEY` | Web, Mobile, API | Vercel env vars, Railway env vars, Flutter build config | `.env` / `.env.local` |
+| `SUPABASE_ANON_KEY` | Web, Mobile, API | Vercel env vars, Railway env vars, Expo env vars (`app.config.ts` / EAS secrets) | `.env` / `.env.local` |
 | `SUPABASE_SERVICE_ROLE_KEY` | API only — **never** sent to any client | Railway env vars (server-only) | `.env` (gitignored, **never** committed) |
 | `GOOGLE_OAUTH_CLIENT_ID` / `SECRET` | Supabase Auth config | Supabase dashboard (not app code) | Supabase dashboard |
 | `FACEBOOK_OAUTH_APP_ID` / `SECRET` (S) | Supabase Auth config | Supabase dashboard | Supabase dashboard |
@@ -1228,7 +1293,7 @@ export function requireAdmin(req: AuthedRequest, res: Response, next: NextFuncti
    bypasses RLS entirely (§6.2). It lives **only** in the Railway server
    environment and is never used in:
    - Next.js client bundles (would require `NEXT_PUBLIC_` prefix)
-   - Flutter app builds
+   - Mobile app builds (EAS Build)
    - GitHub Actions steps not deploying the API
 4. `.gitignore` includes `.env`, `.env.local`, `.env.*.local` from day one.
 5. If a secret is ever accidentally committed: **rotate immediately** in the
@@ -1337,11 +1402,11 @@ Run through manually before the first production deployment
 - [ ] `.env.example` up to date with every variable in §11.1
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` confirmed **absent** from:
   - [ ] Next.js client bundle (`grep` build output for key prefix)
-  - [ ] Flutter APK/IPA build artifacts
+  - [ ] Mobile APK/IPA build artifacts (EAS Build)
   - [ ] Any `NEXT_PUBLIC_*` variable
 - [ ] All secrets rotated if any were used during development with test values
 - [ ] GitHub Actions secrets configured for `web-deploy.yml`,
-      `api-deploy.yml`, `flutter-build.yml`
+      `api-deploy.yml`, `mobile-build.yml`
 
 ### 13.5 File Uploads
 

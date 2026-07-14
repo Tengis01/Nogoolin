@@ -2,10 +2,10 @@
 
 **Document:** `docs/05-sequence-diagrams.md`  
 **Project:** Nogoolin — Premium Religious Product Catalog Platform  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Draft  
 **Author:** Tengis (Solo Developer)  
-**Last Updated:** June 2026  
+**Last Updated:** July 2026  
 **Depends On:** [`docs/03-use-cases.md`](./03-use-cases.md), [`docs/04-er-diagram.md`](./04-er-diagram.md)
 
 ---
@@ -14,6 +14,7 @@
 
 | Version | Date | Type | Description |
 |---|---|---|---|
+| 1.1.0 | July 2026 | MINOR | Updated mobile platform reference: Flutter → React Native + Expo (SEQ-001 note) |
 | 1.0.0 | June 2026 | MAJOR | Initial version. 6 sequence diagrams covering auth, inquiry, multi-script search (FR-PUB-014, v1.2.0), delivery toggle, 3D model upload, and future order placement. |
 
 ---
@@ -73,7 +74,7 @@ sequenceDiagram
 
 **Notes:**
 - For admin users, role is manually set to `admin` post-creation (not via OAuth default).
-- Mobile (Flutter) uses native `signInWithIdToken` (FR-AUTH-002), not WebView — same trigger logic applies at the database level.
+- Mobile (React Native + Expo) uses native `signInWithIdToken` via `@react-native-google-signin` (FR-AUTH-002), not WebView — same trigger logic applies at the database level.
 
 ---
 

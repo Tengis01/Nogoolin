@@ -2,10 +2,10 @@
 
 **Document:** `docs/09-deployment.md`  
 **Project:** Nogoolin — Premium Religious Product Catalog Platform  
-**Version:** 1.0.0  
+**Version:** 1.2.0  
 **Status:** Draft  
 **Author:** Tengis (Solo Developer)  
-**Last Updated:** June 2026  
+**Last Updated:** July 2026  
 **Depends On:** [`docs/06-api-spec.yaml`](./06-api-spec.yaml), [`docs/08-security.md`](./08-security.md)
 
 ---
@@ -14,6 +14,8 @@
 
 | Version | Date | Type | Description |
 |---|---|---|---|
+| 1.2.0 | July 2026 | MINOR | Replaced Flutter with React Native + Expo across mobile CI/CD, build/distribution, local tooling, and environment configuration; `flutter-build.yml` replaced with `mobile-build.yml` (EAS Build) |
+| 1.1.0 | June 2026 | MINOR | Added Fastify CLI to local tools (§3.2); updated Dockerfile note to reference official Fastify TypeScript boilerplate; updated docker-compose dev command |
 | 1.0.0 | June 2026 | MAJOR | Initial version. Covers full production deployment across Supabase, Railway, Vercel, and Cloudflare, including CI/CD pipelines, first admin bootstrap, and pre-launch runbook. |
 
 ---
@@ -29,7 +31,7 @@
 7. [Cloudflare DNS Setup](#7-cloudflare-dns-setup)
 8. [CI/CD Pipelines (GitHub Actions)](#8-cicd-pipelines-github-actions)
 9. [First Admin Bootstrap](#9-first-admin-bootstrap)
-10. [Flutter Build & Distribution](#10-flutter-build--distribution)
+10. [Mobile Build & Distribution (EAS)](#10-mobile-build--distribution-eas)
 11. [Pre-Launch Runbook](#11-pre-launch-runbook)
 12. [Post-Launch Monitoring](#12-post-launch-monitoring)
 
@@ -74,8 +76,8 @@ on merge to `main`. Feature branches are validated locally before merging.
 nogoolin/
 ├── apps/
 │   ├── web/          → Next.js (deployed to Vercel)
-│   ├── api/           → Express.js (deployed to Railway via Docker)
-│   └── mobile/       → Flutter (built via GitHub Actions → APK/IPA)
+│   ├── api/           → Fastify (deployed to Railway via Docker)
+│   └── mobile/       → Expo React Native (built via EAS Build → APK/IPA)
 ├── packages/
 │   ├── shared-types/
 │   └── validation-schemas/
@@ -86,7 +88,7 @@ nogoolin/
 │   └── workflows/
 │       ├── web-deploy.yml
 │       ├── api-deploy.yml
-│       └── flutter-build.yml
+│       └── mobile-build.yml
 ├── docker-compose.yml  → local development only
 └── .env.example
 ```
@@ -99,7 +101,7 @@ nogoolin/
 ┌─────────────────────────────────────────────────────────────────┐
 │  Users (Mongolian customers, admin)                               │
 └───┬───────────────────────────────┬───────────────────────────────┘
-    │ Browser / Flutter app          │ Admin browser
+    │ Browser / React Native app     │ Admin browser
     ▼                                ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Cloudflare (DNS + CDN + WAF + DDoS + SSL termination)            │
@@ -110,7 +112,7 @@ nogoolin/
     ▼                                ▼
 ┌──────────────────┐      ┌──────────────────────────────────────┐
 │  Vercel           │      │  Railway                              │
-│  Next.js web app  │      │  Express.js API (Docker container)   │
+│  Next.js web app  │      │  Fastify API (Docker container)      │
 │  + admin panel    │◀────▶│  Port 3001                           │
 │  (nogoolin.mn)    │      │  (api.nogoolin.mn)                   │
 └──────────────────┘      └──────────────┬───────────────────────┘
@@ -132,7 +134,7 @@ nogoolin/
 |---|---|---|
 | GitHub | Source code, CI/CD secrets, GitHub Actions | Free |
 | Supabase | PostgreSQL DB, Auth, Storage, RLS | Free tier (Singapore) |
-| Railway | Express.js API Docker container | Starter ($5/mo or usage-based) |
+| Railway | Fastify API Docker container | Starter ($5/mo or usage-based) |
 | Vercel | Next.js web + admin panel, Edge functions | Free tier (Hobby) |
 | Cloudflare | DNS, CDN, WAF, DDoS, SSL | Free tier |
 | Apple Developer | iOS distribution (TestFlight / App Store) | $99/yr (Phase 6, not MVP blocker) |
@@ -173,8 +175,13 @@ docker --version
 brew install supabase/tap/supabase   # macOS
 supabase --version
 
-# Flutter SDK (for mobile)
-flutter --version   # 3.x.x
+# Fastify CLI (for scaffolding from official TypeScript boilerplate)
+npm install -g fastify-cli
+fastify --version
+
+# EAS CLI (for mobile builds/submits)
+npm install -g eas-cli
+eas --version
 
 # Railway CLI (optional, for manual deploys)
 npm install -g @railway/cli
@@ -463,7 +470,7 @@ CREATE TRIGGER on_auth_user_created
 ## 5. Railway Setup (API)
 
 **Ref:** NFR-MAIN-006 (Docker multi-stage build), NFR-SEC-005 (secrets as
-env vars), master plan §7.4 (Express.js + TypeScript on Railway)
+env vars), master plan §7.4 (Fastify + TypeScript on Railway)
 
 ### 5.1 Create Railway Project
 
@@ -477,6 +484,7 @@ env vars), master plan §7.4 (Express.js + TypeScript on Railway)
 
 ```dockerfile
 # apps/api/Dockerfile
+# Based on the official Fastify TypeScript boilerplate structure
 
 # ── Stage 1: Build ────────────────────────────────────────────────
 FROM node:20-alpine AS builder
@@ -543,7 +551,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...    # ⚠️ server-only, never expose
 ALLOWED_ORIGINS=https://nogoolin.mn,https://www.nogoolin.mn
 
 # ── Rate limiting ─────────────────────────────────────────────────
-# Inherited by express-rate-limit config; override here if needed
+# Inherited by @fastify/rate-limit config; override here if needed
 RATE_LIMIT_GENERAL_MAX=100
 RATE_LIMIT_AUTH_MAX=5
 RATE_LIMIT_INQUIRY_MAX=3
@@ -879,7 +887,7 @@ Then:
   Action: Block for 60 seconds
 ```
 
-> This is a **coarse backstop** above the precise Express-level limits
+> This is a **coarse backstop** above the precise Fastify-level limits
 > (`08-security.md` §4.3 — 100/15min general, 5/15min auth, 3/hr inquiry).
 > 300/min is intentionally loose; its purpose is to stop extreme abuse
 > (e.g. a runaway script), not to enforce business rules.
@@ -1062,10 +1070,15 @@ jobs:
 > fails, `deploy` does not run — the production API keeps running the
 > previous (working) version.
 
-### 8.5 `flutter-build.yml`
+### 8.5 `mobile-build.yml`
+
+EAS Build runs in Expo's cloud, so this workflow only needs to lint/type-check
+locally and then **trigger** a remote build — no Android SDK or Xcode
+required on the GitHub Actions runner (this is a major simplification versus
+the old Flutter workflow, which had to install a full Flutter SDK).
 
 ```yaml
-# .github/workflows/flutter-build.yml
+# .github/workflows/mobile-build.yml
 name: Build Mobile
 
 on:
@@ -1073,67 +1086,77 @@ on:
     branches: [main]
     paths:
       - 'apps/mobile/**'
-      - '.github/workflows/flutter-build.yml'
+      - 'packages/validation-schemas/**'
+      - '.github/workflows/mobile-build.yml'
   pull_request:
     branches: [main]
     paths:
       - 'apps/mobile/**'
 
 jobs:
-  test-and-analyze:
+  lint-and-typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: actions/setup-node@v4
         with:
-          flutter-version: '3.x'
-          channel: stable
+          node-version: '20'
+      - run: npm ci
       - working-directory: apps/mobile
-        run: flutter pub get
+        run: npm run lint
       - working-directory: apps/mobile
-        run: flutter analyze
+        run: npm run typecheck
       - working-directory: apps/mobile
-        run: flutter test
+        run: npm test -- --watchAll=false
 
-  build-android:
-    needs: test-and-analyze
+  eas-build-android:
+    needs: lint-and-typecheck
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: actions/setup-node@v4
         with:
-          flutter-version: '3.x'
-          channel: stable
-      - working-directory: apps/mobile
-        run: flutter pub get
-      - working-directory: apps/mobile
-        run: flutter build apk --release
-      - uses: actions/upload-artifact@v4
+          node-version: '20'
+      - run: npm ci
+      - uses: expo/expo-github-action@v8
         with:
-          name: nogoolin-android-release
-          path: apps/mobile/build/app/outputs/flutter-apk/app-release.apk
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - working-directory: apps/mobile
+        run: eas build --platform android --profile preview --non-interactive
 
-  # iOS build requires macOS runner + Apple Developer signing —
-  # added in Phase 6 once Apple Developer account ($99/yr) is active.
-  # Placeholder job left commented for future activation:
+  # iOS build does not require a macOS runner — EAS Build compiles it
+  # in Expo's own cloud. It is disabled by default because an Apple
+  # Developer account ($99/yr) is only activated in Phase 6.
+  # Uncomment when ready:
   #
-  # build-ios:
-  #   needs: test-and-analyze
-  #   runs-on: macos-latest
+  # eas-build-ios:
+  #   needs: lint-and-typecheck
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v4
-  #     - uses: subosito/flutter-action@v2
+  #     - uses: actions/setup-node@v4
   #       with:
-  #         flutter-version: '3.x'
+  #         node-version: '20'
+  #     - run: npm ci
+  #     - uses: expo/expo-github-action@v8
+  #       with:
+  #         eas-version: latest
+  #         token: ${{ secrets.EXPO_TOKEN }}
   #     - working-directory: apps/mobile
-  #       run: flutter build ipa --release
+  #       run: eas build --platform ios --profile preview --non-interactive
 ```
 
 > **MVP scope (master plan §29):** Android internal testing build is
 > required; iOS TestFlight is **optional** and not a launch blocker. The
-> `build-android` job produces a downloadable APK artifact on every `main`
-> push — sufficient for internal testing (FR-MOB-001, NFR-COM-003).
+> `eas-build-android` job triggers a cloud build on every `main` push;
+> the resulting APK/AAB is retrieved from the Expo dashboard or via
+> `eas build:list` — sufficient for internal testing (FR-MOB-001,
+> NFR-COM-003). `EXPO_TOKEN` is an additional GitHub secret beyond the
+> six listed in §8.2 (generate via `eas whoami` / Expo account settings).
+
 
 ### 8.6 CI/CD Pipeline Summary
 
@@ -1141,7 +1164,7 @@ jobs:
 |---|---|---|---|
 | `web-deploy.yml` | Push to `main` (web/packages changes) | Vercel production | lint + type-check + build pass |
 | `api-deploy.yml` | Push to `main` (api/packages/migrations changes) | Railway production | lint + type-check + tests + build + migration-check pass |
-| `flutter-build.yml` | Push to `main` (mobile changes) | GitHub Actions artifact (APK) | analyze + test pass |
+| `mobile-build.yml` | Push to `main` (mobile/schema changes) | Expo cloud (EAS Build artifact) | lint + typecheck + tests pass |
 
 ### 8.7 CI/CD Setup Checklist
 
@@ -1151,7 +1174,7 @@ jobs:
 - [ ] `api-deploy.yml` — test PR triggers lint/test/build without deploying
 - [ ] `api-deploy.yml` — push to `main` runs migration-check before deploy
 - [ ] `api-deploy.yml` — health check step passes after deploy
-- [ ] `flutter-build.yml` — Android APK artifact produced on push to `main`
+- [ ] `mobile-build.yml` — EAS Android build triggers on push to `main`
 
 ---
 
@@ -1240,58 +1263,97 @@ when no admin exists yet to use the application flow.
 
 ---
 
-## 10. Flutter Build & Distribution
+## 10. Mobile Build & Distribution (EAS)
 
 **Ref:** FR-MOB-001, NFR-COM-003/004, master plan §29 (Phase 6 — "App Store
 / Play Store public submission should not be a launch blocker")
 
 ### 10.1 MVP Distribution (Internal Testing)
 
-For MVP, the Android APK produced by `flutter-build.yml` (§8.5) is
-distributed **manually**:
+For MVP, the Android build produced by `mobile-build.yml` (§8.5) is
+distributed via EAS, which is simpler than the old manual-APK-sharing flow:
 
-1. Download the `nogoolin-android-release` artifact from the GitHub
-   Actions run
-2. Share the `.apk` file directly (e.g. Google Drive link) with internal
-   testers
-3. Testers enable "Install from unknown sources" to install
+1. Run `eas build:list` (or check the Expo dashboard) to find the completed
+   build
+2. Share the EAS-hosted install link directly with internal testers — no
+   need to download and re-upload the APK manually
+3. Testers open the link on their Android device and install directly
+   (EAS-hosted builds don't require enabling "unknown sources" the way a
+   raw APK does, since Expo provides a signed installable page)
 
 This satisfies the MVP success metric "Mobile app passes internal testing
 on both platforms" (`01-vision.md` §8) for Android. iOS internal testing
-(TestFlight) requires an active Apple Developer account.
+uses **EAS Submit → TestFlight** and still requires an active Apple
+Developer account, same as before — this constraint doesn't change with
+the framework switch.
 
 ### 10.2 Phase 6: Public Store Submission (Not an MVP Blocker)
 
-When ready for public distribution:
+When ready for public distribution, **EAS Submit** replaces most of the
+manual steps a Flutter pipeline would require:
 
 **Android (Google Play, $25 one-time):**
 1. Create a Google Play Console account
-2. Generate a signed release build with a proper keystore (not the debug
-   keystore used in `flutter-build.yml`)
-3. Upload to Play Console → Internal Testing track → promote to Production
+2. Build a production binary: `eas build --platform android --profile production`
+3. Submit directly from the CLI: `eas submit --platform android` (uploads
+   to Play Console — no manual keystore management; EAS manages signing
+   credentials by default)
+4. Promote from Internal Testing track → Production in Play Console
 
 **iOS (Apple App Store, $99/year):**
 1. Enroll in the Apple Developer Program
-2. Configure signing certificates + provisioning profiles
-3. Uncomment and configure the `build-ios` job in `flutter-build.yml`
-   (§8.5) — requires `macos-latest` runner and App Store Connect API key
-   as a GitHub secret
-4. Submit via TestFlight first, then App Store review
+2. Run `eas credentials` to let EAS manage signing certificates +
+   provisioning profiles (or supply your own)
+3. Build: `eas build --platform ios --profile production`
+4. Submit: `eas submit --platform ios` (uploads to App Store Connect
+   directly — no Mac or Xcode required at any step)
+5. Release via TestFlight first, then submit for App Store review
+
+> **Note:** Because EAS Build compiles both platforms in Expo's cloud, this
+> entire section no longer depends on `macos-latest` GitHub runners or
+> local Xcode — a meaningful reduction in solo-dev operational surface
+> compared to the original Flutter/GitHub Actions pipeline.
 
 ### 10.3 Environment Configuration for Mobile
 
-```dart
-// apps/mobile/lib/config/env.dart
-class Env {
-  static const supabaseUrl = 'https://xxxxxxxxxxxx.supabase.co';
-  static const supabaseAnonKey = 'eyJ...'; // anon key only — same as web
-  static const apiBaseUrl = 'https://api.nogoolin.mn/api/v1';
-}
+```typescript
+// apps/mobile/app.config.ts
+export default {
+  expo: {
+    name: 'Nogoolin',
+    slug: 'nogoolin',
+    extra: {
+      supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
+      supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY, // anon key only — same as web
+      apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? 'https://api.nogoolin.mn/api/v1',
+    },
+    plugins: [
+      '@rive-app/react-native', // Rive Expo config plugin
+    ],
+  },
+};
 ```
 
-> The Flutter app uses the **same `SUPABASE_ANON_KEY`** as the web app
+```bash
+# apps/mobile/.env (loaded by app.config.ts; EXPO_PUBLIC_ prefix required
+# for any value that must reach client-side JS bundles)
+EXPO_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+EXPO_PUBLIC_API_BASE_URL=https://api.nogoolin.mn/api/v1
+```
+
+For EAS cloud builds, the same values are set as **EAS secrets** rather
+than committed `.env` files:
+
+```bash
+eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value https://xxxxxxxxxxxx.supabase.co
+eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value eyJ...
+```
+
+> The React Native app uses the **same `SUPABASE_ANON_KEY`** as the web app
 > (§6.2) — this key is designed to be public and is subject to RLS on every
 > request, same as the browser client (`08-security.md` §6.2).
+
 
 ---
 
