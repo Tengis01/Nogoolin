@@ -1,0 +1,6 @@
+{
+  "name": "@nogoolin/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nogoolin mobile app (React Native + Expo, dev client) — skeleton, not yet initialized"
+}
