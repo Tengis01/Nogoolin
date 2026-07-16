@@ -10,24 +10,24 @@
 
 ## Backlog (Phase 1 order)
 
-- [ ] Merge `feature/monorepo-setup`, `feature/docker-cicd`, `feature/agent-context`
-      → `main`; create `develop` branch
+- [ ] Verify migrations end-to-end: start Docker Desktop →
+      `pnpm exec supabase start` → confirm 11 tables + RLS all true
+      (docs/09 §4.5 query) → smoke-test `GET /api/v1/settings/public`
+- [ ] Merge feature branches → `main`; create `develop` branch
+      (waiting for owner go-ahead — "wait user to tell" 2026-07-16)
 - [ ] GitHub Projects Kanban board (Backlog → This Week → In Progress → Review → Done)
-- [ ] Initialize `backend/api` for real: Fastify + TS boilerplate, scripts
-      (`dev`/`build`/`lint`/`type-check`/`test`), generate `pnpm-lock.yaml`
-- [ ] Create Supabase project (Singapore); save keys to env (never commit)
-- [ ] Migration `0001`: 11 tables + enums + indexes + RLS policies + `is_admin()`
-      + `on_auth_user_created` trigger (per `DB_SCHEMA.md` / docs/08 §6)
-- [ ] Seed: `system_settings` row `delivery_enabled=false`
-- [ ] `packages/validation-schemas`: Zod schemas (inquiry, product, category,
-      delivery toggle, inquiry status — docs/08 §7.2 inventory)
-- [ ] Supabase Auth config: email + Google OAuth (PKCE), 15-min JWT, rotation
+- [ ] Supabase Auth flows: email + Google OAuth (PKCE) against LOCAL stack;
+      JWT verify hook + requireAdmin (docs/08 §5.4)
 - [ ] Next.js app init (`apps/web`) + `/admin` protected route scaffold
 - [ ] Expo app init (`apps/mobile`, dev client)
 - [ ] Storage buckets `product-images` / `model-assets` + storage RLS policies
+      (local config.toml buckets or migration)
+- [ ] Real eslint config (lint currently aliases `tsc --noEmit`)
 
 ## Done
 
+- [x] 2026-07-16 — Local Supabase stack + 3 migrations (schema/RLS/seed) +
+      Fastify layered scaffold + shared Zod schemas + lockfile
 - [x] 2026-07-16 — agent-context/ working-memory layer + CLAUDE.md standing instruction
 - [x] 2026-07-16 — Dockerfile (multi-stage, non-root) + docker-compose + 3 CI skeletons
 - [x] 2026-07-15 — CLAUDE.md + monorepo skeleton (workspaces, tsconfig base, env template)
@@ -35,6 +35,22 @@
 ---
 
 ## Log (append after every task, newest first)
+
+### 2026-07-16 — Local DB schema + backend structure (`feature/db-schema-local`)
+- **Done:** Supabase CLI added as root dev dep (`pnpm exec supabase ...`);
+  `supabase init` (config.toml: project_id nogoolin, jwt_expiry 900);
+  3 migrations in `supabase/migrations/` — init_schema (6 enums, 11 tables,
+  9 indexes, updated_at triggers), rls_policies (is_admin(), auth trigger,
+  22 policies, RLS on all 11 tables), seed_system_settings
+  (delivery_enabled=false); `packages/validation-schemas` implemented (9 src
+  files: entity + input schemas per docs/08 §7.2); `backend/api` layered
+  scaffold (env config, supabase client factory, helmet/cors/rate-limit
+  plugins, validateBody hook, DB-agnostic repository interfaces + supabase
+  settings impl, settings service, health + /settings/public controllers);
+  README local-dev docs; .env.example local values; migrations location
+  moved database/→supabase/ (ADR-011, CLAUDE.md + workflows updated).
+  Both packages type-check clean. NOT pushed (owner: wait for go-ahead).
+- **Next:** start Docker → `supabase start` → verify migrations + RLS live.
 
 ### 2026-07-16 — Created agent-context/ layer
 - **Done:** 9 files (PROJECT_BRIEF, DECISIONS, DB_SCHEMA, design, MEMORY,

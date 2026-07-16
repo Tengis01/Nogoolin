@@ -19,7 +19,9 @@
 - **Web:** Next.js + TS + Tailwind, `/admin` included; Three.js + R3F → Vercel.
 - **Mobile:** React Native + Expo, prebuild/CNG + dev client (NOT Expo Go),
   Zustand, fetch + supabase-js → EAS Build (manual trigger).
-- **Data:** Supabase Postgres/Auth/Storage (Singapore). RLS on ALL tables.
+- **Data:** Supabase Postgres/Auth/Storage. **Local dev = Supabase CLI stack**
+  (`pnpm exec supabase start`, offline); cloud project (Singapore) deferred to
+  Phase 6 — never create it or add cloud creds early. RLS on ALL tables.
 - **Shared:** Zod in `packages/validation-schemas`; types in
   `packages/shared-types`. pnpm workspaces, Node 20+.
 
@@ -40,8 +42,9 @@
 5. **Security layers:** Cloudflare WAF → @fastify/helmet+cors+rate-limit →
    JWT (15-min) / RBAC → RLS. Zod-validate every body server-side (shared
    schema; client validation is UX only). No raw SQL interpolation.
-6. **Append-only:** migrations in `database/migrations/` (never edit applied
-   ones) and `audit_logs` (no UPDATE/DELETE for anyone). Log all admin mutations.
+6. **Append-only:** migrations in `supabase/migrations/` (Supabase CLI format;
+   never edit applied ones) and `audit_logs` (no UPDATE/DELETE for anyone).
+   Log all admin mutations.
 7. **Design lock v4:** dark intro `#245842→#1B4634` radial (flat fills
    prohibited), saffron `#F2C94C` (deep `#A9861B` on white), ink `#17352A`
    (never #000), action `#0BB555`. **No red until Phase 3.** Category row
