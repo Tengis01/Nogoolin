@@ -24,12 +24,18 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
       `mobile-build.yml`) — structure only; deploy details are Phase 6 TODOs
 
 ### Week 2 — Backend & Database
-- [ ] Fastify + TS base structure (port 3001, Controller→Service→Repository) —
-      only empty layer folders exist in `backend/api/src/`
-- [ ] Supabase project (Singapore) — not created
-- [ ] DB schema migrations (11 entities per `DB_SCHEMA.md`) — `database/migrations/` empty
-- [ ] RLS policies per docs/08 §6
-- [ ] `packages/validation-schemas` Zod schemas — stub package only
+- [x] Fastify + TS base structure (port 3001, Controller→Service→Repository) —
+      plugins (helmet/cors/rate-limit), env config, supabase client factory,
+      DB-agnostic repository interfaces, health + public-settings exemplar routes
+- [x] Supabase CLI local stack initialized (`supabase/config.toml`, 15-min JWT);
+      **cloud project deliberately deferred to Phase 6** (ADR-011)
+- [x] DB schema migrations (11 entities) — 3 files in `supabase/migrations/`
+- [x] RLS policies per docs/08 §6 (all tables + is_admin() + auth trigger)
+- [x] `packages/validation-schemas` Zod schemas (entities + input schemas)
+- [x] `pnpm-lock.yaml` generated; api + validation-schemas type-check clean
+- [ ] Migrations verified against a running local stack — blocked: Docker
+      Desktop daemon not running (see ERRORS.md 2026-07-16); run
+      `pnpm exec supabase start` once Docker is up
 
 ### Week 3 — Auth & Admin Scaffold
 - [ ] Supabase Auth (email + Google OAuth; Facebook = S-priority)
@@ -40,9 +46,9 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
       grows with each new config
 
 ### Known gaps blocking CI
-- No `pnpm-lock.yaml` (no install run yet)
-- Workspace packages lack `lint`/`type-check`/`test`/`dev`/`build` scripts —
-  CI workflows will fail until apps are initialized
+- `apps/web` and `apps/mobile` still lack `lint`/`type-check`/`build` scripts —
+  web/mobile CI workflows fail until those apps are initialized (api +
+  validation-schemas now pass)
 
 ## Phase 2 — Product System ⬜ NOT STARTED
 ## Phase 3 — Premium Experience ⬜ NOT STARTED (highest-risk phase)

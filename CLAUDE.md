@@ -92,18 +92,30 @@ nogoolin/
 ├── packages/
 │   ├── shared-types/   → shared TypeScript types
 │   └── validation-schemas/ → shared Zod schemas (web + api + mobile)
-├── database/
-│   └── migrations/     → versioned SQL migrations (append-only; never edit
-│                         an applied migration — add a new numbered file)
+├── supabase/
+│   ├── config.toml     → Supabase CLI config (local stack: `supabase start`)
+│   └── migrations/     → versioned SQL migrations, Supabase CLI format
+│                         (append-only; never edit an applied migration —
+│                         `supabase migration new <name>` for changes)
 ├── agent-context/      → AI-agent working memory (condensed from docs/;
 │                         see "Agent Context Workflow" above)
 └── docs/               → authoritative Phase 0 specifications
 ```
 
-> Note: `docs/09-deployment.md` §1.3 shows an older sketch (`apps/api`,
-> `supabase/migrations`). The layout above (`backend/api`,
-> `database/migrations`) is the finalized one, per `docs/10-roadmap.md`
-> Phase 1 and the project owner's instruction.
+> Note: `docs/09-deployment.md` §1.3 shows an older sketch (`apps/api`).
+> `backend/api` is the finalized API location per `docs/10-roadmap.md`
+> Phase 1 and the project owner's instruction. Migrations live in
+> `supabase/migrations/` (Supabase CLI format) — the earlier
+> `database/migrations/` plan was superseded when the local-first Supabase
+> CLI workflow was adopted (2026-07-16).
+
+## Local Development Database
+
+Local dev uses the **Supabase CLI local stack** (Postgres + Auth + Storage +
+Studio via Docker): `pnpm exec supabase start` / `stop`. RLS and auth are
+testable fully offline. **No cloud Supabase project exists yet — do not
+create one or add cloud credentials; that is deferred to Phase 6.** Local
+keys printed by `supabase start` go in `.env` (gitignored), never in code.
 
 ## Layered Architecture Rule (backend)
 

@@ -17,7 +17,17 @@
 
 ---
 
-*(no entries yet — repo is at scaffolding stage; nothing has been run)*
+### 2026-07-16 — Could not verify migrations: Docker daemon not running
+- **Where:** `pnpm exec supabase start` prerequisite check (local machine)
+- **Symptom:** `failed to connect to the docker API at
+  unix:///home/tengis/.docker/desktop/docker.sock` — Docker Desktop installed
+  but daemon not running
+- **Root cause:** Docker Desktop was not started; Supabase local stack needs it
+- **Fix:** none applied automatically (starting system services left to the
+  owner). To verify: start Docker Desktop, then `pnpm exec supabase start`,
+  then the docs/09 §4.5 RLS check query
+- **Prevention:** README "Local Database" section documents the Docker
+  prerequisite
 
 **Pre-known pitfalls inherited from Phase 0 (not runtime errors, but documented
 bugs to avoid):** see `design.md` §Known prototype bugs — (1) category row

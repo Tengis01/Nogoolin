@@ -7,6 +7,7 @@
 
 | # | Date | Decision | Rationale |
 |---|---|---|---|
+| ADR-011 | 2026-07-16 | Local-first DB: Supabase CLI local stack (`supabase start`) until Phase 6; migrations live in `supabase/migrations/` (CLI format), superseding the `database/migrations/` plan (ADR-009 partially amended) | RLS + auth testable fully offline; no cloud project/credentials before Phase 6 (owner instruction); CLI requires its own directory layout |
 | ADR-010 | 2026-07-16 | Mobile EAS builds trigger manually (`workflow_dispatch`), not on every push | Each EAS build spends paid quota; lint/typecheck still runs on PRs (deviation from docs/09 §8.5, owner-approved) |
 | ADR-009 | 2026-07-15 | Monorepo layout: `backend/api` + `database/migrations` (not `apps/api` + `supabase/migrations` as sketched in docs/09 §1.3) | Finalized per docs/10 Phase 1 + project owner instruction; CLAUDE.md records the doc drift |
 | ADR-008 | 2026-07 (Phase 0) | pnpm workspaces, Node 20+ | Fast, disk-efficient workspace resolution across web/api/mobile/packages |

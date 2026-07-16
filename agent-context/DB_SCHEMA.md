@@ -69,5 +69,8 @@ Key RLS facts:
 - `inquiries(status)`, `inquiries(created_at DESC)`, `audit_logs(created_at DESC)`
 - future: `orders(customer_id)`, `orders(status)`
 
-Migrations: `database/migrations/`, numbered, **append-only** — never edit an
-applied migration.
+Migrations: `supabase/migrations/` (Supabase CLI format,
+`pnpm exec supabase migration new <name>`), **append-only** — never edit an
+applied migration. Implemented 2026-07-16 in three files: init_schema
+(enums/tables/indexes), rls_policies (is_admin + all policies + auth trigger),
+seed_system_settings (delivery_enabled=false).
