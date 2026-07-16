@@ -17,6 +17,17 @@
 
 ---
 
+### 2026-07-17 — Type-check failures during web/mobile init (fixed)
+- **Where:** `apps/web/src/lib/supabase/server.ts` + `src/middleware.ts`;
+  `apps/mobile/lib/supabase.ts`
+- **Symptom:** TS7006/TS7031 implicit-any on @supabase/ssr `setAll` cookie
+  callbacks; TS2580 `Cannot find name 'process'` in mobile
+- **Root cause:** @supabase/ssr 0.6 doesn't infer callback param types under
+  `strict`; mobile package lacked `@types/node` for `process.env`
+- **Fix:** explicit `CookieToSet[]` param types; added `@types/node` to
+  apps/mobile devDependencies. `pnpm -r type-check` green after
+- **Prevention:** run `pnpm -r type-check` before every commit touching TS
+
 ### 2026-07-16 — Could not verify migrations: Docker daemon not running
 - **Where:** `pnpm exec supabase start` prerequisite check (local machine)
 - **Symptom:** `failed to connect to the docker API at

@@ -68,10 +68,50 @@ pnpm exec supabase db reset
 pnpm exec supabase migration new <name>
 ```
 
-Then run the API against it:
+Then run the apps against it:
 
 ```bash
-pnpm dev:api   # Fastify on http://localhost:3001 (GET /api/v1/health)
+pnpm dev:api      # Fastify on http://localhost:3001 (GET /api/v1/health)
+pnpm dev:web      # Next.js on http://localhost:3000 (login/signup/admin)
+pnpm dev:mobile   # Expo dev-client server (see § Mobile below)
+```
+
+## Auth & OAuth Setup (local)
+
+Email/password auth works out of the box against the local stack
+(15-min access tokens, 7-day rotating refresh — `supabase/config.toml`).
+Password-reset emails land in the local test inbox at
+<http://127.0.0.1:54324>.
+
+Google/Facebook OAuth needs app registrations. Until credentials are added
+to `.env`, the OAuth buttons render in a disabled "not configured" state.
+
+**Register these redirect URLs on the provider consoles (local dev):**
+
+| Provider | Console setting | Value |
+|---|---|---|
+| Google ([console.cloud.google.com](https://console.cloud.google.com) → OAuth client, type "Web application") | Authorized redirect URI | `http://127.0.0.1:54321/auth/v1/callback` |
+| Google (same client) | Authorized JavaScript origin | `http://localhost:3000` |
+| Facebook ([developers.facebook.com](https://developers.facebook.com) → Facebook Login) | Valid OAuth Redirect URI | `http://127.0.0.1:54321/auth/v1/callback` |
+
+Then put the client IDs/secrets in `.env` (`GOOGLE_CLIENT_ID`,
+`GOOGLE_CLIENT_SECRET`, `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`) and
+restart `supabase start`. Also mirror the two client IDs (not secrets) into
+`apps/web/.env.local` so the login page detects them as configured.
+
+> Phase 6 (cloud): register the additional
+> `https://<project-ref>.supabase.co/auth/v1/callback` URL on both consoles —
+> the local one stays for development.
+
+## Mobile (Expo dev client — NOT Expo Go)
+
+```bash
+cd apps/mobile
+pnpm exec expo prebuild --platform android   # generate native project (CNG)
+pnpm exec expo run:android                    # build + install dev client (needs Android SDK)
+# iOS (macOS only): pnpm exec expo run:ios
+# Cloud alternative: eas build --profile development --platform android
+pnpm start                                    # then: Metro for the dev client
 ```
 
 > Local keys printed by `supabase start` are well-known development-only

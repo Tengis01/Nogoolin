@@ -6,10 +6,13 @@
 
 ## Where we are
 
-- **Phase 1 — Foundation, Week 1** (repo & infrastructure) of the 16-week MVP.
-- Phase 0 (all 10 spec docs) complete 2026-07-05. MVP = Phases 1–3.
-- Done so far: monorepo skeleton, CLAUDE.md, Dockerfile + docker-compose,
-  GitHub Actions skeletons. Nothing implements features yet.
+- **Phase 2 — Product System is NEXT** (catalog CRUD, listing/detail pages,
+  multi-script search, image upload). MVP = Phases 1–3 of the 16-week plan.
+- Phase 0 (docs) done 2026-07-05; Phase 1 (Foundation) done 2026-07-17:
+  monorepo, Docker/CI skeletons, local Supabase stack + migrations + RLS,
+  Fastify layered API with JWT/RBAC, Next.js web with auth + /admin scaffold,
+  Expo mobile with auth screens. Runtime smoke test vs local stack pending
+  (see PROGRESS.md caveat).
 
 ## Stack (finalized — do not relitigate; Flutter/Express mentions in old docs are outdated)
 

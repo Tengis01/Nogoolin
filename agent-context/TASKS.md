@@ -8,24 +8,27 @@
 
 *(empty)*
 
-## Backlog (Phase 1 order)
+## Backlog (Phase 2 order)
 
-- [ ] Verify migrations end-to-end: start Docker Desktop →
-      `pnpm exec supabase start` → confirm 11 tables + RLS all true
-      (docs/09 §4.5 query) → smoke-test `GET /api/v1/settings/public`
+- [ ] Runtime smoke test (Phase 1 closeout): start Docker →
+      `pnpm exec supabase start` → RLS check query (docs/09 §4.5) → sign up
+      on web → bootstrap first admin via SQL (docs/09 §9) → /admin loads →
+      `GET /api/v1/admin/ping` 200/403/401 matrix
 - [ ] Merge feature branches → `main`; create `develop` branch
       (waiting for owner go-ahead — "wait user to tell" 2026-07-16)
-- [ ] GitHub Projects Kanban board (Backlog → This Week → In Progress → Review → Done)
-- [ ] Supabase Auth flows: email + Google OAuth (PKCE) against LOCAL stack;
-      JWT verify hook + requireAdmin (docs/08 §5.4)
-- [ ] Next.js app init (`apps/web`) + `/admin` protected route scaffold
-- [ ] Expo app init (`apps/mobile`, dev client)
+- [ ] GitHub Projects Kanban board
 - [ ] Storage buckets `product-images` / `model-assets` + storage RLS policies
-      (local config.toml buckets or migration)
+- [ ] Category CRUD (admin) — single-row rule (WF-HOME-01)
+- [ ] Product CRUD + image upload + usage instructions
+- [ ] Product listing + detail pages (public), multi-script search
+- [ ] Mobile: listing + detail core screens
 - [ ] Real eslint config (lint currently aliases `tsc --noEmit`)
+- [ ] Mobile: encrypted session storage (docs/08 §5.2) + native Google Sign-In
 
 ## Done
 
+- [x] 2026-07-17 — Phase 1 complete: auth (email + OAuth scaffold), JWT/RBAC,
+      /admin scaffold, Expo app init, .env.example final
 - [x] 2026-07-16 — Local Supabase stack + 3 migrations (schema/RLS/seed) +
       Fastify layered scaffold + shared Zod schemas + lockfile
 - [x] 2026-07-16 — agent-context/ working-memory layer + CLAUDE.md standing instruction
@@ -35,6 +38,24 @@
 ---
 
 ## Log (append after every task, newest first)
+
+### 2026-07-17 — Auth + admin + mobile init (`feature/auth-admin-scaffold`) — PHASE 1 COMPLETE
+- **Done:** config.toml auth finalized (site_url localhost:3000, redirect
+  allowlist incl. nogoolin:// deep link, sessions timebox 168h = 7d,
+  [auth.external.google/facebook] via env() — placeholders OK);
+  API: requireAuth/requireAdmin hooks per docs/08 §5.4 + user/audit-log
+  repositories + `/api/v1/admin/ping` smoke route; web: Next.js 15 app
+  (@supabase/ssr cookies + middleware refresh, login/signup/reset/update
+  password, /auth/callback PKCE exchange, OAuth buttons with not-configured
+  state, protected /admin layout + dashboard, v4 tokens in globals.css);
+  mobile: Expo SDK 52 dev-client/CNG app (expo-router, Zustand auth store,
+  login/signup screens, eas.json with development profile); .env.example
+  finalized; README OAuth redirect-URL guide + mobile build commands.
+  Verified: all 4 packages type-check; `next build` passes (admin/callback
+  dynamic, rest static); `expo prebuild -p android` generates native project.
+  NOT verified at runtime (Docker still down). NOT pushed.
+- **Next:** Phase 2 — runtime smoke test first, then storage buckets +
+  category/product CRUD.
 
 ### 2026-07-16 — Local DB schema + backend structure (`feature/db-schema-local`)
 - **Done:** Supabase CLI added as root dev dep (`pnpm exec supabase ...`);
