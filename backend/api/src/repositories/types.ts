@@ -3,6 +3,7 @@ import type {
   Product,
   ProductListQuery,
   PublicSettings,
+  UserRole,
 } from '@nogoolin/validation-schemas';
 
 // ─────────────────────────────────────────────────────────────
@@ -16,6 +17,15 @@ import type {
 // Concrete Supabase implementations live in ./supabase/.
 // Add new entity interfaces here as features are built.
 // ─────────────────────────────────────────────────────────────
+
+export interface UserRepository {
+  /**
+   * Auth profile lookup (id + role) for the JWT/RBAC layer. This is a plain
+   * data read — the repository stays role-AGNOSTIC; enforcement happens in
+   * the controller-layer hooks (docs/08 §5.4).
+   */
+  findAuthProfile(id: string): Promise<{ id: string; role: UserRole } | null>;
+}
 
 export interface SettingsRepository {
   /** FR-PUB-009 — public delivery_enabled flag */
