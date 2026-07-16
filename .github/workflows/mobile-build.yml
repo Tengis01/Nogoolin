@@ -1,0 +1,77 @@
+# CI/CD skeleton (Phase 1) — build profiles finalized in Phase 6.
+# Ref: docs/09-deployment.md §8.5 (NFR-MAIN-005). EAS Build compiles in
+# Expo's cloud — no Android SDK or Xcode needed on the runner.
+#
+# EAS builds are triggered MANUALLY (workflow_dispatch) — each build spends
+# EAS quota, so it should not fire on every push. Lint/typecheck still runs
+# automatically on PRs touching mobile code.
+name: Build Mobile
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build"
+        type: choice
+        default: android
+        options:
+          - android
+          - ios # requires Apple Developer account — Phase 6, not MVP blocker
+      profile:
+        description: "EAS build profile"
+        type: choice
+        default: preview
+        options:
+          - preview
+          - production
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - "packages/validation-schemas/**"
+      - "packages/shared-types/**"
+      - ".github/workflows/mobile-build.yml"
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @nogoolin/mobile lint
+      - run: pnpm --filter @nogoolin/mobile type-check
+
+  eas-build:
+    needs: lint-and-typecheck
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      # TODO(Phase 6): create apps/mobile/eas.json with preview/production
+      # profiles before first real build (docs/09-deployment.md §10)
+      - name: Trigger EAS Build (Expo cloud)
+        working-directory: apps/mobile
+        run: >
+          eas build
+          --platform ${{ inputs.platform }}
+          --profile ${{ inputs.profile }}
+          --non-interactive
