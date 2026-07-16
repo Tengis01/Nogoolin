@@ -1,0 +1,19 @@
+# Keep the Docker build context small and secrets out of image layers
+node_modules
+**/node_modules
+**/dist
+**/.next
+**/.expo
+
+# Never let env files enter the build context (08-security.md §11.2)
+.env
+.env.local
+.env.*.local
+
+.git
+.github
+docs
+apps
+database
+*.md
+docker-compose.yml

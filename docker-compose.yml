@@ -1,0 +1,31 @@
+# docker-compose.yml — LOCAL DEVELOPMENT ONLY (docs/09-deployment.md §5.7)
+#
+# No local Postgres container: Supabase is cloud-hosted (Singapore region),
+# so the API connects to cloud Supabase even in local dev. Credentials come
+# from .env (copy .env.example → .env and fill in — never commit .env).
+#
+# Usage:
+#   docker compose up api
+# Or without Docker:
+#   pnpm --filter @nogoolin/api dev
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: backend/api/Dockerfile
+      target: builder # builder stage has dev deps → hot-reload via tsx watch
+    ports:
+      - "3001:3001"
+    # All values (Supabase keys, CORS origins, rate limits) load from .env —
+    # see .env.example for the full variable list. No secrets hardcoded here.
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+    volumes:
+      # Hot-reload: mount source over the image copy; tsx watch picks up edits
+      - ./backend/api/src:/app/backend/api/src
+      - ./packages:/app/packages
+    command: pnpm --filter @nogoolin/api dev
