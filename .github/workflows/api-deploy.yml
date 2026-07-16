@@ -9,14 +9,14 @@ on:
     paths:
       - "backend/api/**"
       - "packages/**"
-      - "database/migrations/**"
+      - "supabase/migrations/**"
       - ".github/workflows/api-deploy.yml"
   pull_request:
     branches: [main]
     paths:
       - "backend/api/**"
       - "packages/**"
-      - "database/migrations/**"
+      - "supabase/migrations/**"
 
 jobs:
   lint-and-test:
@@ -49,8 +49,8 @@ jobs:
 
   # NFR-MAIN-007: migrations apply BEFORE the new container deploys, so new
   # code never runs against an old schema (docs/09-deployment.md §8.4).
-  # TODO(Phase 6): enable once the Supabase project exists; point the
-  # Supabase CLI at database/migrations/ (finalized location).
+  # TODO(Phase 6): enable once the cloud Supabase project exists —
+  # `supabase db push` reads supabase/migrations/ (CLI default).
   # migration-check:
   #   needs: docker-build
   #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
