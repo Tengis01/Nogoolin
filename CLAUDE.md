@@ -16,6 +16,25 @@ never require refactoring.
 Solo-developer project (Tengis), 16-week MVP, documentation-first. MVP =
 Phases 1–3 of `docs/10-roadmap.md`; Phase 0 (documentation) is complete.
 
+## Agent Context Workflow (standing instruction)
+
+At the start of every session, read `agent-context/MEMORY.md`,
+`agent-context/PROGRESS.md`, and `agent-context/TASKS.md` first — before
+touching `docs/`.
+
+At the end of EVERY task, no matter how small, append an entry to
+`agent-context/TASKS.md` (what was done, what's next) and, if any error or
+bug was encountered, log it in `agent-context/ERRORS.md` with root cause and
+fix applied. These two files are updated constantly.
+
+The other `agent-context/` files (`DECISIONS.md`, `DB_SCHEMA.md`, `design.md`,
+`PROJECT_BRIEF.md`) are read only when relevant to the current task, and
+updated only when something in that specific domain actually changes — not on
+every task.
+
+`agent-context/` is a condensed working-memory layer, NOT a replacement for
+`docs/` — on any conflict, `docs/` wins.
+
 ## Authoritative Specifications
 
 The `docs/` folder is the **authoritative Phase 0 specification**. Read the
@@ -76,6 +95,8 @@ nogoolin/
 ├── database/
 │   └── migrations/     → versioned SQL migrations (append-only; never edit
 │                         an applied migration — add a new numbered file)
+├── agent-context/      → AI-agent working memory (condensed from docs/;
+│                         see "Agent Context Workflow" above)
 └── docs/               → authoritative Phase 0 specifications
 ```
 
