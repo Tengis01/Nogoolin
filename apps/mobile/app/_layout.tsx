@@ -27,6 +27,8 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: 'Ногоолин' }} />
         <Stack.Screen name="login" options={{ title: 'Нэвтрэх' }} />
         <Stack.Screen name="signup" options={{ title: 'Бүртгүүлэх' }} />
+        <Stack.Screen name="products/index" options={{ title: 'Бүтээгдэхүүн' }} />
+        <Stack.Screen name="products/[slug]" options={{ title: '' }} />
       </Stack>
     </>
   );

@@ -22,6 +22,12 @@ export default function HomeScreen() {
         Сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах
       </Text>
 
+      <Link href="/products" asChild>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Каталог үзэх</Text>
+        </TouchableOpacity>
+      </Link>
+
       {session ? (
         <>
           <Text style={styles.muted}>Нэвтэрсэн: {session.user.email}</Text>
