@@ -1,7 +1,13 @@
 import type {
+  AdminProductListQuery,
   Category,
+  CategoryInput,
+  CategoryPatch,
   Product,
+  ProductImage,
+  ProductInput,
   ProductListQuery,
+  ProductPatch,
   PublicSettings,
   UserRole,
 } from '@nogoolin/validation-schemas';
@@ -9,49 +15,91 @@ import type {
 // ─────────────────────────────────────────────────────────────
 // DB-AGNOSTIC REPOSITORY INTERFACES
 //
-// The rest of the app (services, controllers) depends ONLY on these
-// interfaces — never on Supabase types. This is the isolation that
-// enables a future off-Supabase migration without touching services
-// (CLAUDE.md layered-architecture rule / NFR-MAIN-001).
-//
+// Services and controllers depend ONLY on these interfaces — never on
+// Supabase types (NFR-MAIN-001; enables future off-Supabase migration).
 // Concrete Supabase implementations live in ./supabase/.
-// Add new entity interfaces here as features are built.
+// Repositories are role-AGNOSTIC: RBAC enforcement happens in the
+// controller-layer hooks, never here.
 // ─────────────────────────────────────────────────────────────
 
 export interface UserRepository {
-  /**
-   * Auth profile lookup (id + role) for the JWT/RBAC layer. This is a plain
-   * data read — the repository stays role-AGNOSTIC; enforcement happens in
-   * the controller-layer hooks (docs/08 §5.4).
-   */
   findAuthProfile(id: string): Promise<{ id: string; role: UserRole } | null>;
 }
 
 export interface SettingsRepository {
-  /** FR-PUB-009 — public delivery_enabled flag */
   getPublicSettings(): Promise<PublicSettings>;
-  /** FR-SET-003 — admin-only; caller must already be authorized */
   setDeliveryEnabled(enabled: boolean): Promise<void>;
 }
 
-export interface ProductRepository {
-  /** FR-PUB-001/002, FR-PROD-012/013 — published products, filtered + paginated */
-  listPublished(query: ProductListQuery): Promise<{ data: Product[]; total: number }>;
-  /** FR-PUB-003 — single published product by slug */
-  findBySlug(slug: string): Promise<Product | null>;
+/** Search terms prepared by the service layer (FR-PUB-014) */
+export interface SearchTerms {
+  /** the raw query as typed */
+  raw: string;
+  /** Cyrillic transliteration when the query was Latin; null otherwise */
+  transliterated: string | null;
 }
 
 export interface CategoryRepository {
-  /** FR-PUB-005 — active categories ordered by sort_order */
+  /** FR-CAT-007 / FR-PUB-005 — active categories ordered by sort_order */
   listActive(): Promise<Category[]>;
+  findBySlug(slug: string): Promise<Category | null>;
+  findById(id: string): Promise<Category | null>;
+  slugExists(slug: string): Promise<boolean>;
+  create(data: CategoryInput & { slug: string }): Promise<Category>;
+  /** returns null when the id does not exist */
+  update(id: string, patch: CategoryPatch): Promise<Category | null>;
+  delete(id: string): Promise<void>;
+  /** FR-CAT-004 — deletion guard */
+  countProducts(categoryId: string): Promise<number>;
+}
+
+export interface ProductRepository {
+  /** Public list: published only, filters + multi-script search + sort */
+  listPublished(
+    query: ProductListQuery,
+    search: SearchTerms | null,
+  ): Promise<{ data: Product[]; total: number }>;
+  /** Admin list: any status (FR-ADM-004) */
+  listAll(query: AdminProductListQuery): Promise<{ data: Product[]; total: number }>;
+  /** FR-PUB-003 — published only, with images + category */
+  findPublishedBySlug(slug: string): Promise<Product | null>;
+  findById(id: string): Promise<Product | null>;
+  slugExists(slug: string): Promise<boolean>;
+  create(data: ProductInput & { slug: string }): Promise<Product>;
+  /** returns null when the id does not exist */
+  update(id: string, patch: ProductPatch): Promise<Product | null>;
+  hardDelete(id: string): Promise<void>;
+}
+
+export interface ProductImageRepository {
+  findById(productId: string, imageId: string): Promise<ProductImage | null>;
+  nextSortOrder(productId: string): Promise<number>;
+  insert(record: {
+    product_id: string;
+    image_url: string;
+    alt_text: string | null;
+    sort_order: number;
+  }): Promise<ProductImage>;
+  update(
+    imageId: string,
+    patch: { sort_order?: number; alt_text?: string },
+  ): Promise<ProductImage>;
+  delete(imageId: string): Promise<void>;
+}
+
+/** Object-storage port (Supabase Storage today; keeps services storage-agnostic) */
+export interface FileStorage {
+  /** uploads and returns the public URL; throws on upstream failure */
+  uploadPublic(
+    bucket: string,
+    path: string,
+    data: Buffer,
+    contentType: string,
+  ): Promise<string>;
+  remove(bucket: string, path: string): Promise<void>;
 }
 
 export interface AuditLogRepository {
-  /**
-   * FR-AUD-001/002 — written via service_role AFTER the primary operation
-   * succeeds (UC-SYS-003). The only legitimate RLS bypass besides the
-   * auth sign-up trigger.
-   */
   log(entry: {
     admin_id: string;
     action: string;
