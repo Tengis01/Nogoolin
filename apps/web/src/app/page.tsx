@@ -1,34 +1,33 @@
 import Link from 'next/link';
+import { HeroIntro } from '@/components/intro/hero-intro';
+import { PublicFooter } from '@/components/public/nav';
 
-// Placeholder home — the 3D intro + shrinking hero + catalog arrive in
-// Phases 2–3 (WF-INTRO/WF-HERO/WF-HOME). Phase 1 only needs auth to work.
+// `/` — 3D intro + shrinking hero (WF-INTRO/WF-HERO), white zone below.
+// The full home catalog section (WF-HOME-01…04: category row, featured
+// grid, info strip) lands later in Phase 3 — this section is its slot.
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-[1200px] flex-col items-center justify-center gap-6 px-[5vw]">
-      <h1 className="text-4xl tracking-[0.14em] text-[var(--ink)]">НОГООЛИН</h1>
-      <p className="text-sm text-[var(--muted)]">
-        Сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах — Phase 1 scaffold
-      </p>
-      <div className="flex gap-4">
+    <>
+      <HeroIntro />
+      <main
+        id="catalog"
+        className="mx-auto flex max-w-[1200px] flex-col items-center gap-6 px-[5vw] py-16 text-center"
+      >
+        <h2 className="text-[clamp(26px,3.2vw,38px)] text-[var(--ink)]">
+          Каталог
+        </h2>
+        <p className="max-w-xl text-sm leading-relaxed text-[var(--muted)]">
+          Ангиллаар шүүж, кирилл, латин, англиар хайж, бүтээгдэхүүн бүрийн
+          дэлгэрэнгүй мэдээлэл, хэрэглэх заавартай танилцана уу.
+        </p>
         <Link
           href="/products"
           className="rounded-full bg-[var(--act)] px-8 py-3 text-sm font-semibold text-[var(--act-text)] transition-colors hover:bg-[var(--act-hover)]"
         >
-          Каталог үзэх
+          Бүтээгдэхүүн үзэх
         </Link>
-        <Link
-          href="/login"
-          className="rounded-full border border-[var(--hair)] px-8 py-3 text-sm font-semibold text-[var(--ink)] transition-colors hover:border-[var(--act)]"
-        >
-          Нэвтрэх
-        </Link>
-        <Link
-          href="/signup"
-          className="rounded-full border border-[var(--hair)] px-8 py-3 text-sm font-semibold text-[var(--ink)] transition-colors hover:border-[var(--act)]"
-        >
-          Бүртгүүлэх
-        </Link>
-      </div>
-    </main>
+      </main>
+      <PublicFooter />
+    </>
   );
 }
