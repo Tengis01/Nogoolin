@@ -18,6 +18,18 @@ export const productImageInputSchema = z.object({
 });
 export type ProductImageInput = z.infer<typeof productImageInputSchema>;
 
+// PATCH /admin/products/:id/images/:imageId (06-api-spec — sort_order and/or
+// alt_text; reordering makes lowest sort_order the thumbnail, FR-MEDIA-005)
+export const productImagePatchSchema = z
+  .object({
+    sort_order: z.number().int().min(0).optional(),
+    alt_text: z.string().max(200).optional(),
+  })
+  .refine((v) => v.sort_order !== undefined || v.alt_text !== undefined, {
+    message: 'At least one of sort_order or alt_text is required',
+  });
+export type ProductImagePatch = z.infer<typeof productImagePatchSchema>;
+
 // Entity — public.media_assets (docs/04 §3.5, standalone site-wide assets)
 export const mediaAssetSchema = z.object({
   id: z.string().uuid(),

@@ -7,8 +7,8 @@ export function registerSettingsRoutes(
   fastify: FastifyInstance,
   service: SettingsService,
 ): void {
-  // FR-PUB-009 — public, unauthenticated
+  // FR-PUB-009 — public, unauthenticated; {data} envelope per 06-api-spec
   fastify.get('/settings/public', async () => {
-    return service.getPublicSettings();
+    return { data: await service.getPublicSettings() };
   });
 }
