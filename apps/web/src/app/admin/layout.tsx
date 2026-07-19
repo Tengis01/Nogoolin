@@ -29,11 +29,10 @@ export default async function AdminLayout({
     redirect('/');
   }
 
-  // Feature pages (products/categories/inquiries/settings) arrive in Phase 2+
   const navItems = [
     { href: '/admin', label: 'Хянах самбар' },
-    { href: '/admin#products', label: 'Бүтээгдэхүүн (Phase 2)' },
-    { href: '/admin#categories', label: 'Ангилал (Phase 2)' },
+    { href: '/admin/products', label: 'Бүтээгдэхүүн' },
+    { href: '/admin/categories', label: 'Ангилал' },
     { href: '/admin#inquiries', label: 'Хүсэлтүүд (Phase 4)' },
     { href: '/admin#settings', label: 'Тохиргоо (Phase 5)' },
   ];

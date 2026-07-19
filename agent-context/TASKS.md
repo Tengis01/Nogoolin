@@ -40,6 +40,23 @@
 
 ## Log (append after every task, newest first)
 
+### 2026-07-19 — Admin catalog UI, mock data (`feature/admin-catalog-ui`)
+- **Done:** /admin/categories (CategoryTable: drag-reorder, active toggle,
+  product-count delete guard, add/edit modal with live slug preview),
+  /admin/products (ProductTable: thumbnail/halo placeholder, category +
+  status filters, search, publish-toggle/archive/delete with FR-ADM-008
+  confirm dialogs), /admin/products/new (ProductForm: Cyrillic name + slug
+  preview, category/price/status, markdown description, repeatable
+  usage-instruction steps serialized to markdown, drag&drop multi-image
+  zone with type/size validation + reorder + primary badge). Shared atoms in
+  components/admin/ui.tsx; v4 tokens only, no red (saffron-deep = caution).
+  All on MOCK data (lib/admin/mock-data.ts typed with shared schemas).
+  Parent-category field from the request was intentionally NOT built —
+  schema has no parent_id (docs/04, flat categories); flagged to owner.
+  Verified: type-check + next build green (routes dynamic/auth-gated).
+- **Next:** wire tables/form to the live API (fetch layer + mutations),
+  then public listing/detail pages.
+
 ### 2026-07-19 — Catalog API (`feature/product-category-api`) — Phase 2 Week 1
 - **Done:** local stack started (DOCKER_HOST workaround, ERRORS.md) — RLS
   true on all 11 tables, buckets created; migrations 0004 search_vector
