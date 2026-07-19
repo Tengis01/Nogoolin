@@ -47,6 +47,27 @@
 
 ## Log (append after every task, newest first)
 
+### 2026-07-20 — Intro camera system on placeholder (`feature/intro-camera-system`)
+- **Done:** apps/web/src/components/intro/: intro-config.ts (ALL locked
+  constants + DEITY_GLB_URL single swap point + GLB artist requirements),
+  deity.tsx (WF-INTRO-03 placeholder / future GLB via config), intro-scene
+  (CameraRig: position ONLY from (az,r,y) spherical; per-frame setViewOffset
+  ramp, never cleared; breathing + particles per exact spec formulas),
+  hero-intro (state machine, JS morph height driver sharing the camera's
+  smootherstep, skip/loading/title/nav/copy overlays, reduced-motion +
+  no-WebGL + returning-visitor paths, scroll lock, replay, ?debug=camera
+  overlay), static-hero fallback; home page hosts hero + catalog slot.
+  Deps: three 0.185, @react-three/fiber 9.6, drei 10.7 (lazy-loaded —
+  home first-load stays 110kB, skip never blocked).
+- **Verified:** type-check + build green; grep audit = exactly ONE camera
+  position write (the arc formula), zero translateX/position.x, zero
+  clearViewOffset; headless-Chrome virtual-time runs: endpoint az 0.0000 /
+  r 6.200 / y 2.200 / x-drift 0.000; midpoint self-consistent (e=0.3525
+  across all three params). No lateral-translate-bug symptoms observed
+  (nothing to log in ERRORS beyond process notes).
+- **Next:** home white catalog section (WF-HOME), then 360° viewer; GLB
+  swap when the art asset lands (one line + D-04 re-tune).
+
 ### 2026-07-19 — Public catalog + SEO + mobile screens (`feature/public-catalog`) — PHASE 2 COMPLETE
 - **Done:** web /products listing (server-rendered, WF-LIST: single-row
   chips + right fade, ?category/?q/?page URL state, 300ms debounce → API
