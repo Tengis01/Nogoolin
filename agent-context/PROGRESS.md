@@ -93,14 +93,42 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
       detail Perf 100 (LCP 1.9s); listing Perf 96 / SEO 100 — FCP 0.9s,
       Speed Index 1.4s, LCP 2.2s under sim (≈<2s on real 4G target)
 
-## Phase 3 — Premium Experience 🔜 NEXT ⚠ HIGHEST-RISK PHASE
-Per docs/10 §5: 3D camera math + cross-platform animation parity + documented
-v4 prototype bugs. Non-negotiables: deity never moves; NO lateral camera
-translate (use camera.setViewOffset — the ~10–20° apparent-rotation bug);
-5s single arc az 0.85→0 / r 16→6.2 / y 7.5→2.2 smootherstep; skip ≤1s;
-static fallback; reduced-motion; one persistent canvas 100vh→35vh (42vh
-mobile); Green Tara GLB ≤5MB Draco; resolve D-04. See design.md + MEMORY.md
-rule 3 BEFORE writing any Three.js code.
+## Phase 3 — Premium Experience 🔄 IN PROGRESS ⚠ HIGHEST-RISK PHASE
+Non-negotiables recap: deity never moves; NO lateral camera translate
+(setViewOffset only); locked arc numbers; skip ≤1s; fallbacks. See
+design.md + MEMORY.md rule 3 before ANY Three.js change.
+
+### Done (2026-07-20) — intro camera system (`feature/intro-camera-system`)
+- [x] Persistent-canvas hero (WF-HERO-01): ONE R3F canvas across
+      loading→playing→ready→morph→home; container height JS-animated
+      100vh→35vh (42vh ≤700px) with the same smootherstep as the camera
+- [x] Camera arc (WF-INTRO-02): 5s, az 0.85→0, r 16→6.2, y 7.5→2.2,
+      smootherstep, lookAt(0,1.4,0) fixed; position derived ONLY from
+      (az,r,y) spherical → lateral translate structurally impossible
+- [x] setViewOffset right-placement (WF-HERO-02): −0.18w/−0.10w ramped
+      with morph easing, reapplied per frame w/ current size, never cleared;
+      instant paths apply e=1
+- [x] Morph dolly: r −0.9, y −0.35 along axis, zero angular change
+- [x] WF-INTRO-03 placeholder scene: icosahedron deity + wireframe hint,
+      halo torus, pedestal, ground, fog, 360 drifting particles, breathing
+      lights (exact formulas); CSS radial gradient bg (never flat)
+- [x] Fallback/a11y (WF-INTRO-05…09): skip from first frame (plain DOM,
+      never blocked by lazy three.js), reduced-motion → static home,
+      WebGL-less static hero, sessionStorage returning-visitor, scroll
+      lock until home; replay-intro without reload (WF-HERO-06)
+- [x] GLB swap point: intro-config.ts DEITY_GLB_URL (one line) + full
+      asset requirements doc for the artist (≤5MB Draco, +Y up, faces +Z,
+      ~2.2 units tall, bottom-center origin)
+- [x] Verified at runtime (headless Chrome virtual-time): arc endpoint
+      az 0.0000 / r 6.200 / y 2.200 / x-drift 0.000; midpoint internally
+      consistent (az 0.5504 ⇒ e 0.3525 ⇒ r 12.545, y 5.632 — exact);
+      ?debug=camera overlay ships for visual verification
+
+### Remaining in Phase 3
+- [ ] Green Tara GLB (external asset) → set DEITY_GLB_URL → D-04 re-tune
+- [ ] Home white catalog section (WF-HOME-01…04) below the hero
+- [ ] 360° product viewer + GLB upload endpoint/admin UI
+- [ ] Mobile Rive intro (separate task, after web validation)
 
 ## Phase 2 (archive of week 1–2 log)
 
