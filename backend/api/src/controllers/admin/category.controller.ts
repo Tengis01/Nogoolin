@@ -14,6 +14,14 @@ export function registerAdminCategoryRoutes(
   fastify: FastifyInstance,
   service: CategoryService,
 ): void {
+  // GET /admin/categories — all categories (incl. inactive) with product
+  // counts. NOTE: not in 06-api-spec v1.0.0 (spec gap) but required by
+  // FR-ADM-005 "list, create, edit, deactivate"; response shape
+  // {data: (Category & {product_count})[]}.
+  fastify.get('/categories', async () => {
+    return { data: await service.listAdmin() };
+  });
+
   // POST /admin/categories → 201
   fastify.post<{ Body: CategoryInput }>(
     '/categories',

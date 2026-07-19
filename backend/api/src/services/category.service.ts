@@ -13,6 +13,11 @@ export function createCategoryService(
       return categories.listActive();
     },
 
+    // FR-ADM-005 — admin management table (includes inactive + counts)
+    async listAdmin() {
+      return categories.listAllWithCounts();
+    },
+
     // FR-PUB-008 — 404 when inactive or missing
     async getBySlug(slug: string): Promise<Category> {
       const category = await categories.findBySlug(slug);

@@ -124,6 +124,21 @@ if (!reachable) {
     assert.equal(res.json().data.id, categoryId);
   });
 
+  test('GET /admin/categories: includes counts, admin-only', async () => {
+    const anon = await ctx.app.inject({ method: 'GET', url: '/api/v1/admin/categories' });
+    assert.equal(anon.statusCode, 401);
+
+    const res = await ctx.app.inject({
+      method: 'GET',
+      url: '/api/v1/admin/categories',
+      headers: admin(),
+    });
+    assert.equal(res.statusCode, 200);
+    const row = res.json().data.find((c: { id: string }) => c.id === categoryId);
+    assert.ok(row);
+    assert.equal(typeof row.product_count, 'number');
+  });
+
   test('PATCH /admin/categories/{id} → 200; unknown id → 404', async () => {
     const ok = await ctx.app.inject({
       method: 'PATCH',
