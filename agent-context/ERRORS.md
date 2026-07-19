@@ -17,6 +17,19 @@
 
 ---
 
+### 2026-07-19 — 404 pages returned HTTP 200 (streaming + loading.tsx) (fixed)
+- **Where:** /products/[slug] for unknown/draft slugs (public catalog)
+- **Symptom:** not-found UI rendered but HTTP status was 200 — bad for SEO
+  (crawlers would index 404 pages) and violated the API's 404 contract
+- **Root cause:** `app/products/loading.tsx` created a Suspense boundary
+  wrapping the `[slug]` CHILD segment too; Next streamed a 200 shell before
+  `notFound()` threw inside the suspended boundary
+- **Fix:** moved listing page + loading.tsx into a route group
+  `app/products/(list)/` so the skeleton boundary applies to the listing
+  only; verified 404 for unknown AND draft slugs afterwards
+- **Prevention:** loading.tsx applies to all child segments — scope it with
+  a route group whenever a sibling dynamic segment relies on notFound()
+
 ### 2026-07-19 — Next.js webpack can't resolve shared package's .js specifiers (fixed)
 - **Where:** apps/web build after importing RUNTIME schemas from
   @nogoolin/validation-schemas (type-only imports had worked — they erase)

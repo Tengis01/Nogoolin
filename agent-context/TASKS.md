@@ -8,23 +8,30 @@
 
 *(empty)*
 
-## Backlog (Phase 2 order)
+## Backlog (Phase 3 order — ⚠ highest-risk phase, read design.md first)
 
-- [ ] Web /admin: category + product management UI (uses the new API;
-      single-row rule WF-HOME-01 for category display)
-- [ ] Web public: product listing + detail pages (multi-script search box,
-      chips, pagination — WF-LIST) wired to GET /products
-- [ ] Mobile: listing + detail core screens
-- [ ] Manual web-auth smoke test: signup → SQL admin promotion (docs/09 §9)
-      → /admin loads (API-side RBAC now covered by integration tests)
+- [ ] Green Tara GLB: Meshy AI workflow → gltf-pipeline Draco (<5MB);
+      resolve D-04 composition re-tune on the real model
+- [ ] Web 3D intro (WF-INTRO-01…09): state machine, 5s single arc
+      (az 0.85→0, r 16→6.2, y 7.5→2.2, smootherstep), skip ≤1s, static
+      fallback, reduced-motion, sessionStorage returning-visitor
+- [ ] Shrinking hero morph (WF-HERO-01…08): one persistent canvas
+      100vh→35vh/42vh, camera.setViewOffset (NEVER lateral translate —
+      documented v4 bug), home catalog section (WF-HOME-01…04)
+- [ ] 360° product viewer on detail page (drag-only, no auto-rotate;
+      GLB upload endpoint /admin/products/{id}/model + admin UI)
+- [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition
+- [ ] Product edit page in admin (+ GET /admin/products/{id})
+- [ ] Manual web-auth smoke test in browser (API RBAC covered by tests)
 - [ ] Merge feature branches → `main`; create `develop` branch
       (waiting for owner go-ahead — "wait user to tell" 2026-07-16)
-- [ ] GitHub Projects Kanban board
-- [ ] Real eslint config (lint currently aliases `tsc --noEmit`)
-- [ ] Mobile: encrypted session storage (docs/08 §5.2) + native Google Sign-In
+- [ ] Real eslint config; mobile encrypted session storage; native Google
+      Sign-In (carried over)
 
 ## Done
 
+- [x] 2026-07-19 — PHASE 2 COMPLETE: public listing/detail + SEO (Lighthouse
+      SEO 92/100, perf 100/96) + mobile listing/detail screens
 - [x] 2026-07-19 — Category/Product/Image CRUD API + multi-script search +
       21 integration tests green vs live local stack; local stack finally
       RUNNING (Phase 1 runtime caveat closed)
@@ -39,6 +46,29 @@
 ---
 
 ## Log (append after every task, newest first)
+
+### 2026-07-19 — Public catalog + SEO + mobile screens (`feature/public-catalog`) — PHASE 2 COMPLETE
+- **Done:** web /products listing (server-rendered, WF-LIST: single-row
+  chips + right fade, ?category/?q/?page URL state, 300ms debounce → API
+  `search` param, numbered pagination, exact empty-state copy, skeleton via
+  route group `(list)`) and /products/[slug] detail (breadcrumb, gallery +
+  thumbnails, tabs w/ parsed numbered usage steps, inquiry CTA disabled til
+  Phase 4, not-found page); SEO: generateMetadata (title/desc/OG/canonical),
+  Product JSON-LD, dynamic sitemap.ts (walks all pages), robots.ts,
+  next/image remotePatterns; mobile: products list (chips/search/2-col grid/
+  pull-refresh/load-more) + [slug] detail (paged swipe gallery + dots,
+  numbered steps) with TYPE-ONLY shared-schema imports; nav/footer shared
+  public components. Seeded demo data (8 published incl. multi-image +
+  1 draft) via scratchpad script w/ generated PNGs.
+- **Verified:** SSR HTML contains products; NO draft/archived leakage
+  (listing excludes, detail 404s); search hits for "Ногоон"/"green tara"/
+  "nogoon dar eh"; 404 statuses correct after the route-group fix
+  (ERRORS.md); sitemap 14 urls; Lighthouse (mobile, slow-4G sim): detail
+  SEO 92 + Perf 100 (LCP 1.9s), listing SEO 100 + Perf 96 (FCP 0.9s,
+  SI 1.4s, LCP 2.2s). meta-description audit is a false negative (tag
+  verified in SSR HTML and post-JS DOM).
+- **Next:** Phase 3 (⚠ highest-risk): GLB prep → 3D intro → shrinking hero
+  (setViewOffset!) → 360° viewer → Rive mobile intro.
 
 ### 2026-07-19 — Admin UI wired to live API (`feature/admin-ui`)
 - **Note:** owner's message said v0.dev components were pasted but none were
