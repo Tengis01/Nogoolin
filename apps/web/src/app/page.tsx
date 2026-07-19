@@ -11,8 +11,14 @@ export default function HomePage() {
       </p>
       <div className="flex gap-4">
         <Link
-          href="/login"
+          href="/products"
           className="rounded-full bg-[var(--act)] px-8 py-3 text-sm font-semibold text-[var(--act-text)] transition-colors hover:bg-[var(--act-hover)]"
+        >
+          Каталог үзэх
+        </Link>
+        <Link
+          href="/login"
+          className="rounded-full border border-[var(--hair)] px-8 py-3 text-sm font-semibold text-[var(--ink)] transition-colors hover:border-[var(--act)]"
         >
           Нэвтрэх
         </Link>
