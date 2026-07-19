@@ -42,6 +42,8 @@ export interface SearchTerms {
 export interface CategoryRepository {
   /** FR-CAT-007 / FR-PUB-005 — active categories ordered by sort_order */
   listActive(): Promise<Category[]>;
+  /** FR-ADM-005 — admin list: includes inactive, with product counts */
+  listAllWithCounts(): Promise<Array<Category & { product_count: number }>>;
   findBySlug(slug: string): Promise<Category | null>;
   findById(id: string): Promise<Category | null>;
   slugExists(slug: string): Promise<boolean>;

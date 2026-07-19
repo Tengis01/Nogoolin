@@ -21,6 +21,20 @@ export function createSupabaseCategoryRepository(
       return data as Category[];
     },
 
+    async listAllWithCounts() {
+      const { data, error } = await writeClient
+        .from('categories')
+        .select('*, products(count)')
+        .order('sort_order', { ascending: true });
+      if (error) throw new Error(`admin categories list failed: ${error.message}`);
+      return (data as Array<Category & { products: Array<{ count: number }> }>).map(
+        ({ products, ...category }) => ({
+          ...category,
+          product_count: products[0]?.count ?? 0,
+        }),
+      );
+    },
+
     async findBySlug(slug) {
       const { data, error } = await readClient
         .from('categories')
