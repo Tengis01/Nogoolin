@@ -90,7 +90,10 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
       idempotent across runs; suite self-skips when the stack is down
 
 ### Remaining in Phase 2
-- [ ] Admin web UI: category + product management pages (`apps/web/admin`)
+- [~] Admin web UI: category + product management pages — UI built 2026-07-19
+      (/admin/categories, /admin/products, /admin/products/new: tables,
+      filters, modals, confirm dialogs, image dropzone) but on MOCK data;
+      wiring to the live API is the next step
 - [ ] Public web: product listing + detail pages wired to the API
 - [ ] Mobile: listing + detail core screens
 - [ ] SEO pass on listing/detail (meta, OG, sitemap)
