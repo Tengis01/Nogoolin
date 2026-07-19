@@ -17,6 +17,18 @@
 
 ---
 
+### 2026-07-19 — Next.js webpack can't resolve shared package's .js specifiers (fixed)
+- **Where:** apps/web build after importing RUNTIME schemas from
+  @nogoolin/validation-schemas (type-only imports had worked — they erase)
+- **Symptom:** `Module not found: Can't resolve './media.schema.js'`
+- **Root cause:** the shared package uses NodeNext `.js` import specifiers
+  (required by the API's tsc); webpack doesn't apply TS's js→ts mapping
+- **Fix:** `config.resolve.extensionAlias = { '.js': ['.ts', '.js'] }` in
+  apps/web/next.config.ts webpack hook
+- **Prevention:** any new consumer bundler of the shared packages needs the
+  same alias (metro for mobile may need equivalent when it imports runtime
+  schemas)
+
 ### 2026-07-19 — Supabase CLI targets dead Docker Desktop socket (workaround)
 - **Where:** `pnpm exec supabase start` / all supabase CLI docker commands
 - **Symptom:** "Cannot connect to the Docker daemon at

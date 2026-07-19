@@ -90,10 +90,16 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
       idempotent across runs; suite self-skips when the stack is down
 
 ### Remaining in Phase 2
-- [~] Admin web UI: category + product management pages — UI built 2026-07-19
-      (/admin/categories, /admin/products, /admin/products/new: tables,
-      filters, modals, confirm dialogs, image dropzone) but on MOCK data;
-      wiring to the live API is the next step
+- [x] Admin web UI: built 2026-07-19, wired to the LIVE API same day
+      (`feature/admin-ui`): thin client in apps/web/src/lib/api (Bearer token
+      from Supabase session, 401→login redirect, XHR upload w/ progress),
+      loading/error/empty states, shared-Zod client validation, category
+      reorder + toggle persisted via PATCH, product filters/pagination
+      server-side, image upload → real Storage endpoint with retry-on-fail.
+      Mock data DELETED. New API endpoint: GET /admin/categories (incl.
+      inactive + product_count; 06-spec gap, required by FR-ADM-005).
+      NOT yet done: product EDIT page (no admin get-by-id endpoint exists;
+      Засах button is a stub) and in-browser manual smoke test
 - [ ] Public web: product listing + detail pages wired to the API
 - [ ] Mobile: listing + detail core screens
 - [ ] SEO pass on listing/detail (meta, OG, sitemap)

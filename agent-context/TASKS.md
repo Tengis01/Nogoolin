@@ -40,6 +40,29 @@
 
 ## Log (append after every task, newest first)
 
+### 2026-07-19 — Admin UI wired to live API (`feature/admin-ui`)
+- **Note:** owner's message said v0.dev components were pasted but none were
+  attached — integrated the existing admin components from
+  feature/admin-catalog-ui instead (same goal); flagged to owner.
+- **Done:** API: GET /admin/categories (all + product_count via
+  `products(count)` join; FR-ADM-005, 06-spec gap noted) + integration test
+  (22/22 green). Web: lib/api/client.ts (envelope parsing, Bearer from
+  Supabase session, 401→/login?next=…, XHR apiUpload with progress) +
+  lib/api/admin.ts typed calls; CategoryTable/ProductTable/ProductForm
+  rewired — loading/error/empty states, optimistic toggle + drag-reorder
+  persisted via PATCH sort_order (revert on failure), server-side product
+  filters + debounced search + meta pagination, create-product two-phase
+  flow (POST → image upload w/ progress bar, upload-failure state offers
+  retry or continue), client validation via the SAME shared Zod schemas,
+  409/4xx errors surfaced inline. mock-data.ts deleted. next.config
+  extensionAlias fix for NodeNext .js specifiers (ERRORS.md). Verified:
+  type-check + next build green; CORS + 401 behavior confirmed against the
+  running API.
+- **Still mock/stub:** nothing uses mock data; product Засах (edit) button
+  is a stub pending an admin get-by-id endpoint.
+- **Next:** product edit page (+ GET /admin/products/{id}), manual browser
+  smoke test, then public listing/detail (Week 3).
+
 ### 2026-07-19 — Admin catalog UI, mock data (`feature/admin-catalog-ui`)
 - **Done:** /admin/categories (CategoryTable: drag-reorder, active toggle,
   product-count delete guard, add/edit modal with live slug preview),
