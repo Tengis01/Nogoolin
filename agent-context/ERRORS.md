@@ -17,6 +17,49 @@
 
 ---
 
+### 2026-07-19 — Supabase CLI targets dead Docker Desktop socket (workaround)
+- **Where:** `pnpm exec supabase start` / all supabase CLI docker commands
+- **Symptom:** "Cannot connect to the Docker daemon at
+  unix:///home/tengis/.docker/desktop/docker.sock" although `docker` works
+- **Root cause:** docker context is `desktop-linux` (Docker Desktop, not
+  running); the actual engine listens on /var/run/docker.sock
+- **Fix:** prefix supabase CLI calls with
+  `DOCKER_HOST=unix:///var/run/docker.sock` (or `docker context use default`)
+- **Prevention:** noted here + use the DOCKER_HOST prefix in docs/scripts
+
+### 2026-07-19 — config.toml bucket insert broke TOML parsing (fixed)
+- **Where:** `supabase/config.toml` [storage] section
+- **Symptom:** "toml: key file_size_limit is already defined" after start
+- **Root cause:** bucket tables were inserted BEFORE the template's stray
+  `file_size_limit = "50MiB"` line, which TOML then attributed to the last
+  bucket table (duplicate key)
+- **Fix:** moved the scalar keys above the [storage.buckets.*] tables
+- **Prevention:** when inserting TOML tables, always append after ALL scalar
+  keys of the parent table
+
+### 2026-07-19 — API roles missing DML grants on migration-created tables (fixed)
+- **Where:** service_role UPDATE on public.users → "permission denied"
+- **Symptom:** PostgREST 42501 despite service_role's RLS bypass
+- **Root cause:** current supabase CLI Postgres image does not grant
+  SELECT/INSERT/UPDATE/DELETE to anon/authenticated/service_role on tables
+  created via migrations (only TRUNCATE/REFERENCES/TRIGGER present)
+- **Fix:** migration 0006_table_grants — explicit grants + ALTER DEFAULT
+  PRIVILEGES; RLS remains the enforcement layer (grants are the ceiling)
+- **Prevention:** any new schema/table must be covered by the default
+  privileges (already handled by 0006)
+
+### 2026-07-19 — `supabase migration up` hung; silent psql stdin no-op (fixed)
+- **Where:** applying migration 0006 to the running local DB
+- **Symptom:** CLI command timed out at 2 min; then
+  `docker exec -i psql < file` reported nothing and did NOT apply
+- **Root cause:** CLI hang unexplained (likely docker socket probing); the
+  redirect variant silently failed under the sandboxed shell
+- **Fix:** `cat file | docker exec -i ... psql` applied it; version row
+  inserted into supabase_migrations.schema_migrations manually to keep
+  history consistent (verified via pg_class relacl)
+- **Prevention:** after applying grants/migrations manually, ALWAYS verify
+  effect via a direct query, not by absence of errors
+
 ### 2026-07-17 — Type-check failures during web/mobile init (fixed)
 - **Where:** `apps/web/src/lib/supabase/server.ts` + `src/middleware.ts`;
   `apps/mobile/lib/supabase.ts`
