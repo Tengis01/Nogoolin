@@ -65,7 +65,44 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
 - Mobile session storage: AsyncStorage now; docs/08 §5.2 wants encrypted
   storage — TODO(Phase 2) noted in apps/mobile/lib/supabase.ts
 
-## Phase 2 — Product System 🔄 IN PROGRESS (Week 1)
+## Phase 2 — Product System ✅ COMPLETE (2026-07-19)
+
+### Week 3 close-out (`feature/public-catalog`)
+- [x] Public listing /products (WF-LIST-01…07): sticky solid nav, single-row
+      category chips w/ right fade, 300ms-debounced multi-script search
+      (server-side FR-PUB-014), auto-fill grid cards, numbered pagination
+      12/page, exact empty-state copy, skeleton loading (route-grouped so it
+      doesn't break 404 statuses)
+- [x] Detail /products/[slug] (WF-DET-01…05): breadcrumb, gallery w/
+      thumbnails, price/stock/CTA row (inquiry CTA disabled until Phase 4),
+      tabs w/ numbered usage steps; Үзүүлэлт tab omitted (no schema field)
+- [x] SEO: per-product title/description/OG image, canonical, Product
+      JSON-LD, dynamic sitemap.xml (walks all pages), robots.txt
+      (disallow /admin); next/image with remotePatterns
+- [x] Mobile: /products list (chips, debounced search, 2-col grid,
+      pull-to-refresh, load-more) + /products/[slug] (paged swipe gallery
+      w/ dots, price, stock, description, numbered usage steps) — types via
+      TYPE-ONLY imports from validation-schemas (no duplication, no Metro
+      runtime cost)
+- [x] Verified vs live stack (seeded 8 published + 1 draft): SSR content,
+      NO draft leakage (listing + detail both 404), search hits in all 3
+      scripts, category filter, 404 statuses, sitemap 14 urls
+- [x] Perf/SEO (Lighthouse 12, mobile sim slow-4G 150ms/1.6Mbps, 4× CPU):
+      detail SEO **92** (target ≥90 ✓; sole deduction is a false-negative
+      meta-description audit — tag verified in SSR HTML AND post-JS DOM),
+      detail Perf 100 (LCP 1.9s); listing Perf 96 / SEO 100 — FCP 0.9s,
+      Speed Index 1.4s, LCP 2.2s under sim (≈<2s on real 4G target)
+
+## Phase 3 — Premium Experience 🔜 NEXT ⚠ HIGHEST-RISK PHASE
+Per docs/10 §5: 3D camera math + cross-platform animation parity + documented
+v4 prototype bugs. Non-negotiables: deity never moves; NO lateral camera
+translate (use camera.setViewOffset — the ~10–20° apparent-rotation bug);
+5s single arc az 0.85→0 / r 16→6.2 / y 7.5→2.2 smootherstep; skip ≤1s;
+static fallback; reduced-motion; one persistent canvas 100vh→35vh (42vh
+mobile); Green Tara GLB ≤5MB Draco; resolve D-04. See design.md + MEMORY.md
+rule 3 BEFORE writing any Three.js code.
+
+## Phase 2 (archive of week 1–2 log)
 
 ### Done (2026-07-19) — Category/Product/Image API (`feature/product-category-api`)
 - [x] Phase 1 runtime closeout: local stack RUNNING (docker engine socket,

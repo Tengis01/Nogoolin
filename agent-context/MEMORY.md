@@ -6,13 +6,13 @@
 
 ## Where we are
 
-- **Phase 2 — Product System is NEXT** (catalog CRUD, listing/detail pages,
-  multi-script search, image upload). MVP = Phases 1–3 of the 16-week plan.
-- Phase 0 (docs) done 2026-07-05; Phase 1 (Foundation) done 2026-07-17:
-  monorepo, Docker/CI skeletons, local Supabase stack + migrations + RLS,
-  Fastify layered API with JWT/RBAC, Next.js web with auth + /admin scaffold,
-  Expo mobile with auth screens. Runtime smoke test vs local stack pending
-  (see PROGRESS.md caveat).
+- **Phase 3 — Premium Experience is NEXT** ⚠ HIGHEST-RISK phase (3D intro,
+  shrinking hero, 360° viewer, Rive mobile intro). Re-read rule 3 below and
+  design.md before ANY Three.js work. MVP = Phases 1–3.
+- Phase 0 docs 2026-07-05 · Phase 1 Foundation 2026-07-17 · Phase 2 Product
+  System 2026-07-19: catalog API (22 integration tests green), admin UI wired
+  live, public listing/detail + SEO (Lighthouse SEO 92 detail / 100 listing),
+  mobile listing/detail screens. Local Supabase stack running with demo seed.
 
 ## Stack (finalized — do not relitigate; Flutter/Express mentions in old docs are outdated)
 
