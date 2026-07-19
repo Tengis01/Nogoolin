@@ -18,8 +18,6 @@
 - [ ] Shrinking hero morph (WF-HERO-01…08): one persistent canvas
       100vh→35vh/42vh, camera.setViewOffset (NEVER lateral translate —
       documented v4 bug), home catalog section (WF-HOME-01…04)
-- [ ] 360° product viewer on detail page (drag-only, no auto-rotate;
-      GLB upload endpoint /admin/products/{id}/model + admin UI)
 - [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition
 - [ ] Product edit page in admin (+ GET /admin/products/{id})
 - [ ] Manual web-auth smoke test in browser (API RBAC covered by tests)

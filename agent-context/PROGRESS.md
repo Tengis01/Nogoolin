@@ -127,8 +127,10 @@ design.md + MEMORY.md rule 3 before ANY Three.js change.
 ### Remaining in Phase 3
 - [ ] Green Tara GLB (external asset) → set DEITY_GLB_URL → D-04 re-tune
 - [ ] Home white catalog section (WF-HOME-01…04) below the hero
-- [ ] 360° product viewer + GLB upload endpoint/admin UI
 - [ ] Mobile Rive intro (separate task, after web validation)
+
+> 360° per-product viewer REMOVED from Phase 3 scope — deferred post-MVP
+> (D-07, 2026-07-20). Detail pages ship with the photo gallery only.
 
 ## Phase 2 (archive of week 1–2 log)
 

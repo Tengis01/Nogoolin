@@ -23,6 +23,7 @@
 
 | # | Decision | Status | Resolves in |
 |---|---|---|---|
+| D-07 | **360° per-product 3D viewer deferred — post-MVP** (owner decision 2026-07-20). Rationale: requires a separate 3D asset per product — disproportionate effort for a solo-dev catalog MVP. Product detail pages use the standard photo gallery only (already implemented in feature/public-catalog). State audit at deferral: admin ProductForm/UI and API have NO GLB upload surface (the 06-spec `/admin/products/{id}/model` endpoint was never built; no feature/product-360-viewer branch ever existed — nothing to revert). The `model_3d_url` column DOES exist (migration 0001 per docs/04; append-only, so it stays as a DORMANT column like the order tables) and is accepted by `productPatchSchema`/PATCH; nothing ever sets it, so the public card's conditional "360°" badge never renders. Does NOT affect the 3D INTRO (separate feature, in progress). | Deferred post-MVP | Post-launch |
 | D-01 | Final category count (6 / 8 / 10) | Open — layout ready for any count via single-row rule (WF-HOME-01) | Phase 2 (content entry) |
 | D-02 | Ceremonial deep-red accent | Deferred — **no red in v4 palette** | Phase 3 |
 | D-03 | Product photography standard | Direction set: own high-quality photos on white; lighting/angle/ratio guide TBD | Phase 2 |
