@@ -65,7 +65,36 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
 - Mobile session storage: AsyncStorage now; docs/08 §5.2 wants encrypted
   storage — TODO(Phase 2) noted in apps/mobile/lib/supabase.ts
 
-## Phase 2 — Product System 🔜 NEXT
+## Phase 2 — Product System 🔄 IN PROGRESS (Week 1)
+
+### Done (2026-07-19) — Category/Product/Image API (`feature/product-category-api`)
+- [x] Phase 1 runtime closeout: local stack RUNNING (docker engine socket,
+      not Docker Desktop — see ERRORS.md); all migrations applied; RLS
+      verified true on all 11 tables (docs/09 §4.5 query); storage buckets
+      `product-images` + `model-assets` created (also declared in config.toml)
+- [x] Category CRUD API per 06-api-spec (public GET /categories,
+      /categories/{slug}; admin POST/PATCH/DELETE with 409 CATEGORY_NOT_EMPTY)
+- [x] Product CRUD API per 06-api-spec (public list w/ filters + sort +
+      pagination meta, detail by slug published-only; admin list all statuses,
+      create draft, patch incl. publish/archive, delete soft/hard)
+- [x] Multi-script search at the QUERY level: generated tsvector column
+      (name + name_en + search_tags, migration 0004) + Latin→Cyrillic
+      transliteration util; verified in Cyrillic/English/Latin
+- [x] Image upload: multipart → Supabase Storage → product_images rows;
+      per-file validation (type+MIME+5MB), batch partial-rejection,
+      PATCH sort/alt, DELETE (storage object + row)
+- [x] Audit logging on every admin mutation (FR-AUD-001)
+- [x] Migrations 0004–0006 (search vector, storage policies, table grants)
+- [x] Integration tests: 21 passing against the live local stack (happy
+      paths, 401/403 matrix, 400 validation, 404/409, search, upload) —
+      idempotent across runs; suite self-skips when the stack is down
+
+### Remaining in Phase 2
+- [ ] Admin web UI: category + product management pages (`apps/web/admin`)
+- [ ] Public web: product listing + detail pages wired to the API
+- [ ] Mobile: listing + detail core screens
+- [ ] SEO pass on listing/detail (meta, OG, sitemap)
+- [ ] GLB (model-assets) upload endpoint — Phase 3 with the 360° viewer
 ## Phase 3 — Premium Experience ⬜ NOT STARTED (highest-risk phase)
 ## Phase 4 — Soft Order / Inquiry ⬜ NOT STARTED
 ## Phase 5 — Delivery-Ready Structure ⬜ NOT STARTED
