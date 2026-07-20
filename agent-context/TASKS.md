@@ -55,6 +55,31 @@
 
 ## Log (append after every task, newest first)
 
+### 2026-07-20 — Working `docker compose up --build` for api+web (uncommitted)
+- **Done:** added `apps/web/Dockerfile` (dev-only, single-stage — web
+  still deploys via Vercel in prod, per docs/09) and a `web` service to
+  `docker-compose.yml`; both services set `network_mode: host` (Linux)
+  so `next dev`'s own "Network: http://<lan-ip>:3000" log line — and
+  Fastify's own listen log — reflect the machine's REAL LAN IP for free,
+  no custom scripting needed.
+- **3 real bugs found + fixed while actually running it** (details in
+  ERRORS.md): (1) `.dockerignore` blanket-excluded `apps/`, blocking the
+  new web build; (2) neither Dockerfile copied root `tsconfig.base.json`,
+  so `tsc` failed inside the image only; (3) the API container crashed
+  at startup — `@supabase/supabase-js` requires native `WebSocket`
+  unconditionally, absent on the pinned `node:20-alpine` (Node 22+ only)
+  — fixed with a `ws` polyfill, not by touching the locked Node version.
+- **Verified live:** both containers build + start clean; `curl`
+  confirmed `/api/v1/health` and `/api/v1/categories` (real seeded data)
+  on `:3001`, web `200` on both `localhost:3000` and the LAN IP.
+- **Not done:** these changes are UNCOMMITTED — this turn was a request
+  for testing advice, not an explicit commit instruction, so per the
+  git-safety rule (commit only when asked) they're left in the working
+  tree on `chore/phase3-closeout` for review.
+- **Next:** owner reviews/commits (or asks for a separate branch); mobile
+  stays on `pnpm --filter @nogoolin/mobile start`, intentionally not
+  containerized (Expo dev client needs the host's Android tooling).
+
 ### 2026-07-20 — Phase 3 web close-out (`chore/phase3-closeout`)
 - **Task 1 (E2E integration check):** Built a real-Chrome (puppeteer)
   end-to-end suite against the production build — not a code read, an

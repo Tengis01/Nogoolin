@@ -1,13 +1,23 @@
-# docker-compose.yml — LOCAL DEVELOPMENT ONLY (docs/09-deployment.md §5.7)
+# docker-compose.yml — LOCAL DEVELOPMENT ONLY.
 #
-# No local Postgres container: Supabase is cloud-hosted (Singapore region),
-# so the API connects to cloud Supabase even in local dev. Credentials come
-# from .env (copy .env.example → .env and fill in — never commit .env).
+# Brings up the API + web app together for local testing. Supabase is NOT
+# part of this file — it's the Supabase CLI's own Docker stack, started
+# separately (`pnpm exec supabase start`, see README.md). Credentials come
+# from .env (copy .env.example → .env and fill in the values `supabase
+# start` prints — never commit .env).
+#
+# network_mode: host (Linux only) — so `next dev`'s own "Network: http://
+# <lan-ip>:3000" log line reflects your machine's REAL LAN IP, not an
+# internal container IP. On macOS/Windows (Docker Desktop), drop
+# network_mode: host and use `ports:` instead (bridge networking).
 #
 # Usage:
-#   docker compose up api
+#   pnpm exec supabase start   # once, if not already running
+#   docker compose up --build
+#
 # Or without Docker:
 #   pnpm --filter @nogoolin/api dev
+#   pnpm --filter @nogoolin/web dev
 
 services:
   api:
@@ -15,10 +25,7 @@ services:
       context: .
       dockerfile: backend/api/Dockerfile
       target: builder # builder stage has dev deps → hot-reload via tsx watch
-    ports:
-      - "3001:3001"
-    # All values (Supabase keys, CORS origins, rate limits) load from .env —
-    # see .env.example for the full variable list. No secrets hardcoded here.
+    network_mode: host
     env_file:
       - .env
     environment:
@@ -29,3 +36,19 @@ services:
       - ./backend/api/src:/app/backend/api/src
       - ./packages:/app/packages
     command: pnpm --filter @nogoolin/api dev
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    network_mode: host
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+      - ./apps/web/public:/app/apps/web/public
+      - ./packages:/app/packages
+    depends_on:
+      - api
