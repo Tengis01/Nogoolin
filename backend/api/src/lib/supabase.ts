@@ -1,5 +1,16 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { WebSocket } from 'ws';
 import type { Env } from '../config/env.js';
+
+// supabase-js's RealtimeClient requires a native WebSocket constructor
+// unconditionally at createClient() time (Node 22+ has one; this API is
+// pinned to node:20-alpine per NFR-MAIN-006 — do not relitigate that).
+// This app never uses Realtime; the polyfill only exists to stop
+// construction from throwing. Only assigns when missing so it's a no-op
+// on Node 22+ (local dev host).
+if (!globalThis.WebSocket) {
+  globalThis.WebSocket = WebSocket as unknown as typeof globalThis.WebSocket;
+}
 
 // Two client flavors per docs/08 §6.2:
 //

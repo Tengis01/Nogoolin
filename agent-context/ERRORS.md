@@ -17,6 +17,45 @@
 
 ---
 
+### 2026-07-20 — `docker compose up --build` never actually worked (3 bugs, fixed)
+- **Where:** `.dockerignore`, `backend/api/Dockerfile`,
+  `backend/api/src/lib/supabase.ts` — found while adding a `web` service
+  and actually running `docker compose up --build` for the first time
+  (previously only `pnpm --filter @nogoolin/api dev` on the host had been
+  verified; the Docker path was written but never run to completion).
+- **Bug 1 — Symptom:** `web` build failed, `"/apps/web": not found`.
+  **Root cause:** `.dockerignore` blanket-excluded `apps` (written when
+  only `backend/api` had a Dockerfile). **Fix:** narrowed to `apps/mobile`
+  only.
+- **Bug 2 — Symptom:** `api` image build failed at `tsc -p tsconfig.json`
+  — `error TS5083: Cannot read file '/app/tsconfig.base.json'`.
+  **Root cause:** the Dockerfile's manifest-COPY layer never copied the
+  root `tsconfig.base.json` that `backend/api/tsconfig.json` (and
+  `apps/web/tsconfig.json`) extend. Invisible locally because `tsc` there
+  resolves it straight off the host filesystem. **Fix:** added
+  `tsconfig.base.json` to the COPY line in both `backend/api/Dockerfile`
+  and the new `apps/web/Dockerfile`.
+- **Bug 3 — Symptom:** `api` container crashed at startup:
+  `Error: Node.js detected but native WebSocket not found` from
+  `@supabase/supabase-js`'s realtime-js, thrown unconditionally inside
+  `createClient()`. **Root cause:** the API image is pinned to
+  `node:20-alpine` (NFR-MAIN-006, locked); native `WebSocket` only landed
+  in Node 22. The host's `pnpm dev` never hit this because the dev shell
+  uses Node 24 (nvm) — Docker was the only place running actual Node 20.
+  This app never uses Supabase Realtime. **Fix:** added `ws` as a
+  dependency and polyfilled `globalThis.WebSocket` (only when absent) in
+  `lib/supabase.ts`, before any `createClient()` call — no Node-version or
+  architecture change.
+- **Verified:** full `docker compose up --build` — both images build,
+  both containers start clean, `curl :3001/api/v1/health` and
+  `:3001/api/v1/categories` return real data, web responds 200 on both
+  `localhost:3000` and the LAN IP, API log lines confirm
+  `http://192.168.1.10:3001` alongside localhost.
+- **Prevention:** the `docker-build` CI job (added in the earlier
+  Docker/CI-scaffolding session) only builds the image — it never starts
+  the container, so bug 3 wouldn't have been caught by it either.
+  Worth adding a container-smoke-test step in Phase 6 CI.
+
 ### 2026-07-20 — apps/mobile type-check fails via workspace-wide `@types/react` leak (NOT FIXED — logged, out of scope)
 - **Where:** `pnpm -r type-check` → `apps/mobile` → `app/_layout.tsx(19,8)`
   (`Stack` "cannot be used as a JSX component" / `bigint not assignable to

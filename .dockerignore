@@ -13,7 +13,7 @@ node_modules
 .git
 .github
 docs
-apps
+apps/mobile
 supabase
 *.md
 docker-compose.yml
