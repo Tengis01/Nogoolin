@@ -17,6 +17,52 @@
 
 ---
 
+### 2026-07-20 — apps/mobile type-check fails via workspace-wide `@types/react` leak (NOT FIXED — logged, out of scope)
+- **Where:** `pnpm -r type-check` → `apps/mobile` → `app/_layout.tsx(19,8)`
+  (`Stack` "cannot be used as a JSX component" / `bigint not assignable to
+  ReactNode`)
+- **Symptom:** mobile's own `package.json` pins `@types/react: ~18.3.12`
+  and its local `node_modules/@types/react` correctly resolves to
+  `18.3.31`, yet TypeScript's error trace points at
+  `.pnpm/@types+react@19.2.17/.../react/index` — a version mobile never
+  declared. Only surfaces when type-checking the WHOLE workspace
+  (`pnpm -r type-check`); `apps/web`, `backend/api`, and
+  `validation-schemas` each type-check clean standing alone.
+- **Root cause:** not simple hoisting — there is no `@types/react` at the
+  workspace root `node_modules`, so pnpm's usual isolation is intact; some
+  transitive resolution path (candidate: `expo-router` → `react-helmet-async`,
+  which peer-warns for react-dom 18 while the workspace has 19 installed
+  for `apps/web`) pulls the 19.x types package into mobile's TS program.
+  Bisected to first appear at commit `a9b07c6` (added
+  `three`/`@react-three/fiber`/`@react-three/drei`, and therefore
+  `react@19`/`react-dom@19`, to `apps/web`) — confirmed via `git stash` +
+  re-run against the pre-session HEAD (`151cd3c`), where it already fails
+  identically. **Verified NOT a regression from this session's edits.**
+- **Fix:** none applied — explicitly out of scope for `chore/phase3-closeout`
+  ("Do NOT touch mobile/Rive in this task"). Mobile code and dependencies
+  were untouched this session.
+- **Prevention / next action:** whoever next touches `apps/mobile`
+  (the queued Rive-intro task is the natural point) should resolve this
+  before adding more mobile code — likely candidates: pin/override
+  `@types/react` via `pnpm.overrides` at the workspace root, or isolate
+  mobile further from the web/api dependency graph. Until then, treat
+  `pnpm --filter @nogoolin/mobile type-check` (run in isolation) as the
+  reliable signal for mobile, not the `pnpm -r` aggregate.
+
+### 2026-07-20 — 1-frame 0-height flash at morph→home boundary (fixed)
+- **Where:** hero container in apps/web/src/components/intro/hero-intro.tsx
+- **Symptom:** E2E rAF trace showed height 900→…→315→**0**→315 — a
+  one-paint collapse (visible pop) exactly when the morph completed
+- **Root cause:** container height was owned by TWO writers — the rAF morph
+  driver (inline style) and the React style prop (`height: undefined` in
+  the home branch). The phase='home' re-render re-applied the style prop,
+  wiping the inline height for one paint before the home effect re-set it
+- **Fix:** `height` removed from the React style prop entirely (className
+  h-screen for initial paint); all height writes are imperative in one
+  place (phase effect + morph driver + home pin). E2E re-run: 0 deviation
+- **Prevention:** any style property animated imperatively must NEVER also
+  appear in the element's React style prop — single-writer rule
+
 ### 2026-07-19 — 404 pages returned HTTP 200 (streaming + loading.tsx) (fixed)
 - **Where:** /products/[slug] for unknown/draft slugs (public catalog)
 - **Symptom:** not-found UI rendered but HTTP status was 200 — bad for SEO

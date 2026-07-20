@@ -10,15 +10,16 @@
 
 ## Backlog (Phase 3 order — ⚠ highest-risk phase, read design.md first)
 
-- [ ] Green Tara GLB: Meshy AI workflow → gltf-pipeline Draco (<5MB);
-      resolve D-04 composition re-tune on the real model
-- [ ] Web 3D intro (WF-INTRO-01…09): state machine, 5s single arc
-      (az 0.85→0, r 16→6.2, y 7.5→2.2, smootherstep), skip ≤1s, static
-      fallback, reduced-motion, sessionStorage returning-visitor
-- [ ] Shrinking hero morph (WF-HERO-01…08): one persistent canvas
-      100vh→35vh/42vh, camera.setViewOffset (NEVER lateral translate —
-      documented v4 bug), home catalog section (WF-HOME-01…04)
-- [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition
+- [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition —
+      NOT STARTED; build against ASSET_SPECS.md §2 (proposed contract:
+      artboard `Intro`, state machine `IntroMachine`, inputs `skip`
+      (trigger) / `reducedMotion` (bool), event `finished`)
+- [ ] Home white catalog section (WF-HOME-01…04: category row, featured
+      grid, info strip) below the persistent hero — intro/hero container
+      itself is done, this is the content underneath
+- [ ] Green Tara GLB (owner-produced, timeline unknown): drop in via
+      DEITY_GLB_URL (one line, re-verified 2026-07-20) → resolve D-04
+      composition re-tune (VIEW_OFFSET_FRACTION / DEITY_SCALE knobs)
 - [ ] Product edit page in admin (+ GET /admin/products/{id})
 - [ ] Manual web-auth smoke test in browser (API RBAC covered by tests)
 - [ ] Merge feature branches → `main`; create `develop` branch
@@ -26,8 +27,17 @@
 - [ ] Real eslint config; mobile encrypted session storage; native Google
       Sign-In (carried over)
 
+> Phase 4 (soft order/inquiry) can start in PARALLEL with the above —
+> nothing here blocks it (owner instruction, 2026-07-20 closeout).
+
 ## Done
 
+- [x] 2026-07-20 — Phase 3 web close-out: E2E-verified intro/hero flow (8/8
+      browser checks), 1-frame flash bug fixed, GLB swap re-verified by
+      simulation, Draco self-hosted, ASSET_SPECS.md written. Mobile Rive
+      confirmed NOT built — status corrected, not closed.
+- [x] 2026-07-20 — Intro camera system on placeholder (persistent canvas,
+      locked arc, setViewOffset, WF-INTRO-03 scene)
 - [x] 2026-07-19 — PHASE 2 COMPLETE: public listing/detail + SEO (Lighthouse
       SEO 92/100, perf 100/96) + mobile listing/detail screens
 - [x] 2026-07-19 — Category/Product/Image CRUD API + multi-script search +
@@ -44,6 +54,66 @@
 ---
 
 ## Log (append after every task, newest first)
+
+### 2026-07-20 — Phase 3 web close-out (`chore/phase3-closeout`)
+- **Task 1 (E2E integration check):** Built a real-Chrome (puppeteer)
+  end-to-end suite against the production build — not a code read, an
+  actual browser drive. 8/8 checks green: skip button visible + clickable
+  within ~450ms of navigation and works instantly during the loading
+  phase; skip jumps straight to the exact 35vh shrunk home with scroll
+  unlocked; the 5s arc lands at the EXACT spec pose (az 0.0000, r 6.200,
+  y 2.200); the morph height was traced at requestAnimationFrame
+  resolution against the closed-form smootherstep curve with ZERO
+  out-of-envelope samples (see bug below — this caught a real one);
+  setViewOffset ramps to e=1 in sync with the morph, landing on
+  phase=home; exactly one canvas element exists throughout (never
+  remounted); prefers-reduced-motion → instant shrunk home with offset
+  pre-applied; a same-tab reload after skipping does not replay the
+  intro (sessionStorage). Mobile: **could not test — see Task 2.**
+- **Real bug found & fixed:** the rAF height trace showed a one-frame
+  collapse to 0px exactly at the morph→home boundary — a genuine visual
+  pop, not a measurement artifact. Root cause: the container height had
+  two writers (the imperative rAF morph driver AND a React `style` prop
+  that set `height: undefined` in the home branch); the phase-change
+  re-render clobbered the driver's inline height for one paint. Fixed by
+  making height exclusively imperative (removed from the style prop
+  entirely). Re-ran the full suite after the fix: 0 deviation. Logged in
+  ERRORS.md with a "single-writer rule" prevention note.
+- **Task 2 (asset-swap audit) — GLB:** re-verified by SIMULATION, not by
+  re-reading old claims: set `DEITY_GLB_URL` to a fake path, ran
+  `tsc --noEmit` + `next build` (both green), reverted. Confirmed exactly
+  one line changes. While doing this, found and fixed a real gap: drei's
+  `useGLTF` defaults to loading the Draco decoder from a Google CDN — a
+  hidden runtime dependency the "one-line swap" claim didn't actually
+  cover, since the final GLB IS Draco-compressed per spec. Self-hosted
+  the decoder at `apps/web/public/draco/` (copied from three's installed
+  package) and pointed `useGLTF(url, '/draco/')` at it.
+- **Task 2 — Rive:** the task brief asserted a `feature/mobile-rive-intro`
+  branch and implementation already existed. Verified this directly
+  (`git branch --list`, grep for "rive"/".riv" across apps/mobile): **no
+  such branch, no .riv file, no @rive-app dependency — only forward-
+  looking code comments from Phase 1/2 ("Phase 3 replaces the plain stack
+  entry with the Rive..."), never built.** Corrected the premise rather
+  than fabricating an audit of code that doesn't exist. Converted the
+  "re-verify the swap point" task into "write the contract the future
+  code must satisfy" instead (Task 3).
+- **Task 3 (ASSET_SPECS.md):** new file consolidating: GLB requirements
+  (format/compression/size, +Y up axis, faces +Z, ~2.2 unit height,
+  bottom-center origin, the verified one-line swap procedure, an
+  acceptance checklist) and a PROPOSED Rive contract (artboard `Intro` at
+  430×932, state machine `IntroMachine`, inputs `skip` trigger +
+  `reducedMotion` bool, `finished` event, motion-principle notes, size/
+  naming acceptance checklist) — explicitly labeled proposed-not-built so
+  it reads correctly for someone learning Rive from scratch.
+- **Task 4 (tracking):** PROGRESS.md Phase 3 status corrected to "web
+  code-complete, asset-pending" (not "done" — D-04 needs the real GLB,
+  Rive isn't started) with Phase 4-can-proceed-in-parallel called out
+  explicitly per owner instruction; MEMORY.md "where we are" updated;
+  TASKS.md backlog re-scoped (GLB/intro/morph items marked done and
+  removed from backlog, Rive item corrected to "NOT STARTED" with the
+  ASSET_SPECS.md pointer).
+- **Next:** Rive intro build (whenever the owner's .riv or a placeholder
+  is ready) + WF-HOME catalog section; Phase 4 can start now in parallel.
 
 ### 2026-07-20 — Intro camera system on placeholder (`feature/intro-camera-system`)
 - **Done:** apps/web/src/components/intro/: intro-config.ts (ALL locked

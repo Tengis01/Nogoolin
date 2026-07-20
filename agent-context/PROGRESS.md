@@ -93,7 +93,38 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
       detail Perf 100 (LCP 1.9s); listing Perf 96 / SEO 100 — FCP 0.9s,
       Speed Index 1.4s, LCP 2.2s under sim (≈<2s on real 4G target)
 
-## Phase 3 — Premium Experience 🔄 IN PROGRESS ⚠ HIGHEST-RISK PHASE
+## Phase 3 — Premium Experience 🟡 WEB CODE-COMPLETE, ASSET-PENDING
+
+**Status (2026-07-20):** web intro/hero system is code-complete and
+E2E-verified (8/8 browser-driven checks); NOT closable because (a) D-04
+composition re-tune needs the real Green Tara GLB, and (b) the mobile Rive
+intro is **NOT implemented** (owner session note claimed a
+feature/mobile-rive-intro branch — verified absent: no branch, no .riv, no
+rive dependency; only forward-looking comments). Asset contracts live in
+ASSET_SPECS.md (GLB locked; Rive proposed) — owner is producing both,
+timeline unknown. **Phase 4 engineering can proceed in PARALLEL — asset
+production blocks nothing.**
+
+### Phase 3 close-out E2E (chore/phase3-closeout, 2026-07-20)
+- [x] Web full flow verified in real Chrome (puppeteer): skip visible
+      443ms after navigation (≤1s ✓, works during loading); arc lands at
+      exact spec pose; morph height tracks the smootherstep curve at rAF
+      resolution with ZERO out-of-envelope samples; setViewOffset ramps to
+      1 in sync; single persistent canvas; reduced-motion → instant shrunk
+      home; same-tab reload skips intro
+- [x] Real bug found & fixed by the E2E: 1-frame 0-height flash at
+      morph→home (React style-prop wiped the imperative height — see
+      ERRORS.md); container height is now exclusively imperative
+- [x] GLB swap re-verified by SIMULATION (not just claim): exactly one
+      line in intro-config.ts; type-check + prod build green with URL set
+- [x] Draco decoder now SELF-HOSTED (public/draco) — removed drei's hidden
+      Google-CDN runtime dependency; mandatory since the final GLB is
+      Draco-compressed
+- [x] ASSET_SPECS.md written (GLB locked contract + Rive proposed contract)
+- [ ] Mobile Rive intro — NOT STARTED (build against ASSET_SPECS.md §2 so
+      the .riv the owner produces drops in via one config)
+
+## (previous Phase 3 section)
 Non-negotiables recap: deity never moves; NO lateral camera translate
 (setViewOffset only); locked arc numbers; skip ≤1s; fallbacks. See
 design.md + MEMORY.md rule 3 before ANY Three.js change.

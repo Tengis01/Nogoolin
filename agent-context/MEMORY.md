@@ -6,9 +6,10 @@
 
 ## Where we are
 
-- **Phase 3 — Premium Experience in progress** ⚠ HIGHEST-RISK phase (3D
-  intro + shrinking hero done on placeholder; home catalog section + Rive
-  mobile intro remain; 360° per-product viewer deferred post-MVP, D-07).
+- **Phase 3: web code-complete (E2E-verified), asset-pending** — final GLB
+  + .riv are owner-produced, timeline unknown; contracts in ASSET_SPECS.md.
+  Mobile Rive intro NOT built yet. Home catalog section (WF-HOME) remains.
+  360° viewer deferred (D-07). **Phase 4 may proceed in parallel.**
   Re-read rule 3 below and design.md before ANY Three.js work.
 - Phase 0 docs 2026-07-05 · Phase 1 Foundation 2026-07-17 · Phase 2 Product
   System 2026-07-19: catalog API (22 integration tests green), admin UI wired
