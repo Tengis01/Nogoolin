@@ -46,7 +46,10 @@ function PlaceholderDeity() {
 }
 
 function GltfDeity({ url }: { url: string }) {
-  const { scene } = useGLTF(url);
+  // Draco decoder is SELF-HOSTED at /public/draco (drei defaults to a
+  // Google CDN — a hidden runtime dependency the swap must not rely on).
+  // The final GLB is Draco-compressed per spec, so this path is mandatory.
+  const { scene } = useGLTF(url, '/draco/');
   // GLB origin convention: bottom-center at (0,0,0) → lift onto the
   // pedestal TOP (y=0.35; cylinder h=0.35 sits on the ground) via
   // scene-side position only (see GLB REQUIREMENTS in config)

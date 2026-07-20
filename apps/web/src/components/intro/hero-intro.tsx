@@ -124,6 +124,18 @@ export function HeroIntro() {
     };
   }, [phase]);
 
+  // Container height is owned IMPERATIVELY here and in the morph driver —
+  // never via the React style prop. (A style-prop height gets re-applied on
+  // every re-render; at the morph→home commit that wiped the driver's
+  // inline height for one paint → a 1-frame 0-height flash. Caught by e2e.)
+  useEffect(() => {
+    if (!containerRef.current) return;
+    if (phase === 'loading' || phase === 'playing' || phase === 'ready') {
+      containerRef.current.style.height = '100vh';
+    }
+    // 'morph' → the rAF driver animates; 'home' → the effect below pins it
+  }, [phase]);
+
   // home: pin the container height (also for resize between vh targets)
   useEffect(() => {
     if (phase !== 'home') return;
@@ -162,8 +174,8 @@ export function HeroIntro() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden"
-      style={{ height: phase === 'home' ? undefined : '100vh', ...gradientStyle }}
+      className="relative h-screen w-full overflow-hidden"
+      style={gradientStyle}
     >
       {/* the ONE persistent canvas — never remounted across phases */}
       <IntroScene timeline={timelineRef.current} />
