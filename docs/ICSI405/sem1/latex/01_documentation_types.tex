@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=22mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage{ragged2e,xurl,indentfirst}
+\usepackage{ xcolor,tabularx,booktabs,enumitem,fancyhdr,titlesec,fvextra }
+\usepackage[unicode,colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black]{hyperref}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\large\sffamily\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}\justifying\setlength{\parindent}{1.25cm}\tolerance=3000\setlength{\emergencystretch}{3em}
+\setlist{nosep,leftmargin=1.5em}
+\renewcommand{\arraystretch}{1.12}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 01}
+\fancyhead[R]{\small\sffamily Document RAG Chatbot}
+\fancyfoot[L]{}
+\fancyfoot[R]{\small\thepage}
+\newcommand{\dochead}[3]{\noindent{\sffamily\small\color{accent}#1}\par\vspace{3mm}\noindent{\sffamily\bfseries\LARGE\color{ink}#2}\par\vspace{2mm}\noindent{\large #3}\par\vspace{2mm}\hrule\vspace{3mm}}
+\newcommand{\note}[1]{\par\smallskip{\color{ink}\textbf{Тайлбар.} #1}\par\smallskip}
+\newcommand{\pathref}[1]{\nolinkurl{#1}}
+\newcommand{\src}[2]{\href{#1}{#2}}
+\newcommand{\sources}{\section*{Хичээлийн эх сурвалж}\small Lecture 01, ``Why Documentation?'', слайд 4, 5, 9, 11; Seminar 01 Handout, х. 1--3. Bhatti et al., \textit{Docs for Developers}, бүлэг 1, х. 1--21; бүлэг 3, х. 58. Chinchilla, \textit{Technical Writing for Software Developers}, бүлэг 1, х. 1--8; бүлэг 2, х. 9--24. Номын дугаар нь хэвлэмэл хуудасны дугаар.\normalsize}
+\begin{document}\fontsize{10.5}{13}\selectfont\titlespacing*{\section}{0pt}{10pt}{5pt}\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+\dochead{US-1.1 / DOCUMENTATION TYPES MATRIX}{Баримтжуулалтын дөрвөн төрөл}{Гурван бодит төсөл ба RAG chatbot-д хэрэглэх шийдэл}
+\section{Төслийг сонгосон үндэслэл}
+Би 2026 оны зун дадлагын ажлын хүрээнд хийсэн Document RAG Chatbot төслөө сонгосон. Хэрэглэгч PDF эсвэл текст оруулж, баримтын талаар асуулт асуухад систем холбогдох хэсэгт тулгуурлан хариулж, ашигласан эхийг харуулдаг. Өөрийн төслийг сонгосноор баримтжуулалтын төрлүүдийг бодит код, хэрэглэгчийн үйлдэлтэй холбон судалж, надад ойлгомжтой боловч шинэ уншигчид дутуу тайлбарлагдсан зүйлсийг илрүүлэх боломжтой.
+\section{Гурван төслийн дөрвөн төрлийн матриц}
+Seminar 1-ийн Getting Started, Tutorial, Reference, API ангиллыг хэрэглэв. API нь Reference-тэй давхцаж болох тул энд ерөнхий лавлахыг Reference, тодорхой интерфейсийн гэрээг API гэж ялгав. Lecture-ийн User, Developer, Operations, Process нь уншигчаар ангилсан өөр хэмжээс юм.
+
+Төслүүд: \src{https://github.com/fastapi/fastapi}{fastapi/fastapi}, \src{https://github.com/numpy/numpy}{numpy/numpy}, \src{https://github.com/encode/django-rest-framework}{encode/django-rest-framework}. Доорх мөр бүр хэрэглэгчийн асуулт ба documentation-ийн байрлалыг хоёр өгүүлбэрээр тайлбарлана; холбоосуудыг 2026-09-11-нд шалгав.
+\subsection*{FastAPI}
+\par\noindent\begin{tabularx}{\linewidth}{@{}p{25mm}X@{}}\toprule
+Төрөл & Асуулт ба байрлал\\\midrule
+Getting Started & ``Хамгийн жижиг API-г хэрхэн ажиллуулж, хариуг нь харах вэ?'' гэсэн асуултад First Steps хариулна. Байрлал нь \src{https://fastapi.tiangolo.com/tutorial/first-steps/}{/tutorial/first-steps/} бөгөөд анхны код, ажиллуулах алхам, шалгах үр дүнг нэгтгэсэн.\\
+Tutorial & ``JSON өгөгдөл хүлээн авах endpoint хэрхэн бүтээх вэ?'' гэсэн суралцах зорилгыг Request Body гүйцэтгэнэ. Байрлал нь \src{https://fastapi.tiangolo.com/tutorial/body/}{/tutorial/body/} бөгөөд өгөгдлийн загвараас хүсэлт боловсруулах хүртэл тайлбарлана.\\
+Reference & ``FastAPI-ийн аль хэсгийн дэлгэрэнгүй тайлбарыг хаанаас олох вэ?'' гэсэн асуултад Reference индекс хариулна. Байрлал нь \src{https://fastapi.tiangolo.com/reference/}{/reference/} бөгөөд class, parameter, response зэрэг сэдвийг лавлах байдлаар жагсаана.\\
+API & ``FastAPI class үүсгэхэд ямар параметр өгч болох вэ?'' гэсэн интерфейсийн асуултад class-ийн лавлах хариулна. Байрлал нь \src{https://fastapi.tiangolo.com/reference/fastapi/}{/reference/fastapi/} бөгөөд constructor-ийн параметр ба API гишүүдийг тодорхойлно.\\
+\bottomrule\end{tabularx}\par
+\subsection*{NumPy}
+\par\noindent\begin{tabularx}{\linewidth}{@{}p{25mm}X@{}}\toprule
+Төрөл & Асуулт ба байрлал\\\midrule
+Getting Started & ``NumPy-г анх хэрэглэж, массив хэрхэн үүсгэх вэ?'' гэсэн асуултад Absolute basics хариулна. Байрлал нь \src{https://numpy.org/doc/stable/user/absolute_beginners.html}{/doc/stable/user/absolute\_beginners.html} бөгөөд эхлэгчид зориулсан үндсэн ойлголт, жишээг агуулна.\\
+Tutorial & ``Массивын shape, axis болон үйлдлүүдийг хэрхэн ашиглаж сурах вэ?'' гэсэн асуултад Quickstart-ийн дасгалчилсан жишээнүүд хариулна. Байрлал нь \src{https://numpy.org/doc/stable/user/quickstart.html}{/doc/stable/user/quickstart.html} бөгөөд нэр нь quickstart ч Python мэддэг уншигчид зориулсан суралцах зорилготой тул Tutorial гэж ангилав.\\
+Reference & ``NumPy-ийн өгөгдлийн төрөл, массив, функцийн лавлах хаана байна вэ?'' гэсэн асуултад Reference индекс хариулна. Байрлал нь \src{https://numpy.org/doc/stable/reference/}{/doc/stable/reference/} бөгөөд сэдвээр ангилсан лавлахын орох цэг болно.\\
+API & ``numpy.array функцийн dtype, copy зэрэг аргумент юу хийдэг вэ?'' гэсэн асуултад тухайн функцийн API хуудас хариулна. Байрлал нь \src{https://numpy.org/doc/stable/reference/generated/numpy.array.html}{/doc/stable/reference/generated/numpy.array.html} бөгөөд signature, параметр, буцаах утга, жишээг өгнө.\\
+\bottomrule\end{tabularx}\par
+
+\subsection*{Django REST framework}
+\par\noindent\begin{tabularx}{\linewidth}{@{}p{25mm}X@{}}\toprule
+Төрөл & Асуулт ба байрлал\\\midrule
+Getting Started & ``Анхны хэрэглэгч, бүлгийн API-г хэрхэн босгох вэ?'' гэсэн асуултад Quickstart хариулна. Байрлал нь \src{https://www.django-rest-framework.org/tutorial/quickstart/}{/tutorial/quickstart/} бөгөөд төслийн үүсгэлтээс API-г шалгах хүртэлх богино замыг өгнө.\\
+Tutorial & ``Өгөгдлийг serializer ашиглан хэрхэн хөрвүүлж сурах вэ?'' гэсэн асуултад Serialization tutorial хариулна. Байрлал нь \src{https://www.django-rest-framework.org/tutorial/1-serialization/}{/tutorial/1-serialization/} бөгөөд snippet кейсийг дагуулан хөгжүүлнэ.\\
+Reference & ``HTTP хариуны нэрлэсэн код, ангиллууд юу вэ?'' гэсэн асуултад Status codes лавлах хариулна. Байрлал нь \src{https://www.django-rest-framework.org/api-guide/status-codes/}{/api-guide/status-codes/} бөгөөд кодуудыг утгаар нь хайж ашиглахад зориулагдана.\\
+API & ``Request объектын data, query\_params зэрэг гишүүн юу буцаадаг вэ?'' гэсэн асуултад Requests хуудас хариулна. Байрлал нь \src{https://www.django-rest-framework.org/api-guide/requests/}{/api-guide/requests/} бөгөөд хүсэлтийн объектын интерфейсийг тайлбарлана.\\
+\bottomrule\end{tabularx}\par
+\section{RAG chatbot-д хэрэглэх кейсүүд}
+\textbf{Getting Started:} Төслийг анх ажиллуулах хүнд орчноо бэлдэх, текст оруулах, эх сурвалжтай хариу авах дарааллыг тайлбарлана. Үүний тулд үндсэн README-ээс \pathref{docs/LOCAL_SETUP.md} руу холбоос өгөх хэрэгтэй.
+
+\textbf{Tutorial:} ``Номын сан 18:00 цагт хаана'' гэсэн текст оруулаад ``Хэдэн цагт хаах вэ?'' гэж асууж, хариуг эх хэсэгтэй тулгах нэг бүрэн урсгал бичнэ.
+
+\textbf{Reference:} Retrieval-ийн threshold, lambda, useMMR тохиргооны default утга 0.1, 0.5, true болохыг хүснэгтээр тайлбарлана. Эдгээр нь \pathref{chat.routes.ts}-ийн утга бөгөөд хариултын чанарын баталгаа биш.
+
+\textbf{API:} \pathref{POST /chat}-ийн session, \pathref{documentIds}, \pathref{message}, буцаах \pathref{reply}, \pathref{sources}, алдааны нөхцөлийг одоо байгаа route-оос баримтжуулна.
+
+\textbf{Бодит олдвор:} Root README байхгүй, web README нь Vite template. PROJECT\_BRIEF нь Supabase гэж бичсэн ч LOCAL\_SETUP, Compose тохиргоо local PostgreSQL ашигладаг. Энэ зөрүү нь документацийг кодтой хамт шинэчлэх шаардлагыг харуулна.
+
+\textbf{Эх сурвалж:} Seminar 01, US-1.1; Chinchilla, бүлэг 2, х. 9--24; Lecture 01, слайд 4. Төслийн нотолгоо: \pathref{apps/api/src/modules/chat/chat.routes.ts}, \pathref{docs/LOCAL_SETUP.md}, \pathref{docker-compose.yml}.
+
+\end{document}

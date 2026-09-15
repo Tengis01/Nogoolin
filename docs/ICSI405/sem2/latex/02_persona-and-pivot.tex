@@ -1,0 +1,82 @@
+\section{Nogoolin persona --- Week 2
+нэмэлт}\label{doc2-nogoolin-persona-week-2-ux43dux44dux43cux44dux43bux442}
+
+\textbf{Тэнгис · 2026-09-15 · US-2.3 · Өөрийн ажиглалт; ярилцлага
+хийгдээгүй.}
+
+\subsection{Уншигч ба бүтээгдэхүүний
+хэрэглэгч}\label{doc2-ux443ux43dux448ux438ux433ux447-ux431ux430-ux431ux4afux442ux44dux44dux433ux434ux44dux445ux4afux4afux43dux438ux439-ux445ux44dux440ux44dux433ux43bux44dux433ux447}
+
+\textbf{Хөгжүүлэгч persona:} Тэнгис, TypeScript/React ашигладаг,
+web/API/өгөгдлийн санг холбож ажиллуулна. Зорилго нь Nogoolin-ийн
+inquiry/wishlist урсгалыг local орчинд давтаж шалгаж, алдааг аль
+давхаргаас хайхаа ойлгох. Хэрэгсэл: Fedora, VS Code, Git, pnpm, Docker,
+DevTools.
+
+\textbf{Бүтээгдэхүүний хэрэглэгч:} каталог үзэж, асуулга илгээх эсвэл
+дараа үзэх бүтээгдэхүүнээ хадгалах хүн. Энэ нь
+\href{../../phase-0/01-vision.md}{Phase 0 vision}-ийн catalog
+visitor/inquiry customer тайлбарын хураангуй; шинэ хүнтэй ярилцсан үр
+дүн биш.
+
+\subsection{P-NG-01 --- Session ба өгөгдөл эзэмших эрхийг
+ялгах}\label{doc2-p-ng-01-session-ux431ux430-ux4e9ux433ux4e9ux433ux434ux4e9ux43b-ux44dux437ux44dux43cux448ux438ux445-ux44dux440ux445ux438ux439ux433-ux44fux43bux433ux430ux445}
+
+Нэвтрэлт ажиллаж байсан ч A хэрэглэгч B-ийн wishlist, inquiry history-г
+харах ёсгүй. Шалгах зааварт guest, customer A/B, admin-ийн ялгаа байхгүй
+бол эрхийн алдаа анзаарагдахгүй үлдэнэ. Энэ бол код болон security
+баримтаас гаргасан эрсдэлийн ажиглалт; бодит халдлага болсон гэсэн үг
+биш.
+
+\textbf{Source:}
+\href{../../phase-0/08-security.md\#9-idor-prevention}{08-security §9},
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repository},
+\href{../../../backend/api/src/repositories/supabase/inquiry.repository.ts}{inquiry
+repository}. \textbf{Холбоо:}
+\href{../../requirements/requirements.md\#nfr-01}{NFR-01}.
+
+\subsection{P-NG-02 --- Asset бэлэн бус үед урсгалыг
+шалгах}\label{doc2-p-ng-02-asset-ux431ux44dux43bux44dux43d-ux431ux443ux441-ux4afux435ux434-ux443ux440ux441ux433ux430ux43bux44bux433-ux448ux430ux43bux433ux430ux445}
+
+Бодит Green Tara GLB/.riv бэлэн болоогүй үед каталогийн урсгалыг
+хүлээлгэхгүй шалгах хэрэгтэй. Asset тохируулаагүй нөхцөл дэх орлуулагч,
+WebGL-гүй болон reduced-motion хувилбарын үр дүнг тус бүр тодорхой
+болгоно.
+
+\textbf{Source:} \href{../../../agent-context/ASSET_SPECS.md}{Asset
+contract},
+\href{../../../apps/web/src/components/intro/deity.tsx}{deity.tsx},
+\href{../../../apps/web/src/components/intro/hero-intro.tsx}{hero-intro.tsx}.
+\textbf{Холбоо:}
+\href{../../requirements/requirements.md\#nfr-02}{NFR-02}.
+
+\subsection{P-NG-03 --- Хуучин заавар ба бодит орчин
+зөрөх}\label{doc2-p-ng-03-ux445ux443ux443ux447ux438ux43d-ux437ux430ux430ux432ux430ux440-ux431ux430-ux431ux43eux434ux438ux442-ux43eux440ux447ux438ux43d-ux437ux4e9ux440ux4e9ux445}
+
+Flutter/Express гэсэн хуучин тайлбаруудыг одоогийн React Native/Fastify
+шийдвэртэй андуурч болно. Мөн local өгөгдлийн сан байхгүй үед тест
+алгасагдсаныг бүрэн шалгалт өнгөрсөн гэж ойлгох эрсдэлтэй.
+
+\textbf{Source:}
+\href{../../../agent-context/DECISIONS.md}{ADR-003/004/011},
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{integration
+test-ийн skip салаа}. \textbf{Холбоо:}
+\href{../../requirements/requirements.md\#nfr-03}{NFR-03},
+\href{../../architecture/sdd-template.md}{SDD}.
+
+\subsection{Week 1-тэй холбосон
+үндэслэл}\label{doc2-week-1-ux442ux44dux439-ux445ux43eux43bux431ux43eux441ux43eux43d-ux4afux43dux434ux44dux441ux43bux44dux43b}
+
+\href{../sem1/wiki/02_audience_persona.md}{Өмнө хүлээлгэн өгсөн W1
+persona}-ийн \textbf{P1} нь нэвтрэлтийн cookie/session-ийг шалгах
+зааврын хэрэгцээ байсан. Түүний authentication-ийг оношлох хэрэгцээг
+Nogoolin-д өргөжүүлж \textbf{P1 → P-NG-01 → NFR-01} гэж холбов.
+Authentication болон ownership нь өөр ойлголт; W1-д IDOR байсан гэж
+үзээгүй. Мөн W1-ийн \textbf{P3} нь local ба pipeline-д өөр үр дүн
+гарахыг оношлох, өөр замтай байх хэрэгцээ; үүнээс \textbf{P3 → P-NG-03 →
+NFR-03} холбоог шинэ төсөлд шилжүүлэн гаргав.
+
+Эдгээр нь Week 2-т нэмсэн тайлбарласан холбоо. US-2.3-ийн W1 pain point
+шалгуурт энэ шилжүүлэлт нийцэх эсэхийг багш/reviewer-ээр баталгаажуулна;
+Week 1-ийн эхийг өөрчлөөгүй.

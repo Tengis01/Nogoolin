@@ -1,0 +1,27 @@
+{
+  "name": "nogoolin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nogoolin — Premium Religious Product Catalog Platform (monorepo)",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "backend/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "pnpm --filter @nogoolin/web dev",
+    "dev:api": "pnpm --filter @nogoolin/api dev",
+    "dev:mobile": "pnpm --filter @nogoolin/mobile start",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "type-check": "pnpm -r type-check",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "supabase": "^2.109.1"
+  }
+}

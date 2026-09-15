@@ -1,0 +1,61 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=22mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage{ragged2e,xurl,indentfirst}
+\usepackage{ xcolor,tabularx,booktabs,enumitem,fancyhdr,titlesec,fvextra }
+\usepackage[unicode,colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black]{hyperref}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\large\sffamily\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}\justifying\setlength{\parindent}{1.25cm}\tolerance=3000\setlength{\emergencystretch}{3em}
+\setlist{nosep,leftmargin=1.5em}
+\renewcommand{\arraystretch}{1.12}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 01}
+\fancyhead[R]{\small\sffamily Document RAG Chatbot}
+\fancyfoot[L]{}
+\fancyfoot[R]{\small\thepage}
+\newcommand{\dochead}[3]{\noindent{\sffamily\small\color{accent}#1}\par\vspace{3mm}\noindent{\sffamily\bfseries\LARGE\color{ink}#2}\par\vspace{2mm}\noindent{\large #3}\par\vspace{2mm}\hrule\vspace{3mm}}
+\newcommand{\note}[1]{\par\smallskip{\color{ink}\textbf{Тайлбар.} #1}\par\smallskip}
+\newcommand{\pathref}[1]{\nolinkurl{#1}}
+\newcommand{\src}[2]{\href{#1}{#2}}
+\newcommand{\sources}{\section*{Хичээлийн эх сурвалж}\small Lecture 01, ``Why Documentation?'', слайд 4, 5, 9, 11; Seminar 01 Handout, х. 1--3. Bhatti et al., \textit{Docs for Developers}, бүлэг 1, х. 1--21; бүлэг 3, х. 58. Chinchilla, \textit{Technical Writing for Software Developers}, бүлэг 1, х. 1--8; бүлэг 2, х. 9--24. Номын дугаар нь хэвлэмэл хуудасны дугаар.\normalsize}
+\begin{document}\fontsize{10.5}{13}\selectfont\titlespacing*{\section}{0pt}{10pt}{5pt}\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+
+\dochead{US-1.3 / BEFORE--AFTER AUDIT}{README-ийн ойлгомжгүй өгүүлбэрийг засах}{Document RAG Chatbot}
+\textbf{Эх файл:} \pathref{apps/web/README.md}. Root README байхгүй тул байгаа Vite template README-ийн гурван бодит өгүүлбэрийг сонгов. Before нь үгчилсэн эх, After нь төслийн зориулалтад нийцүүлэн солих санал; эх төсөлд өөрчлөлт оруулаагүй.
+\section{J1. Хэрэгслийн нэрээс өмнө үр дүнг хэлэх}
+\textbf{Before:} ``This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.''
+
+\textbf{Асуудал:} React, Vite, HMR, ESLint-ийг мэддэг гэж үзсэн боловч энэ төслөөр юу хийж болохыг тайлбарлаагүй байна.
+
+\textbf{After:} ``Энэ веб аппад PDF эсвэл текст оруулж, баримтын талаар асуулт асууна. Хариултын хамт ашигласан эх хэсгийг харж шалгана. Жишээлбэл, `Номын сан 18:00 цагт хаана' гэсэн текст оруулаад `Хэдэн цагт хаах вэ?' гэж асууна.''
+
+\textbf{Засварын утга:} Хэрэглэгчийн хийх үйлдэл, авах үр дүнг эхэнд тавьж, тодорхой жишээ өгсөн. Энэ нь Bhatti-ийн ``Most Important Information First'' зарчмыг хэрэглэсэн хувилбар.
+\section{J2. Template-ийн тайлбарыг бодит эхлэх замаар солих}
+\textbf{Before:} ``The React Compiler is not enabled on this template because of its impact on dev \& build performances.''
+
+\textbf{Асуудал:} Compiler, dev, build-ийн утгыг тайлбарлаагүй. Мөн template-ийн ерөнхий тайлбар нь миний төслийг ажиллуулахад хэрэгтэй мэдээлэл өгч чадахгүй байна.
+
+\textbf{After:} ``Төслийн үндсэн хавтас дахь docs/LOCAL\_SETUP.md заавраар database, API, web-ийг асаана. API ажилласны дараа http://localhost:4000/health хаягаар үйлчилгээнд хүрч байгааг шалгана.''
+
+\textbf{Засварын утга:} Үндсэн onboarding хэсгээс баталгаажаагүй compiler тайлбарыг хасаж, ажиллуулах зааварт чиглүүлэв. Compiler-ийн шийдвэрийг шаардлагатай бол хөгжүүлэгчийн хэсэгт тусад нь баталгаажуулна.
+\section{J3. Typecheck ба lint-ийн ялгааг тайлбарлах}
+\textbf{Before:} ``If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:''
+
+\textbf{Асуудал:} Production, configuration, type-aware lint rules нь тайлбаргүй тул яг юуг шалгах, аль командыг ажиллуулах нь ойлгомжгүй байна.
+
+\textbf{After:} ``Кодын өөрчлөлтийг шалгахдаа үндсэн хавтсаас pnpm typecheck ажиллуулна. Энэ нь TypeScript-ийн төрлүүд нийцэж буйг шалгана; жишээлбэл тоо авах хэсэгт текст дамжуулсан алдааг илрүүлж болно. Төрөлд тулгуурласан нэмэлт ESLint дүрмийг хөгжүүлэгч тусад нь шийднэ.''
+
+\textbf{Засварын утга:} Бодит команд, зорилго, жишээ өгч, typecheck ба нэмэлт lint нь ялгаатайг тодруулав.
+\section{Өөрийн дүгнэлт}
+Эхний хувилбарууд хэрэгслийн нэрийг жагсаасан байсан бол засварласан хувилбарууд хийх үйлдэл, шалгах үр дүнг тайлбарлаж байна. README-ийн эхэнд төслийн зориулалтыг бичээд, ажиллуулах болон код шалгах зааврыг дараа нь байрлуулах нь зөв гэж үзлээ. Энэ удаа өөрөө харьцуулж зассан бөгөөд инженер биш уншигчаар шалгуулаагүй.
+
+\textbf{Эх сурвалж:} Seminar 01, US-1.3; Bhatti, \textit{Docs for Developers}, х. 3, 58; төслийн \pathref{apps/web/README.md}, \pathref{docs/LOCAL_SETUP.md}, \pathref{package.json}.
+
+\end{document}

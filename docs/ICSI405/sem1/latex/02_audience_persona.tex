@@ -1,0 +1,61 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=22mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage{ragged2e,xurl,indentfirst}
+\usepackage{ xcolor,tabularx,booktabs,enumitem,fancyhdr,titlesec,fvextra }
+\usepackage[unicode,colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black]{hyperref}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\large\sffamily\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}\justifying\setlength{\parindent}{1.25cm}\tolerance=3000\setlength{\emergencystretch}{3em}
+\setlist{nosep,leftmargin=1.5em}
+\renewcommand{\arraystretch}{1.12}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 01}
+\fancyhead[R]{\small\sffamily Document RAG Chatbot}
+\fancyfoot[L]{}
+\fancyfoot[R]{\small\thepage}
+\newcommand{\dochead}[3]{\noindent{\sffamily\small\color{accent}#1}\par\vspace{3mm}\noindent{\sffamily\bfseries\LARGE\color{ink}#2}\par\vspace{2mm}\noindent{\large #3}\par\vspace{2mm}\hrule\vspace{3mm}}
+\newcommand{\note}[1]{\par\smallskip{\color{ink}\textbf{Тайлбар.} #1}\par\smallskip}
+\newcommand{\pathref}[1]{\nolinkurl{#1}}
+\newcommand{\src}[2]{\href{#1}{#2}}
+\newcommand{\sources}{\section*{Хичээлийн эх сурвалж}\small Lecture 01, ``Why Documentation?'', слайд 4, 5, 9, 11; Seminar 01 Handout, х. 1--3. Bhatti et al., \textit{Docs for Developers}, бүлэг 1, х. 1--21; бүлэг 3, х. 58. Chinchilla, \textit{Technical Writing for Software Developers}, бүлэг 1, х. 1--8; бүлэг 2, х. 9--24. Номын дугаар нь хэвлэмэл хуудасны дугаар.\normalsize}
+\begin{document}\fontsize{10.5}{13}\selectfont\titlespacing*{\section}{0pt}{10pt}{5pt}\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+
+\dochead{US-1.2 / AUDIENCE PERSONA CARD}{Зорилтот уншигч: Тэнгис}{Document RAG Chatbot}
+Энэ хэсэгт өөрийгөө төслийг анх үзэж байгаа хөгжүүлэгчийн байр сууринд тавьж, ямар тайлбар хэрэгтэйг тодорхойлов.
+\section{Persona Card}
+\par\noindent\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+Талбар & Тодорхойлолт\\\midrule
+Нэр & Тэнгис\\
+Жишээ байгууллага & Nomad Learning Lab (persona-д зориулсан нэр)\\
+Техникийн үүрэг & Web болон API холбож ажиллах хөгжүүлэгч\\
+Уншигчийн суурь & TypeScript, React мэддэг; төслийн RAG ажиллагаатай танилцах шаардлагатай\\
+Өдөр тутмын хэрэгсэл & Fedora, VS Code, Git, pnpm, DevTools, Docker Compose, curl\\
+Зорилго & Local орчноос баримт оруулж, эх сурвалжтай хариуг web дээр гаргах\\
+Унших хэв маяг & README-ээс эхэлж, командыг дагаж, алдааны тайлбарыг хайна\\\bottomrule
+\end{tabularx}\par
+\textbf{Миний тавьсан зорилго:} Нэг баримт оруулаад асуулт асуух бүх алхмыг давтаж, алдаа гарвал аль хэсгээс шалгахаа ойлгодог болох.
+
+\textbf{Дам хэрэглэгч (end-end user):} Хөгжүүлэгч энэ баримтыг уншиж системийг ажиллуулна. Харин chatbot ашиглах хүнд хариулт нь оруулсан баримтын аль хэсгээс гарсныг харах хэрэгтэй. Түүнд embedding-ийн дотоод ажиллагааг тайлбарлахаас илүү эх сурвалжаа шалгах боломж өгөх нь чухал.
+\section{Ижил төрлийн төсөлд тулгарсан гурван асуудал}
+\textbf{P1. Нэвтрэлтийн cookie хадгалагдахгүй байх.} Better Auth хэрэглэгч local орчинд ажилласан app Vercel дээр refresh хийхэд нэвтрэлтээ алддаг тухай мэдээлсэн. Тэнгист зориулсан зааварт web/API хаяг, session шалгах алхмыг нэгтгэх хэрэгтэй. \src{https://stackoverflow.com/questions/79757950/better-auth-cookies-not-saving-in-frontend-after-sign-in-on-vercel-deployment-wi}{Stack Overflow: 79757950}.
+
+\textbf{P2. Vector-ийн хэмжээс зөрөх.} SpringAI/pgvector хэрэглэгч 1596 хэмжээс хүлээж байхад 4096 ирсэн алдаа мэдээлсэн. Энэ нь өөр stack-ийн жишээ; chatbot-ийн хэмжээс гэж үзээгүй. Тэнгис model солихдоо embedder ба SQL schema-ийн нийцлийг шалгах лавлахтай байх хэрэгтэй. \src{https://stackoverflow.com/questions/78800728/springai-4096-dimensions-for-java-files-trying-to-load-in-pg-vector-db}{Stack Overflow: 78800728}.
+
+\textbf{P3. PDF-ээс текст хоосон гарах.} pdf-parse хэрэглэгч local орчинд текст гардаг ч Azure pipeline дээр хоосон гардаг тухай мэдээлсэн. Chatbot-ийн \pathref{pdf-extractor.ts} мөн хоосон текстэд алдаа өгдөг. Текст ялгалтыг AI хариултаас салгаж оношлох, текст paste хийх өөр замыг тайлбарлах шаардлагатай. \src{https://stackoverflow.com/questions/60435500/cannot-parse-a-pdf-stream-using-pdf-parse-on-azure-pipelines-nodejs}{Stack Overflow: 60435500}.
+
+Эдгээр асуултаас өөрийн төслийн зааварт юуг тайлбарлах хэрэгтэйг харьцуулж үзэв. Бүгд миний төсөлд гарсан алдаа биш; холбоосуудыг 2026-09-11-нд шалгасан.
+\section{Өөрийн дүгнэлт}
+PDF оруулсны дараа мэдээлэл олдохгүй байвал файл боловсруулагдсан эсэх, зөв баримт сонгосон эсэх, хайлт үр дүн олсон эсэхийг дарааллаар шалгах заавар хэрэгтэй гэж үзлээ.
+
+Тиймээс эхлэх заавартаа нэг бүтэн жишээ оруулж, ready төлөв болон хариултын эх хэсгийг хаанаас харахыг тайлбарлана. Энэ дүгнэлтийг ярилцлагаас бус, төслийн ажиллагаа ба дээрх асуултуудыг харьцуулж гаргав.
+
+\textbf{Эх сурвалж:} Seminar 01, US-1.2; Bhatti, \textit{Docs for Developers}, х. 15--17; Chinchilla, х. 7. Төслийн суурь: \pathref{AGENTS.md}, \pathref{docs/LOCAL_SETUP.md}, \pathref{apps/api/src/modules/documents/pdf-extractor.ts}.
+
+\end{document}

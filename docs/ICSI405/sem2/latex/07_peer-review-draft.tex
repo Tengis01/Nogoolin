@@ -1,0 +1,97 @@
+\section{Peer review draft --- M2}\label{doc7-peer-review-draft-m2}
+
+\textbf{Тэнгис · Nogoolin · 2026-09-15 · Бэлтгэсэн; илгээгээгүй}
+
+\subsection{Reviewer-т зориулсан
+тайлбар}\label{doc7-reviewer-ux442-ux437ux43eux440ux438ux443ux43bux441ux430ux43d-ux442ux430ux439ux43bux431ux430ux440}
+
+Week 2-оос Document RAG Chatbot-оос Nogoolin руу шилжсэн. Week 1-ийн
+ажлыг өөрчлөөгүй. Phase 0 баримтаас SRS-ийн шаардлага болон SDD-ийн
+технологийн шийдвэрийг салгаж, таван шаардлагын draft ба traceability
+бэлтгэлээ.
+
+\textbf{Унших дараалал:}
+\href{../../requirements/scope-charter.md}{Scope Charter} →
+\href{wiki/persona-and-pivot.md}{persona нэмэлт} →
+\href{../../requirements/srs-template.md}{SRS загвар} →
+\href{../../requirements/requirements.md}{5 шаардлага} →
+\href{../../requirements/traceability-matrix.md}{traceability} →
+\href{../../architecture/sdd-template.md}{SDD}.
+
+\subsection{Шалгах
+асуултууд}\label{doc7-ux448ux430ux43bux433ux430ux445-ux430ux441ux443ux443ux43bux442ux443ux443ux434}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Included/excluded/postponed нь ганцаараа хөгжүүлэх хүрээнд хангалттай
+  тодорхой байна уу? Product 360° viewer ба нүүрний hero хоёр ялгагдаж
+  байна уу?
+\item
+  Mapping-ийн мөр бүр яг нэг төлөвтэй, n-a нь тайлбартай байна уу?
+  Complete төлөвийг template-ийн агуулгатай гэж зөв ойлгож байна уу?
+\item
+  FR-01/02, NFR-01\ldots03 бүрд оролт, үйлдэл, гаралт, pass/fail хязгаар
+  хангалттай юу? Олон шалгуурыг M3-д дэд шаардлага болгох хэрэгтэй юу?
+\item
+  \textbf{W1 P1 → P-NG-01 → NFR-01}, \textbf{W1 P3 → P-NG-03 → NFR-03}
+  гэсэн тайлбарласан холбоо нь төсөл сольсон нөхцөлд US-2.3-ын persona
+  шаардлагыг хангах уу?
+\item
+  Ownership-ийг session-ээс авах дүрэм ойлгомжтой юу? Guest inquiry,
+  customer history, admin inbox-ийг зөв ялгасан уу?
+\item
+  NFR-03-т all-skipped тестийг fail гэж үзэх шалгуур хангалттай юу?
+  SRS/SDD-ийн хил зааг алдагдсан өгүүлбэр байна уу?
+\end{enumerate}
+
+\subsection{Санал бүртгэх
+загвар}\label{doc7-ux441ux430ux43dux430ux43b-ux431ux4afux440ux442ux433ux44dux445-ux437ux430ux433ux432ux430ux440}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1900}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2600}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Reviewer / огноо
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Requirement/section
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Асуудал ба санал
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Хариу / өөрчлөлт
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pending & Pending & Санал хараахан ирээгүй & Pending \\
+\end{longtable}
+
+\subsection{Source interview ба
+submission}\label{doc7-source-interview-ux431ux430-submission}
+
+Source interview хийгдээгүй; owner нь Тэнгис, source нь repo-ийн файл ба
+өөрийн ажиглалт. Хүлээн авагч болон Confluence/LMS холбоос байхгүй тул
+2026-09-15-ны хэрэглэгчийн заавраар илгээлт/нийтлэлийг алгассан. Peer
+review хийсэн, neighboring team-д илгээсэн гэж тэмдэглэхгүй. Дараа нь
+хүлээн авах суваг тодорхой болбол Confluence Requirements хэсэгт repo
+permalink холбож, submission evidence хадгалж болно.
+
+\subsection{Богино
+retrospective}\label{doc7-ux431ux43eux433ux438ux43dux43e-retrospective}
+
+\textbf{Сайн болсон:} Phase 0-ийн их хэмжээний эхээс M2-д хэрэгтэй жижиг
+хүрээ сонгож, кодтой тулгав. \textbf{Тодорхойгүй байсан:} SRS-ийн ``юу
+хийх'' ба SDD-ийн ``яаж хийх'' өгүүлбэрүүд холилдсон; W1 persona нь өөр
+төсөл байсан. \textbf{Дараагийн өөрчлөлт:} шаардлага бүрийг source →
+observable result → verification дарааллаар бичиж, тестийн команд
+амжилттай дууссан эсэхээс гадна тест үнэхээр ажилласан эсэхийг шалгана.
+
+Chinchilla-ийн бүлэг 5-аас далд таамаг ба одоогийн дуусах нөхцөлийг
+эхэлж тодруулах аргыг үргэлжлүүлэн хэрэглэнэ. Номын үйл явц ба энэ ажлын
+хамгийн том зөрүү нь бодит хэрэглэгч/reviewer-ийн feedback хараахан
+аваагүй байхад draft-ыг кодын шинжилгээнээс эхлүүлсэн явдал юм.

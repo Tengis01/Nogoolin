@@ -1,0 +1,989 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\documentclass[
+  11pt,
+  a4paper,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=19mm,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage{ragged2e,indentfirst,xurl}
+\usepackage{longtable,booktabs,array,calc,pdflscape}
+\usepackage{xcolor,fancyhdr,titlesec,enumitem}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{0pt}{8pt}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\setlist{nosep,leftmargin=1.5em,topsep=3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 02}
+\fancyhead[R]{\small\sffamily Nogoolin / M2}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\AtBeginDocument{\fontsize{10.5}{12.5}\selectfont\justifying\setlength{\parindent}{1.25cm}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue!55!black},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\newcounter{none}
+\begin{document}
+
+\section{SRS Scope Charter}\label{doc1-srs-scope-charter}
+
+\textbf{Nogoolin · ICSI405 / M2 / UE-2 · Тэнгис · 2026-09-15 · v0.1,
+review draft}
+
+\subsection{Төслийг сольсон
+шийдвэр}\label{doc1-ux442ux4e9ux441ux43bux438ux439ux433-ux441ux43eux43bux44cux441ux43eux43d-ux448ux438ux439ux434ux432ux44dux440}
+
+Би Seminar 1-ийн ажлаа зуны дадлагын Document RAG Chatbot төсөл дээр
+хийж, хүлээлгэн өгсөн. Week 2-оос өөрийн бодит бүтээгдэхүүн, portfolio
+болох Nogoolin-ийг үндсэн кейсээр сонгов. Энэ төсөлд шаардлага,
+архитектур, API, deployment-ийн баримтыг одоогийн кодтой нийцүүлэх
+хэрэгцээ байгаа тул M4, M5, M8, M9-ийн ажлыг бодит төсөлдөө үргэлжлүүлэх
+боломжтой. Seminar 1-ийг дахин хийхгүй; шилжилтийн persona холбоог
+M2-ийн нэмэлтээр ил тод тэмдэглэнэ.
+
+\subsection{Зорилго ба
+уншигч}\label{doc1-ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux443ux43dux448ux438ux433ux447}
+
+Каталогийн хэрэглэгч бүтээгдэхүүний тухай асуулга илгээх, хадгалсан
+бүтээгдэхүүнээ дахин харах боломжийг тодорхойлно. Гол уншигч нь
+хэрэгжүүлж, шалгах хөгжүүлэгч Тэнгис; хоёрдогч уншигч нь админ болон
+хичээлийн reviewer. Phase 0 баримтыг эх материал болгон ашиглаж,
+технологийн сонголтыг SDD-д, шалгаж болох үр дүнг SRS-д тусгана.
+
+\subsection{Included --- энэ
+хүрээнд}\label{doc1-included-ux44dux43dux44d-ux445ux4afux440ux44dux44dux43dux434}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Inquiry + wishlist:} guest болон нэвтэрсэн хэрэглэгчийн
+  асуулга, хүлээн авсан баталгаа; нэвтэрсэн хэрэглэгчийн
+  хадгалах/харах/хасах урсгал. Админ inbox нь асуулга очсоныг шалгах
+  төгсгөлийн цэг.
+\item
+  \textbf{Өгөгдлийн тусгаарлалт:} хэрэглэгч өөрийн wishlist, inquiry
+  history-г л уншиж/өөрчилнө; админ эрхийг тусдаа шалгана.
+\item
+  \textbf{Hero fallback:} 3D asset бэлэн бус үед орлуулагч, WebGL-гүй
+  болон хөдөлгөөн багасгах тохиргоонд статик хувилбар; каталогт хүрэх
+  боломж.
+\item
+  \textbf{Шалгах ба build хийх хүрээ:} API-ийн local Docker build,
+  deploy-оос өмнөх тестийн зайлшгүй хаалт. Docker-ийн сонголт SDD-д,
+  амжилт/алдааны шалгуур NFR-03-д байна.
+\end{itemize}
+
+\subsection{Excluded --- M2/M3-ийн энэ багцаас
+хассан}\label{doc1-excluded-m2m3-ux438ux439ux43d-ux44dux43dux44d-ux431ux430ux433ux446ux430ux430ux441-ux445ux430ux441ux441ux430ux43d}
+
+\textbf{Бүтээгдэхүүн бүрийн 360° viewer:} тус бүрд нь 3D asset бэлтгэх
+ажил ганцаараа хөгжүүлэх MVP-д хэт их тул энгийн зургийн gallery
+ашиглана (D-07). Энэ нь нүүрний 3D intro-г хассан шийдвэр биш.
+Viewer-ийг post-MVP-д дахин авч үзнэ; энэ багцад хэрэгжүүлэх, тестлэх
+үүрэг үүсгэхгүй.
+
+\subsection{Postponed --- дараа
+хийх}\label{doc1-postponed-ux434ux430ux440ux430ux430-ux445ux438ux439ux445}
+
+\textbf{Phase 5:} захиалга, төлбөр/checkout, хүргэлтийн ажиллагаа; одоо
+\nolinkurl{delivery_enabled=false} гэсэн шийдвэр хүчинтэй. \textbf{Phase
+6:} cloud Supabase холбох, production deployment баталгаажуулах, App
+Store/Play Store нийтлэх. Mobile inquiry/wishlist, бодит GLB/.riv asset
+болон бүх каталог/admin шаардлагыг энэ таван шаардлага бүрэн хамрахгүй;
+бүтээгдэхүүний backlog-д үлдээнэ.
+
+\subsection{Хүрээ тогтоох үндэслэл ба дуусах
+нөхцөл}\label{doc1-ux445ux4afux440ux44dux44d-ux442ux43eux433ux442ux43eux43eux445-ux4afux43dux434ux44dux441ux43bux44dux43b-ux431ux430-ux434ux443ux443ux441ux430ux445-ux43dux4e9ux445ux446ux4e9ux43b}
+
+Chinchilla-ийн х. 53--55 дахь аргаас: \textbf{хэн юу хүлээж байна?} ---
+хэрэглэгч баталгаа, хөгжүүлэгч давтаж шалгах нөхцөл; \textbf{ямар далд
+таамаг байна?} --- нэвтэрсэн л бол бүх өгөгдөл харах эрхтэй биш, asset
+болон cloud бэлэн гэж үзэхгүй; \textbf{эхлээд юуг баримтжуулах вэ?} ---
+эхлэлээс үр дүн хүртэлх inquiry/wishlist урсгал. Эдгээр нь номын аргыг
+төсөлдөө хэрэглэсэн асуултууд, үгчилсэн эшлэл биш.
+
+M2-ийн бэлэн багц: SRS/SDD загвар, 5 шаардлага, 8 баганат traceability,
+persona холбоо, review draft. Ярилцлага хийгдээгүй; peer review илгээх,
+нийтлэх/submission алхмыг хэрэглэгчийн заавраар алгассан. W1 persona-ийн
+шинэ төсөлд шилжүүлсэн холбоог reviewer-ээр баталгаажуулах шаардлагатай.
+
+\textbf{Эх:} \href{../../phase-0/01-vision.md}{Vision},
+\href{../../phase-0/10-roadmap.md}{Roadmap},
+\href{../../../agent-context/DECISIONS.md}{D-07 / ADR-011},
+\href{Software_Project_Documentation_Week_02_Handout.pdf}{W2 handout};
+Chinchilla, бүлэг 5, хэвлэмэл х. 53--55 (локал номын PDF х. 74--76).
+
+\clearpage
+\section{Nogoolin persona --- Week 2
+нэмэлт}\label{doc2-nogoolin-persona-week-2-ux43dux44dux43cux44dux43bux442}
+
+\textbf{Тэнгис · 2026-09-15 · US-2.3 · Өөрийн ажиглалт; ярилцлага
+хийгдээгүй.}
+
+\subsection{Уншигч ба бүтээгдэхүүний
+хэрэглэгч}\label{doc2-ux443ux43dux448ux438ux433ux447-ux431ux430-ux431ux4afux442ux44dux44dux433ux434ux44dux445ux4afux4afux43dux438ux439-ux445ux44dux440ux44dux433ux43bux44dux433ux447}
+
+\textbf{Хөгжүүлэгч persona:} Тэнгис, TypeScript/React ашигладаг,
+web/API/өгөгдлийн санг холбож ажиллуулна. Зорилго нь Nogoolin-ийн
+inquiry/wishlist урсгалыг local орчинд давтаж шалгаж, алдааг аль
+давхаргаас хайхаа ойлгох. Хэрэгсэл: Fedora, VS Code, Git, pnpm, Docker,
+DevTools.
+
+\textbf{Бүтээгдэхүүний хэрэглэгч:} каталог үзэж, асуулга илгээх эсвэл
+дараа үзэх бүтээгдэхүүнээ хадгалах хүн. Энэ нь
+\href{../../phase-0/01-vision.md}{Phase 0 vision}-ийн catalog
+visitor/inquiry customer тайлбарын хураангуй; шинэ хүнтэй ярилцсан үр
+дүн биш.
+
+\subsection{P-NG-01 --- Session ба өгөгдөл эзэмших эрхийг
+ялгах}\label{doc2-p-ng-01-session-ux431ux430-ux4e9ux433ux4e9ux433ux434ux4e9ux43b-ux44dux437ux44dux43cux448ux438ux445-ux44dux440ux445ux438ux439ux433-ux44fux43bux433ux430ux445}
+
+Нэвтрэлт ажиллаж байсан ч A хэрэглэгч B-ийн wishlist, inquiry history-г
+харах ёсгүй. Шалгах зааварт guest, customer A/B, admin-ийн ялгаа байхгүй
+бол эрхийн алдаа анзаарагдахгүй үлдэнэ. Энэ бол код болон security
+баримтаас гаргасан эрсдэлийн ажиглалт; бодит халдлага болсон гэсэн үг
+биш.
+
+\textbf{Source:}
+\href{../../phase-0/08-security.md\#9-idor-prevention}{08-security §9},
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repository},
+\href{../../../backend/api/src/repositories/supabase/inquiry.repository.ts}{inquiry
+repository}. \textbf{Холбоо:}
+\href{../../requirements/requirements.md\#nfr-01}{NFR-01}.
+
+\subsection{P-NG-02 --- Asset бэлэн бус үед урсгалыг
+шалгах}\label{doc2-p-ng-02-asset-ux431ux44dux43bux44dux43d-ux431ux443ux441-ux4afux435ux434-ux443ux440ux441ux433ux430ux43bux44bux433-ux448ux430ux43bux433ux430ux445}
+
+Бодит Green Tara GLB/.riv бэлэн болоогүй үед каталогийн урсгалыг
+хүлээлгэхгүй шалгах хэрэгтэй. Asset тохируулаагүй нөхцөл дэх орлуулагч,
+WebGL-гүй болон reduced-motion хувилбарын үр дүнг тус бүр тодорхой
+болгоно.
+
+\textbf{Source:} \href{../../../agent-context/ASSET_SPECS.md}{Asset
+contract},
+\href{../../../apps/web/src/components/intro/deity.tsx}{deity.tsx},
+\href{../../../apps/web/src/components/intro/hero-intro.tsx}{hero-intro.tsx}.
+\textbf{Холбоо:}
+\href{../../requirements/requirements.md\#nfr-02}{NFR-02}.
+
+\subsection{P-NG-03 --- Хуучин заавар ба бодит орчин
+зөрөх}\label{doc2-p-ng-03-ux445ux443ux443ux447ux438ux43d-ux437ux430ux430ux432ux430ux440-ux431ux430-ux431ux43eux434ux438ux442-ux43eux440ux447ux438ux43d-ux437ux4e9ux440ux4e9ux445}
+
+Flutter/Express гэсэн хуучин тайлбаруудыг одоогийн React Native/Fastify
+шийдвэртэй андуурч болно. Мөн local өгөгдлийн сан байхгүй үед тест
+алгасагдсаныг бүрэн шалгалт өнгөрсөн гэж ойлгох эрсдэлтэй.
+
+\textbf{Source:}
+\href{../../../agent-context/DECISIONS.md}{ADR-003/004/011},
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{integration
+test-ийн skip салаа}. \textbf{Холбоо:}
+\href{../../requirements/requirements.md\#nfr-03}{NFR-03},
+\href{../../architecture/sdd-template.md}{SDD}.
+
+\subsection{Week 1-тэй холбосон
+үндэслэл}\label{doc2-week-1-ux442ux44dux439-ux445ux43eux43bux431ux43eux441ux43eux43d-ux4afux43dux434ux44dux441ux43bux44dux43b}
+
+\href{../sem1/wiki/02_audience_persona.md}{Өмнө хүлээлгэн өгсөн W1
+persona}-ийн \textbf{P1} нь нэвтрэлтийн cookie/session-ийг шалгах
+зааврын хэрэгцээ байсан. Түүний authentication-ийг оношлох хэрэгцээг
+Nogoolin-д өргөжүүлж \textbf{P1 → P-NG-01 → NFR-01} гэж холбов.
+Authentication болон ownership нь өөр ойлголт; W1-д IDOR байсан гэж
+үзээгүй. Мөн W1-ийн \textbf{P3} нь local ба pipeline-д өөр үр дүн
+гарахыг оношлох, өөр замтай байх хэрэгцээ; үүнээс \textbf{P3 → P-NG-03 →
+NFR-03} холбоог шинэ төсөлд шилжүүлэн гаргав.
+
+Эдгээр нь Week 2-т нэмсэн тайлбарласан холбоо. US-2.3-ийн W1 pain point
+шалгуурт энэ шилжүүлэлт нийцэх эсэхийг багш/reviewer-ээр баталгаажуулна;
+Week 1-ийн эхийг өөрчлөөгүй.
+
+\clearpage
+\section{SRS Template --- Nogoolin}\label{doc3-srs-template-nogoolin}
+
+\textbf{ICSI405 / M2 / US-2.1 · Тэнгис · 2026-09-15 · v0.1 / draft}
+
+\subsection{1. Оршил}\label{doc3-ux43eux440ux448ux438ux43b}
+
+\textbf{1.1 Purpose.} Энэ SRS нь inquiry, wishlist, хувийн өгөгдлийн
+тусгаарлалт, hero fallback, API-ийн тестийн хаалтын хүлээгдэх үр дүнг
+хөгжүүлэгч болон reviewer-т тодорхойлно. M2-д таван шаардлагын draft
+бэлтгэсэн; бүрэн бүтээгдэхүүний SRS эсвэл ISO нийцлийн гэрчилгээ биш.
+
+\textbf{1.2 Scope.} \href{../../requirements/scope-charter.md}{Scope
+Charter}-ийн included/excluded/postponed шийдвэрийг мөрдөнө. Catalog нь
+inquiry/wishlist-ийн урьдчилсан нөхцөл; 360° product viewer хасагдсан,
+Phase 5/6 ажиллагаа хойшлогдсон. Үндсэн төсөл W2-оос Nogoolin болсон.
+
+\textbf{1.3 Definitions.} Inquiry = бүтээгдэхүүний асуулга; wishlist =
+дараа үзэхээр хадгалсан жагсаалт; guest = нэвтрээгүй хэрэглэгч; customer
+= өөрийн мэдээлэлд эрхтэй хэрэглэгч; admin = тусгай удирдах эрхтэй
+хэрэглэгч. IDOR = эзэмшигчийг шалгалгүй өөр хүний мэдээлэлд хүрэх алдаа;
+RLS = өгөгдлийн мөрийн түвшний хандалтын дүрэм. FR/NFR болон
+Test/Inspection нь \href{../../requirements/requirements.md}{шаардлагын
+баримт}-д тайлбартай.
+
+\textbf{1.4 References.}
+\href{Software_Project_Documentation_Week_02_Handout.pdf}{W2 handout},
+Lecture 02, слайд 4--8; \href{../../phase-0/README.md}{Phase 0 index},
+\href{../../requirements/traceability-matrix.md}{кодын нотолгоо}.
+\href{https://ieeexplore.ieee.org/document/720574}{IEEE 830-1998} нь
+SRS-ийн бүтэц/чанарын зөвлөмж;
+\href{https://www.iso.org/standard/72089.html}{ISO/IEC/IEEE 29148:2018}
+нь requirements engineering-ийн процесс, мэдээллийн агуулгыг
+тодорхойлдог. Доорх нь хичээлийн зориулалтаар тохируулсан IEEE 830
+бүтэц; чанарын найман шалгуурыг Lecture 02-ын rubric-аар ашиглав.
+
+\textbf{1.5 Overview.} §2 нь бүтээгдэхүүний орчин, хэрэглэгч, таамаг;
+§3-ын mapping нь бүрэн/дутуу хэсэг;
+\href{../../requirements/requirements.md}{5 шаардлага},
+\href{../../requirements/traceability-matrix.md}{traceability},
+\href{../../architecture/sdd-template.md}{SDD} нь дэлгэрэнгүй холбоотой
+баримтууд.
+
+\subsection{2. Ерөнхий
+тодорхойлолт}\label{doc3-ux435ux440ux4e9ux43dux445ux438ux439-ux442ux43eux434ux43eux440ux445ux43eux439ux43bux43eux43bux442}
+
+\textbf{2.1 Product perspective.} Nogoolin бол шашин, зан үйлийн
+бүтээгдэхүүний каталог. Web хэрэглэгч бүтээгдэхүүн үзэж, асуулга
+илгээнэ; customer хадгалсан бүтээгдэхүүн болон асуулгын түүхээ харна;
+admin inbox-оос асуулгыг боловсруулна. Нэг хэрэглэгчийн хувийн
+мэдээллийг бусдад үзүүлэхгүй.
+
+\textbf{2.2 Product functions.} Энэ draft-ийн үйлдэл FR-01 (асуулга),
+FR-02 (wishlist); тэдгээрийн чанарын хязгаар NFR-01\ldots03.
+Бүтээгдэхүүн засварлах, search, auth-ийн бүх нарийвчилсан FR нь Phase 0
+эхэд байгаа бөгөөд W3-д сонгон өргөжүүлнэ.
+
+\textbf{2.3 User characteristics.}
+\href{wiki/persona-and-pivot.md}{Persona нэмэлт}: хэрэглэгч энгийн
+монгол интерфэйс, баталгаа хүснэ; хөгжүүлэгч давтаж шалгах алхам, эрхийн
+ялгаа, орчны хамаарлыг мэдэх хэрэгтэй. Эдгээр нь баримт/кодын шинжилгээ;
+хэрэглэгчийн ярилцлага pending.
+
+\textbf{2.4 Constraints.} Ганцаараа хөгжүүлэх хүрээ; монгол интерфэйс;
+delivery идэвхгүй; cloud холболт Phase 6 хүртэл хойшлогдсон.
+Fastify/Next.js/Supabase/Docker-ийн сонголт нь
+\href{../../architecture/sdd-template.md}{SDD}-д байна.
+
+\textbf{2.5 Assumptions/dependencies.} Local өгөгдлийн сан, нийтлэгдсэн
+бүтээгдэхүүн болон test customer/admin бэлэн үед acceptance шалгалт
+ажиллана. Бодит GLB/.riv asset, cloud account, production log бэлэн гэж
+үзэхгүй. Тестүүд ажилласан эсэхийг үр дүнгээс тусад нь шалгана.
+
+\textbf{2.6 Apportioning.} W3-д өргөжүүлсэн SRS, W4-д архитектур, W5-д
+API, W8-д диаграм, W9-д Docs-as-Code/CI evidence бэлтгэх төлөвлөгөөтэй.
+Эдгээр нь хичээлийн долоо хоног; Phase 0--6 нь бүтээгдэхүүний roadmap
+тул хооронд нь адилтгахгүй.
+
+\subsection{3. IEEE 830 section
+mapping}\label{doc3-ieee-830-section-mapping}
+
+\nolinkurl{complete} = M2 загварт тухайн хэсгийн агуулга/холбоос байна;
+хэрэгжилт болон stakeholder approval гэсэн үг биш.
+\nolinkurl{planned (Wxx)} = нөхөх долоо хоног.
+\nolinkurl{n-a (justified)} = энэ хүрээнд хамаарахгүй, шалтгаан нь
+Content-д бий. Мөр бүр яг нэг төлөвтэй.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2600}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1900}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Section
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Content / эх материал
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Status
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1.1 Purpose & §1.1: хөгжүүлэгч/reviewer-ийн зорилго & complete \\
+1.2 Scope & Scope Charter; 01 vision, 10 roadmap & complete \\
+1.3 Definitions & §1.3: inquiry, wishlist, IDOR, RLS & complete \\
+1.4 References & §1.4: handout, lecture, Phase 0, код & complete \\
+1.5 Overview & §1.5: холбоотой баримтын бүтэц & complete \\
+2.1 Product perspective & §2.1; 01 vision, 03 use cases & complete \\
+2.2 Product functions & §2.2; FR-01/02-ийн хүрээ & complete \\
+2.3 User characteristics & Persona нэмэлт; 01 vision, W1 persona &
+complete \\
+2.4 Constraints & §2.4; Scope Charter, SDD & complete \\
+2.5 Assumptions/dependencies & §2.5; 10 roadmap, asset/DB нөхцөл &
+complete \\
+2.6 Apportioning & §2.6; Phase 5/6 postponed & complete \\
+3.1.1 User interfaces & §3.1 доор; 07 wireframes; persona & complete \\
+3.1.2 Hardware interfaces & Тусгай төхөөрөмж/сенсортой холболт энэ
+web/API хүрээнд байхгүй. & n-a (justified) \\
+3.1.3 Software interfaces & §3.1 доор; 06 API, shared schema; wishlist
+OpenAPI gap & planned (W05) \\
+3.1.4 Communication interfaces & §3.1: JSON, auth, status; 06 API, 08
+security & complete \\
+3.2 Functional requirements & FR-01/02 draft; M3-д сонгосон хүрээнд 15
+FR болгон өргөжүүлэх & planned (W03) \\
+3.3 Performance requirements & 02 requirements-ийн NFR-PER; reference
+орчин/ачааллыг хэмжих нөхцөлтэй болгох & planned (W03) \\
+3.4 Logical database requirements & 04 ER эх + inquiry/customer/cart
+migration; өгөгдөл/unique/ownership дүрмийг нийцүүлэх & planned (W03) \\
+3.5 Design constraints & §2.4 ба SDD; delivery-off, local-first, solo
+хүрээ & complete \\
+3.6.1 Reliability & NFR-02 draft; recovery, asset 404 шалгуурыг нөхөх &
+planned (W03) \\
+3.6.2 Availability & 02 requirements; outage хэмжих нөхцөл тодорхойлох &
+planned (W03) \\
+3.6.3 Security & NFR-01 draft; 08 security; 5 NFR багцад өргөжүүлэх &
+planned (W03) \\
+3.6.4 Maintainability & NFR-03 gap; 09 deployment; CI-ийн бодит run
+evidence & planned (W09) \\
+3.6.5 Portability & 02 requirements; browser/mobile дэмжлэгийн шалгах
+матриц & planned (W03) \\
+3.7 Other requirements & Audit/хувийн мэдээллийн хадгалах ба устгах
+бодлого тодруулах; 08 security & planned (W03) \\
+Appendix A: Traceability & 8 багана, 5 ID, source ба persona холбоо &
+complete \\
+Appendix B: Assumptions/quality & §2.5 ба §4; эх сурвалжийн хязгаарлалт
+& complete \\
+\end{longtable}
+
+\subsubsection{3.1 External interface-ийн M2
+эхлэл}\label{doc3-external-interface-ux438ux439ux43d-m2-ux44dux445ux43bux44dux43b}
+
+\textbf{User:} бүтээгдэхүүний detail-ээс тусдаа inquiry page рүү орж
+нэр/утас, сонголтот зурвас илгээнэ; амжилтын баталгаа ба 400/404/429
+алдааг ялгана. Wishlist-д хадгалах/хасах, profile-д зөвхөн өөрийн
+асуулга харах; guest хамгаалагдсан хуудсанд нэвтрэх урсгалтай. Hero нь
+skip/static fallback-тай. Persona-ийн P-NG-01 нь эрхийн алдаа, P-NG-02
+нь asset-гүй төлөвийг тайлбарлах хэрэгцээг өгнө.
+
+\textbf{Software/communication:} REST JSON интерфэйс:
+\nolinkurl{/api/v1/inquiries}, \nolinkurl{/api/v1/cart},
+\nolinkurl{/api/v1/inquiries/mine}; protected API нь Bearer session
+token-оор хэрэглэгчийг тогтооно. 201/204 амжилт, 400 validation, 401
+нэвтрэлт, 403 эрх, 404 олдоогүй, 429 rate limit. Production transport нь
+HTTPS гэсэн security эхийн хязгаартай; localhost нь хөгжүүлэлтийн орчин.
+Field/schema-ийн бүрэн contract W5; 06 OpenAPI-д cart/history нэмэлт
+хараахан нийцээгүй.
+
+\subsection{4. Чанарын review ба W3 ажлын
+хүрээ}\label{doc3-ux447ux430ux43dux430ux440ux44bux43d-review-ux431ux430-w3-ux430ux436ux43bux44bux43d-ux445ux4afux440ux44dux44d}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Lecture 02-ын шалгуур
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Энэ draft-д хэрэглэсэн арга
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Correct & Source нь бодит файл; interview/approval pending гэж
+тэмдэглэсэн \\
+Unambiguous & Input, action, output, pass/fail-ийг тус бүр нэрлэсэн \\
+Complete & Таван шаардлагын нөхцөл/хязгаар бий; бүтээгдэхүүний бүрэн SRS
+W3 \\
+Consistent & Email-гүй inquiry, wishlist ≠ checkout; технологи SDD-д \\
+Ranked & Шаардлага бүр must; optional боломж энэ багцад ороогүй \\
+Verifiable & T-01\ldots03, I-01\ldots02; нотолгооны төлөв тусдаа \\
+Modifiable & Тогтвортой ID, салгасан Markdown, нэг traceability эх \\
+Traceable & 8 багана; Phase 0/код/тайлбарласан W1 холбоо \\
+\end{longtable}
+
+\clearpage
+\section{Таван шалгаж болох
+шаардлага}\label{doc4-ux442ux430ux432ux430ux43d-ux448ux430ux43bux433ux430ux436-ux431ux43eux43bux43eux445-ux448ux430ux430ux440ux434ux43bux430ux433ux430}
+
+\textbf{Nogoolin · M2 / US-2.2 · Тэнгис · 2026-09-15 · v0.1 / draft}
+
+FR нь үйлдлийн, NFR нь чанар/хязгаарлалтын шаардлага. Доорх ID нь энэ
+шинэ багцын ID; Phase 0-ийн урт ID-г солихгүй. \nolinkurl{must} =
+зайлшгүй, \nolinkurl{shall} = тохирсон хүрээнд заавал биелүүлэх,
+\nolinkurl{may} = сонголтот гэсэн хичээлийн тэмдэглэгээг хэрэглэв. Энд
+тавуулаа \nolinkurl{must}. Owner: \textbf{Тэнгис}. Source interview:
+\textbf{хийгдээгүй}; эх нь repo-ийн файл ба өөрийн шинжилгээ. Pass/fail
+нь төлөвлөсөн шалгуур; тестийг энэ ажлаар ажиллуулаагүй.
+
+\subsection{FR-01}\label{doc4-fr-01}
+
+\textbf{Асуулга хадгалах · Priority: must · Verification: Test (T-01)}
+
+Зочин эсвэл нэвтэрсэн хэрэглэгч зөв нэр, утас, сонголтот зурвас болон
+бүтээгдэхүүний ID-тай асуулга илгээхэд систем нэг шинэ асуулга хадгалж,
+\nolinkurl{201}, давтагдашгүй ID, \nolinkurl{status=new} бүхий баталгааг
+\textbf{must} буцаана.
+
+\textbf{T-01:} local өгөгдлийн санд нийтлэгдсэн бүтээгдэхүүн, rate
+limit-д хүрээгүй IP бэлтгэнэ. Нэр \nolinkurl{Тэнгис}, тестийн утас
+\nolinkurl{99112233}, сонголтот зурвас болон бүтээгдэхүүний ID-тай
+\nolinkurl{POST /api/v1/inquiries} явуулна. Guest болон customer нөхцөл
+бүрд 201, нэг мөр нэмэгдсэн, status=new, guest-ийн customer\_id=null,
+customer-ийнх өөрийн ID байвал pass. Нэр 1 тэмдэгт эсвэл утас
+\nolinkurl{abc} үед 400, мөр нэмэгдэхгүй; байхгүй бүтээгдэхүүний зөв
+хэлбэртэй UUID үед 404, мөр нэмэгдэхгүй байна. Аль нэг хүлээлт зөрвөл
+fail. Утасны бүрэн формат нь
+\href{../../../packages/validation-schemas/src/common.ts}{shared
+schema}-д байна.
+
+\textbf{Source:} \href{../../phase-0/02-requirements.md}{Phase 0
+FR-INQ-001\ldots003},
+\href{../../../packages/validation-schemas/src/inquiry.schema.ts}{inquiry
+schema},
+\href{../../../backend/api/src/controllers/inquiry.controller.ts}{controller}.
+Email талбар оруулахгүй; message API дээр сонголтот. \textbf{Төлөв:}
+хэрэгжилт, тестийн эх байгаа; шинэ ажиллуулалтын нотолгоо pending.
+
+\subsection{FR-02}\label{doc4-fr-02}
+
+\textbf{Wishlist-ийн төлөв хадгалах · Priority: must · Verification:
+Test (T-02)}
+
+Нэвтэрсэн хэрэглэгч нийтлэгдсэн бүтээгдэхүүнийг хадгалах, жагсаалтаа
+харах, хасахад систем хэрэглэгч-бүтээгдэхүүн хос бүрд хамгийн ихдээ нэг
+хадгалсан бичлэгтэй төлөвийг \textbf{must} хадгална.
+
+\textbf{T-02:} A хэрэглэгч бүтээгдэхүүн P-г
+\nolinkurl{POST /api/v1/cart}-аар хоёр удаа нэмэхэд хүсэлт бүр 201,
+\nolinkurl{GET /api/v1/cart}-д P яг нэг удаа байна. Хуудсыг дахин
+ачаалахад P хадгалагдсан байна. \nolinkurl{DELETE /api/v1/cart/P}-г хоёр
+удаа дуудахад хоёул 204, дараах GET-д P байхгүй байвал pass. Guest
+хүсэлт 401, draft/байхгүй бүтээгдэхүүн нэмэх хүсэлт 404 байна. Аль нэг
+хүлээлт зөрвөл fail. Энэ нь wishlist бөгөөд тоо хэмжээ, нийт үнэ,
+checkout агуулахгүй.
+
+\textbf{Source:}
+\href{../../../backend/api/src/controllers/cart.controller.ts}{cart
+controller},
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repository}, \href{../../../apps/web/src/app/wishlist/page.tsx}{wishlist
+page},
+\href{../../../supabase/migrations/20260726120000_inquiry_customer_and_cart.sql}{20260726120000
+migration}. \textbf{Төлөв:} хэрэгжилт, тестийн эх байгаа; runtime
+pending. Phase 0-д wishlist-ийн бие даасан FR байгаагүй; одоогийн кодоос
+сэргээн тодорхойлов.
+
+\subsection{NFR-01}\label{doc4-nfr-01}
+
+\textbf{Хэрэглэгчдийн өгөгдлийг тусгаарлах · Priority: must ·
+Verification: Inspection (I-01)}
+
+Customer A-ийн session-ээр wishlist болон inquiry history
+унших/өөрчлөхөд систем өөр customer B-ийн хувийн мөрийг хариунд
+оруулахгүй, өөрчлөхгүй байхыг \textbf{must} хангана; guest нь эдгээр
+хамгаалагдсан үйлдэлд 401 авна. Админ inbox-д зөвхөн баталгаажсан admin
+хүрнэ.
+
+\textbf{I-01:} хамгаалагдсан cart GET/POST/DELETE, inquiry mine GET,
+admin inquiry GET/PATCH-ийн controller → service → repository болон
+RLS-ийг шалгана. Эзэмшигчийн ID баталгаажсан session-ээс ирдэг,
+хэрэглэгчийн body/query-гээс ирдэггүй; cart нь \nolinkurl{user_id},
+inquiry нь \nolinkurl{customer_id}-аар шүүгддэг; insert нь session-ийн
+ID оноодог; RLS болон admin role guard бий гэдгийг мөр бүрд нотолбол
+pass. Нэг хамгаалагдсан зам ownership/role шалгалтгүй бол fail. Public
+catalog, guest inquiry create-д сохроор \nolinkurl{user_id} filter
+шаардахгүй.
+
+\textbf{Дэмжих тест:} A/B хоёр customer үүсгээд A-ийн хариунд B-ийн ID
+огт байхгүй, A хасахад B-ийн хадгалсан бүтээгдэхүүн хэвээр, customer
+admin inbox-д 403 авдгийг шалгана. \textbf{Source:}
+\href{../../phase-0/08-security.md\#9-idor-prevention}{security §9},
+\href{wiki/persona-and-pivot.md}{P-NG-01 / W1 холбоо}, дээрх хоёр
+repository ба migration. \textbf{Төлөв:} статик замыг шалгасан; бүрэн
+I-01 checklist, хоёр-customer runtime нотолгоо pending.
+
+\clearpage
+\subsection{NFR-02}\label{doc4-nfr-02}
+
+\textbf{Asset-гүй үед каталогт хүрэх · Priority: must · Verification:
+Test (T-03)}
+
+Нүүрний 3D asset тохируулаагүй үед систем орлуулагчийг, WebGL боломжгүй
+эсвэл reduced-motion идэвхтэй үед статик hero-г \textbf{must} үзүүлж,
+хэрэглэгчийг каталогт хүрэх боломжтой байлгана.
+
+\textbf{T-03:} desktop 1440×900, mobile хэмжээ 390×844 бүхий browser-д
+sessionStorage-г цэвэрлэж дараахыг тус бүр шалгана: (a) GLB URL
+тохируулаагүй --- орлуулагч харагдах; (b) WebGL unavailable --- статик
+hero; (c) reduced-motion --- хөдөлгөөнт intro алгасагдах. Intro гарсан
+нөхцөлд skip нь navigation эхэлснээс 1 секундийн дотор харагдаж, дарахад
+home төлөвт орно. Нөхцөл бүрд бүтээгдэхүүний холбоосоор
+\nolinkurl{/products} нээгдэж, жагсаалт харагдвал pass; хоосон дэлгэц,
+түгжигдсэн scroll, хүрэх боломжгүй каталог байвал fail. Browser/version,
+local build, хэмжсэн хугацааг тэмдэглэнэ. Буруу URL/404 asset-ийн
+recovery нь тусдаа gap, энэ шаардлагын батлагдсан хэрэгжилт гэж үзэхгүй.
+
+\textbf{Source:}
+\href{../../phase-0/07-uiux-wireframes.md}{WF-INTRO-03/05/06/07},
+\href{../../../apps/web/src/components/intro/hero-intro.tsx}{hero-intro},
+\href{../../../apps/web/src/components/intro/deity.tsx}{deity},
+\href{wiki/persona-and-pivot.md}{P-NG-02}. \textbf{Төлөв:} код байгаа;
+шинэ browser evidence pending.
+
+\subsection{NFR-03}\label{doc4-nfr-03}
+
+\textbf{Deploy-оос өмнөх тестийн хаалт · Priority: must · Verification:
+Inspection (I-02)}
+
+API production deploy нь тухайн commit-ийн шаардлагатай integration
+тестүүд бодитоор ажиллаж амжилттай дууссан, production container build
+амжилттай болсон үед л эхлэхийг систем \textbf{must} хангана. Тест fail
+болох, бүх integration тест алгасагдах, эсвэл Docker build fail болох
+нөхцөл бүр deploy-г хаана.
+
+\textbf{I-02:} CI тохиргоо, тестийн entry point, job dependency болон
+гурван сөрөг тохиолдлын CI log-ийг шалгана. Test fail / DB unavailable
+буюу all-skipped / Docker build fail бүрд deploy job skipped эсвэл
+blocked, амжилттай тохиолдолд deploy нь зөвхөн хоёр шалгалтын дараа
+eligible болсон байвал pass. Энэ review нь production deploy ажиллуулах
+шаардлагагүй. Auto-deploy зэрэг CI-ийг тойрох зам Phase 6-д хаагдсан
+эсэхийг мөн шалгана.
+
+\textbf{Source:}
+\href{../../phase-0/02-requirements.md}{NFR-MAIN-005/006},
+\href{../../phase-0/09-deployment.md}{deployment §8.4},
+\href{../../../.github/workflows/api-deploy.yml}{api workflow},
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{test
+skip branch}, \href{../../../backend/api/Dockerfile}{Dockerfile}.
+\textbf{Төлөв: gap / planned (W09).}
+\nolinkurl{lint-and-test → docker-build → deploy} холбоо байгаа ч
+тестүүд DB-гүй үед skip хийнэ, workflow local Supabase асаахгүй. Иймд
+хаалт бүрэн хэрэгжсэн гэж үзэхгүй. Web workflow-д test команд байхгүй;
+энэ NFR API-д хамаарна, web рүү өргөтгөх нь дараагийн шаардлага.
+
+\clearpage
+\begin{landscape}
+\section{Traceability Matrix}\label{doc5-traceability-matrix}
+
+\textbf{Nogoolin · M2 / US-2.3 · v0.1 · 2026-09-15}
+
+Доорх нь яг 8 баганатай, 5 мөртэй. Last-Reviewed нь баримт/кодыг уншсан
+огноо; тест ажиллуулсан огноо биш. Owner нь Тэнгис (хөгжүүлэгч, баримт
+бичигч). Бүх шаардлага draft, stakeholder interview хийгдээгүй.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0650}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.2550}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0650}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1200}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1150}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1450}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1400}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0950}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Owner
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verification
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dependency
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Risk
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Status
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Last-Reviewed
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\href{../../requirements/requirements.md\#fr-01}{FR-01} &
+\href{../../phase-0/02-requirements.md}{FR-INQ-001\ldots003};
+\href{../../../packages/validation-schemas/src/inquiry.schema.ts}{schema};
+\href{../../../backend/api/src/controllers/inquiry.controller.ts}{controller}
+& Тэнгис & Test: T-01;
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{тестийн
+эх} & Бүтээгдэхүүн, local DB, validation, rate limit & Email/message-ийн
+хуучин баримтын зөрүү; давхардсан илгээлт & Draft; runtime pending &
+2026-09-15 \\
+\href{../../requirements/requirements.md\#fr-02}{FR-02} &
+\href{../../../backend/api/src/controllers/cart.controller.ts}{cart
+controller};
+\href{../../../supabase/migrations/20260726120000_inquiry_customer_and_cart.sql}{migration}
+& Тэнгис & Test: T-02;
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{тестийн
+эх} & Auth, published product, unique pair, NFR-01 & Wishlist-ийг
+checkout-тай андуурах & Draft; runtime pending & 2026-09-15 \\
+\href{../../requirements/requirements.md\#nfr-01}{NFR-01} &
+\href{../sem1/wiki/02_audience_persona.md}{W1 persona P1} →
+\href{wiki/persona-and-pivot.md\#p-ng-01--session-ба-өгөгдөл-эзэмших-эрхийг-ялгах}{P-NG-01};
+\href{../../phase-0/08-security.md\#9-idor-prevention}{08 §9};
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repo};
+\href{../../../backend/api/src/repositories/supabase/inquiry.repository.ts}{inquiry
+repo} & Тэнгис & Inspection: I-01; A/B runtime нэмэлт & Session
+identity, ownership filter, RLS, RBAC & Өөр хүний мэдээлэл алдагдах; W1
+холбооны зөвшөөрөл pending & Draft; partial inspection & 2026-09-15 \\
+\href{../../requirements/requirements.md\#nfr-02}{NFR-02} &
+\href{wiki/persona-and-pivot.md\#p-ng-02--asset-бэлэн-бус-үед-урсгалыг-шалгах}{P-NG-02};
+\href{../../phase-0/07-uiux-wireframes.md}{wireframes};
+\href{../../../apps/web/src/components/intro/hero-intro.tsx}{hero} &
+Тэнгис & Test: T-03; browser evidence pending & Hero, fallback, catalog
+route & Asset байхгүйгээс хэрэглэгч каталогт хүрэхгүй & Draft; runtime
+pending & 2026-09-15 \\
+\href{../../requirements/requirements.md\#nfr-03}{NFR-03} &
+\href{../sem1/wiki/02_audience_persona.md}{W1 P3} →
+\href{wiki/persona-and-pivot.md\#p-ng-03--хуучин-заавар-ба-бодит-орчин-зөрөх}{P-NG-03};
+\href{../../phase-0/09-deployment.md}{09 deployment};
+\href{../../../.github/workflows/api-deploy.yml}{workflow};
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{skip
+branch} & Тэнгис & Inspection: I-02; CI negative-case logs pending &
+Local DB in CI, test exit status, Docker build & Бүх тест skip боловч
+deploy eligible болох & Gap; planned (W09) & 2026-09-15 \\
+\end{longtable}
+
+\subsection{Эх сурвалжийн үнэн зөв
+байдал}\label{doc5-ux44dux445-ux441ux443ux440ux432ux430ux43bux436ux438ux439ux43d-ux4afux43dux44dux43d-ux437ux4e9ux432-ux431ux430ux439ux434ux430ux43b}
+
+W1-ийн P1 нь cookie/session асуудал бөгөөд IDOR биш. NFR-01 рүү холбосон
+нь Week 2-т нэмсэн, тайлбарласан шинэ хэрэглээ. W1 P3-ийн local/pipeline
+ялгаанаас NFR-03-ийн тестийн орчны эрсдэлийг гаргасан. Багш эдгээр
+холбоог зөвшөөрсөн гэж үзээгүй;
+\href{wiki/peer-review-draft.md}{peer-review draft}-д шалгуулах асуулт
+бий. Ярилцлагын source зохиогоогүй.
+
+\subsection{Шинэчлэх
+дүрэм}\label{doc5-ux448ux438ux43dux44dux447ux43bux44dux445-ux434ux4afux440ux44dux43c}
+
+Шаардлага өөрчлөгдвөл ID-г хадгалж, эх холбоос, verification-ийн
+pass/fail, dependency, risk, status, огноог хамтад нь шинэчилнэ. Тестийн
+run URL/log нэмсний дараа л verification status-ийг verified болгоно.
+Confluence-ийн Requirements хэсэгт энэ файлын GitHub permalink-ийг
+оруулахад бэлэн; хэрэглэгчийн заавраар нийтлэлт/submission-ийг алгассан,
+remote commit хийгээгүй.
+
+\end{landscape}
+\clearpage
+\section{SDD Template --- Nogoolin}\label{doc6-sdd-template-nogoolin}
+
+\textbf{ICSI405 / M2 · Тэнгис · 2026-09-15 · v0.1 / draft}
+
+\subsection{1. Зорилго ба шаардлагын
+холбоо}\label{doc6-ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux448ux430ux430ux440ux434ux43bux430ux433ux44bux43d-ux445ux43eux43bux431ux43eux43e}
+
+Энэ SDD нь \href{../../requirements/requirements.md}{таван шаардлагыг}
+хэрэгжүүлэх бүтэц, технологийг тайлбарлана. M2-д одоогийн кодоос үндсэн
+бүтэц, design decision, gap-ийг тогтоов; arc42-ийн дэлгэрэнгүй W4,
+OpenAPI W5, диаграм W8-д төлөвлөгдсөн. SRS нь хэрэглэгчийн авах үр дүн,
+SDD нь түүнийг хэрэгжүүлэх арга.
+
+\subsection{2. Системийн орчин ба
+бүрэлдэхүүн}\label{doc6-ux441ux438ux441ux442ux435ux43cux438ux439ux43d-ux43eux440ux447ux438ux43d-ux431ux430-ux431ux4afux440ux44dux43bux434ux44dux445ux4afux4afux43d}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2600}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1900}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Бүрэлдэхүүн
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Шийдвэр / бодит байршил
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Холбогдох шаардлага
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Web + admin & Next.js/TypeScript; \nolinkurl{apps/web}; inquiry,
+wishlist, profile, admin inbox & FR-01/02, NFR-01/02 \\
+API & Fastify/TypeScript; \nolinkurl{backend/api}; \nolinkurl{/api/v1},
+local port 3001 & FR-01/02, NFR-01 \\
+Өгөгдөл/Auth & Supabase local PostgreSQL/Auth/Storage;
+\nolinkurl{supabase/migrations} & FR-01/02, NFR-01 \\
+Shared validation & Zod; \nolinkurl{packages/validation-schemas} &
+FR-01/02 \\
+Hero & Three.js/R3F; \nolinkurl{apps/web/src/components/intro} &
+NFR-02 \\
+Build/CI & pnpm workspaces, Docker,
+\nolinkurl{.github/workflows/api-deploy.yml} & NFR-03 \\
+\end{longtable}
+
+\textbf{Шийдвэрийн эх:}
+\href{../../../agent-context/DECISIONS.md}{ADR-003/004/005/006/007/008/011}.
+Mobile нь React Native + Expo prebuild/dev client; энэ M2 багц mobile
+inquiry/wishlist-ийг дууссан гэж үзэхгүй. Railway/Vercel/cloud Supabase
+нь Phase 6-ын байршуулалтын зорилт, одоо ажиллаж буй production орчин
+гэж батлаагүй.
+
+\subsection{3. Backend-ийн дотоод
+бүтэц}\label{doc6-backend-ux438ux439ux43d-ux434ux43eux442ux43eux43eux434-ux431ux4afux442ux44dux446}
+
+Controller → Service → Repository. Controller нь request/response ба
+validation hook; service нь бизнесийн дүрэм; repository нь өгөгдөлд
+хүрэх кодыг хариуцна. Auth hook хэрэглэгчийн session-ийг тогтооно.
+Бизнесийн логикийг route руу, DB query-г service рүү холихгүй.
+
+\textbf{FR-01:} inquiry controller → inquiry service → inquiry
+repository → \nolinkurl{inquiries}. \textbf{FR-02:} cart controller →
+cart service → cart repository → \nolinkurl{cart_items}. Shared schema-г
+web/API нэг эхээс хэрэглэнэ; client validation нь server validation-ийг
+орлохгүй.
+
+\subsection{4. Өгөгдөл ба эрхийн
+дизайн}\label{doc6-ux4e9ux433ux4e9ux433ux434ux4e9ux43b-ux431ux430-ux44dux440ux445ux438ux439ux43d-ux434ux438ux437ux430ux439ux43d}
+
+\nolinkurl{inquiries.customer_id} нь нэвтэрсэн илгээгчийг заана, guest-д
+null; шинэ асуулгын төлөв \nolinkurl{new}. \nolinkurl{cart_items} нь
+\nolinkurl{(user_id, product_id)} unique хостой. Нэмэх үйлдлийг давтахад
+нэг бичлэг хэвээр; хасах нь давтаж дуудаж болох үйлдэл. Эх:
+\href{../../../supabase/migrations/20260726120000_inquiry_customer_and_cart.sql}{20260726120000
+migration},
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repository},
+\href{../../../backend/api/src/repositories/supabase/inquiry.repository.ts}{inquiry
+repository}.
+
+\textbf{NFR-01:} customer ID-г request body-оос авахгүй, баталгаажсан
+session-ээс дамжуулна. Cart read/delete нь
+\nolinkurl{.eq('user_id', userId)}, inquiry mine нь
+\nolinkurl{.eq('customer_id', customerId)}; insert session-ийн ID
+онооно. RLS нь DB түвшний хамгаалалт, admin scope нь RBAC шалгалттай.
+Бүх query-д нэг ижил \nolinkurl{user_id} шүүлтүүр шаардахгүй: public
+catalog, guest create, admin ажиллагаа тус тусын эрхийн дүрэмтэй.
+
+\clearpage
+\subsection{5. Гадаад интерфэйс ба contract
+gap}\label{doc6-ux433ux430ux434ux430ux430ux434-ux438ux43dux442ux435ux440ux444ux44dux439ux441-ux431ux430-contract-gap}
+
+\href{../../phase-0/06-api-spec.yaml}{Phase 0 OpenAPI} нь эх contract.
+Код дахь \nolinkurl{/cart} болон \nolinkurl{/inquiries/mine}, customer
+ownership болон admin filter нэмэлтүүдийг W5-д тулган шинэчилнэ. Inquiry
+нь email field-гүй; UI wireframe-ийн хуучин email мөрийг хэрэгжилттэй
+ижил гэж үзэхгүй. \nolinkurl{INQ-YYYY-NNNN} нь UI-ийн derived display
+утга бөгөөд дараалсан захиалгын дугаар биш.
+
+\subsection{6. Hero fallback-ийн
+дизайн}\label{doc6-hero-fallback-ux438ux439ux43d-ux434ux438ux437ux430ux439ux43d}
+
+GLB URL тохируулаагүй үед \nolinkurl{deity.tsx} геометр орлуулагч
+сонгоно. \nolinkurl{hero-intro.tsx} нь WebGL/reduced-motion-оор static
+home төлөв сонгож, skip/catalog холбоосыг DOM дээр харуулна. Бодит
+asset-ийг \href{../../../agent-context/ASSET_SPECS.md}{ASSET\_SPECS}-ийн
+дагуу дараа солино. Алдаатай GLB URL-ийн error boundary/recovery-г энэ
+draft баталгаажаагүй gap гэж тэмдэглэв. Product 360° viewer нь D-07-оор
+post-MVP; нүүрний intro-оос тусдаа.
+
+\subsection{7. Build, deploy ба
+verification}\label{doc6-build-deploy-ux431ux430-verification}
+
+API Dockerfile нь multi-stage build, non-root runtime ашигладаг.
+Одоогийн CI dependency нь
+\nolinkurl{lint-and-test → docker-build → deploy}.
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{Тестийн
+эх} DB хүрэхгүй үед skip хийдэг; workflow local Supabase бэлтгэхгүй тул
+NFR-03-ын all-skipped хаалт хангагдаагүй. W9-д CI DB setup,
+skip-fails-CI нөхцөл, гурван сөрөг шалгалтын log төлөвлөсөн. Production
+auto-deploy нь энэ хаалтыг тойрохгүй байх тохиргоог Phase 6-д шалгана.
+
+Энэ task-аар код, DB migration, CI-ийн ажиллагааг өөрчлөөгүй; шинэ
+runtime/build тест ажиллуулаагүй.
+\href{../../../agent-context/PROGRESS.md}{PROGRESS}-ийн өмнөх тестийн
+тайлан нь түүхэн тэмдэглэл, одоогийн ажиллуулалтын нотолгоо биш.
+
+\subsection{8. Үргэлжлүүлэн бөглөх
+хэсгүүд}\label{doc6-ux4afux440ux433ux44dux43bux436ux43bux4afux4afux43bux44dux43d-ux431ux4e9ux433ux43bux4e9ux445-ux445ux44dux441ux433ux4afux4afux434}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2600}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1900}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Хэсэг
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Нөхөх агуулга
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Status
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Architecture views & arc42 context, building blocks, runtime,
+deployment; FR/NFR холбоо & planned (W04) \\
+API contracts & cart/history schema ба бодит error/status нийцүүлэлт &
+planned (W05) \\
+Diagrams & C4, ER, inquiry/auth sequence source ба review & planned
+(W08) \\
+Design verification & CI negative-case evidence, Docker build evidence,
+traceability шинэчлэлт & planned (W09) \\
+\end{longtable}
+
+\textbf{Эх:} \href{../../phase-0/README.md}{Phase 0 index},
+\href{../../../agent-context/DECISIONS.md}{шийдвэрүүд},
+\href{../../requirements/srs-template.md}{SRS},
+\href{../../requirements/traceability-matrix.md}{traceability}.
+
+\clearpage
+\section{Peer review draft --- M2}\label{doc7-peer-review-draft-m2}
+
+\textbf{Тэнгис · Nogoolin · 2026-09-15 · Бэлтгэсэн; илгээгээгүй}
+
+\subsection{Reviewer-т зориулсан
+тайлбар}\label{doc7-reviewer-ux442-ux437ux43eux440ux438ux443ux43bux441ux430ux43d-ux442ux430ux439ux43bux431ux430ux440}
+
+Week 2-оос Document RAG Chatbot-оос Nogoolin руу шилжсэн. Week 1-ийн
+ажлыг өөрчлөөгүй. Phase 0 баримтаас SRS-ийн шаардлага болон SDD-ийн
+технологийн шийдвэрийг салгаж, таван шаардлагын draft ба traceability
+бэлтгэлээ.
+
+\textbf{Унших дараалал:}
+\href{../../requirements/scope-charter.md}{Scope Charter} →
+\href{wiki/persona-and-pivot.md}{persona нэмэлт} →
+\href{../../requirements/srs-template.md}{SRS загвар} →
+\href{../../requirements/requirements.md}{5 шаардлага} →
+\href{../../requirements/traceability-matrix.md}{traceability} →
+\href{../../architecture/sdd-template.md}{SDD}.
+
+\subsection{Шалгах
+асуултууд}\label{doc7-ux448ux430ux43bux433ux430ux445-ux430ux441ux443ux443ux43bux442ux443ux443ux434}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Included/excluded/postponed нь ганцаараа хөгжүүлэх хүрээнд хангалттай
+  тодорхой байна уу? Product 360° viewer ба нүүрний hero хоёр ялгагдаж
+  байна уу?
+\item
+  Mapping-ийн мөр бүр яг нэг төлөвтэй, n-a нь тайлбартай байна уу?
+  Complete төлөвийг template-ийн агуулгатай гэж зөв ойлгож байна уу?
+\item
+  FR-01/02, NFR-01\ldots03 бүрд оролт, үйлдэл, гаралт, pass/fail хязгаар
+  хангалттай юу? Олон шалгуурыг M3-д дэд шаардлага болгох хэрэгтэй юу?
+\item
+  \textbf{W1 P1 → P-NG-01 → NFR-01}, \textbf{W1 P3 → P-NG-03 → NFR-03}
+  гэсэн тайлбарласан холбоо нь төсөл сольсон нөхцөлд US-2.3-ын persona
+  шаардлагыг хангах уу?
+\item
+  Ownership-ийг session-ээс авах дүрэм ойлгомжтой юу? Guest inquiry,
+  customer history, admin inbox-ийг зөв ялгасан уу?
+\item
+  NFR-03-т all-skipped тестийг fail гэж үзэх шалгуур хангалттай юу?
+  SRS/SDD-ийн хил зааг алдагдсан өгүүлбэр байна уу?
+\end{enumerate}
+
+\subsection{Санал бүртгэх
+загвар}\label{doc7-ux441ux430ux43dux430ux43b-ux431ux4afux440ux442ux433ux44dux445-ux437ux430ux433ux432ux430ux440}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1900}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2600}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Reviewer / огноо
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Requirement/section
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Асуудал ба санал
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Хариу / өөрчлөлт
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pending & Pending & Санал хараахан ирээгүй & Pending \\
+\end{longtable}
+
+\subsection{Source interview ба
+submission}\label{doc7-source-interview-ux431ux430-submission}
+
+Source interview хийгдээгүй; owner нь Тэнгис, source нь repo-ийн файл ба
+өөрийн ажиглалт. Хүлээн авагч болон Confluence/LMS холбоос байхгүй тул
+2026-09-15-ны хэрэглэгчийн заавраар илгээлт/нийтлэлийг алгассан. Peer
+review хийсэн, neighboring team-д илгээсэн гэж тэмдэглэхгүй. Дараа нь
+хүлээн авах суваг тодорхой болбол Confluence Requirements хэсэгт repo
+permalink холбож, submission evidence хадгалж болно.
+
+\subsection{Богино
+retrospective}\label{doc7-ux431ux43eux433ux438ux43dux43e-retrospective}
+
+\textbf{Сайн болсон:} Phase 0-ийн их хэмжээний эхээс M2-д хэрэгтэй жижиг
+хүрээ сонгож, кодтой тулгав. \textbf{Тодорхойгүй байсан:} SRS-ийн ``юу
+хийх'' ба SDD-ийн ``яаж хийх'' өгүүлбэрүүд холилдсон; W1 persona нь өөр
+төсөл байсан. \textbf{Дараагийн өөрчлөлт:} шаардлага бүрийг source →
+observable result → verification дарааллаар бичиж, тестийн команд
+амжилттай дууссан эсэхээс гадна тест үнэхээр ажилласан эсэхийг шалгана.
+
+Chinchilla-ийн бүлэг 5-аас далд таамаг ба одоогийн дуусах нөхцөлийг
+эхэлж тодруулах аргыг үргэлжлүүлэн хэрэглэнэ. Номын үйл явц ба энэ ажлын
+хамгийн том зөрүү нь бодит хэрэглэгч/reviewer-ийн feedback хараахан
+аваагүй байхад draft-ыг кодын шинжилгээнээс эхлүүлсэн явдал юм.
+
+
+\end{document}
