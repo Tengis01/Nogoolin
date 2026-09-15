@@ -1,0 +1,103 @@
+\section{Traceability Matrix}\label{doc5-traceability-matrix}
+
+\textbf{Nogoolin · M2 / US-2.3 · v0.1 · 2026-09-15}
+
+Доорх нь яг 8 баганатай, 5 мөртэй. Last-Reviewed нь баримт/кодыг уншсан
+огноо; тест ажиллуулсан огноо биш. Owner нь Тэнгис (хөгжүүлэгч, баримт
+бичигч). Бүх шаардлага draft, stakeholder interview хийгдээгүй.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0650}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.2550}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0650}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1200}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1150}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1450}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1400}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0950}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Owner
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verification
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dependency
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Risk
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Status
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Last-Reviewed
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\href{../../requirements/requirements.md\#fr-01}{FR-01} &
+\href{../../phase-0/02-requirements.md}{FR-INQ-001\ldots003};
+\href{../../../packages/validation-schemas/src/inquiry.schema.ts}{schema};
+\href{../../../backend/api/src/controllers/inquiry.controller.ts}{controller}
+& Тэнгис & Test: T-01;
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{тестийн
+эх} & Бүтээгдэхүүн, local DB, validation, rate limit & Email/message-ийн
+хуучин баримтын зөрүү; давхардсан илгээлт & Draft; runtime pending &
+2026-09-15 \\
+\href{../../requirements/requirements.md\#fr-02}{FR-02} &
+\href{../../../backend/api/src/controllers/cart.controller.ts}{cart
+controller};
+\href{../../../supabase/migrations/20260726120000_inquiry_customer_and_cart.sql}{migration}
+& Тэнгис & Test: T-02;
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{тестийн
+эх} & Auth, published product, unique pair, NFR-01 & Wishlist-ийг
+checkout-тай андуурах & Draft; runtime pending & 2026-09-15 \\
+\href{../../requirements/requirements.md\#nfr-01}{NFR-01} &
+\href{../sem1/wiki/02_audience_persona.md}{W1 persona P1} →
+\href{wiki/persona-and-pivot.md\#p-ng-01--session-ба-өгөгдөл-эзэмших-эрхийг-ялгах}{P-NG-01};
+\href{../../phase-0/08-security.md\#9-idor-prevention}{08 §9};
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repo};
+\href{../../../backend/api/src/repositories/supabase/inquiry.repository.ts}{inquiry
+repo} & Тэнгис & Inspection: I-01; A/B runtime нэмэлт & Session
+identity, ownership filter, RLS, RBAC & Өөр хүний мэдээлэл алдагдах; W1
+холбооны зөвшөөрөл pending & Draft; partial inspection & 2026-09-15 \\
+\href{../../requirements/requirements.md\#nfr-02}{NFR-02} &
+\href{wiki/persona-and-pivot.md\#p-ng-02--asset-бэлэн-бус-үед-урсгалыг-шалгах}{P-NG-02};
+\href{../../phase-0/07-uiux-wireframes.md}{wireframes};
+\href{../../../apps/web/src/components/intro/hero-intro.tsx}{hero} &
+Тэнгис & Test: T-03; browser evidence pending & Hero, fallback, catalog
+route & Asset байхгүйгээс хэрэглэгч каталогт хүрэхгүй & Draft; runtime
+pending & 2026-09-15 \\
+\href{../../requirements/requirements.md\#nfr-03}{NFR-03} &
+\href{../sem1/wiki/02_audience_persona.md}{W1 P3} →
+\href{wiki/persona-and-pivot.md\#p-ng-03--хуучин-заавар-ба-бодит-орчин-зөрөх}{P-NG-03};
+\href{../../phase-0/09-deployment.md}{09 deployment};
+\href{../../../.github/workflows/api-deploy.yml}{workflow};
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{skip
+branch} & Тэнгис & Inspection: I-02; CI negative-case logs pending &
+Local DB in CI, test exit status, Docker build & Бүх тест skip боловч
+deploy eligible болох & Gap; planned (W09) & 2026-09-15 \\
+\end{longtable}
+
+\subsection{Эх сурвалжийн үнэн зөв
+байдал}\label{doc5-ux44dux445-ux441ux443ux440ux432ux430ux43bux436ux438ux439ux43d-ux4afux43dux44dux43d-ux437ux4e9ux432-ux431ux430ux439ux434ux430ux43b}
+
+W1-ийн P1 нь cookie/session асуудал бөгөөд IDOR биш. NFR-01 рүү холбосон
+нь Week 2-т нэмсэн, тайлбарласан шинэ хэрэглээ. W1 P3-ийн local/pipeline
+ялгаанаас NFR-03-ийн тестийн орчны эрсдэлийг гаргасан. Багш эдгээр
+холбоог зөвшөөрсөн гэж үзээгүй;
+\href{wiki/peer-review-draft.md}{peer-review draft}-д шалгуулах асуулт
+бий. Ярилцлагын source зохиогоогүй.
+
+\subsection{Шинэчлэх
+дүрэм}\label{doc5-ux448ux438ux43dux44dux447ux43bux44dux445-ux434ux4afux440ux44dux43c}
+
+Шаардлага өөрчлөгдвөл ID-г хадгалж, эх холбоос, verification-ийн
+pass/fail, dependency, risk, status, огноог хамтад нь шинэчилнэ. Тестийн
+run URL/log нэмсний дараа л verification status-ийг verified болгоно.
+Confluence-ийн Requirements хэсэгт энэ файлын GitHub permalink-ийг
+оруулахад бэлэн; хэрэглэгчийн заавраар нийтлэлт/submission-ийг алгассан,
+remote commit хийгээгүй.

@@ -1,0 +1,84 @@
+# CI/CD skeleton (Phase 1) — deploy details finalized in Phase 6.
+# Ref: docs/phase-0/09-deployment.md §8.4 (NFR-MAIN-005), adapted to the finalized
+# backend/api + database/migrations layout (see CLAUDE.md).
+name: Deploy API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/api/**"
+      - "packages/**"
+      - "supabase/migrations/**"
+      - ".github/workflows/api-deploy.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/api/**"
+      - "packages/**"
+      - "supabase/migrations/**"
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @nogoolin/api lint
+      - run: pnpm --filter @nogoolin/api type-check
+      - run: pnpm --filter @nogoolin/api test
+      - run: pnpm --filter @nogoolin/api build
+
+  # Validates the production image builds cleanly. Railway itself
+  # auto-detects and builds backend/api/Dockerfile on deploy (§5.1) —
+  # this job is a CI gate, not the production build.
+  docker-build:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image (verification only)
+        run: docker build -f backend/api/Dockerfile -t nogoolin-api:ci .
+
+  # NFR-MAIN-007: migrations apply BEFORE the new container deploys, so new
+  # code never runs against an old schema (docs/phase-0/09-deployment.md §8.4).
+  # TODO(Phase 6): enable once the cloud Supabase project exists —
+  # `supabase db push` reads supabase/migrations/ (CLI default).
+  # migration-check:
+  #   needs: docker-build
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: supabase/setup-cli@v1
+  #       with:
+  #         version: latest
+  #     - run: supabase db push
+  #       env:
+  #         SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  #         SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+
+  deploy:
+    needs: docker-build # TODO(Phase 6): change to migration-check when enabled
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Railway
+        uses: bervProject/railway-deploy@main
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: nogoolin-api
+
+      # TODO(Phase 6): enable once api.nogoolin.mn is live (§5.6)
+      # - name: Health check
+      #   run: |
+      #     sleep 30  # wait for container to start
+      #     curl --fail https://api.nogoolin.mn/api/v1/health || exit 1

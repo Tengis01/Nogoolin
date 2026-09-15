@@ -1,0 +1,72 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=22mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage{ragged2e,xurl,indentfirst}
+\usepackage{ xcolor,tabularx,booktabs,enumitem,fancyhdr,titlesec,fvextra }
+\usepackage[unicode,colorlinks=true,urlcolor=blue!55!black,linkcolor=blue!55!black]{hyperref}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\large\sffamily\bfseries\color{ink}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}\justifying\setlength{\parindent}{1.25cm}\tolerance=3000\setlength{\emergencystretch}{3em}
+\setlist{nosep,leftmargin=1.5em}
+\renewcommand{\arraystretch}{1.12}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 01}
+\fancyhead[R]{\small\sffamily Document RAG Chatbot}
+\fancyfoot[L]{}
+\fancyfoot[R]{\small\thepage}
+\newcommand{\dochead}[3]{\noindent{\sffamily\small\color{accent}#1}\par\vspace{3mm}\noindent{\sffamily\bfseries\LARGE\color{ink}#2}\par\vspace{2mm}\noindent{\large #3}\par\vspace{2mm}\hrule\vspace{3mm}}
+\newcommand{\note}[1]{\par\smallskip{\color{ink}\textbf{Тайлбар.} #1}\par\smallskip}
+\newcommand{\pathref}[1]{\nolinkurl{#1}}
+\newcommand{\src}[2]{\href{#1}{#2}}
+\newcommand{\sources}{\section*{Хичээлийн эх сурвалж}\small Lecture 01, ``Why Documentation?'', слайд 4, 5, 9, 11; Seminar 01 Handout, х. 1--3. Bhatti et al., \textit{Docs for Developers}, бүлэг 1, х. 1--21; бүлэг 3, х. 58. Chinchilla, \textit{Technical Writing for Software Developers}, бүлэг 1, х. 1--8; бүлэг 2, х. 9--24. Номын дугаар нь хэвлэмэл хуудасны дугаар.\normalsize}
+\begin{document}\fontsize{10.5}{13}\selectfont\titlespacing*{\section}{0pt}{10pt}{5pt}\titlespacing*{\subsection}{0pt}{7pt}{3pt}
+
+\dochead{US-1.4 / WRITER-IN-THE-MIDDLE}{Баримтжуулалт бичихийн ач холбогдол}{Өөрийн төслийн дүгнэлт ба Corg.ly кейс}
+\section{200 үгийн reflection}
+Би зун хийсэн RAG chatbot төслөө баримтжуулахдаа дараа нь унших хүнд юу хэрэгтэйг түрүүлж бодох ёстой гэж ойлголоо. Өөрийн бичсэн кодыг мэддэг ч шинэ хөгжүүлэгч хаанаас эхлэхээ мэдэхгүй байж болно. Түүнд баримт оруулаад эх сурвалжтай хариу авах дарааллыг тайлбарлана. Харин chatbot ашиглах хүнд хариултаа баримтын эхтэй тулгах боломж хэрэгтэй. Ингэж хөгжүүлэгчийн заавар эцсийн хэрэглээнд нөлөөлнө.
+
+Marketing талд би чатботын боломжийг PDF асуултын бодит жишээгээр тайлбарлаж, OCR дэмждэг мэт амлалт өгөхөөс сэргийлнэ. Product талд баримт боловсруулах төлөвийг хэрэглэгч ойлгох эсэхийг шалгах шалгуур бичнэ. Sales талд үзүүлэх демог нэг текст, нэг асуулт, нэг эх сурвалжтай болгож давтахад хялбар болгоно. Support талд хоосон текст, нэвтрэлт, мэдээлэл олдоогүй хариуг ялгасан заавар гаргана. DevRel талд шинэ хөгжүүлэгчийн анхны холболтыг тайлбарласан tutorial бэлдэнэ. Engineering талд README, тохиргоо, API гэрээний зөрүүг өөрчлөлтийн review дотор илрүүлнэ. Machine Readers талд хүсэлт болон хариуны талбаруудыг бүтэцтэй schema хэлбэрээр баримтжуулах санал гаргана.
+
+Writer-in-the-Middle байрлалын хүн бүх багийн хүсэлтийг ганцаараа биелүүлэх боломжгүй. Би нээлтэд хэрэгтэй урсгалыг түрүүлж сонгон, хэсэг бүрийн эзэн, шинэчлэх шалтгаан, шалгах аргыг тохирно. Хэрэглэгчийн хүсэлтийг техникийн шийдэлтэй андуурахгүй, хэмжээгүй хугацааг амжилт гэж тайлагнахгүй. Миний ажлын үр дүнг хуудасны тоогоор бус, шинэ хүн анхны зөв хариунд хүрч, эхийг шалгаж, алдааны дараагийн алхмыг олж чадаж байгаагаар үнэлнэ. Ингэснээр багийн мэдлэг хадгалагдана.
+\section{Энэ ажлаас ойлгосон зүйл}
+\textbf{1. Мэдлэгийн таамаг:} Bhatti, х. 3. README-ийн HMR, ESLint нэрс шинэ хүнд бүтээгдэхүүний хэрэглээг ойлгуулахгүй тул эхэнд үр дүнг бичнэ.
+
+\textbf{2. Цаашид хэрэглэх арга:} Chinchilla, х. 5. Хэсэг бүрийн эзэн, шинэчлэх шалтгаан, шалгах аргыг тохирч, API өөрчлөгдөхөд жишээг нэг review-д шинэчилнэ.
+
+\textbf{3. Бодит зөрүү:} PROJECT\_BRIEF-ийн Supabase тайлбар local PostgreSQL тохиргоотой зөрдөг. Root README-ээс одоогийн setup руу нэг эхлэх зам өгөх шаардлагатай.
+
+\textbf{Эх сурвалж:} Seminar 01, US-1.4; Chinchilla, \textit{Technical Writing for Software Developers}, х. 2--7; Lecture 01, слайд 9.
+\newpage
+\section*{UE-1: Corg.ly нээлтийн өмнөх кейс}
+Bhatti-ийн х. 1--2-т Charlotte API-ийн нээлтэд бэлдэж байгаа ч хэрэглэгчид нь ажиллуулах заавар дутаж байна. Энэ нөхцөлд үндэслэн дараах уншигчийн жишээ болон README-ийн засваруудыг бэлтгэв. API-ийн өгүүлбэрүүдийг дасгалд зориулж бичсэн.
+\subsection*{Part A. Persona Card}
+\par\noindent\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+Нэр / байгууллага & Тэнгис / PawBridge Labs (кейсийн жишээ байгууллага)\\
+Үүрэг / хэрэгсэл & Junior integration developer / Python, VS Code, Git, curl, Postman\\
+Зорилго & Нэг sample дуу илгээж, орчуулгыг хүзүүвчийн аппад харуулах\\
+Хүндрэл & Холболтын эрх, үр дүн бэлэн болох хугацаа, давхар хүсэлтийн эрсдэл\\
+End-end user & Хүзүүвч ашиглах нохойн эзэн; орчуулга бэлэн эсэхийг мэдэхийг хүснэ\\\bottomrule
+\end{tabularx}\par
+\textbf{User story:} Integration хийх хөгжүүлэгчийн хувьд нэг sample дуу илгээж, үр дүнг хүлээн авах алхмыг давтан хийж үзээд аппдаа холбохыг хүснэ.
+\subsection*{Part B. Гурван өгүүлбэрийн Before/After}
+\textbf{B1. Before:} ``Initialize the tenant-scoped client before inference.'' Tenant, client, inference нь тайлбаргүй. \textbf{After:} ``Дуу орчуулахын өмнө байгууллагынхаа холболтыг тохируулна. Жишээлбэл, сургалтын эрхээр холбогдоод нэг sample илгээнэ.''
+
+\textbf{B2. Before:} ``Poll the asynchronous job until terminal state.'' Poll, asynchronous, terminal state нь ойлгомжгүй. \textbf{After:} ``Орчуулга бэлэн эсэхийг ажлын дугаараар шалгана. Бэлэн бол үр дүнг, амжилтгүй бол алдааны тайлбарыг харуулна.'' Үйлдлийг эхэнд тавьсан нь Bhatti, х. 58-ын зарчим.
+
+\textbf{B3. Before:} ``Replay idempotently on transient upstream failures.'' Давтан оролдох нөхцөл, давхардлыг тайлбарлаагүй. \textbf{After:} ``Холболт тасарвал өмнөх хүсэлт биелсэн эсэхийг эхлээд шалгана. Давтан хүсэлтийг ялгах тэмдэг дэмждэг бол sample-001 зэрэг ижил тэмдгээр дахин илгээнэ.''
+
+Эдгээр засварт нэр томьёог хийх үйлдлээр нь тайлбарлав. Бодит API-ийн заавар болгохдоо төлөв, эрх, давтан хүсэлтийн дүрмийг хөгжүүлэгчээс нь тодруулах хэрэгтэй.
+\subsection*{Part C. Charlotte-ийн Writer-in-the-Middle reflection}
+Би Charlotte-ийн оронд нээлтээс өмнө нэг sample-ээс үр дүнд хүрэх замыг түрүүлж баримтжуулна. Engineering-ээс хүсэлт, алдааны дүрэм; Product-оос хэрэглэгчийн зорилго; Support-оос давтагдах асуултыг авч нэгтгэнэ. Marketing, Sales-ийн амлалтыг энэ урсгалтай нийцүүлнэ.
+
+Бүх асуултад Charlotte өөрөө хариулдаг байвал заавар бичсэн ч баг түүнээс хамааралтай хэвээр байна. Тиймээс хэсэг бүрийг хэн шинэчлэхийг тохирч, өөр хөгжүүлэгчээр зааврыг дагуулж үзэх хэрэгтэй. Гол нь шинэ хүн API-г холбоод, хүзүүвч ашиглах хүнд орчуулгын үр дүнг ойлгомжтой харуулж чаддаг болох юм.
+
+\textbf{Эх сурвалж:} Bhatti, \textit{Docs for Developers}, х. 1--3, 15--16, 58; Chinchilla, х. 5, 7.
+
+\end{document}

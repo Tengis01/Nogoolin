@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+
+/* v4 design-lock tokens (agent-context/design.md, docs/07 §1.1).
+   Every color in the app must come from these variables — no ad-hoc hex. */
+:root {
+  /* dark intro/hero zone */
+  --n-bg0: #245842;
+  --n-bg1: #1b4634;
+  --n-text: #f5f2e6;
+  --n-muted: #a9c7b4;
+  --saff: #f2c94c;
+  --n-line: rgba(242, 201, 76, 0.32);
+
+  /* white catalog zone */
+  --paper: #ffffff;
+  --paper-alt: #f6f8f5;
+  --ink: #17352a;
+  --muted: #6b7d72;
+  --act: #0bb555;
+  --act-text: #042f1c;
+  --act-hover: #12c963;
+  --saff-deep: #a9861b;
+  --hair: rgba(20, 56, 42, 0.12);
+
+  /* form-validation accent — the exact value docs/07 §3.6.2 (WF-INQ-01)
+     specifies for invalid fields, where the spec calls it "orange".
+     NOT the deferred ceremonial red (D-02): no red exists in v4. Used only
+     for inquiry-form field errors. */
+  --warn: #d98a6a;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* intro title-block entrance (WF-INTRO-04) */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* inquiry success check-circle (WF-INQ-04 — 0.5s pop) */
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* design.md: prefers-reduced-motion disables entrance animations, hover
+   transforms and smooth scroll across the app */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .group:hover {
+    transform: none !important;
+  }
+}

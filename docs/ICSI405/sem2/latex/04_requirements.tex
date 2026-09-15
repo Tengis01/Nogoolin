@@ -1,0 +1,158 @@
+\section{Таван шалгаж болох
+шаардлага}\label{doc4-ux442ux430ux432ux430ux43d-ux448ux430ux43bux433ux430ux436-ux431ux43eux43bux43eux445-ux448ux430ux430ux440ux434ux43bux430ux433ux430}
+
+\textbf{Nogoolin · M2 / US-2.2 · Тэнгис · 2026-09-15 · v0.1 / draft}
+
+FR нь үйлдлийн, NFR нь чанар/хязгаарлалтын шаардлага. Доорх ID нь энэ
+шинэ багцын ID; Phase 0-ийн урт ID-г солихгүй. \nolinkurl{must} =
+зайлшгүй, \nolinkurl{shall} = тохирсон хүрээнд заавал биелүүлэх,
+\nolinkurl{may} = сонголтот гэсэн хичээлийн тэмдэглэгээг хэрэглэв. Энд
+тавуулаа \nolinkurl{must}. Owner: \textbf{Тэнгис}. Source interview:
+\textbf{хийгдээгүй}; эх нь repo-ийн файл ба өөрийн шинжилгээ. Pass/fail
+нь төлөвлөсөн шалгуур; тестийг энэ ажлаар ажиллуулаагүй.
+
+\subsection{FR-01}\label{doc4-fr-01}
+
+\textbf{Асуулга хадгалах · Priority: must · Verification: Test (T-01)}
+
+Зочин эсвэл нэвтэрсэн хэрэглэгч зөв нэр, утас, сонголтот зурвас болон
+бүтээгдэхүүний ID-тай асуулга илгээхэд систем нэг шинэ асуулга хадгалж,
+\nolinkurl{201}, давтагдашгүй ID, \nolinkurl{status=new} бүхий баталгааг
+\textbf{must} буцаана.
+
+\textbf{T-01:} local өгөгдлийн санд нийтлэгдсэн бүтээгдэхүүн, rate
+limit-д хүрээгүй IP бэлтгэнэ. Нэр \nolinkurl{Тэнгис}, тестийн утас
+\nolinkurl{99112233}, сонголтот зурвас болон бүтээгдэхүүний ID-тай
+\nolinkurl{POST /api/v1/inquiries} явуулна. Guest болон customer нөхцөл
+бүрд 201, нэг мөр нэмэгдсэн, status=new, guest-ийн customer\_id=null,
+customer-ийнх өөрийн ID байвал pass. Нэр 1 тэмдэгт эсвэл утас
+\nolinkurl{abc} үед 400, мөр нэмэгдэхгүй; байхгүй бүтээгдэхүүний зөв
+хэлбэртэй UUID үед 404, мөр нэмэгдэхгүй байна. Аль нэг хүлээлт зөрвөл
+fail. Утасны бүрэн формат нь
+\href{../../../packages/validation-schemas/src/common.ts}{shared
+schema}-д байна.
+
+\textbf{Source:} \href{../../phase-0/02-requirements.md}{Phase 0
+FR-INQ-001\ldots003},
+\href{../../../packages/validation-schemas/src/inquiry.schema.ts}{inquiry
+schema},
+\href{../../../backend/api/src/controllers/inquiry.controller.ts}{controller}.
+Email талбар оруулахгүй; message API дээр сонголтот. \textbf{Төлөв:}
+хэрэгжилт, тестийн эх байгаа; шинэ ажиллуулалтын нотолгоо pending.
+
+\subsection{FR-02}\label{doc4-fr-02}
+
+\textbf{Wishlist-ийн төлөв хадгалах · Priority: must · Verification:
+Test (T-02)}
+
+Нэвтэрсэн хэрэглэгч нийтлэгдсэн бүтээгдэхүүнийг хадгалах, жагсаалтаа
+харах, хасахад систем хэрэглэгч-бүтээгдэхүүн хос бүрд хамгийн ихдээ нэг
+хадгалсан бичлэгтэй төлөвийг \textbf{must} хадгална.
+
+\textbf{T-02:} A хэрэглэгч бүтээгдэхүүн P-г
+\nolinkurl{POST /api/v1/cart}-аар хоёр удаа нэмэхэд хүсэлт бүр 201,
+\nolinkurl{GET /api/v1/cart}-д P яг нэг удаа байна. Хуудсыг дахин
+ачаалахад P хадгалагдсан байна. \nolinkurl{DELETE /api/v1/cart/P}-г хоёр
+удаа дуудахад хоёул 204, дараах GET-д P байхгүй байвал pass. Guest
+хүсэлт 401, draft/байхгүй бүтээгдэхүүн нэмэх хүсэлт 404 байна. Аль нэг
+хүлээлт зөрвөл fail. Энэ нь wishlist бөгөөд тоо хэмжээ, нийт үнэ,
+checkout агуулахгүй.
+
+\textbf{Source:}
+\href{../../../backend/api/src/controllers/cart.controller.ts}{cart
+controller},
+\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
+repository}, \href{../../../apps/web/src/app/wishlist/page.tsx}{wishlist
+page},
+\href{../../../supabase/migrations/20260726120000_inquiry_customer_and_cart.sql}{20260726120000
+migration}. \textbf{Төлөв:} хэрэгжилт, тестийн эх байгаа; runtime
+pending. Phase 0-д wishlist-ийн бие даасан FR байгаагүй; одоогийн кодоос
+сэргээн тодорхойлов.
+
+\subsection{NFR-01}\label{doc4-nfr-01}
+
+\textbf{Хэрэглэгчдийн өгөгдлийг тусгаарлах · Priority: must ·
+Verification: Inspection (I-01)}
+
+Customer A-ийн session-ээр wishlist болон inquiry history
+унших/өөрчлөхөд систем өөр customer B-ийн хувийн мөрийг хариунд
+оруулахгүй, өөрчлөхгүй байхыг \textbf{must} хангана; guest нь эдгээр
+хамгаалагдсан үйлдэлд 401 авна. Админ inbox-д зөвхөн баталгаажсан admin
+хүрнэ.
+
+\textbf{I-01:} хамгаалагдсан cart GET/POST/DELETE, inquiry mine GET,
+admin inquiry GET/PATCH-ийн controller → service → repository болон
+RLS-ийг шалгана. Эзэмшигчийн ID баталгаажсан session-ээс ирдэг,
+хэрэглэгчийн body/query-гээс ирдэггүй; cart нь \nolinkurl{user_id},
+inquiry нь \nolinkurl{customer_id}-аар шүүгддэг; insert нь session-ийн
+ID оноодог; RLS болон admin role guard бий гэдгийг мөр бүрд нотолбол
+pass. Нэг хамгаалагдсан зам ownership/role шалгалтгүй бол fail. Public
+catalog, guest inquiry create-д сохроор \nolinkurl{user_id} filter
+шаардахгүй.
+
+\textbf{Дэмжих тест:} A/B хоёр customer үүсгээд A-ийн хариунд B-ийн ID
+огт байхгүй, A хасахад B-ийн хадгалсан бүтээгдэхүүн хэвээр, customer
+admin inbox-д 403 авдгийг шалгана. \textbf{Source:}
+\href{../../phase-0/08-security.md\#9-idor-prevention}{security §9},
+\href{wiki/persona-and-pivot.md}{P-NG-01 / W1 холбоо}, дээрх хоёр
+repository ба migration. \textbf{Төлөв:} статик замыг шалгасан; бүрэн
+I-01 checklist, хоёр-customer runtime нотолгоо pending.
+
+\clearpage
+\subsection{NFR-02}\label{doc4-nfr-02}
+
+\textbf{Asset-гүй үед каталогт хүрэх · Priority: must · Verification:
+Test (T-03)}
+
+Нүүрний 3D asset тохируулаагүй үед систем орлуулагчийг, WebGL боломжгүй
+эсвэл reduced-motion идэвхтэй үед статик hero-г \textbf{must} үзүүлж,
+хэрэглэгчийг каталогт хүрэх боломжтой байлгана.
+
+\textbf{T-03:} desktop 1440×900, mobile хэмжээ 390×844 бүхий browser-д
+sessionStorage-г цэвэрлэж дараахыг тус бүр шалгана: (a) GLB URL
+тохируулаагүй --- орлуулагч харагдах; (b) WebGL unavailable --- статик
+hero; (c) reduced-motion --- хөдөлгөөнт intro алгасагдах. Intro гарсан
+нөхцөлд skip нь navigation эхэлснээс 1 секундийн дотор харагдаж, дарахад
+home төлөвт орно. Нөхцөл бүрд бүтээгдэхүүний холбоосоор
+\nolinkurl{/products} нээгдэж, жагсаалт харагдвал pass; хоосон дэлгэц,
+түгжигдсэн scroll, хүрэх боломжгүй каталог байвал fail. Browser/version,
+local build, хэмжсэн хугацааг тэмдэглэнэ. Буруу URL/404 asset-ийн
+recovery нь тусдаа gap, энэ шаардлагын батлагдсан хэрэгжилт гэж үзэхгүй.
+
+\textbf{Source:}
+\href{../../phase-0/07-uiux-wireframes.md}{WF-INTRO-03/05/06/07},
+\href{../../../apps/web/src/components/intro/hero-intro.tsx}{hero-intro},
+\href{../../../apps/web/src/components/intro/deity.tsx}{deity},
+\href{wiki/persona-and-pivot.md}{P-NG-02}. \textbf{Төлөв:} код байгаа;
+шинэ browser evidence pending.
+
+\subsection{NFR-03}\label{doc4-nfr-03}
+
+\textbf{Deploy-оос өмнөх тестийн хаалт · Priority: must · Verification:
+Inspection (I-02)}
+
+API production deploy нь тухайн commit-ийн шаардлагатай integration
+тестүүд бодитоор ажиллаж амжилттай дууссан, production container build
+амжилттай болсон үед л эхлэхийг систем \textbf{must} хангана. Тест fail
+болох, бүх integration тест алгасагдах, эсвэл Docker build fail болох
+нөхцөл бүр deploy-г хаана.
+
+\textbf{I-02:} CI тохиргоо, тестийн entry point, job dependency болон
+гурван сөрөг тохиолдлын CI log-ийг шалгана. Test fail / DB unavailable
+буюу all-skipped / Docker build fail бүрд deploy job skipped эсвэл
+blocked, амжилттай тохиолдолд deploy нь зөвхөн хоёр шалгалтын дараа
+eligible болсон байвал pass. Энэ review нь production deploy ажиллуулах
+шаардлагагүй. Auto-deploy зэрэг CI-ийг тойрох зам Phase 6-д хаагдсан
+эсэхийг мөн шалгана.
+
+\textbf{Source:}
+\href{../../phase-0/02-requirements.md}{NFR-MAIN-005/006},
+\href{../../phase-0/09-deployment.md}{deployment §8.4},
+\href{../../../.github/workflows/api-deploy.yml}{api workflow},
+\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{test
+skip branch}, \href{../../../backend/api/Dockerfile}{Dockerfile}.
+\textbf{Төлөв: gap / planned (W09).}
+\nolinkurl{lint-and-test → docker-build → deploy} холбоо байгаа ч
+тестүүд DB-гүй үед skip хийнэ, workflow local Supabase асаахгүй. Иймд
+хаалт бүрэн хэрэгжсэн гэж үзэхгүй. Web workflow-д test команд байхгүй;
+энэ NFR API-д хамаарна, web рүү өргөтгөх нь дараагийн шаардлага.

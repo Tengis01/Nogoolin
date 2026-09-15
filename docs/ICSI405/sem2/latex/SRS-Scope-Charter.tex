@@ -1,0 +1,180 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\documentclass[
+  11pt,
+  a4paper,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=19mm,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage{ragged2e,indentfirst,xurl}
+\usepackage{longtable,booktabs,array,calc,pdflscape}
+\usepackage{xcolor,fancyhdr,titlesec,enumitem}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{0pt}{8pt}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\setlist{nosep,leftmargin=1.5em,topsep=3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 02}
+\fancyhead[R]{\small\sffamily Nogoolin / M2}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\AtBeginDocument{\fontsize{10.5}{12.5}\selectfont\justifying\setlength{\parindent}{1.25cm}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue!55!black},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\newcounter{none}
+\begin{document}
+
+\section{SRS Scope Charter}\label{doc1-srs-scope-charter}
+
+\textbf{Nogoolin · ICSI405 / M2 / UE-2 · Тэнгис · 2026-09-15 · v0.1,
+review draft}
+
+\subsection{Төслийг сольсон
+шийдвэр}\label{doc1-ux442ux4e9ux441ux43bux438ux439ux433-ux441ux43eux43bux44cux441ux43eux43d-ux448ux438ux439ux434ux432ux44dux440}
+
+Би Seminar 1-ийн ажлаа зуны дадлагын Document RAG Chatbot төсөл дээр
+хийж, хүлээлгэн өгсөн. Week 2-оос өөрийн бодит бүтээгдэхүүн, portfolio
+болох Nogoolin-ийг үндсэн кейсээр сонгов. Энэ төсөлд шаардлага,
+архитектур, API, deployment-ийн баримтыг одоогийн кодтой нийцүүлэх
+хэрэгцээ байгаа тул M4, M5, M8, M9-ийн ажлыг бодит төсөлдөө үргэлжлүүлэх
+боломжтой. Seminar 1-ийг дахин хийхгүй; шилжилтийн persona холбоог
+M2-ийн нэмэлтээр ил тод тэмдэглэнэ.
+
+\subsection{Зорилго ба
+уншигч}\label{doc1-ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux443ux43dux448ux438ux433ux447}
+
+Каталогийн хэрэглэгч бүтээгдэхүүний тухай асуулга илгээх, хадгалсан
+бүтээгдэхүүнээ дахин харах боломжийг тодорхойлно. Гол уншигч нь
+хэрэгжүүлж, шалгах хөгжүүлэгч Тэнгис; хоёрдогч уншигч нь админ болон
+хичээлийн reviewer. Phase 0 баримтыг эх материал болгон ашиглаж,
+технологийн сонголтыг SDD-д, шалгаж болох үр дүнг SRS-д тусгана.
+
+\subsection{Included --- энэ
+хүрээнд}\label{doc1-included-ux44dux43dux44d-ux445ux4afux440ux44dux44dux43dux434}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Inquiry + wishlist:} guest болон нэвтэрсэн хэрэглэгчийн
+  асуулга, хүлээн авсан баталгаа; нэвтэрсэн хэрэглэгчийн
+  хадгалах/харах/хасах урсгал. Админ inbox нь асуулга очсоныг шалгах
+  төгсгөлийн цэг.
+\item
+  \textbf{Өгөгдлийн тусгаарлалт:} хэрэглэгч өөрийн wishlist, inquiry
+  history-г л уншиж/өөрчилнө; админ эрхийг тусдаа шалгана.
+\item
+  \textbf{Hero fallback:} 3D asset бэлэн бус үед орлуулагч, WebGL-гүй
+  болон хөдөлгөөн багасгах тохиргоонд статик хувилбар; каталогт хүрэх
+  боломж.
+\item
+  \textbf{Шалгах ба build хийх хүрээ:} API-ийн local Docker build,
+  deploy-оос өмнөх тестийн зайлшгүй хаалт. Docker-ийн сонголт SDD-д,
+  амжилт/алдааны шалгуур NFR-03-д байна.
+\end{itemize}
+
+\subsection{Excluded --- M2/M3-ийн энэ багцаас
+хассан}\label{doc1-excluded-m2m3-ux438ux439ux43d-ux44dux43dux44d-ux431ux430ux433ux446ux430ux430ux441-ux445ux430ux441ux441ux430ux43d}
+
+\textbf{Бүтээгдэхүүн бүрийн 360° viewer:} тус бүрд нь 3D asset бэлтгэх
+ажил ганцаараа хөгжүүлэх MVP-д хэт их тул энгийн зургийн gallery
+ашиглана (D-07). Энэ нь нүүрний 3D intro-г хассан шийдвэр биш.
+Viewer-ийг post-MVP-д дахин авч үзнэ; энэ багцад хэрэгжүүлэх, тестлэх
+үүрэг үүсгэхгүй.
+
+\subsection{Postponed --- дараа
+хийх}\label{doc1-postponed-ux434ux430ux440ux430ux430-ux445ux438ux439ux445}
+
+\textbf{Phase 5:} захиалга, төлбөр/checkout, хүргэлтийн ажиллагаа; одоо
+\nolinkurl{delivery_enabled=false} гэсэн шийдвэр хүчинтэй. \textbf{Phase
+6:} cloud Supabase холбох, production deployment баталгаажуулах, App
+Store/Play Store нийтлэх. Mobile inquiry/wishlist, бодит GLB/.riv asset
+болон бүх каталог/admin шаардлагыг энэ таван шаардлага бүрэн хамрахгүй;
+бүтээгдэхүүний backlog-д үлдээнэ.
+
+\subsection{Хүрээ тогтоох үндэслэл ба дуусах
+нөхцөл}\label{doc1-ux445ux4afux440ux44dux44d-ux442ux43eux433ux442ux43eux43eux445-ux4afux43dux434ux44dux441ux43bux44dux43b-ux431ux430-ux434ux443ux443ux441ux430ux445-ux43dux4e9ux445ux446ux4e9ux43b}
+
+Chinchilla-ийн х. 53--55 дахь аргаас: \textbf{хэн юу хүлээж байна?} ---
+хэрэглэгч баталгаа, хөгжүүлэгч давтаж шалгах нөхцөл; \textbf{ямар далд
+таамаг байна?} --- нэвтэрсэн л бол бүх өгөгдөл харах эрхтэй биш, asset
+болон cloud бэлэн гэж үзэхгүй; \textbf{эхлээд юуг баримтжуулах вэ?} ---
+эхлэлээс үр дүн хүртэлх inquiry/wishlist урсгал. Эдгээр нь номын аргыг
+төсөлдөө хэрэглэсэн асуултууд, үгчилсэн эшлэл биш.
+
+M2-ийн бэлэн багц: SRS/SDD загвар, 5 шаардлага, 8 баганат traceability,
+persona холбоо, review draft. Ярилцлага хийгдээгүй; peer review илгээх,
+нийтлэх/submission алхмыг хэрэглэгчийн заавраар алгассан. W1 persona-ийн
+шинэ төсөлд шилжүүлсэн холбоог reviewer-ээр баталгаажуулах шаардлагатай.
+
+\textbf{Эх:} \href{../../phase-0/01-vision.md}{Vision},
+\href{../../phase-0/10-roadmap.md}{Roadmap},
+\href{../../../agent-context/DECISIONS.md}{D-07 / ADR-011},
+\href{Software_Project_Documentation_Week_02_Handout.pdf}{W2 handout};
+Chinchilla, бүлэг 5, хэвлэмэл х. 53--55 (локал номын PDF х. 74--76).
+
+
+\end{document}

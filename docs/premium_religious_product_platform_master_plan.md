@@ -1538,5 +1538,5 @@ An AI agent can help with:
 The next recommended step is:
 
 ```text
-Create docs/01-project-vision.md and docs/02-requirements.md first.
+Create docs/phase-0/01-project-vision.md and docs/phase-0/02-requirements.md first.
 ```

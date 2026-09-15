@@ -1,0 +1,8 @@
+# Generated seminar review/build intermediates remain local.
+**/tmp/
+**/latex/*.aux
+**/latex/*.log
+**/latex/*.fls
+**/latex/*.fdb_latexmk
+**/latex/*.out
+**/latex/__pycache__/
