@@ -276,3 +276,9 @@ solutions; if either reproduces, log it here.
 - **Broken MN source links:** Full link validation found 16 existing links using `.mn.md` where the actual Phase 0 filename uses `_mn.md`. Fixed the targets to the existing files after relocation; no translated content was rewritten.
 - **Initial PDF layout:** One SDD paragraph overflowed by about 4 pt; the SRS ending paragraph created an almost-empty third page. Shortened the SDD sentence, removed redundant SRS planning text already covered in the mapping, and added section-aware page breaks. Rebuilt and visually reviewed the final PDFs; no overflow/missing glyphs remain.
 - **Unresolved product gap, documented only:** API integration suites skip when local Supabase is unavailable, while the CI workflow lacks DB setup. NFR-03 specifies a real pre-deploy gate including all-skipped failure; implementation/evidence deferred to W9. No CI or application logic changed in this documentation task.
+
+
+### 2026-09-15 — TeX save/compile workflow
+- **Issue:** Seminar 2 lacked a LaTeX Workshop recipe, and the original build.py unconditionally regenerated TeX from Markdown, risking loss of manual edits.
+- **Fix:** Added onSave settings, a focused workspace and .latexmkrc; build.py now compiles existing TeX by default and only regenerates with --from-markdown. Existing TeX hashes were preserved.
+- **Environment observation:** The login shell prints a pre-existing missing `/home/tengis/.deno/env` warning from .bashrc/.bash_profile. It did not affect successful latexmk compilation; shell configuration was outside this task and was not changed.

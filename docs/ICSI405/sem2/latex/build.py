@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Export the canonical M2 Markdown to editable XeLaTeX and two final PDFs."""
+"""Compile existing TeX. Explicit --from-markdown regenerates TeX from Markdown."""
 from pathlib import Path
-import copy, json, os, re, subprocess
+import argparse, json, os, subprocess
 from urllib.parse import urlsplit, unquote, quote
 
 HERE = Path(__file__).resolve().parent
@@ -9,6 +9,15 @@ SEM = HERE.parent
 ROOT = SEM.parents[2]
 TMP = SEM / 'tmp/pdfs'
 TMP.mkdir(parents=True, exist_ok=True)
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--from-markdown', action='store_true',
+                    help='Regenerate TeX from Markdown, replacing manual TeX edits.')
+args = parser.parse_args()
+if not args.from_markdown:
+    subprocess.run(['latexmk', '-xelatex', '-synctex=1',
+                    '-interaction=nonstopmode', '-halt-on-error', '-file-line-error',
+                    'sem2_merged.tex', 'SRS-Scope-Charter.tex'], cwd=HERE, check=True)
+    raise SystemExit(0)
 SOURCES = [
     ROOT/'docs/requirements/scope-charter.md',
     SEM/'wiki/persona-and-pivot.md',

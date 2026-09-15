@@ -6,3 +6,4 @@
 **/latex/*.fdb_latexmk
 **/latex/*.out
 **/latex/__pycache__/
+**/*.synctex.gz

@@ -381,3 +381,10 @@
 - **Verification:** Original course files present; only AGENTS intentionally changed. 5 requirement IDs, 5 matrix rows/8 columns, 27 mapping rows; LaTeX font/overflow checks and visual PDF review. Details in `docs/ICSI405/sem2/tmp/validation-report.json`. No application runtime tests or product implementation changes; code/workflow edits only update documentation references.
 - **Scope:** Owner explicitly asked to skip peer-review delivery and Confluence/LMS publication/submission because no recipients/links are available. No messages sent, commits pushed, or deployment performed.
 - **Next:** W3 expand scoped SRS and get stakeholder input/persona-bridge review when available. NFR-03 remains a real gap: integration tests skip when local DB is unreachable, and CI does not provision it. Do not infer runtime success from a zero-exit all-skipped run. Later milestones: W4 architecture, W5 API drift reconciliation, W8 diagrams, W9 CI evidence.
+
+
+### 2026-09-15 — Seminar 2 LaTeX build-on-save
+- **Done:** Studied the read-only `rag_chatbot/.vscode/settings.json` and `report/.latexmkrc`. Added the same LaTeX Workshop onSave + latexmk/XeLaTeX workflow to Nogoolin, plus a focused `docs/ICSI405/sem2/sem2.code-workspace` for users who normally open the parent Tengis folder.
+- **Done:** PDF + SyncTeX go directly to `sem2/`; aux/log files remain in `sem2/tmp/pdfs/`. Added local `.latexmkrc`; error messages remain visible. Changed `build.py` default to compile existing TeX; Markdown regeneration now requires explicit `--from-markdown`.
+- **Verification:** Ran the exact editor build recipe successfully (10-page merged PDF + SyncTeX, no overflow/missing characters). Hash-checked all existing TeX sources unchanged. VS Code Ctrl+S event itself was not driven through the UI; workspace onSave config and the compiler command were verified.
+- **Next/use:** Open sem2.code-workspace or Nogoolin as the VS Code workspace; edit latex/sem2_merged.tex, save, and use LaTeX Workshop's PDF preview. Exported 01–07 fragments are not inputs to the merged source.

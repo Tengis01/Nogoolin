@@ -28,15 +28,42 @@
 
 **Локал багц бэлэн.** 2026-09-15-нд хэрэглэгч peer-review хүлээн авагч, Confluence/LMS холбоос одоогоор байхгүй тул илгээх/нийтлэх алхмуудыг алгасахыг хүссэн. Хичээлийн гадаад DoD (review/нийтлэл/submission) биелсэн гэж үзэхгүй. Хичээлийн W2 болон бүтээгдэхүүний Phase/Week дугаарыг адилтгахгүй. Энэ ажлаар production deployment, аппын кодын өөрчлөлт, шинэ runtime тест хийгдээгүй. NFR-03 нь CI-ийн бодит gap; өмнөх тестүүдийн түүхэн тайланг шинэ нотолгоо болгож ашиглаагүй.
 
-## Дахин хөрвүүлэх
+## Ctrl+S → PDF автоматаар шинэчлэх
 
-Nogoolin root-оос:
+`rag_chatbot/report`-той адил LaTeX Workshop-ийн **onSave → latexmk → XeLaTeX** горим тохируулсан.
+
+1. VS Code-ийн **File → Open Workspace from File…** цэсээр [sem2.code-workspace](sem2.code-workspace)-ийг нээнэ. Эсвэл `Nogoolin` хавтсыг өөрийг нь Open Folder хийнэ; repo-ийн `.vscode/settings.json` мөн тохиргоотой.
+2. [latex/sem2_merged.tex](latex/sem2_merged.tex)-ийг нээн засаж **Ctrl+S** дарна.
+3. **LaTeX Workshop: View LaTeX PDF file** командаар preview нээнэ. Амжилттай build бүрийн дараа `sem2_merged.pdf` болон нээлттэй preview шинэчлэгдэнэ. Compile дуусахад хэдэн секунд шаардана.
+
+`Tengis` зэрэг дээд хавтсыг дангаар нь нээсэн үед доторх Nogoolin-ийн `.vscode` тохиргоо автоматаар ачаалагдахгүй; дээрх workspace-ийг нээх хэрэгтэй. LaTeX Workshop энэ машинд суусан; өөр машинд workspace-ийн recommended extension-ийг суулгана. XeLaTeX, latexmk, Liberation font мөн шаардлагатай.
+
+**Зам:** үндсэн PDF ба SyncTeX нь `sem2/`, завсрын `.aux/.log/.fls/.xdv` нь `sem2/tmp/pdfs/`. Compile алдаа гарвал LaTeX Workshop-ийн log/error дээр харагдана; алдааг засаж дахин хадгална.
+
+### Терминалаас
+
+Nogoolin root-оос одоогийн хоёр `.tex` эхийг хөрвүүлэх:
 
 ```bash
 python3 docs/ICSI405/sem2/latex/build.py
 ```
 
-Pandoc + XeLaTeX + Liberation font шаардлагатай. Markdown эхийг өөрчилсний дараа командаар LaTeX/PDF-ийг хамтад нь шинэчилнэ. PDF-ийн visual QA-г `tmp/review/` дэх хуудасны зургуудаар шалгана.
+Зөвхөн нэгдсэн тайланг хөрвүүлэх:
+
+```bash
+cd docs/ICSI405/sem2/latex
+latexmk
+```
+
+**`build.py` одоо анхдагчаар одоогийн `.tex` эхийг хөрвүүлнэ; гар засварыг дарж бичихгүй.** Markdown-оос `.tex`-ийг дахин үүсгэх нь тусдаа, санаатай үйлдэл:
+
+```bash
+python3 docs/ICSI405/sem2/latex/build.py --from-markdown
+```
+
+`--from-markdown` нь `.tex` дээрх гар засварыг Markdown хувилбараар солино. `Ctrl+S` auto-build энэ flag болон Markdown үүсгэгчийг огт дуудахгүй. `01_…07_*.tex`, `header.tex` нь өмнөх экспортын хэсгүүд; одоогийн нэгдсэн файл тэдгээрийг `input` хийдэггүй тул нэгдсэн тайлангаа **sem2_merged.tex** дээр засна. Тусдаа Scope Charter-ийг `SRS-Scope-Charter.tex` дээр засахад түүний PDF шинэчлэгдэнэ.
+
+Албан ёсны тохиргооны тайлбар: [LaTeX Workshop — Compile](https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile).
 
 ## Эх материал
 
