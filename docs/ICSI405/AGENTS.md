@@ -92,3 +92,10 @@ pdfunite sem1/01_documentation_types.pdf sem1/02_audience_persona.pdf sem1/03_cu
 - Үндсэн prompt-ын дагуу бүтээгдэхүүний SRS/traceability нь `docs/requirements/`, SDD нь `docs/architecture/`; seminar README тийш холбоно.
 - Course-only persona нэмэлт, peer-review draft нь `sem2/wiki/`; LaTeX нь `sem2/latex/`. Phase 0 дугаартай эхүүд `docs/phase-0/` дотор байна.
 - W1 persona-ийн IDOR биш асуудлыг IDOR байсан мэт өөрчилж болохгүй; шинэ холбоог W2 нэмэлтээр тайлбарлаж, review pending төлөвийг хадгална.
+
+## Seminar 2 — хадгалах үед хөрвүүлэх (2026-09-15)
+
+- `sem2/sem2.code-workspace` эсвэл Nogoolin root-ийг VS Code-д нээхэд LaTeX Workshop `onSave` горимоор latexmk/XeLaTeX ажиллана.
+- Засварлах нэгдсэн эх нь `sem2/latex/sem2_merged.tex`. Одоогийн гар засварыг хадгална; 01–07 экспортын хэсгүүдийг нэгдсэн файл автоматаар input хийдэг гэж бүү үз.
+- `sem2/latex/.latexmkrc` нь үндсэн PDF/SyncTeX-ийг `sem2/`, завсрын файлыг `sem2/tmp/pdfs/` дотор гаргана.
+- `python3 sem2/latex/build.py` нь одоогийн TeX-ийг л хөрвүүлнэ. Зөвхөн Markdown-оос зориуд дахин экспортлох үед `--from-markdown` ашиглана; энэ нь TeX гар засварыг дарж бичдэг тул ердийн compile/auto-save-д хэрэглэж болохгүй.
