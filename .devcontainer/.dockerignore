@@ -1,0 +1,3 @@
+# Only the container recipe belongs in the image build context.
+*
+!Dockerfile

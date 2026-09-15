@@ -1,0 +1,10 @@
+# Portable documentation scripts and sources across Windows/Linux checkouts.
+.devcontainer/*.sh text eol=lf
+.devcontainer/Dockerfile text eol=lf
+.devcontainer/*.json text eol=lf
+docs/**/*.sh text eol=lf
+docs/**/*.py text eol=lf
+docs/**/*.tex text eol=lf
+docs/**/*.md text eol=lf
+docs/**/.latexmkrc text eol=lf
+*.pdf binary
