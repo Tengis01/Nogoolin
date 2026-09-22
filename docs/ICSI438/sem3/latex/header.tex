@@ -1,16 +1,16 @@
-
 \usepackage{fontspec}
 \setmainfont{Liberation Serif}
 \setsansfont{Liberation Sans}
 \setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage[a4paper,left=3cm,right=2cm,top=2cm,bottom=2cm,includefoot,headheight=15pt]{geometry}
 \usepackage{ragged2e,indentfirst,xurl}
-\usepackage{longtable,booktabs,array,calc}
-\usepackage{xcolor,fancyhdr,titlesec,enumitem}
+\usepackage{longtable,booktabs,array,calc,graphicx}
+\usepackage{xcolor,fancyhdr,titlesec,enumitem,float}
 \definecolor{ink}{HTML}{19354A}
 \definecolor{accent}{HTML}{167D8D}
 \titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
-\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
-\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsubsection}{\fontsize{11.5}{13.5}\selectfont\sffamily\bfseries\color{ink}}{}{0pt}{}
 \titlespacing*{\section}{1.25cm}{0pt}{8pt}
 \titlespacing*{\subsection}{1.25cm}{8pt}{4pt}
 \titlespacing*{\subsubsection}{1.25cm}{6pt}{3pt}
@@ -21,8 +21,8 @@
 \renewcommand{\arraystretch}{1.08}
 \setlist{nosep,leftmargin=1.5em,topsep=3pt}
 \pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 02}
-\fancyhead[R]{\small\sffamily Nogoolin / M2}
+\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 03}
+\fancyhead[R]{\small\sffamily Nogoolin / M3}
 \fancyfoot[R]{\small\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \AtBeginDocument{\fontsize{10.5}{12.5}\selectfont\justifying\setlength{\parindent}{1.25cm}}

@@ -49,16 +49,16 @@
 \setsansfont{Liberation Sans}
 \setmonofont{Liberation Mono}[Scale=0.86]
 \usepackage{ragged2e,indentfirst,xurl}
-\usepackage{longtable,booktabs,array,calc,pdflscape}
+\usepackage{longtable,booktabs,array,calc}
 \usepackage{xcolor,fancyhdr,titlesec,enumitem}
 \definecolor{ink}{HTML}{19354A}
 \definecolor{accent}{HTML}{167D8D}
 \titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
 \titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
 \titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
-\titlespacing*{\section}{0pt}{0pt}{8pt}
-\titlespacing*{\subsection}{0pt}{8pt}{4pt}
-\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+\titlespacing*{\section}{1.25cm}{0pt}{8pt}
+\titlespacing*{\subsection}{1.25cm}{8pt}{4pt}
+\titlespacing*{\subsubsection}{1.25cm}{6pt}{3pt}
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{3pt}
 \setlength{\emergencystretch}{3em}
@@ -66,7 +66,7 @@
 \renewcommand{\arraystretch}{1.08}
 \setlist{nosep,leftmargin=1.5em,topsep=3pt}
 \pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 02}
+\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 02}
 \fancyhead[R]{\small\sffamily Nogoolin / M2}
 \fancyfoot[R]{\small\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
@@ -90,7 +90,7 @@
 
 \section{SRS Scope Charter}\label{doc1-srs-scope-charter}
 
-\textbf{Nogoolin · ICSI405 / M2 / UE-2 · Тэнгис · 2026-09-15 · v0.1,
+\textbf{Nogoolin · ICSI438 / M2 / UE-2 · Тэнгис · 2026-09-21 · v0.2,
 review draft}
 
 \subsection{Төслийг сольсон
@@ -104,14 +104,17 @@ review draft}
 боломжтой. Seminar 1-ийг дахин хийхгүй; шилжилтийн persona холбоог
 M2-ийн нэмэлтээр ил тод тэмдэглэнэ.
 
+\textbf{Public repository:}
+\href{https://github.com/Tengis01/Nogoolin}{github.com/Tengis01/Nogoolin}
+
 \subsection{Зорилго ба
 уншигч}\label{doc1-ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux443ux43dux448ux438ux433ux447}
 
 Каталогийн хэрэглэгч бүтээгдэхүүний тухай асуулга илгээх, хадгалсан
 бүтээгдэхүүнээ дахин харах боломжийг тодорхойлно. Гол уншигч нь
-хэрэгжүүлж, шалгах хөгжүүлэгч Тэнгис; хоёрдогч уншигч нь админ болон
-хичээлийн reviewer. Phase 0 баримтыг эх материал болгон ашиглаж,
-технологийн сонголтыг SDD-д, шалгаж болох үр дүнг SRS-д тусгана.
+хэрэгжүүлж, шалгах хөгжүүлэгч Тэнгис; хоёрдогч уншигч нь хичээлийн багш.
+Phase 0 баримтыг эх материал болгон ашиглаж, технологийн сонголтыг
+SDD-д, шалгаж болох үр дүнг SRS-д тусгана.
 
 \subsection{Included --- энэ
 хүрээнд}\label{doc1-included-ux44dux43dux44d-ux445ux4afux440ux44dux44dux43dux434}

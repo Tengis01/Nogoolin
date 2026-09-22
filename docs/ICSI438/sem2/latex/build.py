@@ -33,16 +33,16 @@ HEADER = r'''
 \setsansfont{Liberation Sans}
 \setmonofont{Liberation Mono}[Scale=0.86]
 \usepackage{ragged2e,indentfirst,xurl}
-\usepackage{longtable,booktabs,array,calc,pdflscape}
+\usepackage{longtable,booktabs,array,calc}
 \usepackage{xcolor,fancyhdr,titlesec,enumitem}
 \definecolor{ink}{HTML}{19354A}
 \definecolor{accent}{HTML}{167D8D}
 \titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
 \titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
 \titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
-\titlespacing*{\section}{0pt}{0pt}{8pt}
-\titlespacing*{\subsection}{0pt}{8pt}{4pt}
-\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+\titlespacing*{\section}{1.25cm}{0pt}{8pt}
+\titlespacing*{\subsection}{1.25cm}{8pt}{4pt}
+\titlespacing*{\subsubsection}{1.25cm}{6pt}{3pt}
 \setlength{\parindent}{1.25cm}
 \setlength{\parskip}{3pt}
 \setlength{\emergencystretch}{3em}
@@ -50,7 +50,7 @@ HEADER = r'''
 \renewcommand{\arraystretch}{1.08}
 \setlist{nosep,leftmargin=1.5em,topsep=3pt}
 \pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small\sffamily ICSI405 / SEMINAR 02}
+\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 02}
 \fancyhead[R]{\small\sffamily Nogoolin / M2}
 \fancyfoot[R]{\small\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
@@ -107,14 +107,17 @@ def fragment(source, index):
     return out
 
 parts = [fragment(source,i+1) for i,source in enumerate(SOURCES)]
-for name, blocks in [('SRS-Scope-Charter',[parts[0]]),('sem2_merged',parts)]:
+# Requirements and peer-review remain separate course artifacts, but are not
+# chapters in the merged report. The traceability matrix stays portrait.
+merged_parts = [parts[i] for i in (0, 1, 2, 4, 5)]
+for name, blocks in [('SRS-Scope-Charter',[parts[0]]),('sem2_merged',merged_parts)]:
     body=[]
     for i, block in enumerate(blocks):
         if i: body.append(r'\clearpage')
-        if name=='sem2_merged' and i==4:
-            body.append(r'\begin{landscape}')
+        if name=='sem2_merged' and i==3:
+            body.append(r'\begingroup\footnotesize\setlength{\tabcolsep}{2pt}')
             body.append(block)
-            body.append(r'\end{landscape}')
+            body.append(r'\endgroup')
         else:
             body.append(block)
     # Pandoc supplies version-compatible packages/macros for table export.

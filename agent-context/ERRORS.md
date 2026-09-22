@@ -282,3 +282,30 @@ solutions; if either reproduces, log it here.
 - **Issue:** Seminar 2 lacked a LaTeX Workshop recipe, and the original build.py unconditionally regenerated TeX from Markdown, risking loss of manual edits.
 - **Fix:** Added onSave settings, a focused workspace and .latexmkrc; build.py now compiles existing TeX by default and only regenerates with --from-markdown. Existing TeX hashes were preserved.
 - **Environment observation:** The login shell prints a pre-existing missing `/home/tengis/.deno/env` warning from .bashrc/.bash_profile. It did not affect successful latexmk compilation; shell configuration was outside this task and was not changed.
+
+
+### 2026-09-21 — M2 template scope correction
+- **Issue:** Prior M2 output mixed reusable templates with detailed project content, obscuring the boundary between W2 template preparation and W3 full SRS writing.
+- **Cause:** Existing implementation and Phase 0 details were expanded beyond the instructional purpose of a template.
+- **Correction:** Rechecked the authoritative handout and Lecture 02 slide 8; recorded the M2/M3 boundary and required deliverables. Artifact rewrite is still pending; do not describe the audit as a completed rewrite.
+
+### 2026-09-21 — Inline template placeholders overflowed in PDF
+- **Issue:** The first v0.2 export produced two 15–17 pt overfull lines in SRS sections 3.5 and 3.6.
+- **Cause:** Markdown backticks made long `[Бөглөх: …]` instructions unbreakable `\nolinkurl` runs in LaTeX.
+- **Fix:** Rendered fill-in instructions as emphasized prose so TeX can wrap them. Rebuilt both PDFs; final logs contain no overfull boxes, missing characters or undefined references, and the rendered pages were visually checked.
+
+### 2026-09-21 — PDF page-size check dependency unavailable
+- **Issue:** A verification snippet using Python `pypdf` failed because that optional package is not installed in the host Python environment.
+- **Fix:** Did not install anything. Used Poppler `pdfinfo -f/-l` instead and confirmed every merged page is 595.28 × 841.89 pt A4 portrait.
+
+### 2026-09-22 — Seminar 3 mock UI headless capture produced no files
+- **Issue:** Five parallel and one isolated Firefox `--headless --screenshot` invocations exited successfully but wrote no PNG files, including when given separate profiles.
+- **Fix:** Preserved the editable HTML mockups, created one editable SVG sheet, rendered it with the installed librsvg/ImageMagick path, and cropped five 1280×720 PNG artifacts. Visually checked a contact sheet; all five acceptance views are legible and correctly labeled.
+
+### 2026-09-22 — Seminar 3 initial LaTeX hyperref ordering failure
+- **Issue:** The first Pandoc/XeLaTeX build stopped because `header.tex` called `\hypersetup` before Pandoc loaded `hyperref`.
+- **Fix:** Removed the premature link-style override and kept Pandoc's clickable `hidelinks` setup. Rebuilt successfully; final log has no overfull boxes, missing characters, undefined controls or LaTeX errors.
+
+### 2026-09-22 — Seminar 3 print-margin reflow
+- **Issue:** Applying the narrower 3 cm left / 2 cm right print area exposed several overfull cells in the traceability and Human-vs-AI tables, plus one long FR verification line.
+- **Fix:** Kept the standard body size, scoped `footnotesize` and tighter padding to the two dense tables, split the FR-11 metadata line and shortened unbreakable source labels. The final two-pass build reports no overfull boxes or changed table widths.

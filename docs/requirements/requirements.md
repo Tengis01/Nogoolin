@@ -32,7 +32,7 @@ Customer A-ийн session-ээр wishlist болон inquiry history унших/
 
 **I-01:** хамгаалагдсан cart GET/POST/DELETE, inquiry mine GET, admin inquiry GET/PATCH-ийн controller → service → repository болон RLS-ийг шалгана. Эзэмшигчийн ID баталгаажсан session-ээс ирдэг, хэрэглэгчийн body/query-гээс ирдэггүй; cart нь `user_id`, inquiry нь `customer_id`-аар шүүгддэг; insert нь session-ийн ID оноодог; RLS болон admin role guard бий гэдгийг мөр бүрд нотолбол pass. Нэг хамгаалагдсан зам ownership/role шалгалтгүй бол fail. Public catalog, guest inquiry create-д сохроор `user_id` filter шаардахгүй.
 
-**Дэмжих тест:** A/B хоёр customer үүсгээд A-ийн хариунд B-ийн ID огт байхгүй, A хасахад B-ийн хадгалсан бүтээгдэхүүн хэвээр, customer admin inbox-д 403 авдгийг шалгана. **Source:** [security §9](../phase-0/08-security.md#9-idor-prevention), [P-NG-01 / W1 холбоо](../ICSI405/sem2/wiki/persona-and-pivot.md), дээрх хоёр repository ба migration. **Төлөв:** статик замыг шалгасан; бүрэн I-01 checklist, хоёр-customer runtime нотолгоо pending.
+**Дэмжих тест:** A/B хоёр customer үүсгээд A-ийн хариунд B-ийн ID огт байхгүй, A хасахад B-ийн хадгалсан бүтээгдэхүүн хэвээр, customer admin inbox-д 403 авдгийг шалгана. **Source:** [security §9](../phase-0/08-security.md#9-idor-prevention), [P-NG-01 / W1 холбоо](../ICSI438/sem2/wiki/persona-and-pivot.md), дээрх хоёр repository ба migration. **Төлөв:** статик замыг шалгасан; бүрэн I-01 checklist, хоёр-customer runtime нотолгоо pending.
 
 ## NFR-02
 
@@ -42,7 +42,7 @@ Customer A-ийн session-ээр wishlist болон inquiry history унших/
 
 **T-03:** desktop 1440×900, mobile хэмжээ 390×844 бүхий browser-д sessionStorage-г цэвэрлэж дараахыг тус бүр шалгана: (a) GLB URL тохируулаагүй — орлуулагч харагдах; (b) WebGL unavailable — статик hero; (c) reduced-motion — хөдөлгөөнт intro алгасагдах. Intro гарсан нөхцөлд skip нь navigation эхэлснээс 1 секундийн дотор харагдаж, дарахад home төлөвт орно. Нөхцөл бүрд бүтээгдэхүүний холбоосоор `/products` нээгдэж, жагсаалт харагдвал pass; хоосон дэлгэц, түгжигдсэн scroll, хүрэх боломжгүй каталог байвал fail. Browser/version, local build, хэмжсэн хугацааг тэмдэглэнэ. Буруу URL/404 asset-ийн recovery нь тусдаа gap, энэ шаардлагын батлагдсан хэрэгжилт гэж үзэхгүй.
 
-**Source:** [WF-INTRO-03/05/06/07](../phase-0/07-uiux-wireframes.md), [hero-intro](../../apps/web/src/components/intro/hero-intro.tsx), [deity](../../apps/web/src/components/intro/deity.tsx), [P-NG-02](../ICSI405/sem2/wiki/persona-and-pivot.md). **Төлөв:** код байгаа; шинэ browser evidence pending.
+**Source:** [WF-INTRO-03/05/06/07](../phase-0/07-uiux-wireframes.md), [hero-intro](../../apps/web/src/components/intro/hero-intro.tsx), [deity](../../apps/web/src/components/intro/deity.tsx), [P-NG-02](../ICSI438/sem2/wiki/persona-and-pivot.md). **Төлөв:** код байгаа; шинэ browser evidence pending.
 
 ## NFR-03
 

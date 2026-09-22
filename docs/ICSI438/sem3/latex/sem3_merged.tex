@@ -1,0 +1,1136 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  mongolian,
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off,,provide=*]{babel}
+\else
+\usepackage[bidi=default,shorthands=off,,provide=*]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage[a4paper,left=3cm,right=2cm,top=2cm,bottom=2cm,includefoot,headheight=15pt]{geometry}
+\usepackage{ragged2e,indentfirst,xurl}
+\usepackage{longtable,booktabs,array,calc,graphicx}
+\usepackage{xcolor,fancyhdr,titlesec,enumitem,float}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsubsection}{\fontsize{11.5}{13.5}\selectfont\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{1.25cm}{0pt}{8pt}
+\titlespacing*{\subsection}{1.25cm}{8pt}{4pt}
+\titlespacing*{\subsubsection}{1.25cm}{6pt}{3pt}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\setlist{nosep,leftmargin=1.5em,topsep=3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 03}
+\fancyhead[R]{\small\sffamily Nogoolin / M3}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\AtBeginDocument{\fontsize{10.5}{12.5}\selectfont\justifying\setlength{\parindent}{1.25cm}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdflang={mn},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\input{sem3-title.tex}
+
+\section{Nogoolin Software Requirements
+Specification}\label{nogoolin-software-requirements-specification}
+
+\textbf{ICSI438 · Seminar 3 / M3 · Тэнгис · v1.0 draft · 2026-09-22}
+
+\subsection{Баримтын
+төлөв}\label{ux431ux430ux440ux438ux43cux442ux44bux43d-ux442ux4e9ux43bux4e9ux432}
+
+Энэ хувилбар нь M3-д зориулсан бүрэн агуулгатай draft. Нийт 15
+функциональ, 5 функциональ бус шаардлагатай. Peer review болон trial
+test execution хийгдээгүй; доорх test procedure-ууд нь төлөвлөсөн
+шалгалт бөгөөд pass болсон нотолгоо биш. Эх кодын хэрэгжилтийн төлөвийг
+шаардлагын статусад тусад нь тэмдэглэв.
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Талбар & Утга \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Төсөл & Nogoolin \\
+Зохиогч, owner & Тэнгис \\
+Хувилбар & v1.0 draft \\
+Үндсэн уншигч & Хөгжүүлэгч Тэнгис \\
+Хоёрдогч уншигч & ICSI438 хичээлийн багш \\
+Public repository & \url{https://github.com/Tengis01/Nogoolin} \\
+Review & Хийгдээгүй; бодит peer comment байхгүй \\
+Trial test & Хийгдээгүй; procedure ба pass/fail босго төлөвлөсөн \\
+\end{longtable}
+
+\subsection{1. Оршил}\label{ux43eux440ux448ux438ux43b}
+
+\subsubsection{1.1 Зорилго}\label{ux437ux43eux440ux438ux43bux433ux43e}
+
+Энэ SRS нь Nogoolin-ийн каталогийн inquiry, wishlist болон нүүрний hero
+fallback урсгалын ажиглагдах зан төлөвийг хэрэгжүүлэлт, шалгалтын гэрээ
+болгон тодорхойлно. Шаардлага бүр хамгийн чухал үр дүнгээр эхэлж, ID,
+эх, priority, owner, verification болон pass/fail босготой байна.
+
+\subsubsection{1.2 Хамрах
+хүрээ}\label{ux445ux430ux43cux440ux430ux445-ux445ux4afux440ux44dux44d}
+
+Хүрээг \href{scope-charter.md}{SRS Scope Charter}-аар тогтоов. Энэ
+хувилбарт:
+
+\begin{itemize}
+\tightlist
+\item
+  зочин болон нэвтэрсэн хэрэглэгчийн бүтээгдэхүүний inquiry;
+\item
+  өөрийн inquiry history;
+\item
+  админы inquiry inbox, filter, status;
+\item
+  нэвтэрсэн хэрэглэгчийн wishlist;
+\item
+  asset болон хөдөлгөөний тохиргооноос үл хамааран каталогт хүрэх hero
+  fallback;
+\item
+  өгөгдлийн тусгаарлалт, гүйцэтгэл, accessibility, retry reliability,
+  deploy gate орно.
+\end{itemize}
+
+Захиалга, төлбөр, хүргэлт, production cloud, mobile inquiry/wishlist,
+бүтээгдэхүүн бүрийн 360° viewer энэ SRS-ийн хүрээнээс гадуур.
+
+\subsubsection{1.3 Нэр
+томьёо}\label{ux43dux44dux440-ux442ux43eux43cux44cux451ux43e}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Нэр
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Тайлбар
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Inquiry & Бүтээгдэхүүний тухай нэр, утас, зурвасаар илгээсэн хүсэлт \\
+Wishlist & Нэвтэрсэн хэрэглэгчийн дараа үзэхээр хадгалсан бүтээгдэхүүний
+жагсаалт; checkout биш \\
+Guest & Нэвтрээгүй каталогийн хэрэглэгч \\
+Customer & Нэвтэрсэн хэрэглэгч \\
+Admin & Inquiry-г харах, төлөв солих эрхтэй хэрэглэгч \\
+FR / NFR & Функциональ / функциональ бус шаардлага \\
+Priority & \texttt{must}, \texttt{should}, \texttt{could} гэсэн M3-ийн
+MoSCoW тэмдэглэгээ \\
+Planned test & Procedure бичигдсэн боловч энэ ажлаар ажиллуулаагүй
+шалгалт \\
+\end{longtable}
+
+\subsubsection{1.4 Эх
+сурвалж}\label{ux44dux445-ux441ux443ux440ux432ux430ux43bux436}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{../phase-0/02-requirements.md}{Phase 0 requirements},
+  \href{../phase-0/08-security.md}{security},
+  \href{../phase-0/07-uiux-wireframes.md}{wireframes},
+  \href{../phase-0/10-roadmap.md}{roadmap}
+\item
+  Одоогийн inquiry, wishlist, hero, auth болон admin эх код
+\item
+  ICSI438 Lecture 03, Week 03 handout
+\item
+  Bhatti et al., \emph{Docs for Developers}, бүлэг 3, х. 58--59
+\item
+  Chinchilla, \emph{Technical Writing for Software Developers}, бүлэг 5
+  ба 9
+\item
+  \href{https://www.ir.akamai.com/news-releases/news-release-details/akamai-online-retail-performance-report-milliseconds-are}{Akamai
+  retail performance report}
+\item
+  \href{https://docs.stripe.com/api/idempotent_requests}{Stripe
+  idempotent requests}
+\end{itemize}
+
+\subsubsection{1.5 Баримтын
+бүтэц}\label{ux431ux430ux440ux438ux43cux442ux44bux43d-ux431ux4afux442ux44dux446}
+
+§2 нь бүтээгдэхүүний орчин, хэрэглэгч, хязгаарлалтыг; §3 нь
+интерфэйсийг; §4 нь 15 FR-ийг; §5 нь 5 NFR-ийг тодорхойлно. Чанарын
+checklist болон 20 мөртэй traceability нь төгсгөлийн хавсралтад байна.
+
+\subsection{2. Ерөнхий
+тодорхойлолт}\label{ux435ux440ux4e9ux43dux445ux438ux439-ux442ux43eux434ux43eux440ux445ux43eux439ux43bux43eux43bux442}
+
+\subsubsection{2.1 Бүтээгдэхүүний
+орчин}\label{ux431ux4afux442ux44dux44dux433ux434ux44dux445ux4afux4afux43dux438ux439-ux43eux440ux447ux438ux43d}
+
+Nogoolin нь Next.js web, Fastify REST API, Supabase
+PostgreSQL/Auth/Storage бүхий шашин, зан үйлийн бүтээгдэхүүний каталог.
+Web болон mobile нь нэг \texttt{/api/v1/} REST API хэрэглэнэ. Энэ
+SRS-ийн урсгал web интерфэйс болон API дээр төвлөрнө.
+
+\subsubsection{2.2 Гол
+үйлдлүүд}\label{ux433ux43eux43b-ux4afux439ux43bux434ux43bux4afux4afux434}
+
+Хэрэглэгч бүтээгдэхүүнээс inquiry илгээж баталгааны дугаар авна.
+Нэвтэрсэн хэрэглэгч өөрийн inquiry history болон wishlist-ийг харна.
+Админ inquiry жагсаалтыг шүүж, төлөвийг шинэчилнэ. Hero ажиллах
+боломжгүй нөхцөлд статик хувилбар каталогийн холбоосыг хадгална.
+
+\subsubsection{2.3 Хэрэглэгчийн
+онцлог}\label{ux445ux44dux440ux44dux433ux43bux44dux433ux447ux438ux439ux43d-ux43eux43dux446ux43bux43eux433}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Guest:} бүртгэлгүйгээр каталог үзэж inquiry илгээнэ.
+\item
+  \textbf{Customer:} өөрийн inquiry history болон wishlist-д хандана.
+\item
+  \textbf{Admin:} хүсэлтүүдийг эрэмбэлж, шүүж, төлөв шинэчилнэ.
+\item
+  \textbf{Developer:} local орчинд API, web, auth болон өгөгдлийн
+  урсгалыг шалгана.
+\end{itemize}
+
+Persona-ийн эх нь \href{../ICSI438/sem2/wiki/persona-and-pivot.md}{Week
+2 нэмэлт}. Шинэ stakeholder interview хийгдээгүй.
+
+\subsubsection{2.4
+Хязгаарлалт}\label{ux445ux44fux437ux433ux430ux430ux440ux43bux430ux43bux442}
+
+\begin{itemize}
+\tightlist
+\item
+  Ганцаар хөгжүүлж байгаа тул M3 нь Scope Charter-ийн урсгалаар
+  хязгаарлагдана.
+\item
+  Монгол интерфэйсийн үндсэн алдааны мессежийг хадгална.
+\item
+  \texttt{delivery\_enabled=false}; wishlist нь захиалга, үнэ бодох,
+  checkout хийхгүй.
+\item
+  Cloud болон бодит 3D asset бэлэн гэж таамаглахгүй.
+\item
+  Нууц түлхүүр client bundle болон repository-д орохгүй.
+\end{itemize}
+
+\subsubsection{2.5 Таамаг ба
+хамаарал}\label{ux442ux430ux430ux43cux430ux433-ux431ux430-ux445ux430ux43cux430ux430ux440ux430ux43b}
+
+Шалгалтын үед Node 20+, pnpm, Docker, local Supabase болон seed
+бүтээгдэхүүн бэлэн байна гэж үзнэ. Хэрэв local DB байхгүй бол
+integration test-ийн үр дүнг pass гэж тооцохгүй. Authenticated тестэд
+customer болон admin test account шаардана.
+
+\subsection{3. Гадаад
+интерфэйс}\label{ux433ux430ux434ux430ux430ux434-ux438ux43dux442ux435ux440ux444ux44dux439ux441}
+
+\subsubsection{3.1 Хэрэглэгчийн
+интерфэйс}\label{ux445ux44dux440ux44dux433ux43bux44dux433ux447ux438ux439ux43d-ux438ux43dux442ux435ux440ux444ux44dux439ux441}
+
+Inquiry form нь нэр, 8 оронтой утас, зурвас, илгээх болон буцах
+үйлдэлтэй. Success төлөв нь inquiry дугаар, холбоо барих утас, каталог
+руу буцах холбоос харуулна. Wishlist нь хадгалсан бүтээгдэхүүний карт
+эсвэл empty state харуулна. Admin inbox нь status/product/date filter
+болон status update үйлдэлтэй.
+
+\subsubsection{3.2 Программын
+интерфэйс}\label{ux43fux440ux43eux433ux440ux430ux43cux43cux44bux43d-ux438ux43dux442ux435ux440ux444ux44dux439ux441}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Интерфэйс
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Гол үр дүн
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{POST\ /api/v1/inquiries} & \texttt{201\ \{data\}} эсвэл
+validation/not-found/rate-limit алдаа \\
+\texttt{GET\ /api/v1/inquiries/mine} & Нэвтэрсэн хэрэглэгчийн өөрийн
+inquiry жагсаалт \\
+\texttt{GET\ /api/v1/admin/inquiries} & Шүүсэн, хуудасласан inquiry
+жагсаалт \\
+\texttt{PATCH\ /api/v1/admin/inquiries/\{id\}/status} & Шинэ төлөвтэй
+inquiry \\
+\texttt{GET\ /api/v1/cart} & Хэрэглэгчийн wishlist \\
+\texttt{POST\ /api/v1/cart} & Нийтлэгдсэн бүтээгдэхүүнийг хадгалж
+\texttt{201} \\
+\texttt{DELETE\ /api/v1/cart/\{productId\}} & Хадгалсан бүтээгдэхүүнийг
+хасаад \texttt{204} \\
+\end{longtable}
+
+\subsubsection{3.3 Харилцаа ба өгөгдлийн
+формат}\label{ux445ux430ux440ux438ux43bux446ux430ux430-ux431ux430-ux4e9ux433ux4e9ux433ux434ux43bux438ux439ux43d-ux444ux43eux440ux43cux430ux442}
+
+REST хүсэлт, хариу JSON форматтай. Огноо ISO 8601 UTC байна. Production
+орчинд HTTPS хэрэглэнэ. Нэвтэрсэн урсгал Bearer access token ашиглаж,
+хэрэглэгчийн ID-г body/query-гээс биш баталгаажсан token-оос авна.
+
+\subsubsection{3.4 Төхөөрөмжийн
+интерфэйс}\label{ux442ux4e9ux445ux4e9ux4e9ux440ux4e9ux43cux436ux438ux439ux43d-ux438ux43dux442ux435ux440ux444ux44dux439ux441}
+
+Тусгай төхөөрөмж, сенсор, hardware port хэрэглэхгүй. Web интерфэйс
+mouse, touch болон keyboard оролтыг дэмжинэ.
+
+\subsection{4. Функциональ
+шаардлага}\label{ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44c-ux448ux430ux430ux440ux434ux43bux430ux433ux430}
+
+\subsubsection{FR-01 --- Зочны inquiry
+үүсгэх}\label{fr-01-ux437ux43eux447ux43dux44b-inquiry-ux4afux4afux441ux433ux44dux445}
+
+\textbf{Requirement · must.} Зочин нийтлэгдсэн бүтээгдэхүүний inquiry
+form-д хүчинтэй нэр, утас, зурвас оруулж илгээхэд систем яг нэг inquiry
+үүсгэж, \texttt{201}, давтагдашгүй ID, \texttt{status=new},
+\texttt{customer\_id=null} буцаана.
+
+\textbf{Source / owner:} FR-INQ-001\ldots003, inquiry controller/schema
+· Тэнгис. \textbf{Verification T-01:} нийтлэгдсэн бүтээгдэхүүн дээр
+guest хүсэлт илгээж status, ID, DB-ийн нэг мөр, null customer-ийг
+шалгана. Аль нэг нь зөрвөл fail. \textbf{Mock UI:}
+\href{../assets/01-inquiry-form.png}{MUI-01}. \textbf{Status:}
+Implemented; test execution not performed.
+
+\subsubsection{FR-02 --- Нэвтэрсэн хэрэглэгчийн inquiry-г
+холбох}\label{fr-02-ux43dux44dux432ux442ux44dux440ux441ux44dux43d-ux445ux44dux440ux44dux433ux43bux44dux433ux447ux438ux439ux43d-inquiry-ux433-ux445ux43eux43bux431ux43eux445}
+
+\textbf{Requirement · must.} Нэвтэрсэн хэрэглэгч inquiry илгээхэд систем
+хэрэглэгчийн баталгаажсан session ID-г \texttt{customer\_id} болгон
+хадгалж, client body дахь owner утгыг үл хэрэгсэнэ.
+
+\textbf{Source / owner:} migration 0007, optionalAuth, inquiry service ·
+Тэнгис. \textbf{Verification T-02:} A customer-ийн token-оор илгээж,
+хадгалсан \texttt{customer\_id=A}; body-д B ID оруулах боломжгүй/үл
+хэрэгссэн байхыг шалгана. \textbf{Mock UI:}
+\href{../assets/01-inquiry-form.png}{MUI-01}. \textbf{Status:}
+Implemented; not executed.
+
+\subsubsection{FR-03 --- Inquiry form-ийг
+баталгаажуулах}\label{fr-03-inquiry-form-ux438ux439ux433-ux431ux430ux442ux430ux43bux433ux430ux430ux436ux443ux443ux43bux430ux445}
+
+\textbf{Requirement · must.} Нэр 2-оос цөөн тэмдэгт, утас 8 цифр биш,
+зурвас хоосон эсвэл product ID буруу үед web систем тухайн талбарын
+монгол алдааг үзүүлж, API inquiry мөр үүсгэхгүй.
+
+\textbf{Source / owner:} inquiry-form-schema, shared inquiryInputSchema,
+WF-INQ-01 · Тэнгис. \textbf{Verification T-03:} дөрвөн invalid input-ыг
+тус тус илгээж, field error/HTTP 400 эсвэл 404 болон DB row count
+өөрчлөгдөөгүйг шалгана. \textbf{Mock UI:}
+\href{../assets/01-inquiry-form.png}{MUI-01}. \textbf{Status:}
+Implemented; not executed.
+
+\subsubsection{FR-04 --- Inquiry баталгааг
+харуулах}\label{fr-04-inquiry-ux431ux430ux442ux430ux43bux433ux430ux430ux433-ux445ux430ux440ux443ux443ux43bux430ux445}
+
+\textbf{Requirement · must.} Inquiry амжилттай хадгалагдмагц web
+form-ийг success төлөвөөр сольж, форматласан inquiry дугаар,
+хэрэглэгчийн утас болон каталог руу буцах холбоос харуулна.
+
+\textbf{Source / owner:} WF-INQ-04, \texttt{InquirySuccess},
+inquiry-display · Тэнгис. \textbf{Verification T-04:} successful API
+response өгч, form алга болсон, дугаар/утас/link харагдсан, link
+\texttt{/products} нээснийг шалгана. \textbf{Mock UI:}
+\href{../assets/02-inquiry-success.png}{MUI-02}. \textbf{Status:}
+Implemented; not executed.
+
+\subsubsection{FR-05 --- Inquiry rate limit
+хэрэгжүүлэх}\label{fr-05-inquiry-rate-limit-ux445ux44dux440ux44dux433ux436ux4afux4afux43bux44dux445}
+
+\textbf{Requirement · must.} Нэг IP нэг цагт тохируулсан дээд хэмжээнээс
+олон inquiry илгээвэл API шинэ мөр үүсгэхгүй, \texttt{429} буцааж, web
+нэг цагийн дараа дахин оролдох монгол тайлбар үзүүлнэ.
+
+\textbf{Source / owner:} FR-INQ-007, NFR-SEC-002, rate-limit plugin ·
+Тэнгис. \textbf{Verification T-05:} test max=1 үед эхний valid хүсэлт
+\texttt{201}, хоёр дахь нь \texttt{429}, DB-д нэг мөр байгааг шалгана.
+\textbf{Status:} Implemented; not executed.
+
+\subsubsection{FR-06 --- Өөрийн inquiry history-г
+харах}\label{fr-06-ux4e9ux4e9ux440ux438ux439ux43d-inquiry-history-ux433-ux445ux430ux440ux430ux445}
+
+\textbf{Requirement · must.} Нэвтэрсэн customer өөрийн profile-оос
+зөвхөн өөрийн inquiry-г newest-first дарааллаар дугаар, бүтээгдэхүүн,
+огноо, төлөвтэй харна; guest \texttt{401} авна.
+
+\textbf{Source / owner:} \texttt{/inquiries/mine}, inquiry repository,
+profile UI · Тэнгис. \textbf{Verification T-06:} A/B хэрэглэгч тус бүр
+мөртэй үед A response-д зөвхөн A ID орсон, guest \texttt{401}, UI зөв
+талбаруудтайг шалгана. \textbf{Mock UI:}
+\href{../assets/03-inquiry-history.png}{MUI-03}. \textbf{Status:}
+Implemented; not executed.
+
+\subsubsection{FR-07 --- Админ inquiry inbox
+харах}\label{fr-07-ux430ux434ux43cux438ux43d-inquiry-inbox-ux445ux430ux440ux430ux445}
+
+\textbf{Requirement · must.} Баталгаажсан admin inquiry жагсаалтыг
+newest-first, page/limit metadata-тай харна; guest \texttt{401}, энгийн
+customer \texttt{403} авна.
+
+\textbf{Source / owner:} FR-INQ-004, FR-ADM-006, admin controller/table
+· Тэнгис. \textbf{Verification T-07:} хоёр өөр огноотой мөр үүсгээд
+дараалал, metadata, 401/403-г шалгана. \textbf{Mock UI:}
+\href{../assets/04-admin-inbox.png}{MUI-04}. \textbf{Status:}
+Implemented; not executed.
+
+\subsubsection{FR-08 --- Админ inquiry
+шүүх}\label{fr-08-ux430ux434ux43cux438ux43d-inquiry-ux448ux4afux4afux445}
+
+\textbf{Requirement · should.} Admin inquiry inbox-ийг status, product
+ID болон date range-аар шүүхэд систем зөвхөн бүх идэвхтэй нөхцөлийг
+хангасан мөрүүдийг буцаана.
+
+\textbf{Source / owner:} FR-INQ-006, adminInquiryListQuerySchema ·
+Тэнгис. \textbf{Verification T-08:} new/contacted, хоёр product, хоёр
+огнооны fixture дээр filter бүр болон хослолын ID-г шалгана.
+\textbf{Mock UI:} \href{../assets/04-admin-inbox.png}{MUI-04}.
+\textbf{Status:} Implemented; not executed.
+
+\subsubsection{FR-09 --- Inquiry төлөв
+шинэчлэх}\label{fr-09-inquiry-ux442ux4e9ux43bux4e9ux432-ux448ux438ux43dux44dux447ux43bux44dux445}
+
+\textbf{Requirement · must.} Admin inquiry төлөвийг \texttt{new},
+\texttt{contacted}, \texttt{closed} утгын аль нэгээр шинэчлэхэд API шинэ
+төлөвтэй мөрийг буцааж, audit log-д admin, entity ID, action, status-ийг
+нэмнэ.
+
+\textbf{Source / owner:} FR-INQ-005, inquiryStatusPatchSchema, audit log
+repository · Тэнгис. \textbf{Verification T-09:} valid transition бүр
+\texttt{200} ба audit row үүсгэсэн; invalid status \texttt{400}, unknown
+ID \texttt{404}, customer \texttt{403} болохыг шалгана. \textbf{Mock
+UI:} \href{../assets/04-admin-inbox.png}{MUI-04}. \textbf{Status:}
+Implemented; not executed.
+
+\subsubsection{FR-10 --- Wishlist-д нэвтрэлт
+шаардах}\label{fr-10-wishlist-ux434-ux43dux44dux432ux442ux440ux44dux43bux442-ux448ux430ux430ux440ux434ux430ux445}
+
+\textbf{Requirement · must.} Guest \texttt{/wishlist} нээхэд web
+\texttt{/login?next=/wishlist} рүү шилжүүлж, wishlist API-ийн
+GET/POST/DELETE хүсэлт бүр \texttt{401} буцаана.
+
+\textbf{Source / owner:} wishlist page, authenticated API scope ·
+Тэнгис. \textbf{Verification T-10:} cookie/token-гүй page ба гурван
+endpoint-ийг шалгана. Redirect query болон бүх API status зөв байвал
+pass. \textbf{Status:} Implemented; not executed.
+
+\subsubsection{FR-11 --- Нийтлэгдсэн бүтээгдэхүүн
+хадгалах}\label{fr-11-ux43dux438ux439ux442ux43bux44dux433ux434ux441ux44dux43d-ux431ux4afux442ux44dux44dux433ux434ux44dux445ux4afux4afux43d-ux445ux430ux434ux433ux430ux43bux430ux445}
+
+\textbf{Requirement · must.} Нэвтэрсэн хэрэглэгч нийтлэгдсэн
+бүтээгдэхүүний хадгалах товчийг дарахад систем тухайн хэрэглэгчийн
+wishlist-д бүтээгдэхүүнийг нэмээд \texttt{201} буцаана; draft, archived
+эсвэл unknown product-д \texttt{404} буцаана.
+
+\textbf{Source / owner:} cart service/controller, SaveButton · Тэнгис.
+
+\textbf{Verification T-11:} published, draft, unknown fixture дээр POST
+response ба DB мөрийг шалгана. \textbf{Mock UI:}
+\href{../assets/05-wishlist.png}{MUI-05}. \textbf{Status:} Implemented;
+not executed.
+
+\subsubsection{FR-12 --- Wishlist давхардлыг
+хориглох}\label{fr-12-wishlist-ux434ux430ux432ux445ux430ux440ux434ux43bux44bux433-ux445ux43eux440ux438ux433ux43bux43eux445}
+
+\textbf{Requirement · must.} Нэг хэрэглэгч нэг бүтээгдэхүүнийг давтан
+хадгалахад систем хамгийн ихдээ нэг \texttt{(user\_id,\ product\_id)}
+мөр хадгалж, wishlist-д нэг карт харуулна.
+
+\textbf{Source / owner:} cart repository, unique migration constraint ·
+Тэнгис. \textbf{Verification T-12:} ижил POST-ыг хоёр удаа явуулж, хоёул
+амжилттай боловч DB/list count=1 байхыг шалгана. \textbf{Mock UI:}
+\href{../assets/05-wishlist.png}{MUI-05}. \textbf{Status:} Implemented;
+not executed.
+
+\subsubsection{FR-13 --- Wishlist
+жагсаах}\label{fr-13-wishlist-ux436ux430ux433ux441ux430ux430ux445}
+
+\textbf{Requirement · must.} Нэвтэрсэн хэрэглэгч wishlist-ээ нээхэд
+систем зөвхөн өөрийн хадгалсан бүтээгдэхүүнийг newest-first дарааллаар
+нэр, зураг, үнэ, stock status-тай харуулна; хоосон үед каталогийн
+холбоостой empty state үзүүлнэ.
+
+\textbf{Source / owner:} cart repository, WishlistGrid · Тэнгис.
+\textbf{Verification T-13:} A/B хэрэглэгчийн fixture, хоёр огноо болон
+empty account ашиглан ownership, order, fields, empty link-ийг шалгана.
+\textbf{Mock UI:} \href{../assets/05-wishlist.png}{MUI-05}.
+\textbf{Status:} Implemented; not executed.
+
+\subsubsection{FR-14 --- Wishlist-ээс
+хасах}\label{fr-14-wishlist-ux44dux44dux441-ux445ux430ux441ux430ux445}
+
+\textbf{Requirement · must.} Нэвтэрсэн хэрэглэгч хадгалсан
+бүтээгдэхүүнийг хасахад API \texttt{204} буцааж, UI картаа арилгана;
+ижил DELETE-г дахин хийхэд мөн \texttt{204} буцааж бусдын мөрийг
+өөрчлөхгүй.
+
+\textbf{Source / owner:} cart remove service/repository, wishlist store
+· Тэнгис. \textbf{Verification T-14:} A/B хэрэглэгч ижил product
+хадгалсан үед A хоёр удаа DELETE хийж, A-д 0, B-д 1 мөр үлдсэнийг
+шалгана. \textbf{Mock UI:} \href{../assets/05-wishlist.png}{MUI-05}.
+\textbf{Status:} Implemented; not executed.
+
+\subsubsection{FR-15 --- Hero fallback-аас каталогт
+хүрэх}\label{fr-15-hero-fallback-ux430ux430ux441-ux43aux430ux442ux430ux43bux43eux433ux442-ux445ux4afux440ux44dux445}
+
+\textbf{Requirement · must.} 3D asset тохируулаагүй эсвэл WebGL
+боломжгүй үед web canvas-гүй статик hero харуулж, хэрэглэгчид ажиллах
+\texttt{/products} холбоос өгнө.
+
+\textbf{Source / owner:} WF-INTRO-03/07, static-hero, intro-config ·
+Тэнгис. \textbf{Verification T-15:} asset URL байхгүй ба WebGL disabled
+хоёр нөхцөлд static hero, link, scroll lock байхгүйг desktop/mobile дээр
+шалгана. \textbf{Status:} Implemented for missing configuration/WebGL;
+broken asset recovery is a known gap; not executed.
+
+\subsection{5. Функциональ бус
+шаардлага}\label{ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44c-ux431ux443ux441-ux448ux430ux430ux440ux434ux43bux430ux433ux430}
+
+\subsubsection{NFR-01 --- Хувийн өгөгдлийг
+тусгаарлах}\label{nfr-01-ux445ux443ux432ux438ux439ux43d-ux4e9ux433ux4e9ux433ux434ux43bux438ux439ux433-ux442ux443ux441ux433ux430ux430ux440ux43bux430ux445}
+
+\textbf{Requirement · Security · must.} Customer A-ийн wishlist болон
+inquiry history response-д customer B-ийн ID эсвэл мөр огт орохгүй;
+customer admin endpoint-д \texttt{403}, guest хамгаалагдсан endpoint-д
+\texttt{401} авна.
+
+\textbf{Source / owner:} security §9, P-NG-01, auth hooks, ownership
+repositories · Тэнгис. \textbf{Verification I-01/T-16:}
+controller→service→repository→RLS замыг inspect хийж, A/B/admin runtime
+matrix ажиллуулна. Нэг cross-user мөр илэрвэл fail. \textbf{Status:}
+Static path partially inspected; runtime not executed.
+
+\subsubsection{NFR-02 --- Хөдөлгөөн багасгах
+тохиргоо}\label{nfr-02-ux445ux4e9ux434ux4e9ux43bux433ux4e9ux4e9ux43d-ux431ux430ux433ux430ux441ux433ux430ux445-ux442ux43eux445ux438ux440ux433ux43eux43e}
+
+\textbf{Requirement · Accessibility/Reliability · must.}
+\texttt{prefers-reduced-motion:\ reduce} идэвхтэй үед web хөдөлгөөнт 3D
+intro-г эхлүүлэхгүй, статик hero болон каталогийн холбоосыг 1 секундийн
+дотор харуулна.
+
+\textbf{Source / owner:} NFR-ACC-004, WF-INTRO-06/07, hero-intro ·
+Тэнгис. \textbf{Verification T-17:} browser media emulation-аар
+reduce/no-preference нөхцөлийг харьцуулж, canvas байхгүй, CTA хугацаа ≤1
+s болохыг хэмжинэ. \textbf{Status:} Implemented; not executed.
+
+\subsubsection{NFR-03 --- Deploy-оос өмнөх тестийн
+хаалт}\label{nfr-03-deploy-ux43eux43eux441-ux4e9ux43cux43dux4e9ux445-ux442ux435ux441ux442ux438ux439ux43d-ux445ux430ux430ux43bux442}
+
+\textbf{Requirement · Maintainability · must.} API production deploy нь
+integration test үнэхээр ажиллаж амжилттай болсон, production Docker
+build амжилттай болсон үед л eligible байна; test fail, all-skipped
+эсвэл build fail бүр deploy-г хаана.
+
+\textbf{Source / owner:} NFR-MAIN-005/006, API workflow, test skip
+branch · Тэнгис. \textbf{Verification I-02:} CI dependency ба гурван
+negative log-ийг шалгана. \textbf{Status:} Gap/planned W9; local DB
+provisioning байхгүй тул all-skipped хаалт одоогоор хангагдаагүй.
+
+\subsubsection{NFR-04 --- Каталогийн хуудсын ачааллын
+хугацаа}\label{nfr-04-ux43aux430ux442ux430ux43bux43eux433ux438ux439ux43d-ux445ux443ux443ux434ux441ux44bux43d-ux430ux447ux430ux430ux43bux43bux44bux43d-ux445ux443ux433ux430ux446ux430ux430}
+
+\textbf{Requirement · Performance · must.} Нийтлэгдсэн бүтээгдэхүүнтэй
+\texttt{/products} хуудас cold-cache simulated 4G, mid-tier mobile
+profile дээр 10 хэмжилтийн дор хаяж 9-д нь 2.0 секундээс өмнө үндсэн
+каталогийн агуулгаа харуулна.
+
+\textbf{Source / owner:} NFR-PERF-002; Akamai-ийн retail performance
+report нь 2 секундийн саатал bounce rate-ийг өсгөдөг болохыг тайлагнасан
+· Тэнгис. \textbf{Verification A-01/T-18:} Lighthouse эсвэл browser
+trace-аар ижил build/seed/profile дээр 10 run хийж, 9/10 ≤2.0 s бол
+pass. \textbf{Status:} Requirement defined; not executed.
+
+\subsubsection{NFR-05 --- Inquiry retry давхардал үүсгэхгүй
+байх}\label{nfr-05-inquiry-retry-ux434ux430ux432ux445ux430ux440ux434ux430ux43b-ux4afux4afux441ux433ux44dux445ux433ux4afux439-ux431ux430ux439ux445}
+
+\textbf{Requirement · Reliability · should.} Client
+\texttt{Idempotency-Key}-тай ижил inquiry POST-ыг ижил payload-аар 24
+цагийн дотор давтахад систем эхний status/body-г буцааж, inquiry мөрийг
+нэгээс олшруулахгүй; ижил key өөр payload-тай бол \texttt{409} буцаана.
+
+\textbf{Source / owner:} давтагдсан илгээлтийн эрсдэл; Stripe idempotent
+request нь retry-г давхар object үүсгэхгүй болгох, key-г дор хаяж 24 цаг
+хадгалах жишиг өгдөг · Тэнгис. \textbf{Verification T-19:} нэг key/ижил
+payload хоёр POST → нэг row, ижил ID; нэг key/өөр payload →
+\texttt{409}; 24 цагийн хадгалалтыг clock-controlled test-ээр шалгана.
+\textbf{Status:} Planned; одоогийн API энэ header-ийг хэрэгжүүлээгүй.
+
+\subsection{6. Бусад
+шаардлага}\label{ux431ux443ux441ux430ux434-ux448ux430ux430ux440ux434ux43bux430ux433ux430}
+
+Inquiry phone нь зөвхөн хариу өгөх зорилгоор хэрэглэгдэнэ. Secret болон
+service-role key нь server-side орчинд хадгалагдана. Admin status update
+бүр audit log үүсгэнэ. Монгол интерфэйсийн алдааны мессежийг code/API
+нэрээс бусад хэсэгт хэрэглэнэ.
+
+\subsection{7. Verification
+төлөв}\label{verification-ux442ux4e9ux43bux4e9ux432}
+
+Энэ M3 багцаар test procedure болон хэмжигдэх босго бичсэн. Үндсэн
+хэрэгжилтийн хугацаанаас шалтгаалан 80\% trial test ажиллуулаагүй. Иймд
+ямар ч шаардлагыг энэ баримтаар \texttt{verified} гэж зарлаагүй;
+\texttt{implemented} нь зөвхөн кодын зам байгаа гэсэн утгатай.
+
+\subsection{Хавсралт A. ISO/IEEE чанарын
+checklist}\label{ux445ux430ux432ux441ux440ux430ux43bux442-a.-isoieee-ux447ux430ux43dux430ux440ux44bux43d-checklist}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Шалгуур
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+M3 хяналт
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Correct & Эх код, Phase 0, Scope Charter-тай тулгасан; stakeholder
+interview байхгүйг тэмдэглэсэн \\
+Unambiguous & Нэг ID нэг ажиглагдах үндсэн үр дүнтэй; тодорхой role,
+нөхцөл, status ашигласан \\
+Complete & 15 FR + 5 NFR, интерфэйс, dependency, error/boundary болон
+verification орсон \\
+Consistent & Wishlist-ийг checkout гэж нэрлээгүй; delivery disabled,
+scope exclusion-тай зөрчөөгүй \\
+Ranked & Week 3-ын \texttt{must/should/could} priority бүх шаардлагад
+бий \\
+Verifiable & Шаардлага бүр named procedure болон pass/fail босготой \\
+Modifiable & FR/NFR ID тогтвортой, requirement ба traceability тусдаа
+эхтэй \\
+Traceable & \href{traceability-matrix-v1.0.md}{20 мөртэй matrix}-аар
+source→requirement→verification холбоно \\
+\end{longtable}
+
+\subsection{Хавсралт B. Шаардлагын
+тоо}\label{ux445ux430ux432ux441ux440ux430ux43bux442-b.-ux448ux430ux430ux440ux434ux43bux430ux433ux44bux43d-ux442ux43eux43e}
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\toprule\noalign{}
+Төрөл & Must & Should & Could & Нийт \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+FR & 14 & 1 & 0 & 15 \\
+NFR & 4 & 1 & 0 & 5 \\
+\textbf{Нийт} & \textbf{18} & \textbf{2} & \textbf{0} & \textbf{20} \\
+\end{longtable}
+
+\newpage
+
+\section{Traceability Matrix --- SRS v1.0
+draft}\label{traceability-matrix-srs-v1.0-draft}
+
+\textbf{Nogoolin · ICSI438 M3 · Тэнгис · 2026-09-22}
+
+Нийт 20 шаардлага, 20 мөр, 8 баганатай. \texttt{Planned} verification нь
+procedure бичигдсэн боловч энэ ажлаар ажиллуулаагүй гэсэн утгатай. Peer
+review болон stakeholder interview хийгдээгүй.
+
+\begingroup\footnotesize\setlength{\tabcolsep}{2pt}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+ID
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Source
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Owner
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verification
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Dependency
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Risk
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Status
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Last-Reviewed
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+FR-01 & FR-INQ-001\ldots003; controller/schema & Тэнгис & T-01 guest
+create & Product, DB & Давхар мөр & Implemented; planned test &
+2026-09-22 \\
+FR-02 & migration 0007; optionalAuth & Тэнгис & T-02 session link & Auth
+& Client owner spoof & Implemented; planned test & 2026-09-22 \\
+FR-03 & form/shared schemas; WF-INQ-01 & Тэнгис & T-03 invalid matrix &
+Zod, UI & Web/API drift & Implemented; planned test & 2026-09-22 \\
+FR-04 & WF-INQ-04; InquirySuccess & Тэнгис & T-04 success UI & Create
+response & Баталгаа ойлгомжгүй & Implemented; planned test &
+2026-09-22 \\
+FR-05 & FR-INQ-007; rate-limit plugin & Тэнгис & T-05 cap+1 & IP
+detection & Spam / shared IP & Implemented; planned test & 2026-09-22 \\
+FR-06 & inquiries mine; P-NG-01 & Тэнгис & T-06 A/B/guest & Auth,
+ownership & Cross-user leak & Implemented; planned test & 2026-09-22 \\
+FR-07 & FR-INQ-004; admin inbox & Тэнгис & T-07 order/RBAC & Admin role
+& Unauthorized inbox & Implemented; planned test & 2026-09-22 \\
+FR-08 & FR-INQ-006; query schema & Тэнгис & T-08 filter matrix & Seed
+variety & Буруу result set & Implemented; planned test & 2026-09-22 \\
+FR-09 & FR-INQ-005; audit repository & Тэнгис & T-09 status/audit &
+Admin, audit & Төлөв audit-гүй & Implemented; planned test &
+2026-09-22 \\
+FR-10 & wishlist page; auth scope & Тэнгис & T-10 redirect/401 & Auth
+middleware & Guest data access & Implemented; planned test &
+2026-09-22 \\
+FR-11 & cart service; SaveButton & Тэнгис & T-11 product states &
+Published product & Draft exposure & Implemented; planned test &
+2026-09-22 \\
+FR-12 & cart repository; unique pair & Тэнгис & T-12 repeated POST & DB
+constraint & Duplicate cards & Implemented; planned test & 2026-09-22 \\
+FR-13 & cart list; WishlistGrid & Тэнгис & T-13 owner, order, empty &
+Product join & Null/stale product & Implemented; planned test &
+2026-09-22 \\
+FR-14 & cart remove; wishlist store & Тэнгис & T-14 repeated DELETE &
+Ownership & Бусдын мөр устах & Implemented; planned test & 2026-09-22 \\
+FR-15 & WF-INTRO-03/07; static hero & Тэнгис & T-15 fallback paths &
+Intro config & Blank/locked page & Partial; planned test & 2026-09-22 \\
+NFR-01 & Security §9; P-NG-01 & Тэнгис & I-01/T-16 A/B matrix & JWT,
+RLS, RBAC & Personal data leak & Partial inspection & 2026-09-22 \\
+NFR-02 & NFR-ACC-004; hero-intro & Тэнгис & T-17 reduce ≤1 s & Browser
+media query & Motion barrier & Implemented; planned test & 2026-09-22 \\
+NFR-03 & NFR-MAIN-005/006; CI & Тэнгис & I-02 negative CI & Local DB,
+Docker & False-green deploy & Gap; planned W9 & 2026-09-22 \\
+NFR-04 & NFR-PERF-002; Akamai & Тэнгис & A-01/T-18 9/10 ≤2 s & Seed, 4G
+profile & Slow catalog & Defined; not executed & 2026-09-22 \\
+NFR-05 & Stripe idempotency; retry risk & Тэнгис & T-19 24 h retry & Key
+store/clock & Duplicate inquiry & Planned; not implemented &
+2026-09-22 \\
+\end{longtable}
+
+\subsection{W1 persona
+холбоо}\label{w1-persona-ux445ux43eux43bux431ux43eux43e}
+
+W1 P1-ийн session оношлох хэрэгцээг P-NG-01-ээр дамжуулан FR-02, FR-06,
+FR-10, NFR-01-т холбоно. W1 P3-ийн local/pipeline ялгааг NFR-03-т
+холбоно. Энэ нь шинэ төсөлд хийсэн тайлбарласан mapping бөгөөд W1-д IDOR
+эсвэл CI gate байсан гэж өөрчлөөгүй.
+
+\subsection{Change record}\label{change-record}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Version
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Өөрчлөлт
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Review
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+M2 v0.2 & 2 FR + 3 NFR-ийн seed, 5 мөр & Self-check \\
+M3 v1.0 draft & 15 FR + 5 NFR, 20 мөр, Week 3 priority & Source/code
+check \\
+Peer-reviewed v1.0 & Үүсгээгүй & Бодит peer comment байхгүй \\
+\end{longtable}
+
+\newpage
+
+\section{Use--Verify--Cite: AI candidate ба эхээр шалгасан
+засвар}\label{useverifycite-ai-candidate-ux431ux430-ux44dux445ux44dux44dux440-ux448ux430ux43bux433ux430ux441ux430ux43d-ux437ux430ux441ux432ux430ux440}
+
+\textbf{Nogoolin · ICSI438 M3 · Тэнгис · 2026-09-22}
+
+Энэ хүснэгтийн AI candidate нь requirement drafting-ийн эхний санал.
+Засварыг Scope Charter, Phase 0, одоогийн код болон хэмжигдэх шалгууртай
+тулгаж хийсэн. AI output-ыг дангаар нь specification гэж үзээгүй.
+
+\begingroup\footnotesize\setlength{\tabcolsep}{2pt}\sloppy
+
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1875}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1875}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1875}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1875}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedleft
+№
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+AI candidate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Илэрсэн зөрүү
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Эхээр шалгасан засвар
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Cite
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & ``The system should let users easily send product inquiries.'' &
+\texttt{should}, ``easily'' хоёр нь хэмжигдэхгүй; guest/customer, input,
+output, status байхгүй. & \textbf{FR-01:} valid нэр, утас, зурваст яг
+нэг inquiry үүсгэж \texttt{201}, ID, \texttt{status=new}, guest-д
+\texttt{customer\_id=null} буцаана. & inquiry controller, inquiry
+schema, FR-INQ-001\ldots003 \\
+2 & ``The wishlist may be available to both guests and registered users
+and should remember products.'' & Одоогийн auth boundary-тай зөрсөн;
+wishlist-ийг checkout-той андуурах эрсдэлтэй; duplicate boundary
+байхгүй. & \textbf{FR-10--14:} guest redirect/401; зөвхөн customer-ийн
+жагсаалт; published product; unique user-product pair; idempotent
+remove. & \texttt{wishlist/page.tsx}, \texttt{cart.controller.ts},
+\texttt{cart.repository.ts}, migration 0007 \\
+3 & ``The app shall always display an impressive 3D hero and load
+quickly.'' & Asset байхгүй нөхцөл, WebGL, reduced motion-ийг орхисон;
+``impressive'', ``quickly'' шалгах боломжгүй; хоёр чанарыг нэг өгүүлбэрт
+хольсон. & \textbf{FR-15:} missing asset/WebGL үед static hero +
+\texttt{/products}; \textbf{NFR-02:} reduced motion үед CTA ≤1 s;
+\textbf{NFR-04:} 10 run-ийн 9-д каталог ≤2.0 s. & WF-INTRO-03/06/07,
+\texttt{hero-intro.tsx}, \texttt{static-hero.tsx}, Akamai report \\
+\end{longtable}
+
+\endgroup
+
+\subsection{Use--Verify--Cite
+протокол}\label{useverifycite-ux43fux440ux43eux442ux43eux43aux43eux43b}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Use:} AI-г эхний candidate болон эрсдэлийн асуулт гаргахад
+  ашиглав.
+\item
+  \textbf{Verify:} Requirement бүрийг repository-ийн schema, controller,
+  service, UI болон Phase 0 эхтэй тулгав.
+\item
+  \textbf{Cite:} Final шаардлагын Source болон traceability мөрд
+  шалгасан файл, баримт, гаднын эхийг бичив.
+\end{enumerate}
+
+\subsection{Дүгнэлт}\label{ux434ux4afux433ux43dux44dux43bux442}
+
+AI candidate нь хурдан эхлэл өгсөн боловч гурван тохиолдолд хэмжигдэх
+босго, системийн хил, одоогийн auth/asset нөхцөлийг алдсан. Source-оор
+шалгасны дараа өгүүлбэрүүд pass/fail нөхцөлтэй болсон. Энэ хүснэгт нь AI
+өөрийгөө зөв гэж баталсан нотолгоо биш; хүлээлгэн өгөхийн өмнөх эцсийн
+утгын хяналтыг Тэнгис хийнэ.
+
+\newpage
+
+\section{UE-3 --- Corg.ly requirement diff ба
+reflection}\label{ue-3-corg.ly-requirement-diff-ux431ux430-reflection}
+
+\textbf{ICSI438 Seminar 3 · Тэнгис · 2026-09-22}
+
+\subsection{1. ``Most important information first'' хэлбэрийн 5
+FR}\label{most-important-information-first-ux445ux44dux43bux431ux44dux440ux438ux439ux43d-5-fr}
+
+Эдгээр нь Bhatti-ийн Corg.ly Pet Translation API кейс дээр хийсэн
+дасгал. Тоон хязгааруудыг дасгалын testable contract болгохын тулд ил
+тод тогтоосон; Corg.ly-ийн бодит production contract гэж үзэхгүй.
+
+\subsubsection{C-FR-01 --- Audio upload}\label{c-fr-01-audio-upload}
+
+\textbf{Corg.ly valid dog-bark audio-г нэг upload ID-тай хүлээн авна.}
+Баталгаажсан client \texttt{POST\ /audio} руу MP3 эсвэл WAV, 20 MB
+хүртэл файл илгээхэд API \texttt{202}, \texttt{uploadId},
+\texttt{status=queued} буцаана; формат эсвэл хэмжээ зөрвөл
+\texttt{400/413} буцаана.
+
+\subsubsection{C-FR-02 --- Authentication}\label{c-fr-02-authentication}
+
+\textbf{Corg.ly зөв API key-тэй хүсэлтийг л translation queue-д
+оруулна.} \texttt{Authorization:\ Bearer} header байхгүй эсвэл хүчингүй
+бол API \texttt{401} буцааж, upload/job үүсгэхгүй.
+
+\subsubsection{C-FR-03 --- Translation
+result}\label{c-fr-03-translation-result}
+
+\textbf{Corg.ly дууссан job-д англи орчуулга болон confidence утга
+буцаана.} Client \texttt{GET\ /translations/\{jobId\}} дуудахад
+completed job нь \texttt{translation}, 0--1 хооронд \texttt{confidence},
+\texttt{completedAt} бүхий \texttt{200} хариу өгнө.
+
+\subsubsection{C-FR-04 --- Processing
+status}\label{c-fr-04-processing-status}
+
+\textbf{Corg.ly дуусаагүй job-ийн одоогийн төлөвийг алдалгүй мэдээлнэ.}
+Queued/processing job-д API \texttt{200}, зөвхөн
+\texttt{queued\textbar{}processing} status болон retry хийх
+\texttt{pollAfterSeconds} утга буцааж, хоосон translation үүсгэхгүй.
+
+\subsubsection{C-FR-05 --- Safe retry}\label{c-fr-05-safe-retry}
+
+\textbf{Corg.ly ижил idempotency key-тэй давтан upload-аас нэг л job
+хадгална.} Ижил key, ижил файлтай хүсэлтийг 24 цагийн дотор давтахад
+анхны \texttt{uploadId} болон status-г буцаана; ижил key өөр файлтай бол
+\texttt{409} буцаана.
+
+\subsection{2. AI alternative ба
+зөрүү}\label{ai-alternative-ux431ux430-ux437ux4e9ux440ux4afux4af}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Human/source-first requirement
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+AI alternative
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Concise/Usable зөрчил
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Засварын шийдвэр
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+C-FR-01 & ``Users should be able to upload various audio files of a
+reasonable size so that the innovative platform can process their
+beloved pets.'' & Урт, сурталчилгааны үгтэй; format, size, response
+байхгүй. & Үр дүнг эхэнд тавьж MP3/WAV, 20 MB, \texttt{202/uploadId},
+\texttt{400/413}-г нэрлэв. \\
+C-FR-03 & ``The system will try to provide a good translation to the
+user after processing has eventually completed.'' & ``try'', ``good'',
+``eventually'' нь pass/fail тогтоохгүй; output schema байхгүй. &
+\texttt{translation}, 0--1 confidence, \texttt{completedAt},
+\texttt{200} гэсэн ажиглагдах үр дүн болгосон. \\
+C-FR-05 & ``The upload process should be robust and avoid unnecessary
+duplicates whenever possible.'' & ``robust'', ``unnecessary'',
+``whenever possible'' тодорхойгүй; retry identity ба хугацаа байхгүй. &
+Idempotency key, 24 цаг, ижил/өөр payload-ийн хариуг салгав. \\
+\end{longtable}
+
+\subsection{3. Requirement diff}\label{requirement-diff}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Шинж & AI draft & Зассан хувилбар \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Эхлэл & Role/desire эсвэл ерөнхий тайлбар & Хэрэглэгчийн авах үр дүн \\
+Үйл үг & should, try, avoid & accept, return, create, reject \\
+Boundary & reasonable, eventually & 20 MB, 24 h, 0--1, HTTP status \\
+Output & Ерөнхий success & Нэрлэсэн JSON field/status \\
+Fail case & Байхгүй & \texttt{400}, \texttt{401}, \texttt{409},
+\texttt{413} \\
+\end{longtable}
+
+\newpage
+
+\subsection{4. Нэг хуудасны
+reflection}\label{ux43dux44dux433-ux445ux443ux443ux434ux430ux441ux43dux44b-reflection}
+
+Bhatti-ийн ``хамгийн чухал мэдээллийг эхэнд тавих'' зарчмыг requirement
+дээр хэрэглэхэд өгүүлбэрийн эхний хэсэг л уншигчид юу авахыг ойлгуулах
+ёстойг анзаарлаа. Эхний AI хувилбарууд хэрэглэгчийн хүсэл,
+бүтээгдэхүүнийг магтсан үг, ерөнхий чанараар эхэлсэн. Тэдгээрийг уншихад
+яг ямар response гарах, ямар нөхцөлд fail болохыг дараа нь таах хэрэгтэй
+болсон. Харин зассан таван FR ``Corg.ly юу буцаах вэ?'' гэсэн үр дүнгээр
+эхэлж, дараа нь input ба boundary-г өгсөн.
+
+Concise гэдэг нь зөвхөн цөөн үг хэрэглэх биш гэж ойлгов. Хэрэггүй үгийг
+хасахын зэрэгцээ шалгахад зайлшгүй хэрэгтэй format, хэмжээ, ID, status,
+хугацааг үлдээх шаардлагатай. Жишээлбэл ``reasonable size'' нь богино
+боловч usable биш; ``MP3/WAV, 20 MB хүртэл'' нь арай урт ч шалгаж болно.
+Мөн ``good translation'' гэсэн AI өгүүлбэрийг confidence field болон
+response schema-гаар сольсноор subjective үгийг ажиглагдах output
+болгосон.
+
+Энэ дасгалын хамгийн том сургамж нь AI-ийн цэвэрхэн сонсогдох
+өгүүлбэрийг contract гэж шууд хүлээн авч болохгүй явдал байв. AI
+ихэвчлэн нөхцөл, алдааны хязгаар, хугацааг алгасаж, ``should'',
+``robust'', ``quickly'' зэрэг аюулгүй мэт боловч шалгах боломжгүй үг
+хэрэглэсэн. Цаашид candidate бүр дээр input, action, observable output,
+failure boundary, verification гэсэн таван асуулт тавина. Ингэснээр
+requirement нь гоё тайлбар биш, тест бичиж болох гэрээ болно.
+
+\newpage
+
+\section{Seminar 3 reflection}\label{seminar-3-reflection}
+
+\textbf{Тэнгис · 2026-09-22}
+
+\subsection{1. Bhatti-ийн ямар ойлголт миний өмнөх дадлыг өөрчилсөн
+бэ?}\label{bhatti-ux438ux439ux43d-ux44fux43cux430ux440-ux43eux439ux43bux433ux43eux43bux442-ux43cux438ux43dux438ux439-ux4e9ux43cux43dux4e9ux445-ux434ux430ux434ux43bux44bux433-ux4e9ux4e9ux440ux447ux438ux43bux441ux4e9ux43d-ux431ux44d}
+
+Bhatti-ийн бүлэг 3, х. 58 дахь хамгийн чухал мэдээллийг эхэнд байрлуулах
+зарчим хамгийн их нөлөөлөв. Би өмнө нь шаардлагын нөхцөл, тайлбар,
+технологийг эхэлж бичээд үр дүнг төгсгөлд үлдээх хандлагатай байсан. M3
+дээр requirement бүрийг хэрэглэгч эсвэл системийн авах ажиглагдах үр
+дүнгээр эхлүүлж, verification-ийг дараагийн өгүүлбэрт салгав. Ингэснээр
+20 шаардлагыг гарчиг болон эхний мөрөөр нь гүйлгэн унших боломжтой
+болсон.
+
+\subsection{2. Chinchilla-ийн ямар ойлголтыг W16-аас хойш ашиглах
+вэ?}\label{chinchilla-ux438ux439ux43d-ux44fux43cux430ux440-ux43eux439ux43bux433ux43eux43bux442ux44bux433-w16-ux430ux430ux441-ux445ux43eux439ux448-ux430ux448ux438ux433ux43bux430ux445-ux432ux44d}
+
+Chinchilla-ийн бүлэг 9, х. 130--131 дэх AI-аар үүсгэсэн агуулгыг хүн
+эцсийн хяналтдаа байлгах санааг үргэлжлүүлэн хэрэглэнэ. AI candidate
+хурдан боловч Nogoolin-ийн auth хил, asset байхгүй нөхцөл, бодит API
+field-ийг алдсан. Иймээс Use--Verify--Cite дарааллаар AI санал бүрийг
+code/document source-той тулгаж, зөвхөн тайлбарлаж чадах өгүүлбэрээ
+final баримтад үлдээнэ.
+
+\subsection{3. Ном ба бодит ажиллагааны хамгийн том зөрүү хаана байна
+вэ?}\label{ux43dux43eux43c-ux431ux430-ux431ux43eux434ux438ux442-ux430ux436ux438ux43bux43bux430ux433ux430ux430ux43dux44b-ux445ux430ux43cux433ux438ux439ux43d-ux442ux43eux43c-ux437ux4e9ux440ux4afux4af-ux445ux430ux430ux43dux430-ux431ux430ux439ux43dux430-ux432ux44d}
+
+Ном болон handout нь requirement-ийг peer review, stakeholder source-оор
+баталгаажуулахыг санал болгодог. Мөн trial test ажиллуулаад publish хийх
+бүрэн давталтыг зөвлөсөн. Харин Nogoolin-ийн үндсэн хэрэгжилт энэ
+семинарын хугацаанд бүх урсгалыг runtime-аар шалгах хэмжээнд бэлэн биш,
+peer reviewer ч байхгүй. Тиймээс хамгийн том зөрүү нь verification
+evidence дээр байна. Би энэ зөрүүг нуухын оронд test procedure,
+pass/fail boundary-г бүрэн бичиж, execution status-ийг
+\texttt{not\ performed} гэж тэмдэглэв. Энэ нь rubric-ийн тухайн хэсгийг
+бүрэн биелүүлэхгүй ч хуурамч comment эсвэл test result оруулахаас зөв
+гэж үзлээ.
+
+\newpage
+
+\section{Mock UI acceptance
+screenshots}\label{mock-ui-acceptance-screenshots}
+
+Эдгээр нь requirement-ийн acceptance criteria-г тайлбарлах mock зураг;
+ажиллаж буй production UI-ийн test evidence биш.
+
+\subsection{MUI-01 --- Inquiry form}\label{mui-01-inquiry-form}
+
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio]{../assets/01-inquiry-form.png}
+
+\newpage
+
+\subsection{MUI-02 --- Inquiry success}\label{mui-02-inquiry-success}
+
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio]{../assets/02-inquiry-success.png}
+
+\newpage
+
+\subsection{MUI-03 --- Inquiry history}\label{mui-03-inquiry-history}
+
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio]{../assets/03-inquiry-history.png}
+
+\newpage
+
+\subsection{MUI-04 --- Admin inquiry
+inbox}\label{mui-04-admin-inquiry-inbox}
+
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio]{../assets/04-admin-inbox.png}
+
+\newpage
+
+\subsection{MUI-05 --- Wishlist}\label{mui-05-wishlist}
+
+\includegraphics[width=0.92\linewidth,height=\textheight,keepaspectratio]{../assets/05-wishlist.png}
+
+\end{document}
