@@ -1,22 +1,22 @@
 # Seminar 2 — Nogoolin / M2
 
-**Тэнгис · 2026-09-15 · Review-д бэлтгэсэн draft**
+**Тэнгис · 2026-09-21 · v0.2 · Review-д бэлтгэсэн draft**
 
 ## Хүлээлгэн өгөх багц
 
-- [Нэгдсэн PDF](sem2_merged.pdf) — Scope Charter, persona нэмэлт, SRS, 5 шаардлага, traceability, SDD, peer-review draft.
+- [Нэгдсэн PDF](sem2_merged.pdf) — Scope Charter, persona нэмэлт, SRS загвар, portrait traceability, SDD загвар.
 - [Нэг хуудаст Scope Charter](SRS-Scope-Charter.pdf).
 - [SRS-Template](../../requirements/srs-template.md), [шаардлага](../../requirements/requirements.md), [traceability](../../requirements/traceability-matrix.md), [SDD-Template](../../architecture/sdd-template.md) нь төслийн засварлах үндсэн Markdown эх.
-- [Persona/W1 холбоо](wiki/persona-and-pivot.md), [peer-review draft](wiki/peer-review-draft.md) нь хичээлийн нэмэлт.
+- [Persona/W1 холбоо](wiki/persona-and-pivot.md), таван шаардлага болон peer-review эхүүд нь тусдаа нэмэлт; нэгдсэн PDF-д ороогүй.
 - `latex/` — засварлах боломжтой LaTeX экспорт ба build хэрэгсэл; `tmp/` — хөрвүүлэлт, QA, шилжүүлэлтийн manifest.
 
-Бүтээгдэхүүний Markdown эхийг `docs/requirements/`, `docs/architecture/`-д байлгах нь татсан үндсэн prompt-ын шийдвэр. Course-only эх болон PDF-үүдийг хэрэглэгчийн зааврын дагуу `docs/ICSI405/sem2/`-т төвлөрүүлэв.
+Бүтээгдэхүүний Markdown эхийг `docs/requirements/`, `docs/architecture/`-д байлгах нь татсан үндсэн prompt-ын шийдвэр. Course-only эх болон PDF-үүдийг хэрэглэгчийн зааврын дагуу `docs/ICSI438/sem2/`-т төвлөрүүлэв.
 
 ## DoD ба үлдсэн ажил
 
 | Шалгуур | Төлөв / нотолгоо |
 |---|---|
-| IEEE 830 mapping + SRS/SDD загвар | Draft бэлэн; mapping-ийн мөр бүр нэг төлөвтэй |
+| IEEE 830 бүтэц + ISO 29148 шаардлагын чанар, SRS/SDD загвар | v0.2 бэлэн; mapping-ийн мөр бүр нэг төлөвтэй |
 | 5 testable FR/NFR; ID, priority, owner, verification | Draft бэлэн; 2 FR + 3 NFR, бүгд must |
 | 8 баганат traceability; бодит source | 5 мөртэй draft бэлэн |
 | W1 persona pain point холбоо | Шилжилтийг тайлбарласан; багш/reviewer-ийн баталгаажуулалт pending |
@@ -45,20 +45,20 @@
 Nogoolin root-оос одоогийн хоёр `.tex` эхийг хөрвүүлэх:
 
 ```bash
-python3 docs/ICSI405/sem2/latex/build.py
+python3 docs/ICSI438/sem2/latex/build.py
 ```
 
 Зөвхөн нэгдсэн тайланг хөрвүүлэх:
 
 ```bash
-cd docs/ICSI405/sem2/latex
+cd docs/ICSI438/sem2/latex
 latexmk
 ```
 
 **`build.py` одоо анхдагчаар одоогийн `.tex` эхийг хөрвүүлнэ; гар засварыг дарж бичихгүй.** Markdown-оос `.tex`-ийг дахин үүсгэх нь тусдаа, санаатай үйлдэл:
 
 ```bash
-python3 docs/ICSI405/sem2/latex/build.py --from-markdown
+python3 docs/ICSI438/sem2/latex/build.py --from-markdown
 ```
 
 `--from-markdown` нь `.tex` дээрх гар засварыг Markdown хувилбараар солино. `Ctrl+S` auto-build энэ flag болон Markdown үүсгэгчийг огт дуудахгүй. `01_…07_*.tex`, `header.tex` нь өмнөх экспортын хэсгүүд; одоогийн нэгдсэн файл тэдгээрийг `input` хийдэггүй тул нэгдсэн тайлангаа **sem2_merged.tex** дээр засна. Тусдаа Scope Charter-ийг `SRS-Scope-Charter.tex` дээр засахад түүний PDF шинэчлэгдэнэ.

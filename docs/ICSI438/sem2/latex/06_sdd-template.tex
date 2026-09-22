@@ -1,133 +1,86 @@
-\section{SDD Template --- Nogoolin}\label{doc6-sdd-template-nogoolin}
+\section{SDD загвар -
+Nogoolin}\label{doc6-sdd-ux437ux430ux433ux432ux430ux440---nogoolin}
 
-\textbf{ICSI405 / M2 · Тэнгис · 2026-09-15 · v0.1 / draft}
+\textbf{M2 · Тэнгис · 2026-09-21 · v0.2 · Бөглөх загвар}
 
-\subsection{1. Зорилго ба шаардлагын
-холбоо}\label{doc6-ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux448ux430ux430ux440ux434ux43bux430ux433ux44bux43d-ux445ux43eux43bux431ux43eux43e}
+SRS нь системээс шаардах үр дүнг, SDD нь түүнийг хэрэгжүүлэх аргыг
+тодорхойлно. Lecture 02-ын M2 заалтын дагуу энэ бүтэц бэлтгэв. Доорх
+асуултуудыг дараагийн ажлаар бөглөнө; бүрэн архитектурын баримт биш.
 
-Энэ SDD нь \href{../../requirements/requirements.md}{таван шаардлагыг}
-хэрэгжүүлэх бүтэц, технологийг тайлбарлана. M2-д одоогийн кодоос үндсэн
-бүтэц, design decision, gap-ийг тогтоов; arc42-ийн дэлгэрэнгүй W4,
-OpenAPI W5, диаграм W8-д төлөвлөгдсөн. SRS нь хэрэглэгчийн авах үр дүн,
-SDD нь түүнийг хэрэгжүүлэх арга.
+\subsection{1. Зорилго ба хамрах
+хүрээ}\label{doc6-ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux445ux430ux43cux440ux430ux445-ux445ux4afux440ux44dux44d}
+
+\emph{{[}Бөглөх: ямар SRS хувилбар, FR/NFR ID-г энэ дизайн хангах вэ?
+Хэн унших вэ?{]}}
+
+Эхлэл: Nogoolin; \href{../../requirements/scope-charter.md}{Scope
+Charter}, \href{../../requirements/requirements.md}{таван шаардлага}.
+Уншигч нь хөгжүүлэгч Тэнгис, хичээлийн багш.
 
 \subsection{2. Системийн орчин ба
 бүрэлдэхүүн}\label{doc6-ux441ux438ux441ux442ux435ux43cux438ux439ux43d-ux43eux440ux447ux438ux43d-ux431ux430-ux431ux4afux440ux44dux43bux434ux44dux445ux4afux4afux43d}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2600}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5500}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1900}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-Бүрэлдэхүүн
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Шийдвэр / бодит байршил
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Холбогдох шаардлага
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Web + admin & Next.js/TypeScript; \nolinkurl{apps/web}; inquiry,
-wishlist, profile, admin inbox & FR-01/02, NFR-01/02 \\
-API & Fastify/TypeScript; \nolinkurl{backend/api}; \nolinkurl{/api/v1},
-local port 3001 & FR-01/02, NFR-01 \\
-Өгөгдөл/Auth & Supabase local PostgreSQL/Auth/Storage;
-\nolinkurl{supabase/migrations} & FR-01/02, NFR-01 \\
-Shared validation & Zod; \nolinkurl{packages/validation-schemas} &
-FR-01/02 \\
-Hero & Three.js/R3F; \nolinkurl{apps/web/src/components/intro} &
-NFR-02 \\
-Build/CI & pnpm workspaces, Docker,
-\nolinkurl{.github/workflows/api-deploy.yml} & NFR-03 \\
-\end{longtable}
+\emph{{[}Бөглөх: системийн хил, гаднын оролцогч, бүрэлдэхүүн бүрийн
+үүрэг ба холбоо. Context diagram нэм.{]}}
 
-\textbf{Шийдвэрийн эх:}
-\href{../../../agent-context/DECISIONS.md}{ADR-003/004/005/006/007/008/011}.
-Mobile нь React Native + Expo prebuild/dev client; энэ M2 багц mobile
-inquiry/wishlist-ийг дууссан гэж үзэхгүй. Railway/Vercel/cloud Supabase
-нь Phase 6-ын байршуулалтын зорилт, одоо ажиллаж буй production орчин
-гэж батлаагүй.
+Эх материал: \href{https://github.com/Tengis01/Nogoolin}{Nogoolin public
+repository}, web/admin, API, өгөгдөл/auth, shared validation;
+\href{../../phase-0/README.md}{Phase 0 index}. Эдгээрийг бэлэн
+архитектурын нотолгоо гэж үзэхгүй, холбогдох кодтой тулгана.
 
-\subsection{3. Backend-ийн дотоод
-бүтэц}\label{doc6-backend-ux438ux439ux43d-ux434ux43eux442ux43eux43eux434-ux431ux4afux442ux44dux446}
+\subsection{3. Архитектурын
+шийдвэр}\label{doc6-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux44bux43d-ux448ux438ux439ux434ux432ux44dux440}
 
-Controller → Service → Repository. Controller нь request/response ба
-validation hook; service нь бизнесийн дүрэм; repository нь өгөгдөлд
-хүрэх кодыг хариуцна. Auth hook хэрэглэгчийн session-ийг тогтооно.
-Бизнесийн логикийг route руу, DB query-г service рүү холихгүй.
+\emph{{[}Бөглөх: шийдвэр, хувилбарууд, сонгосон шалтгаан, сул тал,
+хангах requirement ID.{]}}
 
-\textbf{FR-01:} inquiry controller → inquiry service → inquiry
-repository → \nolinkurl{inquiries}. \textbf{FR-02:} cart controller →
-cart service → cart repository → \nolinkurl{cart_items}. Shared schema-г
-web/API нэг эхээс хэрэглэнэ; client validation нь server validation-ийг
-орлохгүй.
+Карт: \textbf{Decision ID:} \nolinkurl{[D-XX]}; \textbf{Requirement:}
+\nolinkurl{[FR/NFR-XX]}; \textbf{Сонголт:} \nolinkurl{[…]};
+\textbf{Үндэслэл/эрсдэл:} \nolinkurl{[…]}; \textbf{Source:}
+\nolinkurl{[…]}.
 
-\subsection{4. Өгөгдөл ба эрхийн
-дизайн}\label{doc6-ux4e9ux433ux4e9ux433ux434ux4e9ux43b-ux431ux430-ux44dux440ux445ux438ux439ux43d-ux434ux438ux437ux430ux439ux43d}
+Next.js, Fastify, Supabase зэрэг технологийн сонголтыг
+\href{../../../agent-context/DECISIONS.md}{шийдвэрийн эх}-ээс нягталж
+энд оруулна. ``Хэрэглэгч юу хийж чадах вэ?'' гэсэн шаардлагыг
+технологийн нэрээр орлуулахгүй.
 
-\nolinkurl{inquiries.customer_id} нь нэвтэрсэн илгээгчийг заана, guest-д
-null; шинэ асуулгын төлөв \nolinkurl{new}. \nolinkurl{cart_items} нь
-\nolinkurl{(user_id, product_id)} unique хостой. Нэмэх үйлдлийг давтахад
-нэг бичлэг хэвээр; хасах нь давтаж дуудаж болох үйлдэл. Эх:
-\href{../../../supabase/migrations/20260726120000_inquiry_customer_and_cart.sql}{20260726120000
-migration},
-\href{../../../backend/api/src/repositories/supabase/cart.repository.ts}{cart
-repository},
-\href{../../../backend/api/src/repositories/supabase/inquiry.repository.ts}{inquiry
-repository}.
+\subsection{4. Өгөгдөл ба
+хамгаалалт}\label{doc6-ux4e9ux433ux4e9ux433ux434ux4e9ux43b-ux431ux430-ux445ux430ux43cux433ux430ux430ux43bux430ux43bux442}
 
-\textbf{NFR-01:} customer ID-г request body-оос авахгүй, баталгаажсан
-session-ээс дамжуулна. Cart read/delete нь
-\nolinkurl{.eq('user_id', userId)}, inquiry mine нь
-\nolinkurl{.eq('customer_id', customerId)}; insert session-ийн ID
-онооно. RLS нь DB түвшний хамгаалалт, admin scope нь RBAC шалгалттай.
-Бүх query-д нэг ижил \nolinkurl{user_id} шүүлтүүр шаардахгүй: public
-catalog, guest create, admin ажиллагаа тус тусын эрхийн дүрэмтэй.
+\emph{{[}Бөглөх: entity/холбоо, ownership, эрх, өгөгдлийн lifecycle;
+шаардлагын ID ба ER эх.{]}}
 
-\clearpage
-\subsection{5. Гадаад интерфэйс ба contract
-gap}\label{doc6-ux433ux430ux434ux430ux430ux434-ux438ux43dux442ux435ux440ux444ux44dux439ux441-ux431ux430-contract-gap}
+Эхлэх жишээ: NFR-01-ийн хувийн өгөгдөл тусгаарлах шаардлагад session
+identity, ownership filter, RLS/RBAC ямар үүрэгтэйг тайлбарлана.
 
-\href{../../phase-0/06-api-spec.yaml}{Phase 0 OpenAPI} нь эх contract.
-Код дахь \nolinkurl{/cart} болон \nolinkurl{/inquiries/mine}, customer
-ownership болон admin filter нэмэлтүүдийг W5-д тулган шинэчилнэ. Inquiry
-нь email field-гүй; UI wireframe-ийн хуучин email мөрийг хэрэгжилттэй
-ижил гэж үзэхгүй. \nolinkurl{INQ-YYYY-NNNN} нь UI-ийн derived display
-утга бөгөөд дараалсан захиалгын дугаар биш.
+\subsection{5. Интерфэйс ба ажиллах
+урсгал}\label{doc6-ux438ux43dux442ux435ux440ux444ux44dux439ux441-ux431ux430-ux430ux436ux438ux43bux43bux430ux445-ux443ux440ux441ux433ux430ux43b}
 
-\subsection{6. Hero fallback-ийн
-дизайн}\label{doc6-hero-fallback-ux438ux439ux43d-ux434ux438ux437ux430ux439ux43d}
+\emph{{[}Бөглөх: интерфэйсийн contract холбоос, бүрэлдэхүүн хоорондын
+дараалал, хэвийн/алдааны урсгал.{]}}
 
-GLB URL тохируулаагүй үед \nolinkurl{deity.tsx} геометр орлуулагч
-сонгоно. \nolinkurl{hero-intro.tsx} нь WebGL/reduced-motion-оор static
-home төлөв сонгож, skip/catalog холбоосыг DOM дээр харуулна. Бодит
-asset-ийг \href{../../../agent-context/ASSET_SPECS.md}{ASSET\_SPECS}-ийн
-дагуу дараа солино. Алдаатай GLB URL-ийн error boundary/recovery-г энэ
-draft баталгаажаагүй gap гэж тэмдэглэв. Product 360° viewer нь D-07-оор
-post-MVP; нүүрний intro-оос тусдаа.
+FR-01-ийн асуулга илгээх урсгалаас эхэлнэ. API field/schema-г нэг эхэд
+хадгалж, энд холбоно; \href{../../phase-0/06-api-spec.yaml}{OpenAPI}-г
+кодтой тулгах шаардлагатай.
 
-\subsection{7. Build, deploy ба
-verification}\label{doc6-build-deploy-ux431ux430-verification}
+\subsection{6. Чанарын шаардлагыг хангах
+арга}\label{doc6-ux447ux430ux43dux430ux440ux44bux43d-ux448ux430ux430ux440ux434ux43bux430ux433ux44bux433-ux445ux430ux43dux433ux430ux445-ux430ux440ux433ux430}
 
-API Dockerfile нь multi-stage build, non-root runtime ашигладаг.
-Одоогийн CI dependency нь
-\nolinkurl{lint-and-test → docker-build → deploy}.
-\href{../../../backend/api/tests/inquiry-cart.integration.test.ts}{Тестийн
-эх} DB хүрэхгүй үед skip хийдэг; workflow local Supabase бэлтгэхгүй тул
-NFR-03-ын all-skipped хаалт хангагдаагүй. W9-д CI DB setup,
-skip-fails-CI нөхцөл, гурван сөрөг шалгалтын log төлөвлөсөн. Production
-auto-deploy нь энэ хаалтыг тойрохгүй байх тохиргоог Phase 6-д шалгана.
+\emph{{[}Бөглөх: NFR ID → дизайны арга → шалгах арга → эрсдэл.{]}}
 
-Энэ task-аар код, DB migration, CI-ийн ажиллагааг өөрчлөөгүй; шинэ
-runtime/build тест ажиллуулаагүй.
-\href{../../../agent-context/PROGRESS.md}{PROGRESS}-ийн өмнөх тестийн
-тайлан нь түүхэн тэмдэглэл, одоогийн ажиллуулалтын нотолгоо биш.
+Жишээ чиглэл: NFR-02-д fallback, NFR-03-д тестийн хаалт. Арга төлөвлөсөн
+эсэх, хэрэгжсэн эсэх, шалгасан эсэхийг ялгана.
 
-\subsection{8. Үргэлжлүүлэн бөглөх
-хэсгүүд}\label{doc6-ux4afux440ux433ux44dux43bux436ux43bux4afux4afux43bux44dux43d-ux431ux4e9ux433ux43bux4e9ux445-ux445ux44dux441ux433ux4afux4afux434}
+\subsection{7. Байршуулалт ба
+хамаарал}\label{doc6-ux431ux430ux439ux440ux448ux443ux443ux43bux430ux43bux442-ux431ux430-ux445ux430ux43cux430ux430ux440ux430ux43b}
+
+\emph{{[}Бөглөх: local/test/production орчин, компонент байрших газар,
+build/deploy хамаарал, тохиргооны нэр.{]}} Нууц түлхүүрийн утга
+бичихгүй. \href{../../phase-0/09-deployment.md}{Deployment эх}-ийг
+ашиглана.
+
+\subsection{8. Нээлттэй асуудал ба
+төлөвлөгөө}\label{doc6-ux43dux44dux44dux43bux442ux442ux44dux439-ux430ux441ux443ux443ux434ux430ux43b-ux431ux430-ux442ux4e9ux43bux4e9ux432ux43bux4e9ux433ux4e9ux4e9}
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2600}}
@@ -137,7 +90,7 @@ runtime/build тест ажиллуулаагүй.
 \begin{minipage}[b]{\linewidth}\raggedright
 Хэсэг
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Нөхөх агуулга
+Бөглөх зүйл
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Status
 \end{minipage} \\
@@ -145,17 +98,13 @@ Status
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Architecture views & arc42 context, building blocks, runtime,
-deployment; FR/NFR холбоо & planned (W04) \\
-API contracts & cart/history schema ба бодит error/status нийцүүлэлт &
-planned (W05) \\
-Diagrams & C4, ER, inquiry/auth sequence source ба review & planned
-(W08) \\
-Design verification & CI negative-case evidence, Docker build evidence,
-traceability шинэчлэлт & planned (W09) \\
+§1--4 & Архитектурын тайлбар, шийдвэр, өгөгдөл/эрхийн дизайн & planned
+(W04) \\
+§5 & API contract нийцүүлэлт & planned (W05) \\
+§2/4/5 зураг & Context, ER, sequence диаграмын эх & planned (W08) \\
+§6--7 & CI/build шалгалтын нотолгоо & planned (W09) \\
 \end{longtable}
 
-\textbf{Эх:} \href{../../phase-0/README.md}{Phase 0 index},
-\href{../../../agent-context/DECISIONS.md}{шийдвэрүүд},
-\href{../../requirements/srs-template.md}{SRS},
-\href{../../requirements/traceability-matrix.md}{traceability}.
+Эдгээр нь дараагийн ажлын төлөвлөгөө; M2-д дээрх бөглөх бүтэц бэлэн
+болсон. Шийдвэр өөрчлөгдвөл SRS ID, traceability, холбогдох диаграмыг
+хамтад нь шинэчилнэ.

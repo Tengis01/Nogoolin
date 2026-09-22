@@ -1,82 +1,124 @@
-# SRS Template — Nogoolin
+# SRS загвар - Nogoolin
 
-**ICSI405 / M2 / US-2.1 · Тэнгис · 2026-09-15 · v0.1 / draft**
+**M2 / US-2.1 · Тэнгис · 2026-09-21 · v0.2 · SRS загвар**
 
-## 1. Оршил
+## Загварыг ашиглах нь
 
-**1.1 Purpose.** Энэ SRS нь inquiry, wishlist, хувийн өгөгдлийн тусгаарлалт, hero fallback, API-ийн тестийн хаалтын хүлээгдэх үр дүнг хөгжүүлэгч болон reviewer-т тодорхойлно. M2-д таван шаардлагын draft бэлтгэсэн; бүрэн бүтээгдэхүүний SRS эсвэл ISO нийцлийн гэрчилгээ биш.
+IEEE 830-1998-ийн агуулгын бүтцийг ISO/IEC/IEEE 29148:2018-ийн шаардлага тодорхойлох, шалгах, мөрдөх зарчимтай хослуулна. Доорх *[…]* хэсэгт M3-аас агуулга нэмнэ. M2-д таван жишээ шаардлагыг тусад нь бичсэн; энэ нь бүрэн SRS биш.
 
-**1.2 Scope.** [Scope Charter](scope-charter.md)-ийн included/excluded/postponed шийдвэрийг мөрдөнө. Catalog нь inquiry/wishlist-ийн урьдчилсан нөхцөл; 360° product viewer хасагдсан, Phase 5/6 ажиллагаа хойшлогдсон. Үндсэн төсөл W2-оос Nogoolin болсон.
+**Баримтын бүртгэл:** төсөл Nogoolin; зохиогч Тэнгис; хувилбар v0.2; төлөв draft; хянагч *[нэр]*; баталсан огноо *[огноо]*.
 
-**1.3 Definitions.** Inquiry = бүтээгдэхүүний асуулга; wishlist = дараа үзэхээр хадгалсан жагсаалт; guest = нэвтрээгүй хэрэглэгч; customer = өөрийн мэдээлэлд эрхтэй хэрэглэгч; admin = тусгай удирдах эрхтэй хэрэглэгч. IDOR = эзэмшигчийг шалгалгүй өөр хүний мэдээлэлд хүрэх алдаа; RLS = өгөгдлийн мөрийн түвшний хандалтын дүрэм. FR/NFR болон Test/Inspection нь [шаардлагын баримт](requirements.md)-д тайлбартай.
+### 1. Оршил
 
-**1.4 References.** [W2 handout](../ICSI405/sem2/Software_Project_Documentation_Week_02_Handout.pdf), Lecture 02, слайд 4–8; [Phase 0 index](../phase-0/README.md), [кодын нотолгоо](traceability-matrix.md). [IEEE 830-1998](https://ieeexplore.ieee.org/document/720574) нь SRS-ийн бүтэц/чанарын зөвлөмж; [ISO/IEC/IEEE 29148:2018](https://www.iso.org/standard/72089.html) нь requirements engineering-ийн процесс, мэдээллийн агуулгыг тодорхойлдог. Доорх нь хичээлийн зориулалтаар тохируулсан IEEE 830 бүтэц; чанарын найман шалгуурыг Lecture 02-ын rubric-аар ашиглав.
+**1.1 Зорилго.** *[Энэ SRS ямар шийдвэр, хэрэгжилт, шалгалтад ашиглагдах вэ?]* Гол уншигч нь хөгжүүлэгч Тэнгис; хоёрдогч уншигч нь хичээлийн багш.
 
-**1.5 Overview.** §2 нь бүтээгдэхүүний орчин, хэрэглэгч, таамаг; §3-ын mapping нь бүрэн/дутуу хэсэг; [5 шаардлага](requirements.md), [traceability](traceability-matrix.md), [SDD](../architecture/sdd-template.md) нь дэлгэрэнгүй холбоотой баримтууд.
+**1.2 Хамрах хүрээ.** [Scope Charter](scope-charter.md)-ийг мөрдөнө. Эхлэх хүрээ: inquiry, wishlist, хувийн өгөгдлийн тусгаарлалт, hero fallback, API тестийн хаалт. *[Системийн хил ба амжилтын хэмжүүр.]*
 
-## 2. Ерөнхий тодорхойлолт
+**1.3 Нэр томьёо.** *[Нэр - нэг утгатай тайлбар.]* Эхлэл: inquiry = бүтээгдэхүүний асуулга; wishlist = дараа үзэхээр хадгалсан жагсаалт; FR = үйлдлийн шаардлага; NFR = чанарын шаардлага.
 
-**2.1 Product perspective.** Nogoolin бол шашин, зан үйлийн бүтээгдэхүүний каталог. Web хэрэглэгч бүтээгдэхүүн үзэж, асуулга илгээнэ; customer хадгалсан бүтээгдэхүүн болон асуулгын түүхээ харна; admin inbox-оос асуулгыг боловсруулна. Нэг хэрэглэгчийн хувийн мэдээллийг бусдад үзүүлэхгүй.
+**1.4 Эх сурвалж.** *[Баримтын нэр, хувилбар/огноо, хэсэг, холбоос.]* Эхлэл: [Nogoolin public repository](https://github.com/Tengis01/Nogoolin), W2 handout, Lecture 02, [Phase 0 эхүүд](../phase-0/README.md), IEEE 830, ISO/IEC/IEEE 29148.
 
-**2.2 Product functions.** Энэ draft-ийн үйлдэл FR-01 (асуулга), FR-02 (wishlist); тэдгээрийн чанарын хязгаар NFR-01…03. Бүтээгдэхүүн засварлах, search, auth-ийн бүх нарийвчилсан FR нь Phase 0 эхэд байгаа бөгөөд W3-д сонгон өргөжүүлнэ.
+**1.5 Бүтцийн тайлбар.** §2-т орчин ба хэрэглэгч, §3-т шаардлага; хавсралтуудад mapping, чанарын checklist, traceability байна. Технологийн шийдвэрийг [SDD загварт](../architecture/sdd-template.md) бөглөнө.
 
-**2.3 User characteristics.** [Persona нэмэлт](../ICSI405/sem2/wiki/persona-and-pivot.md): хэрэглэгч энгийн монгол интерфэйс, баталгаа хүснэ; хөгжүүлэгч давтаж шалгах алхам, эрхийн ялгаа, орчны хамаарлыг мэдэх хэрэгтэй. Эдгээр нь баримт/кодын шинжилгээ; хэрэглэгчийн ярилцлага pending.
+### 2. Ерөнхий тодорхойлолт
 
-**2.4 Constraints.** Ганцаараа хөгжүүлэх хүрээ; монгол интерфэйс; delivery идэвхгүй; cloud холболт Phase 6 хүртэл хойшлогдсон. Fastify/Next.js/Supabase/Docker-ийн сонголт нь [SDD](../architecture/sdd-template.md)-д байна.
+**2.1 Бүтээгдэхүүний орчин.** *[Системийн зориулалт, хил, гаднын системтэй харилцах байдал.]* Эхлэл: Nogoolin нь шашин, зан үйлийн бүтээгдэхүүний каталог.
 
-**2.5 Assumptions/dependencies.** Local өгөгдлийн сан, нийтлэгдсэн бүтээгдэхүүн болон test customer/admin бэлэн үед acceptance шалгалт ажиллана. Бодит GLB/.riv asset, cloud account, production log бэлэн гэж үзэхгүй. Тестүүд ажилласан эсэхийг үр дүнгээс тусад нь шалгана.
+**2.2 Гол үйлдлүүд.** *[Хэрэглэгчийн зорилгоор бүлэглэсэн үйлдлийн жагсаалт; FR ID холбоос.]* Эхлэх жишээ: асуулга илгээх FR-01, бүтээгдэхүүн хадгалах FR-02.
 
-**2.6 Apportioning.** W3-д өргөжүүлсэн SRS, W4-д архитектур, W5-д API, W8-д диаграм, W9-д Docs-as-Code/CI evidence бэлтгэх төлөвлөгөөтэй. Эдгээр нь хичээлийн долоо хоног; Phase 0–6 нь бүтээгдэхүүний roadmap тул хооронд нь адилтгахгүй.
+**2.3 Хэрэглэгчийн онцлог.** *[Дүр, зорилго, мэдлэг, хүндрэл, W1 persona-ийн эх.]* Guest, customer, admin-ийг ялгана; [persona нэмэлт](../ICSI438/sem2/wiki/persona-and-pivot.md)-ээс эхэлнэ.
 
-## 3. IEEE 830 section mapping
+**2.4 Хязгаарлалт.** *[Бизнес, орчин, нөөцийн зайлшгүй хязгаар ба үндэслэл.]* Эхлэл: ганцаар хөгжүүлэх, монгол интерфэйс, хүргэлт идэвхгүй.
 
-`complete` = M2 загварт тухайн хэсгийн агуулга/холбоос байна; хэрэгжилт болон stakeholder approval гэсэн үг биш. `planned (Wxx)` = нөхөх долоо хоног. `n-a (justified)` = энэ хүрээнд хамаарахгүй, шалтгаан нь Content-д бий. Мөр бүр яг нэг төлөвтэй.
+**2.5 Таамаг ба хамаарал.** *[Таамаг, эзэн, шалгах хугацаа, буруу бол нөлөө.]* Local DB болон тестийн өгөгдөл бэлэн эсэхийг шалгана; cloud, asset, stakeholder approval-ийг бэлэн гэж таамаглахгүй.
 
-| Section | Content / эх материал | Status |
+**2.6 Дараа хийх хүрээ.** *[Боломж, хойшлуулах шалтгаан, зорилтот үе.]* Scope Charter-ийн postponed жагсаалтыг холбоно. Хичээлийн W3 ба бүтээгдэхүүний Phase 3-ыг адилтгахгүй.
+
+### 3. Тодорхой шаардлагууд
+
+**3.1 Гадаад интерфэйс.** *[Оролт/гаралт, формат, алдаа, харилцах тал.]* 3.1.1 хэрэглэгчийн, 3.1.2 төхөөрөмжийн, 3.1.3 программын, 3.1.4 холбооны интерфэйс гэж салгана. Төхөөрөмжийн интерфэйсийн n-a үндэслэлийг mapping-д тэмдэглэв.
+
+**3.2 Функциональ шаардлага.** *[Доорх шаардлагын картаар FR бүрийг бич.]* M2-ийн [FR-01, FR-02](requirements.md) нь жишээ; үлдсэнийг W3-д нэмнэ.
+
+**3.3 Гүйцэтгэл.** *[Ачаалал, өгөгдлийн хэмжээ, орчин, хугацааны хэмжүүр, pass/fail босго.]* “Хурдан” гэх мэт хэмжүүргүй өгүүлбэр хэрэглэхгүй.
+
+**3.4 Логик өгөгдөл.** *[Хадгалах мэдээлэл, холбоо, unique/ownership дүрэм, хадгалах хугацаа.]* Өгөгдлийн сангийн бүтээгдэхүүн сонгох шийдвэрийг SDD-д бичнэ.
+
+**3.5 Дизайнд тавих зайлшгүй хязгаар.** *[Гаднаас тогтоосон техникийн хязгаар, түүний эх ба үндэслэл.]* Өөрийн сонгосон хэрэгжүүлэлтийн аргыг энд шаардлага болгож хуулж болохгүй.
+
+**3.6 Чанарын шаардлага.** *[Найдвартай ажиллагаа, бэлэн байдал, аюулгүй байдал, засварлах боломж, зөөврийн байдал тус бүрийн NFR.]* M2-ийн NFR-01…03-ыг холбож, дутагдах хэсгийг W3-д нөхнө.
+
+**3.7 Бусад шаардлага.** *[Хувийн мэдээлэл, audit, хэрэглэх бодлогын эх ба шалгуур.]* Мэдээлэл дутуу хэсгийг planned гэж тэмдэглэнэ; тодорхойгүйг n-a гэж үзэхгүй.
+
+## Хавсралт A. IEEE 830 section mapping
+
+**Төлөв:** `complete` = M2-т шаардсан тухайн агуулга бэлэн; бүтээгдэхүүн хэрэгжсэн гэсэн үг биш. `planned (W…)` = агуулгыг нөхөх үе. `n-a (justified)` = хүрээнд хамаарахгүй, нэг өгүүлбэр үндэслэлтэй. Мөр бүр яг нэг төлөвтэй.
+
+| Section | Content / агуулга, эх | Status |
 |---|---|---|
-| 1.1 Purpose | §1.1: хөгжүүлэгч/reviewer-ийн зорилго | complete |
-| 1.2 Scope | Scope Charter; 01 vision, 10 roadmap | complete |
-| 1.3 Definitions | §1.3: inquiry, wishlist, IDOR, RLS | complete |
-| 1.4 References | §1.4: handout, lecture, Phase 0, код | complete |
-| 1.5 Overview | §1.5: холбоотой баримтын бүтэц | complete |
-| 2.1 Product perspective | §2.1; 01 vision, 03 use cases | complete |
-| 2.2 Product functions | §2.2; FR-01/02-ийн хүрээ | complete |
-| 2.3 User characteristics | Persona нэмэлт; 01 vision, W1 persona | complete |
-| 2.4 Constraints | §2.4; Scope Charter, SDD | complete |
-| 2.5 Assumptions/dependencies | §2.5; 10 roadmap, asset/DB нөхцөл | complete |
-| 2.6 Apportioning | §2.6; Phase 5/6 postponed | complete |
-| 3.1.1 User interfaces | §3.1 доор; 07 wireframes; persona | complete |
-| 3.1.2 Hardware interfaces | Тусгай төхөөрөмж/сенсортой холболт энэ web/API хүрээнд байхгүй. | n-a (justified) |
-| 3.1.3 Software interfaces | §3.1 доор; 06 API, shared schema; wishlist OpenAPI gap | planned (W05) |
-| 3.1.4 Communication interfaces | §3.1: JSON, auth, status; 06 API, 08 security | complete |
-| 3.2 Functional requirements | FR-01/02 draft; M3-д сонгосон хүрээнд 15 FR болгон өргөжүүлэх | planned (W03) |
-| 3.3 Performance requirements | 02 requirements-ийн NFR-PER; reference орчин/ачааллыг хэмжих нөхцөлтэй болгох | planned (W03) |
-| 3.4 Logical database requirements | 04 ER эх + inquiry/customer/cart migration; өгөгдөл/unique/ownership дүрмийг нийцүүлэх | planned (W03) |
-| 3.5 Design constraints | §2.4 ба SDD; delivery-off, local-first, solo хүрээ | complete |
-| 3.6.1 Reliability | NFR-02 draft; recovery, asset 404 шалгуурыг нөхөх | planned (W03) |
-| 3.6.2 Availability | 02 requirements; outage хэмжих нөхцөл тодорхойлох | planned (W03) |
-| 3.6.3 Security | NFR-01 draft; 08 security; 5 NFR багцад өргөжүүлэх | planned (W03) |
-| 3.6.4 Maintainability | NFR-03 gap; 09 deployment; CI-ийн бодит run evidence | planned (W09) |
-| 3.6.5 Portability | 02 requirements; browser/mobile дэмжлэгийн шалгах матриц | planned (W03) |
-| 3.7 Other requirements | Audit/хувийн мэдээллийн хадгалах ба устгах бодлого тодруулах; 08 security | planned (W03) |
-| Appendix A: Traceability | 8 багана, 5 ID, source ба persona холбоо | complete |
-| Appendix B: Assumptions/quality | §2.5 ба §4; эх сурвалжийн хязгаарлалт | complete |
+| 1.1 Purpose | §1.1-ийн зорилго, уншигчийн хэрэгцээг эцэслэх | planned (W03) |
+| 1.2 Scope | Нэг хуудас Scope Charter | complete |
+| 1.3 Definitions | Нэр томьёоны нэгдсэн тайлбар | planned (W03) |
+| 1.4 References | W2/лекц/стандарт/Phase 0 эхийн холбоос | complete |
+| 1.5 Overview | §1.5-ийн бүтцийн тайлбар | complete |
+| 2.1 Product perspective | Системийн хил, гаднын орчин; Vision | planned (W03) |
+| 2.2 Product functions | FR-01/02-оос үйлдлийн хүрээг өргөжүүлэх | planned (W03) |
+| 2.3 User characteristics | Persona нэмэлт, ярилцлагаар нягтлах | planned (W03) |
+| 2.4 Constraints | Scope Charter, нөөц ба бизнесийн хязгаар | planned (W03) |
+| 2.5 Assumptions/dependencies | Таамаг бүрийн эзэн, шалгах нөхцөл | planned (W03) |
+| 2.6 Apportioning | Scope Charter-ийн postponed жагсаалт | complete |
+| 3.1.1 User interfaces | Хэрэглэгчийн урсгал, оролт, баталгаа/алдаа | planned (W03) |
+| 3.1.2 Hardware interfaces | Энэ web/API хүрээнд тусгай төхөөрөмж, сенсортой холболт байхгүй. | n-a (justified) |
+| 3.1.3 Software interfaces | Гаднын систем ба интерфэйсийн шаардлага; нарийн API contract W5 | planned (W03) |
+| 3.1.4 Communications | Протокол, өгөгдлийн формат, хамгаалалтын шаардлага | planned (W03) |
+| 3.2 Functional requirements | Хоёр FR жишээ; W3-д 15 FR болгох | planned (W03) |
+| 3.3 Performance | Ачаалал, орчин, хэмжүүр, босго | planned (W03) |
+| 3.4 Logical database | Өгөгдөл ба бүрэн бүтэн байдлын дүрэм | planned (W03) |
+| 3.5 Design constraints | Зайлшгүй хязгаар ба эх сурвалж | planned (W03) |
+| 3.6.1 Reliability | Алдаа/сэргэлтийн шалгуур; NFR-02 эхлэл | planned (W03) |
+| 3.6.2 Availability | Хэмжих хугацаа, бэлэн байдлын зорилт | planned (W03) |
+| 3.6.3 Security | NFR-01; эрх ба хувийн өгөгдөл | planned (W03) |
+| 3.6.4 Maintainability | NFR-03; шаардлагыг W3, CI нотолгоог W9 | planned (W03) |
+| 3.6.5 Portability | Дэмжих орчин ба шалгах нөхцөл | planned (W03) |
+| 3.7 Other requirements | Хувийн мэдээлэл, audit бодлого | planned (W03) |
+| Appendix B | Шаардлагын карт ба найман чанарын шалгуур | complete |
+| Appendix C | 5 мөртэй, 8 баганат traceability; W1 холбоо | complete |
 
-### 3.1 External interface-ийн M2 эхлэл
+## Хавсралт B. Шаардлагын карт ба чанарын шалгалт
 
-**User:** бүтээгдэхүүний detail-ээс тусдаа inquiry page рүү орж нэр/утас, сонголтот зурвас илгээнэ; амжилтын баталгаа ба 400/404/429 алдааг ялгана. Wishlist-д хадгалах/хасах, profile-д зөвхөн өөрийн асуулга харах; guest хамгаалагдсан хуудсанд нэвтрэх урсгалтай. Hero нь skip/static fallback-тай. Persona-ийн P-NG-01 нь эрхийн алдаа, P-NG-02 нь asset-гүй төлөвийг тайлбарлах хэрэгцээг өгнө.
+Энэ картыг §3-ын шаардлага бүрд хуулж бөглөнө. ISO/IEC/IEEE 29148-ийн шаардлагын шинж, атрибут, удирдлагын зарчмыг хэрэгжүүлэхэд ашиглана; доорх бүх талбар стандартын үгчилсэн хуулбар биш.
 
-**Software/communication:** REST JSON интерфэйс: `/api/v1/inquiries`, `/api/v1/cart`, `/api/v1/inquiries/mine`; protected API нь Bearer session token-оор хэрэглэгчийг тогтооно. 201/204 амжилт, 400 validation, 401 нэвтрэлт, 403 эрх, 404 олдоогүй, 429 rate limit. Production transport нь HTTPS гэсэн security эхийн хязгаартай; localhost нь хөгжүүлэлтийн орчин. Field/schema-ийн бүрэн contract W5; 06 OpenAPI-д cart/history нэмэлт хараахан нийцээгүй.
-
-## 4. Чанарын review ба W3 ажлын хүрээ
-
-| Lecture 02-ын шалгуур | Энэ draft-д хэрэглэсэн арга |
+| Талбар | Загвар |
 |---|---|
-| Correct | Source нь бодит файл; interview/approval pending гэж тэмдэглэсэн |
-| Unambiguous | Input, action, output, pass/fail-ийг тус бүр нэрлэсэн |
-| Complete | Таван шаардлагын нөхцөл/хязгаар бий; бүтээгдэхүүний бүрэн SRS W3 |
-| Consistent | Email-гүй inquiry, wishlist ≠ checkout; технологи SDD-д |
-| Ranked | Шаардлага бүр must; optional боломж энэ багцад ороогүй |
-| Verifiable | T-01…03, I-01…02; нотолгооны төлөв тусдаа |
-| Modifiable | Тогтвортой ID, салгасан Markdown, нэг traceability эх |
-| Traceable | 8 багана; Phase 0/код/тайлбарласан W1 холбоо |
+| ID / төрөл / нэр | *[FR-XX эсвэл NFR-XX] / [FR эсвэл NFR] / [нэг үр дүнгийн нэр]* |
+| Шаардлагын өгүүлбэр | *[Нөхцөл] үед систем [ажиглагдах нэг үр дүн]-г [must/shall/may] хангана.* |
+| Priority | *[must / shall / may]*; хичээлийн тэмдэглэгээг мөрдөж `should` хэрэглэхгүй |
+| Source / үндэслэл | *[Баримт/хэсэг/холбоос, persona pain point, яагаад хэрэгтэй]* |
+| Owner / source interview | *[Нэр] / [ярилцсан хүн, огноо, тэмдэглэлийн холбоос; хийгдээгүй бол хийгдээгүй]* |
+| Acceptance criteria | *Given [урьдчилсан нөхцөл], When [үйлдэл], Then [ажиглах үр дүн ба pass/fail босго].* |
+| Verification | *[Test / Inspection / Analysis] + [шалгалтын ID, алхам, орчин, нотолгоо]* |
+| Dependency / Risk | *[Хамаарах ID/нөхцөл] / [эрсдэл]* |
+| Status / Last-Reviewed | *[Draft / reviewed / approved …] / [YYYY-MM-DD]* |
+
+### W2-ын найман чанарын шалгуур
+
+| Шалгуур | Хянах асуулт |
+|---|---|
+| Correct | Хэрэгцээ нь эх сурвалжаар нотлогдож, stakeholder-аар нягтлагдсан уу? |
+| Unambiguous | Нэр томьёо, нөхцөл, үр дүнг нэг утгаар ойлгох уу? |
+| Complete | Тухайн шаардлагын урьдчилсан нөхцөл, хэвийн/алдааны үр дүн хангалттай юу? |
+| Consistent | Бусад ID, Scope Charter-тай зөрчилдөх үү? |
+| Ranked | Priority ил тод уу; өөрчлөгдөх магадлалыг шаардлагатай бол тэмдэглэсэн үү? |
+| Verifiable | Test/Inspection/Analysis-аар pass/fail-ийг тогтоож болох уу? |
+| Modifiable | Нэг ID нэг үүрэгтэй, давхар хуулбаргүй, засварлахад ойлгомжтой юу? |
+| Traceable | Эх хэрэгцээ → шаардлага → шалгалтын холбоо байгаа юу? |
+
+Энэ найман нэрийг Lecture 02-ын rubric-аар хэрэглэв. IEEE 830 §4.3-т мөн эдгээр SRS чанарыг нэрлэдэг; ISO 29148-ийн бүх шинжийг зөвхөн энэ наймаар хязгаарлаж ойлгохгүй.
+
+## Хавсралт C. Traceability ба өөрчлөлт
+
+[Traceability Matrix](traceability-matrix.md)-ийн баганыг `ID | Source | Owner | Verification | Dependency | Risk | Status | Last-Reviewed` гэсэн дарааллаар хадгална. Шаардлага бүр нэг мөртэй, дор хаяж гурван багана бөглөсөн байна. M2-ийн таван жишээнд найман баганыг бөглөсөн. Нэгээс доошгүй мөр W1 persona pain point-той холбоотой байна; төсөл сольсон холбоог тайлбарлана.
+
+Өөрчлөхдөө ID-г хадгалж, source, шалгуур, matrix, review огноог хамтад нь шинэчилнэ. Тестийн нотолгоо байхгүй бол verified гэж тэмдэглэхгүй. Бүрэн SRS (15 FR + 5 NFR) нь W3/M3-ын ажил.
+
+**Эх:** [W2 handout](../ICSI438/sem2/Software_Project_Documentation_Week_02_Handout.pdf), [Lecture 02, слайд 4–8](<../ICSI438/lecture/Lecture_02 Why Documentation Documentation Standards.pdf>); [IEEE 830-1998](https://www.math.uaa.alaska.edu/~afkjm/cs401/IEEE830.pdf), §4.3, §5; [ISO/IEC/IEEE 29148:2018](https://standards.ieee.org/ieee/29148/6937/). Хичээлийн унших чиглэл: Bhatti бүлэг 2, х. 23–44 (хүрээ), бүлэг 4, х. 67–81 (шаардлагын эх ба уншигч); Chinchilla бүлэг 5, х. 53–55 (хүлээлт, таамаг, одоогийн дуусах нөхцөл).
