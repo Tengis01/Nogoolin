@@ -1,0 +1,10 @@
+{
+  "name": "nogoolin-sem4-diagram-tools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pinned Mermaid renderer for the ICSI438 Seminar 4 architecture diagrams.",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "11.17.0"
+  }
+}
+

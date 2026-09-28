@@ -1,0 +1,19 @@
+sequenceDiagram
+ actor U as User
+ participant W as Web client
+ participant A as Fastify API
+ participant D as PostgreSQL
+ autonumber
+ U->>W: Inquiry form
+ W->>A: POST /api/v1/inquiries
+ A->>A: Hooks: optionalAuth, Zod, rate limit
+ alt Invalid / rate limit
+ A-->>W: 400 / 429
+ else Accepted
+ A->>A: Controller → Inquiry Service
+ A->>D: Repository INSERT + session customerId
+ D-->>A: Inquiry row
+ A-->>W: 201 + ID/status
+ W-->>U: Success confirmation
+ end
+ Note over A,D: NFR-05 idempotency planned

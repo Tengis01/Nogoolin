@@ -1,0 +1,43 @@
+flowchart TB
+ client["Web/Admin + Mobile · External Containers
+Next.js / Expo
+JSON client"]
+ subgraph api["Fastify API"]
+  hook["Plugins / Hooks · Component
+Fastify
+Auth, RBAC, rate limit, validation"]
+  ctrl["Controllers · Component
+TypeScript
+HTTP mapping"]
+  svc["Services · Component
+TypeScript
+Business orchestration"]
+  repo["Repositories · Component
+TypeScript
+Data access"]
+  audit["Audit Repository · Component
+TypeScript
+Append-only events"]
+ end
+ schema["Shared Schemas · Library
+Zod / TypeScript
+Validation contract"]
+ auth["Supabase Auth · External System
+JWT identity"]
+ db[("PostgreSQL · External System
+RLS protected data")]
+ client -->|JSON / HTTPS| hook
+ hook -->|Validate| schema
+ hook -->|getUser| auth
+ hook -->|Accepted request| ctrl
+ ctrl -->|Call| svc
+ svc -->|Query / command| repo
+ svc -->|Admin event| audit
+ repo -->|CRUD| db
+ audit -->|INSERT| db
+ class hook,ctrl,svc,repo,audit internal
+ class client,schema,auth,db external
+
+classDef person fill:#19354A,color:#fff,stroke:#19354A
+classDef internal fill:#E8F2F3,color:#19354A,stroke:#167D8D
+classDef external fill:#F1F1F1,color:#333,stroke:#777

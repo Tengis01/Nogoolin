@@ -1,0 +1,43 @@
+{
+  "theme": "base",
+  "deterministicIds": true,
+  "deterministicIDSeed": "nogoolin-sem4",
+  "themeVariables": {
+    "fontFamily": "Liberation Sans, Arial, sans-serif",
+    "primaryColor": "#E8F2F3",
+    "primaryTextColor": "#19354A",
+    "primaryBorderColor": "#167D8D",
+    "lineColor": "#19354A",
+    "secondaryColor": "#F5F2E6",
+    "tertiaryColor": "#FFFFFF"
+  },
+  "c4": {
+    "diagramMarginX": 30,
+    "diagramMarginY": 20,
+    "c4ShapeMargin": 35,
+    "c4ShapePadding": 16,
+    "width": 230,
+    "height": 72,
+    "boxMargin": 10,
+    "c4ShapeInRow": 4,
+    "c4BoundaryInRow": 1
+  },
+  "flowchart": {
+    "htmlLabels": false,
+    "curve": "basis",
+    "nodeSpacing": 25,
+    "rankSpacing": 45
+  },
+  "sequence": {
+    "useMaxWidth": false,
+    "wrap": false,
+    "width": 150,
+    "height": 40,
+    "actorMargin": 30,
+    "diagramMarginX": 10,
+    "messageMargin": 20,
+    "noteMargin": 10,
+    "mirrorActors": false
+  },
+  "htmlLabels": false
+}

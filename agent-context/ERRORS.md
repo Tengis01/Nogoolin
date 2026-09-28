@@ -17,6 +17,22 @@
 
 ---
 
+### 2026-09-28 — Course screenshot instruction conflicted with approved QA policy (fixed)
+- **Where:** `docs/ICSI438/AGENTS.md`; related Obsidian course index.
+- **Symptom:** The old course instructions required screenshots for every changed PDF, despite the owner's newer request to avoid routine screenshot work; the vault index still treated the ICSI405/ICSI438 label as unresolved.
+- **Root cause:** Earlier local instructions/index text had not been reconciled with later course decisions.
+- **Fix:** Linked the course instructions to the Obsidian design/workflow rules, replaced blanket screenshot checks with targeted QA, and corrected the active course path in the vault index.
+- **Prevention:** Preserve one course-scoped rules source and align local entry-point instructions whenever a standing owner preference changes.
+
+
+### 2026-09-28 — Seminar 4 PDF diagram and handout gaps (fixed)
+- **Where:** `docs/ICSI438/sem4/` and `docs/architecture/`.
+- **Symptom:** The pre-handout draft omitted binding UE4/Interface/role-mapping deliverables; native C4 layout crossed arrows, Inkscape dropped SVG word spaces, and LaTeX moved figures away from their sections. Chromium also failed inside the restricted execution sandbox.
+- **Root cause:** Earlier inferred scope; native C4 layout limitations; SVG whitespace/HTML-label conversion; default floating figures; sandbox browser socket restrictions.
+- **Fix:** Reconciled with the supplied handout; used Mermaid typed flowcharts/sequence diagrams for C4 views, disabled HTML labels, preserved XML text spaces, embedded vector PDFs with fixed figure placement and a height cap, and ran approved renderer escalation with a pinned isolated toolchain. Default compilation reconstructs ignored vector-PDF intermediates from committed SVGs.
+- **Prevention:** Check actual handout acceptance items and source/ID links; retain the lockfile and targeted diagram QA when source/layout changes. Keep architecture mapping separate from runtime test evidence.
+
+
 ### 2026-07-26 — profile save confirmation never appeared (stale-prop dirty check) (fixed)
 - **Where:** `apps/web/src/components/public/profile-form.tsx` — found by the
   Phase 4 UI E2E, not by reading the code.

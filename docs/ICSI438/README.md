@@ -5,6 +5,7 @@
 - [Seminar 1](sem1/README.md) — өмнөх ажил.
 - [Seminar 2 / M2](sem2/README.md) — SRS/SDD, шаардлага, traceability, scope, peer review draft.
 - [Seminar 3 / M3](sem3/README.md) — SRS v1.0 draft, 15 FR + 5 NFR, 20 мөртэй traceability, Human-vs-AI, UE-3, mock UI.
+- [Seminar 4 / M4](sem4/README.md) — arc42 §1/3/5, Mermaid C4, 3 MADR, 20-row architecture traceability, UE-4 Before/After.
 - `lecture/`, `book/` — хэрэглэгчийн өмнө байсан хичээлийн эх материал.
 - [AGENTS.md](AGENTS.md) — хичээлийн файл дээр ажиллах дүрэм.
 

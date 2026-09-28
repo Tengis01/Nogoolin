@@ -1,0 +1,19 @@
+sequenceDiagram
+ actor U as Admin
+ participant W as Admin web
+ participant A as Fastify API
+ participant D as PostgreSQL
+ autonumber
+ U->>W: Select status
+ W->>A: PATCH /admin/inquiries/{id}/status
+ alt Missing / non-admin session
+ A-->>W: 401 / 403
+ else Admin
+ A->>A: Auth/RBAC, Zod → Controller → Service
+ A->>D: Inquiry Repository: UPDATE
+ D-->>A: Updated row (unknown → 404)
+ A->>D: Audit Repository: INSERT event
+ A-->>W: 200 + new status
+ W-->>U: Updated inbox
+ end
+ Note over A,D: Update/audit тусдаа, atomic биш
