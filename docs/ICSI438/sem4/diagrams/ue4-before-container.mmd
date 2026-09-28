@@ -1,0 +1,22 @@
+flowchart TB
+ g(["Зочин · Person"])
+ c(["Customer · Person"])
+ a(["Админ · Person"])
+ subgraph n["Nogoolin Boundary"]
+  magic["Magic Container · Container
+Various technologies
+Бүх зүйлийг хийнэ"]
+ end
+ sb["Supabase · External System
+Auth/Data/Storage"]
+ g -->|Uses| magic
+ c -->|Uses| magic
+ a -->|Uses| magic
+ magic -->|Does stuff| sb
+ class g,c,a person
+ class magic internal
+ class sb external
+
+classDef person fill:#19354A,color:#fff,stroke:#19354A
+classDef internal fill:#E8F2F3,color:#19354A,stroke:#167D8D
+classDef external fill:#F1F1F1,color:#333,stroke:#777

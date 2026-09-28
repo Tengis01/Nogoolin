@@ -1,0 +1,27 @@
+flowchart TB
+  g(["Зочин · Person
+P3: inquiry алдаа оношлох"])
+  c(["Customer · Person
+P1: session/own data"])
+  a(["Админ · Person
+P1/P3: role/audit"])
+  n["Nogoolin · Software System
+Каталог, inquiry, wishlist, admin"]
+  sb["Supabase · External System
+Auth, PostgreSQL, Storage"]
+  oa["OAuth Providers · External System
+Google/Facebook identity"]
+  g -->|Каталог / inquiry| n
+  c -->|Session / wishlist / history| n
+  a -->|Inbox / status| n
+  n -->|Auth, query, media request| sb
+  sb -->|Result / data| n
+  sb -->|OAuth request| oa
+  oa -->|Authorization response| sb
+  class g,c,a person
+  class n internal
+  class sb,oa external
+
+classDef person fill:#19354A,color:#fff,stroke:#19354A
+classDef internal fill:#E8F2F3,color:#19354A,stroke:#167D8D
+classDef external fill:#F1F1F1,color:#333,stroke:#777

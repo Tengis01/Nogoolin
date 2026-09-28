@@ -1,0 +1,19 @@
+sequenceDiagram
+ actor U as Customer
+ participant W as Web client
+ participant A as Fastify API
+ participant D as PostgreSQL
+ autonumber
+ U->>W: Save / list / remove
+ W->>A: GET/POST/DELETE /cart + JWT
+ alt Guest
+ A-->>W: 401
+ else Authenticated
+ A->>A: Hooks → Controller → Cart Service
+ A->>A: Published product, session user ID
+ A->>D: Repository: user-scoped operation
+ D-->>A: Own rows / result
+ A-->>W: 200 / 201 / 204
+ W-->>U: Wishlist UI
+ end
+ Note over A,D: RLS, unique pair, idempotent remove

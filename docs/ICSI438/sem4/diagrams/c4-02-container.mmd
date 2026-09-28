@@ -1,0 +1,47 @@
+flowchart TB
+  g(["Зочин · Person
+P3: inquiry урсгал"])
+  c(["Customer · Person
+P1: session/ownership"])
+  a(["Админ · Person
+P1/P3: role/audit"])
+  subgraph n["Nogoolin"]
+    w["Web + Admin · Container
+Next.js / TypeScript
+Catalog, inquiry, wishlist, inbox"]
+    m["Mobile · Container
+Expo / React Native
+Catalog/auth; inquiry pending"]
+    api["REST API · Container
+Fastify / TypeScript
+Auth boundary, business rules"]
+  end
+  subgraph sb["Supabase Platform"]
+    auth["Auth · External Service
+JWT / OAuth
+Session ба identity"]
+    db[("PostgreSQL · External Data Store
+SQL / RLS
+Inquiry, cart, product, audit")]
+    st["Storage · External Service
+Object storage
+Product media"]
+  end
+  g -->|HTTPS catalog/inquiry| w
+  c -->|HTTPS web| w
+  c -->|Mobile UI| m
+  a -->|HTTPS /admin| w
+  w -->|JSON / HTTPS| api
+  m -->|JSON / HTTPS| api
+  w -->|Session / HTTPS| auth
+  m -->|Session / HTTPS| auth
+  api -->|getUser / HTTPS| auth
+  api -->|CRUD / Supabase client| db
+  api -->|Media / HTTPS| st
+  class g,c,a person
+  class w,m,api internal
+  class auth,db,st external
+
+classDef person fill:#19354A,color:#fff,stroke:#19354A
+classDef internal fill:#E8F2F3,color:#19354A,stroke:#167D8D
+classDef external fill:#F1F1F1,color:#333,stroke:#777

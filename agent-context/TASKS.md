@@ -451,3 +451,23 @@
 ### 2026-09-22 — Seminar 3 third-level heading correction
 - **Done:** Increased third-level headings such as `3.1 Хэрэглэгчийн интерфэйс` from 10.5 pt to 11.5/13.5 pt bold sans-serif. The hierarchy is now H1 `Large`, H2 `large`, H3 11.5 pt, and body 10.5 pt, avoiding the smaller-looking sans-serif effect reported by the owner.
 - **Verification:** Regenerated and rebuilt the 17-page A4 PDF; no overfull boxes or table-width warnings were reported. No routine page screenshots were generated.
+
+### 2026-09-22 — ICSI438 print rules saved to Obsidian
+- **Done:** Consolidated the approved Seminar 3 revisions into `00-Vault/DESIGN-RULES.md` as the reusable ICSI438-only profile: 3/2/2/2 cm margins, 10.5/12.5 pt body, H1/H2/H3 hierarchy including the 11.5 pt H3 correction, 1.25 cm alignment, header/footer behavior, dense-table exceptions, NUM cover composition, direct exercise structure, and targeted PDF QA policy.
+- **Reason:** Liberation Sans headings at the same nominal size as the serif body looked smaller. The saved rules explicitly prevent H2/H3 from reverting to body size and prevent global table shrinking when only one dense table needs adjustment.
+
+
+### 2026-09-28 — Seminar 4 handout reconciliation and completed local package
+- **Reassessed:** Read the newly supplied two-page Week 04 Lab Assignment. Its binding scope is populated arc42 §1/§3/§5, C4 Context/Container, Tech Stack/Persistence/Interface MADRs with W1 links, ≥80% functional mapping, UE4 Magic Container Before/After plus a one-page refactoring ADR, and book-based reflection. Lecture 04 is still absent.
+- **Done:** Updated the canonical arc42 and 20-ID architecture traceability; added the Architecture workspace/ADR index, Interface MADR, W1 role/pain mapping, UE4 rework and reflection. Retained §6 dynamic views and the lean 12-section structure. All 15 FR have responsible building blocks (100%; orphan FR 0). NFR-03/05 gaps remain planned, not verified.
+- **Artifacts:** Completed seven Mermaid sources/SVGs, pinned local CLI/lockfile, portable render/build scripts, editable Markdown/TeX and `docs/ICSI438/sem4/sem4_merged.pdf` (19 portrait A4 pages). Preserved the approved NUM cover, 3/2/2/2 cm margins, body/heading/table hierarchy and exercise format without a TOC. Git ignores compiler/QA caches; a clean checkout can compile committed SVGs without Mermaid/Chromium, then use Ctrl+S.
+- **Verification:** Checked the 12 sections, exact 20 baseline IDs and SRS anchors, 7 source/render pairs, three MADR mandatory fields/persona links, local links, public URL annotations and the one-page UE4 ADR (physical PDF page 18). XeLaTeX completed without overfull boxes, missing glyphs, undefined controls or LaTeX errors. Targeted diagram/layout QA resolved labels, vector text and figure placement; no further routine screenshots were needed. A separate clean copy containing only committed LaTeX/assets rebuilt all seven vector intermediates and the PDF successfully; `git diff --check` passed.
+- **Limitations:** W1 contains one developer persona, so three business actors explicitly map to that persona's pain points rather than claiming three original personas. No peer feedback, runtime tests, remote publication/submission, commit or push is claimed. The ≥80% M4 criterion is architecture mapping, distinct from the skipped M3 trial tests.
+- **Next:** Owner reviews the local package; if the instructor requires three distinct original W1 personas, clarify that interpretation. Use the Seminar 4 README build commands for further edits.
+
+
+### 2026-09-28 — Seminar 4 prevention rules saved to Obsidian
+- **Done:** Added course-scoped Mermaid/SVG/vector-PDF/layout and portable-build lessons to `00-Vault/DESIGN-RULES.md`; added handout reconciliation, requirement coverage versus test execution, persona/source fidelity, MADR indexing and book/page/evidence checks to `00-Vault/WORKFLOW.md`. Updated the existing course index to link these rules and recognize the active ICSI438 path.
+- **Instruction alignment:** Linked the vault rules from `docs/ICSI438/AGENTS.md` and replaced the stale requirement to screenshot every changed PDF page with targeted QA only for new layouts, suspected defects or explicit requests.
+- **Verification:** Checked all Markdown file paths and heading anchors in the four edited knowledge files, reviewed the course instruction diff and preserved existing content. No PDF rerender, app tests or package installation were needed for this documentation-only change.
+- **Next:** Apply the course workflow before the next seminar and reuse the approved print/diagram build profile; update only newly verified lessons.
