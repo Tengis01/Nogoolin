@@ -1,0 +1,14 @@
+{
+  "folders": [
+    { "name": "Seminar 5", "path": "." },
+    { "name": "Nogoolin", "path": "../../.." }
+  ],
+  "settings": {
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.latex.outDir": "%DIR%/..",
+    "latex-workshop.view.pdf.viewer": "tab"
+  },
+  "extensions": {
+    "recommendations": ["james-yu.latex-workshop"]
+  }
+}

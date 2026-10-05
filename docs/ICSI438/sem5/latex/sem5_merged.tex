@@ -1,0 +1,435 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  mongolian,
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off,,provide=*]{babel}
+\else
+\usepackage[bidi=default,shorthands=off,,provide=*]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage[a4paper,left=3cm,right=2cm,top=2cm,bottom=2cm,includefoot,headheight=15pt]{geometry}
+\usepackage{ragged2e,indentfirst,xurl}
+\usepackage{longtable,booktabs,array,calc,graphicx}
+\usepackage{xcolor,fancyhdr,titlesec,enumitem,float}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsubsection}{\fontsize{11.5}{13.5}\selectfont\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{1.25cm}{0pt}{8pt}
+\titlespacing*{\subsection}{1.25cm}{8pt}{4pt}
+\titlespacing*{\subsubsection}{1.25cm}{6pt}{3pt}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\setlist{nosep,leftmargin=1.5em,topsep=3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 05}
+\fancyhead[R]{\small\sffamily Nogoolin / OpenAPI}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\AtBeginDocument{\fontsize{10.5}{12.5}\selectfont\justifying\setlength{\parindent}{1.25cm}}
+
+
+\AtBeginDocument{\renewcommand{\figurename}{Зураг}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdflang={mn},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\input{sem5-title.tex}
+
+\section{Seminar 5 --- OpenAPI 3.0 ба code
+sample}\label{seminar-5-openapi-3.0-ux431ux430-code-sample}
+
+\subsection{Зорилго ба
+хүрээ}\label{ux437ux43eux440ux438ux43bux433ux43e-ux431ux430-ux445ux4afux440ux44dux44d}
+
+Nogoolin-ийн одоо кодод бүртгэлтэй таван үйлдлийг
+\href{openapi/openapi.yaml}{OpenAPI 3.0.3 YAML}-д тусгав. Сонголт нь
+Sem3-ын inquiry SRS, Sem4-ийн inquiry runtime view-тэй шууд холбогдоно.
+Энэ нь \texttt{docs/phase-0/06-api-spec.yaml}-ийн бүх API-г орлуулах
+шинэ үндсэн spec биш; W5 лабораторийн нарийвчилсан slice юм. Серверийн
+URL нь \texttt{localhost} тул Swagger-ийн ``Try it out'' зөвхөн local
+API, local Supabase, тохирох auth token бэлэн үед ажиллана.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Үйлдэл
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Sem3 шаардлага
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Sem4 холбоо
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Оролт
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Амжилт
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{GET\ /products} & Каталогийн контекст & C4-02 API & query &
+\texttt{200\ ProductList} \\
+\texttt{POST\ /inquiries} & FR-01/02/03/05 & C4-D01 & JSON body; JWT
+сонголтот & \texttt{201\ InquiryOne} \\
+\texttt{GET\ /inquiries/mine} & FR-06, NFR-01 & C4-D01 & JWT &
+\texttt{200\ InquiryArray} \\
+\texttt{GET\ /admin/inquiries} & FR-07/08 & C4-D03 & query + admin JWT &
+\texttt{200\ InquiryList} \\
+\texttt{PATCH\ status} & FR-09 & C4-D03 & path + JSON body + admin JWT &
+\texttt{200\ InquiryOne} \\
+\end{longtable}
+
+\texttt{PATCH\ status} нь \texttt{PATCH\ /admin/inquiries/\{id\}/status}
+гэсэн бүтэн замтай. GET үйлдэлд \texttt{requestBody} бичээгүй. Оролтгүй
+\texttt{GET\ /inquiries/mine} нь JWT-ээр хэрэглэгчээ танина; бусад
+GET-ийн filter-ийг query parameter-аар өгнө. POST/PATCH-ийн жишээ болон
+response schema YAML-д байна. \texttt{400/401/403/404/429/500} нь тухайн
+үйлдэлд хэрэгтэй үед schema-тай. YAML дахь жишээ ID, огноо нь
+\textbf{схемийг тайлбарлах өгөгдөл}; серверээс авсан JSON биш.
+\texttt{product} холбоос response-д null эсвэл объект байх боломжтой;
+кодын join-оор нягтална.
+
+Нэг drift илэрсэн: Sem3 FR-03 inquiry утсыг 8 цифр гэж шаарддаг, харин
+одоогийн \texttt{phoneSchema} нь \texttt{+}, зай, \texttt{-} тэмдэг
+оролцсон 8--15 тэмдэгт зөвшөөрдөг. W5 YAML нь \textbf{одоогийн API
+кодын} дүрмийг тусгасан; SRS ба кодын аль нэгийг багш/төслийн шийдвэрээр
+дараа нь нэг мөр болгох хэрэгтэй.
+
+\subsection{UE-5 --- Corg.ly Python
+samples}\label{ue-5-corg.ly-python-samples}
+
+Bhatti Ch.5 х.86--94-ийн контекст, товч байдал, нэршил, шууд ашиглалт,
+бодит хариунд нийцэх гэсэн таван хэмжүүрээр гурван тусдаа Python script
+бэлдэв. Эдгээр нь handout-ийн сургалтын \textbf{Corg.ly scenario};
+Corg.ly-ийн ажилладаг сервер, батлагдсан request field contract, token
+бидэнд байхгүй. Тиймээс Python синтаксийг шалгасан ч endpoint-уудыг live
+ажиллуулсан, статус эсвэл returned JSON баталсан гэж үзэхгүй. Script нь
+\texttt{CORGLY\_BASE\_URL}, \texttt{CORGLY\_TOKEN} environment variable
+шаардаж, зөвхөн хэрэглэгч гараар ажиллуулбал HTTP хүсэлт явуулна.
+
+\subsubsection{Зураг
+илгээх}\label{ux437ux443ux440ux430ux433-ux438ux43bux433ux44dux44dux445}
+
+\texttt{upload\_photo.py} нь бүртгэлтэй pet ID болон локал JPEG файлыг
+multipart-аар илгээнэ. CLI-д \texttt{photo} ба \texttt{-\/-pet-id}
+дамжуулна; \texttt{photo} field нэр нь handout-д тодорхойгүй тул
+серверийн жинхэнэ contract-той тулгах шаардлагатай.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{"""UE{-}5 Corg.ly exercise: upload one pet image. Contract is unverified."""}
+
+\ImportTok{import}\NormalTok{ argparse}
+\ImportTok{import}\NormalTok{ os}
+\ImportTok{from}\NormalTok{ pathlib }\ImportTok{import}\NormalTok{ Path}
+
+\ImportTok{import}\NormalTok{ requests}
+
+
+\KeywordTok{def}\NormalTok{ main() }\OperatorTok{{-}\textgreater{}} \VariableTok{None}\NormalTok{:}
+\NormalTok{    parser }\OperatorTok{=}\NormalTok{ argparse.ArgumentParser(description}\OperatorTok{=}\StringTok{"Upload a pet photo to a configured lab server"}\NormalTok{)}
+\NormalTok{    parser.add\_argument(}\StringTok{"photo"}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\NormalTok{Path, }\BuiltInTok{help}\OperatorTok{=}\StringTok{"Existing pet image path"}\NormalTok{)}
+\NormalTok{    parser.add\_argument(}\StringTok{"{-}{-}pet{-}id"}\NormalTok{, required}\OperatorTok{=}\VariableTok{True}\NormalTok{, }\BuiltInTok{help}\OperatorTok{=}\StringTok{"Registered pet ID"}\NormalTok{)}
+\NormalTok{    args }\OperatorTok{=}\NormalTok{ parser.parse\_args()}
+\NormalTok{    base\_url }\OperatorTok{=}\NormalTok{ os.environ[}\StringTok{"CORGLY\_BASE\_URL"}\NormalTok{].rstrip(}\StringTok{"/"}\NormalTok{)}
+\NormalTok{    token }\OperatorTok{=}\NormalTok{ os.environ[}\StringTok{"CORGLY\_TOKEN"}\NormalTok{]}
+    \ControlFlowTok{with}\NormalTok{ args.photo.}\BuiltInTok{open}\NormalTok{(}\StringTok{"rb"}\NormalTok{) }\ImportTok{as}\NormalTok{ image:}
+\NormalTok{        response }\OperatorTok{=}\NormalTok{ requests.post(}
+            \SpecialStringTok{f"}\SpecialCharTok{\{}\NormalTok{base\_url}\SpecialCharTok{\}}\SpecialStringTok{/v1/pets/upload{-}photo"}\NormalTok{,}
+\NormalTok{            headers}\OperatorTok{=}\NormalTok{\{}\StringTok{"Authorization"}\NormalTok{: }\SpecialStringTok{f"Bearer }\SpecialCharTok{\{}\NormalTok{token}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{\},}
+\NormalTok{            data}\OperatorTok{=}\NormalTok{\{}\StringTok{"pet\_id"}\NormalTok{: args.pet\_id\},}
+\NormalTok{            files}\OperatorTok{=}\NormalTok{\{}\StringTok{"photo"}\NormalTok{: (args.photo.name, image, }\StringTok{"image/jpeg"}\NormalTok{)\},}
+\NormalTok{            timeout}\OperatorTok{=}\DecValTok{20}\NormalTok{,}
+\NormalTok{        )}
+    \BuiltInTok{print}\NormalTok{(response.status\_code, response.text)}
+\NormalTok{    response.raise\_for\_status()}
+
+
+\ControlFlowTok{if} \VariableTok{\_\_name\_\_} \OperatorTok{==} \StringTok{"\_\_main\_\_"}\NormalTok{:}
+\NormalTok{    main()}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Bark
+орчуулах}\label{bark-ux43eux440ux447ux443ux443ux43bux430ux445}
+
+\texttt{translate\_bark.py} нь pet ID болон локал WAV бичлэгийг
+multipart-аар илгээнэ. \texttt{audio} field нэр болон MIME нь
+лабораторийн боломжит таамаг тул Corg.ly API-ийн баталгаа биш.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{"""UE{-}5 Corg.ly exercise: request bark translation. Contract is unverified."""}
+
+\ImportTok{import}\NormalTok{ argparse}
+\ImportTok{import}\NormalTok{ os}
+\ImportTok{from}\NormalTok{ pathlib }\ImportTok{import}\NormalTok{ Path}
+
+\ImportTok{import}\NormalTok{ requests}
+
+
+\KeywordTok{def}\NormalTok{ main() }\OperatorTok{{-}\textgreater{}} \VariableTok{None}\NormalTok{:}
+\NormalTok{    parser }\OperatorTok{=}\NormalTok{ argparse.ArgumentParser(description}\OperatorTok{=}\StringTok{"Send a bark recording to a configured lab server"}\NormalTok{)}
+\NormalTok{    parser.add\_argument(}\StringTok{"audio"}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\NormalTok{Path, }\BuiltInTok{help}\OperatorTok{=}\StringTok{"Existing WAV recording path"}\NormalTok{)}
+\NormalTok{    parser.add\_argument(}\StringTok{"{-}{-}pet{-}id"}\NormalTok{, required}\OperatorTok{=}\VariableTok{True}\NormalTok{, }\BuiltInTok{help}\OperatorTok{=}\StringTok{"Registered pet ID"}\NormalTok{)}
+\NormalTok{    args }\OperatorTok{=}\NormalTok{ parser.parse\_args()}
+\NormalTok{    base\_url }\OperatorTok{=}\NormalTok{ os.environ[}\StringTok{"CORGLY\_BASE\_URL"}\NormalTok{].rstrip(}\StringTok{"/"}\NormalTok{)}
+\NormalTok{    token }\OperatorTok{=}\NormalTok{ os.environ[}\StringTok{"CORGLY\_TOKEN"}\NormalTok{]}
+    \ControlFlowTok{with}\NormalTok{ args.audio.}\BuiltInTok{open}\NormalTok{(}\StringTok{"rb"}\NormalTok{) }\ImportTok{as}\NormalTok{ recording:}
+\NormalTok{        response }\OperatorTok{=}\NormalTok{ requests.post(}
+            \SpecialStringTok{f"}\SpecialCharTok{\{}\NormalTok{base\_url}\SpecialCharTok{\}}\SpecialStringTok{/v1/audio/translate{-}bark"}\NormalTok{,}
+\NormalTok{            headers}\OperatorTok{=}\NormalTok{\{}\StringTok{"Authorization"}\NormalTok{: }\SpecialStringTok{f"Bearer }\SpecialCharTok{\{}\NormalTok{token}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{\},}
+\NormalTok{            data}\OperatorTok{=}\NormalTok{\{}\StringTok{"pet\_id"}\NormalTok{: args.pet\_id\},}
+\NormalTok{            files}\OperatorTok{=}\NormalTok{\{}\StringTok{"audio"}\NormalTok{: (args.audio.name, recording, }\StringTok{"audio/wav"}\NormalTok{)\},}
+\NormalTok{            timeout}\OperatorTok{=}\DecValTok{30}\NormalTok{,}
+\NormalTok{        )}
+    \BuiltInTok{print}\NormalTok{(response.status\_code, response.text)}
+\NormalTok{    response.raise\_for\_status()}
+
+
+\ControlFlowTok{if} \VariableTok{\_\_name\_\_} \OperatorTok{==} \StringTok{"\_\_main\_\_"}\NormalTok{:}
+\NormalTok{    main()}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Webhook
+бүртгүүлэх}\label{webhook-ux431ux4afux440ux442ux433ux4afux4afux43bux44dux445}
+
+\texttt{subscribe\_webhook.py} нь pet ID ба өөрийн эзэмшлийн HTTPS
+callback URL-ийг JSON-аар илгээнэ. Callback endpoint-ийг олон нийтэд
+ажиллуулж туршаагүй; \texttt{url} field-ийн нэрийг мөн бодит
+contract-той шалгах хэрэгтэй.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{"""UE{-}5 Corg.ly exercise: subscribe to pet events. Contract is unverified."""}
+
+\ImportTok{import}\NormalTok{ argparse}
+\ImportTok{import}\NormalTok{ os}
+\ImportTok{from}\NormalTok{ urllib.parse }\ImportTok{import}\NormalTok{ urlparse}
+
+\ImportTok{import}\NormalTok{ requests}
+
+
+\KeywordTok{def}\NormalTok{ main() }\OperatorTok{{-}\textgreater{}} \VariableTok{None}\NormalTok{:}
+\NormalTok{    parser }\OperatorTok{=}\NormalTok{ argparse.ArgumentParser(description}\OperatorTok{=}\StringTok{"Register an HTTPS webhook with a lab server"}\NormalTok{)}
+\NormalTok{    parser.add\_argument(}\StringTok{"webhook\_url"}\NormalTok{, }\BuiltInTok{help}\OperatorTok{=}\StringTok{"HTTPS callback owned by the caller"}\NormalTok{)}
+\NormalTok{    parser.add\_argument(}\StringTok{"{-}{-}pet{-}id"}\NormalTok{, required}\OperatorTok{=}\VariableTok{True}\NormalTok{, }\BuiltInTok{help}\OperatorTok{=}\StringTok{"Registered pet ID"}\NormalTok{)}
+\NormalTok{    args }\OperatorTok{=}\NormalTok{ parser.parse\_args()}
+    \ControlFlowTok{if}\NormalTok{ urlparse(args.webhook\_url).scheme }\OperatorTok{!=} \StringTok{"https"}\NormalTok{:}
+\NormalTok{        parser.error(}\StringTok{"webhook\_url must use HTTPS"}\NormalTok{)}
+\NormalTok{    base\_url }\OperatorTok{=}\NormalTok{ os.environ[}\StringTok{"CORGLY\_BASE\_URL"}\NormalTok{].rstrip(}\StringTok{"/"}\NormalTok{)}
+\NormalTok{    token }\OperatorTok{=}\NormalTok{ os.environ[}\StringTok{"CORGLY\_TOKEN"}\NormalTok{]}
+\NormalTok{    response }\OperatorTok{=}\NormalTok{ requests.post(}
+        \SpecialStringTok{f"}\SpecialCharTok{\{}\NormalTok{base\_url}\SpecialCharTok{\}}\SpecialStringTok{/v1/webhooks/subscribe"}\NormalTok{,}
+\NormalTok{        headers}\OperatorTok{=}\NormalTok{\{}\StringTok{"Authorization"}\NormalTok{: }\SpecialStringTok{f"Bearer }\SpecialCharTok{\{}\NormalTok{token}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{\},}
+\NormalTok{        json}\OperatorTok{=}\NormalTok{\{}\StringTok{"pet\_id"}\NormalTok{: args.pet\_id, }\StringTok{"url"}\NormalTok{: args.webhook\_url\},}
+\NormalTok{        timeout}\OperatorTok{=}\DecValTok{20}\NormalTok{,}
+\NormalTok{    )}
+    \BuiltInTok{print}\NormalTok{(response.status\_code, response.text)}
+\NormalTok{    response.raise\_for\_status()}
+
+
+\ControlFlowTok{if} \VariableTok{\_\_name\_\_} \OperatorTok{==} \StringTok{"\_\_main\_\_"}\NormalTok{:}
+\NormalTok{    main()}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Code sample audit}\label{code-sample-audit}
+
+Оноо 1--5; хамгийн бага нотолгоотой Trustworthy хэмжүүрийг өндөр
+оноогоор нөхөөгүй. Bhatti х.89--94-ийн request/response-ийн яг тохирол,
+товч, ойлгомжтой, солих утга тодорхой байх шалгуурыг хэрэглэв.
+
+\begingroup\footnotesize\setlength{\tabcolsep}{2pt}
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\toprule\noalign{}
+Sample & Explained & Concise & Clear & Usable & Trustworthy & Дундаж \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Photo upload & 5 & 4 & 5 & 3 & 1 & 3.6 \\
+Bark translation & 5 & 4 & 5 & 3 & 1 & 3.6 \\
+Webhook subscribe & 5 & 4 & 5 & 3 & 1 & 3.6 \\
+Nogoolin OpenAPI request/response examples & 4 & 5 & 4 & 3 & 2 & 3.6 \\
+\textbf{Нийт} & & & & & & \textbf{3.6/5} \\
+\end{longtable}
+
+\endgroup
+
+Өндөр үнэлгээний үндэслэл: зорилго, оролт, тайлбартай нэр, богино API
+call бий; \texttt{foo/bar/test} орлуулагч байхгүй. Бага үнэлгээний
+үндэслэл: Corg.ly request field болон response shape бодитоор
+батлагдаагүй, Nogoolin example JSON нь код/схемээр нягталсан загвар
+боловч live capture биш. Энэ нь DoD-ийн 4/5 босгыг \textbf{одоогоор
+хангахгүй}. Бодит sandbox ирвэл field contract-ийг тулгаж, response-ийг
+capture хийж, дахин үнэлнэ.
+
+\subsection{Swagger UI ба Redoc --- шийдвэрийн тайлан (100
+үг)}\label{swagger-ui-ux431ux430-redoc-ux448ux438ux439ux434ux432ux44dux440ux438ux439ux43d-ux442ux430ux439ux43bux430ux43d-100-ux4afux433}
+
+Swagger UI нь endpoint бүрийн параметр, хамгаалалт, body-г бөглөж хүсэлт
+илгээх боломжтой тул хөгжүүлэгчийн локал туршилтад тохирно. Гэхдээ ``Try
+it out'' нь токен, ажиллаж буй API, өгөгдлийн сан шаардана; нийтэд
+нээлттэй орчинд санамсаргүй бичилт үүсгэж болно. Redoc нь уншихад
+цэгцтэй navigation, schema холбоос, гурван баганат үзэмжтэй тул
+хэрэглэгчид API гэрээг тайлбарлахад илүү тохиромжтой. Хайлт ба байршлын
+хурдыг endpoint дээр хэмжээгүй. Одоохондоо Redoc-ийг унших үндсэн
+хувилбар, Swagger UI-г зөвхөн локал sandbox гэж сонгов. Хоёр
+renderer-ийг ижил YAML-аас үүсгэвэл зөрүү багасна. Public URL,
+хэрэглэгчийн үнэлгээ байхгүй тул энэ шийдвэрийг түр гэж үзэж,
+deployment-ийн дараа дахин шалгана. Энэ нь лабораторийн хүрээний санал
+юм.
+
+\subsection{Reflection}\label{reflection}
+
+Bhatti Ch.5 х.89--94-ийн хамгийн чухал санаа нь response жишээ код шигээ
+шалгагдах ёстой гэдэг байлаа. Өмнөх spec-д жишээ өгөгдөл байхад түүнийг
+бодит үр дүн гэж андуурах амархан. Би энэ удаа жишээг зориуд
+``illustrative'' гэж тэмдэглэж, өөрийн хийж чадаагүй live шалгалтыг ил
+үлдээв. Chinchilla Ch.6 х.79-ийн docs-as-code ба render-ийн санаагаар
+YAML-г локал lint, standalone HTML, PDF тайлантай нэг эхээс холбоно.
+Миний төслийн хамгийн том зөрүү нь хуучин Phase-0 spec-ийн зарим
+response жишээ бодит controller-ийн return envelope-той бүрэн нийцэхгүй
+байгаа явдал; W5-ийн таван route-ыг кодоос дахин тулгасан ч бүх API-ийн
+drift audit хийгээгүй.
+
+\subsection{Нотолгоо ба дутуу
+шалгуур}\label{ux43dux43eux442ux43eux43bux433ux43eux43e-ux431ux430-ux434ux443ux442ux443ux443-ux448ux430ux43bux433ux443ux443ux440}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{redocly\ lint}: OpenAPI valid, алдаа 0; localhost болон лиценз
+  metadata-ийн warning-ийг README-д тэмдэглэв.
+\item
+  \texttt{python3\ -m\ py\_compile}: гурван script синтаксийн хувьд зөв.
+\item
+  Redoc standalone HTML болон Swagger UI local HTML-г бэлдэв. Static
+  asset замыг шалгасан ч browser rendering, ``Try it out'' runtime
+  туршилт хийгдээгүй.
+\item
+  Public хоёр URL, workspace upload, Git commit/push, CI executable
+  bonus, Corg.ly live response: хийгдээгүй.
+\end{itemize}
+
+Эх:
+\href{Sprint\%2005\%20Lab\%20Instructions\%20-\%20OpenAPI\%203.0\%20\%26\%20Bhatti\%20Code\%20Samples.pdf}{W5
+тусгай handout}; Bhatti et al., \emph{Docs for Developers}, Ch.5
+х.86--94; Chinchilla, \emph{Technical Writing for Software Developers},
+Ch.6 х.79.
+
+\end{document}
