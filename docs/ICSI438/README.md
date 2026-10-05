@@ -1,5 +1,7 @@
 # ICSI438 — Software Project Documentation
 
+[Course home](COURSE-HOME.md) · [Roadmap](COURSE-ROADMAP.md) · [Weekly progress](WEEKLY-PROGRESS.md)
+
 2026-09-15-нд хуучин `/home/tengis/Documents/Tengis/ICSI405`-ийн хичээлийн файлуудыг одоогийн `Nogoolin/docs/ICSI438/` хавтас руу шилжүүлсэн. Seminar 1 нь rag_chatbot дээр өмнө хүлээлгэн өгсөн ажил; Seminar 2-оос Nogoolin үндсэн кейс болсон.
 
 - [Seminar 1](sem1/README.md) — өмнөх ажил.

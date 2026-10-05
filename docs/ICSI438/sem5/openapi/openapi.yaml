@@ -1,0 +1,364 @@
+openapi: 3.0.3
+info:
+  title: Nogoolin inquiry and catalog API — Seminar 5 slice
+  version: 0.1.0
+  description: >-
+    Five implemented operations selected from the Nogoolin API for ICSI438.
+    Examples illustrate the contract and are not captured server responses.
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Local development only; start the API and local database separately.
+tags:
+  - name: Catalog
+    description: Published product discovery.
+  - name: Inquiries
+    description: Customer inquiry submission and history.
+  - name: Admin inquiries
+    description: Admin inbox and status control.
+paths:
+  /products:
+    get:
+      tags: [Catalog]
+      operationId: listProducts
+      summary: List published products
+      description: Phase-0 FR-PUB-001/014; Sem3 FR-15 catalog destination and Sem4 C4-02 API container.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: search
+          in: query
+          description: Cyrillic, English, or Latin transliteration; request example.
+          schema: {type: string, maxLength: 200}
+          example: Ногоон Дарь Эх
+        - name: category_id
+          in: query
+          schema: {type: string, format: uuid}
+          example: 8f14e45f-ceea-4c4a-b0b1-000000000001
+        - name: category_slug
+          in: query
+          schema: {type: string, maxLength: 120, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'}
+          example: shuteen
+        - name: stock_status
+          in: query
+          schema: {type: string, enum: [in_stock, out_of_stock, pre_order]}
+          example: in_stock
+        - name: is_featured
+          in: query
+          schema: {type: boolean}
+          example: true
+        - name: sort
+          in: query
+          schema: {type: string, enum: [newest, price_asc, price_desc], default: newest}
+          example: newest
+      responses:
+        '200':
+          description: Published products in a paginated envelope.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ProductList'}
+              example:
+                data: []
+                meta: {page: 1, limit: 12, total: 0, total_pages: 1}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '500': {$ref: '#/components/responses/ServerError'}
+  /inquiries:
+    post:
+      tags: [Inquiries]
+      operationId: createInquiry
+      summary: Submit an inquiry as a guest or signed-in customer
+      description: 'FR-01/02/03/05 → Sem4 C4-D01. Bearer token is optional.'
+      security: [{}, {BearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/InquiryInput'}
+            example:
+              customer_name: Бат-Эрдэнэ
+              phone: '99112233'
+              message: Энэ бүтээгдэхүүн байгаа юу?
+      responses:
+        '201':
+          description: Inquiry created; status starts as new.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/InquiryOne'}
+              example:
+                data:
+                  id: 8f14e45f-ceea-4c4a-b0b1-000000000201
+                  product_id: null
+                  customer_id: null
+                  customer_name: Бат-Эрдэнэ
+                  phone: '99112233'
+                  message: Энэ бүтээгдэхүүн байгаа юу?
+                  status: new
+                  created_at: '2026-09-30T10:00:00Z'
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '500': {$ref: '#/components/responses/ServerError'}
+  /inquiries/mine:
+    get:
+      tags: [Inquiries]
+      operationId: listOwnInquiries
+      summary: List the authenticated customer's own inquiries
+      description: 'FR-06/NFR-01 → Sem4 C4-D01. No query or body input; Bearer token identifies owner.'
+      security: [{BearerAuth: []}]
+      responses:
+        '200':
+          description: Newest-first own inquiry list.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/InquiryArray'}
+              example: {data: []}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '500': {$ref: '#/components/responses/ServerError'}
+  /admin/inquiries:
+    get:
+      tags: [Admin inquiries]
+      operationId: listAdminInquiries
+      summary: Filter and page the admin inbox
+      description: 'FR-07/08 → Sem4 C4-D03. Admin role required.'
+      security: [{BearerAuth: []}]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema: {$ref: '#/components/schemas/InquiryStatus'}
+          example: new
+        - name: product_id
+          in: query
+          schema: {type: string, format: uuid}
+          example: 8f14e45f-ceea-4c4a-b0b1-000000000010
+        - name: date_from
+          in: query
+          schema: {type: string, format: date-time}
+          example: '2026-09-01T00:00:00Z'
+        - name: date_to
+          in: query
+          schema: {type: string, format: date-time}
+          example: '2026-10-01T00:00:00Z'
+      responses:
+        '200':
+          description: Admin inquiry page.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/InquiryList'}
+              example:
+                data: []
+                meta: {page: 1, limit: 12, total: 0, total_pages: 1}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '500': {$ref: '#/components/responses/ServerError'}
+  /admin/inquiries/{id}/status:
+    patch:
+      tags: [Admin inquiries]
+      operationId: updateInquiryStatus
+      summary: Change inquiry status and append an audit log
+      description: 'FR-09 → Sem4 C4-D03. Admin role required.'
+      security: [{BearerAuth: []}]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Existing inquiry UUID; request example.
+          schema: {type: string, format: uuid}
+          example: 8f14e45f-ceea-4c4a-b0b1-000000000201
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/StatusPatch'}
+            example: {status: contacted}
+      responses:
+        '200':
+          description: Updated inquiry.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/InquiryOne'}
+              example:
+                data:
+                  id: 8f14e45f-ceea-4c4a-b0b1-000000000201
+                  product_id: null
+                  customer_id: null
+                  customer_name: Бат-Эрдэнэ
+                  phone: '99112233'
+                  message: Энэ бүтээгдэхүүн байгаа юу?
+                  status: contacted
+                  created_at: '2026-09-30T10:00:00Z'
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '500': {$ref: '#/components/responses/ServerError'}
+components:
+  securitySchemes:
+    BearerAuth: {type: http, scheme: bearer, bearerFormat: JWT}
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema: {type: integer, minimum: 1, default: 1}
+      example: 1
+    Limit:
+      name: limit
+      in: query
+      schema: {type: integer, minimum: 1, maximum: 50, default: 12}
+      example: 12
+  schemas:
+    InquiryStatus: {type: string, enum: [new, contacted, closed]}
+    InquiryInput:
+      type: object
+      required: [customer_name, phone]
+      properties:
+        customer_name: {type: string, minLength: 2}
+        phone: {type: string, pattern: '^[0-9+\s-]{8,15}$'}
+        message: {type: string}
+        product_id: {type: string, format: uuid, nullable: true}
+    StatusPatch:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status: {$ref: '#/components/schemas/InquiryStatus'}
+    Inquiry:
+      type: object
+      required: [id, product_id, customer_id, customer_name, phone, message, status, created_at]
+      properties:
+        id: {type: string, format: uuid}
+        product_id: {type: string, format: uuid, nullable: true}
+        customer_id: {type: string, format: uuid, nullable: true}
+        customer_name: {type: string}
+        phone: {type: string}
+        message: {type: string, nullable: true}
+        status: {$ref: '#/components/schemas/InquiryStatus'}
+        created_at: {type: string, format: date-time}
+        product:
+          type: object
+          nullable: true
+          required: [id, name, name_en, slug]
+          properties:
+            id: {type: string, format: uuid}
+            name: {type: string}
+            name_en: {type: string, nullable: true}
+            slug: {type: string}
+    InquiryOne:
+      type: object
+      required: [data]
+      properties:
+        data: {$ref: '#/components/schemas/Inquiry'}
+    InquiryArray:
+      type: object
+      required: [data]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/Inquiry'}}
+    InquiryList:
+      type: object
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/Inquiry'}}
+        meta: {$ref: '#/components/schemas/Pagination'}
+    Pagination:
+      type: object
+      required: [page, limit, total, total_pages]
+      properties:
+        page: {type: integer}
+        limit: {type: integer}
+        total: {type: integer}
+        total_pages: {type: integer}
+    Product:
+      type: object
+      required: [id, category_id, name, name_en, slug, price, short_description, full_description, usage_instruction, status, stock_status, is_featured, model_3d_url, search_tags, created_at, updated_at]
+      properties:
+        id: {type: string, format: uuid}
+        category_id: {type: string, format: uuid}
+        category: {$ref: '#/components/schemas/Category'}
+        name: {type: string}
+        name_en: {type: string, nullable: true}
+        slug: {type: string}
+        price: {type: number}
+        short_description: {type: string, nullable: true}
+        full_description: {type: string, nullable: true}
+        usage_instruction: {type: string, nullable: true}
+        status: {type: string, enum: [published]}
+        stock_status: {type: string, enum: [in_stock, out_of_stock, pre_order]}
+        is_featured: {type: boolean}
+        model_3d_url: {type: string, nullable: true}
+        search_tags: {type: array, nullable: true, items: {type: string}}
+        images: {type: array, items: {$ref: '#/components/schemas/ProductImage'}}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+    Category:
+      type: object
+      required: [id, name, slug, description, sort_order, is_active, created_at, updated_at]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        slug: {type: string}
+        description: {type: string, nullable: true}
+        sort_order: {type: integer}
+        is_active: {type: boolean}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+    ProductImage:
+      type: object
+      required: [id, product_id, image_url, alt_text, sort_order, created_at]
+      properties:
+        id: {type: string, format: uuid}
+        product_id: {type: string, format: uuid}
+        image_url: {type: string}
+        alt_text: {type: string, nullable: true}
+        sort_order: {type: integer}
+        created_at: {type: string, format: date-time}
+    ProductList:
+      type: object
+      required: [data, meta]
+      properties:
+        data: {type: array, items: {$ref: '#/components/schemas/Product'}}
+        meta: {$ref: '#/components/schemas/Pagination'}
+    Error:
+      type: object
+      required: [error, code]
+      properties:
+        error: {type: string}
+        code: {type: string}
+  responses:
+    BadRequest:
+      description: Invalid query or JSON body.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+          example: {error: Invalid query parameters, code: VALIDATION_ERROR}
+    Unauthorized:
+      description: Bearer token missing or invalid.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+          example: {error: Missing access token, code: UNAUTHORIZED}
+    Forbidden:
+      description: Authenticated user lacks admin role.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+          example: {error: Admin access required, code: FORBIDDEN}
+    NotFound:
+      description: Referenced product or inquiry was not found.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+          example: {error: Inquiry not found, code: INQUIRY_NOT_FOUND}
+    RateLimited:
+      description: Inquiry submission rate limit reached.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+          example: {error: Too many requests, code: RATE_LIMIT_EXCEEDED}
+    ServerError:
+      description: Unexpected server failure; no internal details are exposed.
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+          example: {error: Internal server error, code: INTERNAL}
