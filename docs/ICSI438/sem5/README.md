@@ -2,6 +2,8 @@
 
 **Тэнгис · Nogoolin · 2026-10-01–02 · v0.1 local draft.** [W5 тусгай заавар](<Sprint 05 Lab Instructions - OpenAPI 3.0 & Bhatti Code Samples.pdf>) нь 3 агуулгын хуудас, PDF-д төгсгөлийн 4 дэх хоосон хуудастай. [Course home](../COURSE-HOME.md) · [Weekly progress](../WEEKLY-PROGRESS.md).
 
+GitHub дахь Sem5 хавтас: <https://github.com/Tengis01/Nogoolin/tree/main/docs/ICSI438/sem5>. [renderers/](renderers/) хавтаст `redoc.html` (Redoc), `swagger.html` (Swagger UI) бий.
+
 ## Зорилго, эх ба багц
 
 Handout х.1–3-ын дагуу таван route бүхий OpenAPI 3.0.3 spec, code sample audit, Swagger UI/Redoc хоёр renderer, 100 үгийн харьцуулалт, UE-5 гурван Python жишээг локал орчинд бэлдэв. Номын холбогдох санааг Bhatti Ch.5 х.86–94, Chinchilla Ch.6 х.79-өөс тулгав. Энэ ажил нь сургалтын баримт; бүтээгдэхүүний API кодыг өөрчлөөгүй.
