@@ -1,5 +1,7 @@
 # Seminar 5 — OpenAPI 3.0 ба code sample
 
+Төслийн GitHub дахь Sem5 хавтас: <https://github.com/Tengis01/Nogoolin/tree/main/docs/ICSI438/sem5>. Түүний [renderers/](../renderers/) хавтаст Redoc-ийн `redoc.html` болон Swagger UI-ийн `swagger.html` байна.
+
 ## Зорилго ба хүрээ
 
 Nogoolin-ийн одоо кодод бүртгэлтэй таван үйлдлийг [OpenAPI 3.0.3 YAML](../openapi/openapi.yaml)-д тусгав. Сонголт нь Sem3-ын inquiry SRS, Sem4-ийн inquiry runtime view-тэй шууд холбогдоно. Энэ нь `docs/phase-0/06-api-spec.yaml`-ийн бүх API-г орлуулах шинэ үндсэн spec биш; W5 лабораторийн нарийвчилсан slice юм. Серверийн URL нь `localhost` тул Swagger-ийн “Try it out” зөвхөн local API, local Supabase, тохирох auth token бэлэн үед ажиллана.
