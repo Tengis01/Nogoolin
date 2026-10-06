@@ -2,7 +2,7 @@
 
 [Home](../COURSE-HOME.md) · [Commands](COMMANDS.md)
 
-Эдгээр нь existing материалд тэмдэглэсэн бодит workflow асуудал/шийдэл; энэ task-д шинэ build/runtime тест хийгээгүй.
+Эдгээр нь coursework-ийн бодит workflow асуудал/шийдэл; шинэ verification-ийн огноо ба эхийг тухайн мөрд холбоно.
 
 | Symptom / risk | Documented cause | Solution / evidence | Remaining limit |
 |---|---|---|---|
@@ -13,3 +13,11 @@
 | Handout/book page anchor зөрөх | UE-4 номын local printed pagination handout-оос зөрсөн | Дэд гарчиг болон actual printed/PDF page-аар тулгах; [UE-4](../sem4/wiki/ue4-rework.md) | Book chapter/page-ийг дараагийн ажилд дахин шалгах |
 
 Peer review/submission байхгүй нь software error биш; [weekly progress](../WEEKLY-PROGRESS.md)-ийн open criterion. Хэрэглэгчийн төсөлд тохиолдоогүй community issue-г энд өөрийн incident болгон нэмэхгүй.
+
+## Sem6 — TypeScript documentation build
+
+- Course folder → repository root relative depth-ийг бодит замаар шалгах. Sem6 tsconfig-д нэг түвшин зөрөхөд TS5083/TS18003 гарсан; `../../..` болгож TypeDoc build давсан.
+- ESM source import хийх extracted snippet-ийг `.mts` болгох. `.ts` нь CommonJS package context-д TS1479/TS1541 өгсөн; `.mts`-ээр 37 snippet type-check давсан.
+- Scope-оос гаднах imported contract warning ба missing documentation error-ийг ялгах. Warning-as-error-ийг бүхэлд нь унтраахын оронд entrypoint/scope болон external contract policy-г тайлбарлах.
+
+2026-10-06 verification: [Sem6 README](../sem6/README.md), [log](../sem6/evidence/verification.txt).

@@ -12,3 +12,6 @@
 - **Completion:** local artifact, review, runtime test, publication, submission, teacher grade тусдаа төлөв. SRS/M milestone label нь calendar week-тэй адил биш.
 
 Theory-г lab бүрт давтахгүй; шинэ lesson нь аль source/result-оос гарсныг холбоно.
+
+- **Code comment verification:** validation/auth can belong to the controller, while the service performs a different check. A lifecycle arrow does not prove enforced transitions; mutation followed by audit is not automatically transactional ([Sem6 audit](../sem6/bhatti_audit_table.md)).
+- **Detector evidence:** a seeded ghost method/type can prove that reflection rejects missing symbols. It cannot prove that a real model invented that API ([Sem6 provenance](../sem6/audit/provenance.md)).

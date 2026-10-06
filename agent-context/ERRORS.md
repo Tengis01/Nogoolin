@@ -325,3 +325,18 @@ solutions; if either reproduces, log it here.
 ### 2026-09-22 — Seminar 3 print-margin reflow
 - **Issue:** Applying the narrower 3 cm left / 2 cm right print area exposed several overfull cells in the traceability and Human-vs-AI tables, plus one long FR verification line.
 - **Fix:** Kept the standard body size, scoped `footnotesize` and tighter padding to the two dense tables, split the FR-11 metadata line and shortened unbreakable source labels. The final two-pass build reports no overfull boxes or changed table widths.
+
+### 2026-10-01–02 — Seminar 5 contract and build corrections
+- **OpenAPI lint:** Initial `Inquiry.product` used `nullable` with `allOf` but no `type`, which Redocly rejected. Replaced it with a typed nullable object and removed an invalid `$ref` inside an example. Final lint has zero errors; remaining warnings are intentional localhost server and unknown repository license.
+- **Source drift:** Initially associated public `GET /products` with Sem3 FR-10/11, which actually concern wishlist. Corrected the description to Phase-0 FR-PUB-001/014 and Sem3 FR-15 catalog destination. Also corrected mini-spec phone validation to current Zod `phoneSchema`; Sem3 FR-03 still requires exactly eight digits and needs a product decision.
+- **PDF layout:** Initial endpoint/audit tables produced overfull lines. Shortened the long path label in the table, put its full path in prose, and scoped compact table padding/font to the audit table. Final five-page PDF log has no overfull boxes or missing glyphs.
+- **Environment:** Swagger UI package download failed under sandbox DNS (`EAI_AGAIN`); approved local install in `sem5/tools` succeeded. Local HTTP binding was sandbox-denied; approved loopback-only static file check returned 200 for both renderer pages, YAML and Swagger bundle. Browser rendering and API requests remain unverified.
+
+## 2026-10-06 — Sem6 documentation build fixes and evidence boundaries
+
+- **Source lookup:** Two guessed file paths (repository/schema singular names) did not exist. Located actual repository ports and `inquiry.schema.ts` with targeted file listings; final links use real paths.
+- **Tool lookup/execution:** Sandboxed Context7 lookup failed to fetch; approved network lookup succeeded. The verifier's npm child process returned EPERM inside the sandbox; approved verifier execution completed all checks.
+- **TypeDoc config:** Initial Sem6 relative paths traversed one directory too far, causing TS5083/TS18003. Corrected to three parents and supplied the reference README; final strict HTML/JSON build has no warnings.
+- **Snippet compiler:** Temporary `.ts` snippets inherited a CommonJS context and triggered TS1479/TS1541 when importing backend ESM. Changed generated snippets to `.mts`; all 37 examples type-check. Direct `node:test` invocation makes diagnostic output readable; final 9 tests pass.
+- **Comment integrity:** Inquiry's lifecycle arrow implied an enforced order absent from the service. Reworded it and documented the controller/schema/service boundary and nontransactional audit behavior; local doubles verify transition/rollback claims. Mobile's stale Phase-2 TODO and unverified SecureStore-size advice were replaced with an actionable local issue link; real issue ID remains pending.
+- **External evidence:** User has no GitLab project, so no remote run/Pages/issues are claimed. Controlled AI faults and seeded ghost symbols are disclosed; they do not satisfy the requirement to discover a spontaneous model-invented API.

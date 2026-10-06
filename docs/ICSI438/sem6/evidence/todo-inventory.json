@@ -1,0 +1,8 @@
+[
+  {
+    "file": "apps/mobile/lib/supabase.ts",
+    "line": 9,
+    "comment": "// TODO: move session storage to encrypted storage per docs/phase-0/08 §5.2.",
+    "gitlabIssue": null
+  }
+]

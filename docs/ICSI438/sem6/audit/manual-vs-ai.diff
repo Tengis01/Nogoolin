@@ -1,0 +1,29 @@
+--- source-verified baseline (AI-assisted)
++++ controlled AI exercise draft
+@@ -43,7 +43,7 @@
+     // UC-G-007 / FR-INQ-001..003 — guest OR authenticated submission.
+     // customerId is the JWT subject when present, else null (guest).
+     /**
+-     * Inquiry үүсгэнэ; product_id өгөгдвөл бүтээгдэхүүн байгаа эсэхийг шалгана.
++     * Inquiry үүсгэхдээ утсыг яг 8 цифр эсэхийг service өөрөө шалгана.
+      *
+      * @param input - Controller-оор inquiryInputSchema шалгасан input; email талбаргүй.
+      * @param customerId - JWT subject UUID эсвэл зочинд null; caller өөрөө баталгаажуулна.
+@@ -75,7 +75,7 @@
+      * Өгсөн хэрэглэгчийн inquiry жагсаалтыг repository-оос уншина.
+      *
+      * @param customerId - Controller-оор баталгаажсан хэрэглэгчийн UUID; service JWT шалгахгүй.
+-     * @returns Inquiry[]; хоосон жагсаалт байж болно, pagination wrapper байхгүй.
++     * @returns Pagination metadata бүхий InquiryPage буцаана.
+      * @throws Repository-ийн алдаа өөрчлөгдөхгүй дамжина.
+      * @example
+      * ```ts
+@@ -113,7 +113,7 @@
+ 
+     // UC-ADM-010 / FR-INQ-005 — accepted status values; transition order is not enforced here.
+     /**
+-     * Inquiry status-ийг зассаны дараа admin audit бүртгэнэ.
++     * Inquiry status-ийг зөвхөн new → contacted → closed дарааллаар, нэг transaction-д өөрчилнө.
+      *
+      * @param id - Inquiry UUID.
+      * @param status - Шалгасан new, contacted эсвэл closed утга; шилжилтийн дарааллыг service хориглохгүй.

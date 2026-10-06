@@ -1,0 +1,37 @@
+# Requires the repository source tree, not just a copied sem6 folder.
+stages:
+  - build
+  - deploy
+
+default:
+  image: node:22-bookworm-slim
+
+docs-build:
+  stage: build
+  script:
+    - npm ci --prefix docs/ICSI438/sem6/tools --ignore-scripts --no-audit --no-fund
+    - npm run verify --prefix docs/ICSI438/sem6/tools
+    - cp -r docs/ICSI438/sem6/reference public
+  artifacts:
+    paths:
+      - public
+      - docs/ICSI438/sem6/evidence/verification.txt
+      - docs/ICSI438/sem6/evidence/coverage.json
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH'
+
+publish-docs:
+  stage: deploy
+  needs:
+    - job: docs-build
+      artifacts: true
+  script:
+    - test -s public/index.html
+  pages:
+    publish: public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

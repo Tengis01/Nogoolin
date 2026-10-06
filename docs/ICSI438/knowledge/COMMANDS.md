@@ -48,3 +48,16 @@ lychee --offline --no-progress ./site
 ```
 
 Strict build, prose style lint, offline link check гэсэн 3 local gate; GitHub PR merge gate нь remote configuration ба бодит CI evidence шаарддаг. Энэ нь өөрөө push/merge хийх зөвшөөрөл биш.
+
+## Sem6 — strict code reference build
+
+Working directory: Nogoolin root. Verified 2026-10-06.
+
+```bash
+npm run verify --prefix docs/ICSI438/sem6/tools
+```
+
+Runs scoped symbol inventory, snippet/behavior/reflection tests and TypeDoc with
+warning-as-error. Writes HTML/JSON and a short verification log. New checkout needs
+`npm ci --prefix docs/ICSI438/sem6/tools` first. Local success does not prove GitLab
+CI/Pages publication. [Sem6 evidence](../sem6/README.md).

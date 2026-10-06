@@ -1,0 +1,3 @@
+# Sem6 documentation pipeline. GitHub workflows remain the product pipeline.
+include:
+  - local: docs/ICSI438/sem6/gitlab-ci.yml

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Nogoolin — Service API Reference / Seminar 6",
+  "entryPoints": ["../../../backend/api/src/services/*.service.ts"],
+  "entryPointStrategy": "expand",
+  "tsconfig": "tsconfig.json",
+  "out": "reference",
+  "json": "evidence/reference.json",
+  "readme": "api-reference.md",
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "disableSources": true,
+  "treatWarningsAsErrors": true,
+  "validation": {
+    "notDocumented": true,
+    "invalidLink": true,
+    "notExported": false
+  },
+  "requiredToBeDocumented": ["Function", "Method", "Interface", "TypeAlias"],
+  "sort": ["source-order"],
+  "navigationLinks": {
+    "Seminar 6": "https://github.com/Tengis01/Nogoolin/tree/main/docs/ICSI438/sem6"
+  }
+}

@@ -158,31 +158,42 @@ OpenAPI YAML; spectral-lint эсвэл Redocly боломжтой бол.
 
 [A, PDF х.6](lecture/Lab-Handouts%20W01%20-%20W10%20Software%20Project%20Documentation%20%281%29.pdf#page=6)
 
-## W06 — Docstrings + Ethics
+## W06 — Code Documentation ба AI Audit
 
 ### What I should understand
 
-Argument/return/example/edge-case тайлбарын чанар.
+Code symbol reference ба HTTP API spec-ийн ялгаа; controller/service-ийн хариуцлага,
+source verification, comment claim ба бодит implementation.
 
 ### What I should be able to do
 
-3 docstring-ийг 0–5 axis-аар үнэлж, нэг мууг засах.
+Structured docstring, consistent example, strict TypeDoc/Sphinx build, manual/model
+comparison, Bhatti audit, TODO issue tracking хийх.
 
 ### Tools / technologies involved
 
-PEP 257 / NumPy / Google conventions, repository docs.
+JSDoc/TypeDoc эсвэл Google/reST/Sphinx; GitLab CI/Pages/Issues, optional reflection test.
 
 ### Important concepts
 
-TODO-from-LLM, Lying-Comment, Over-confident Spec.
+Explained/Concise/Clear/Usable/Trustworthy; Chinchilla domain consistency;
+Use–Verify–Cite; seeded fixture нь observed hallucination биш.
 
 ### Expected practical work
 
-1-page audit; бодитоор олдсон anti-pattern нэрлэх. Байхгүй бол байхгүй гэж бичнэ; асуудал зохиохгүй.
+Тусгай W6 handout-ийн US-6.1–6.4: бүх public symbols-ийн docs, warning-гүй build,
+GitLab Pages URL, diff/audit ≥2 correction, invented API log, TODO issue IDs.
+UE-6: нэг public module/class дээр baseline → AI audit → clean renderer integration,
+bonus reflection test. [Sem6 local evidence](sem6/README.md)-д 44 service symbols,
+9 tests, local reference, CI config, issue draft бий; external ба independent audit
+шалгуурууд нээлттэй. Python-oriented UE-6 vs TypeScript option-ийн ялгааг ил тод хадгалсан.
 
 ### Source
 
-[A, PDF х.7](lecture/Lab-Handouts%20W01%20-%20W10%20Software%20Project%20Documentation%20%281%29.pdf#page=7)
+[Тусгай Sprint 06 handout, х.1–2](<sem6/Sprint 06 Lab Instructions - GitLab & Code Documentation.pdf>).
+Нийлмэл [A, PDF х.7](lecture/Lab-Handouts%20W01%20-%20W10%20Software%20Project%20Documentation%20%281%29.pdf#page=7)
+нь 3 docstring + 1-page ethics audit гэсэн илүү нарийн хуучин preparation; тусгай
+handout-ийн GitLab/public coverage шалгуурыг орлохгүй. Lecture 6 материал байхгүй.
 
 ## W07 — Microcopy Repair
 

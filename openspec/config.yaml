@@ -1,0 +1,21 @@
+schema: spec-driven
+context: |
+  Nogoolin is an existing religious-product catalog with web/admin, mobile and REST API.
+  Read AGENTS.md and relevant project documentation before planning.
+  Detected stack: TypeScript, Next.js/React/Tailwind, Fastify, Expo/React Native, Supabase, pnpm.
+  Existing authoritative product docs remain in docs/; OpenSpec records scoped future changes, not a wholesale rewrite.
+  Preserve current architecture and unrelated work. Do not access secrets automatically.
+  Use targeted Context7 docs only for version-sensitive external APIs; project-local rules remain authoritative.
+  UI changes use tengis-ui, Impeccable and Playwright CLI verification at an appropriate scope.
+rules:
+  proposal:
+    - State why, scope, non-goals and unknowns concisely; label hypothetical setup tests as unapproved and unimplemented.
+  tasks:
+    - Keep acceptance verification explicit and distinguish planned work from completed work.
+operations:
+  apply:
+    guidance:
+      - Require explicit human approval of the scoped change before implementation.
+  archive:
+    guidance:
+      - Archive verified work; never promote a cancelled/unimplemented demonstration into current specs.
