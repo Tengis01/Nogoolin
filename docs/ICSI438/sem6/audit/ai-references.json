@@ -1,0 +1,28 @@
+{
+  "corrected": {
+    "factory": "createInquiryService",
+    "methods": [
+      "submit",
+      "listOwn",
+      "listAdmin",
+      "updateStatus"
+    ],
+    "types": [
+      "Inquiry",
+      "InquiryInput",
+      "AdminInquiryListQuery",
+      "InquiryStatus"
+    ]
+  },
+  "seeded": {
+    "factory": "createInquiryService",
+    "methods": [
+      "submit",
+      "getInquiryById"
+    ],
+    "types": [
+      "Inquiry",
+      "InquiryReceipt"
+    ]
+  }
+}

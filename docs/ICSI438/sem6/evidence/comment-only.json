@@ -1,0 +1,32 @@
+[
+  {
+    "file": "backend/api/src/services/cart.service.ts",
+    "runtimeUnchanged": true,
+    "emittedSha256": "45e803e866431518e4f376b9c76fc8ad91859e06266a97c2d2497d118747e31f"
+  },
+  {
+    "file": "backend/api/src/services/category.service.ts",
+    "runtimeUnchanged": true,
+    "emittedSha256": "05a1e1cbec89d95acb87c6e51e02a1b834a6a545a8873e67c512281d0e8a8cc7"
+  },
+  {
+    "file": "backend/api/src/services/inquiry.service.ts",
+    "runtimeUnchanged": true,
+    "emittedSha256": "bbd89abbb53f4315f53bd3c7407ee93d29e56fa3b86332ade6f0de6e0ce0a2a9"
+  },
+  {
+    "file": "backend/api/src/services/media.service.ts",
+    "runtimeUnchanged": true,
+    "emittedSha256": "f9bb1b11c4fb9e307f94cabc11f1a053ff8c76494dc96c59bdf70e24aeb1d5a7"
+  },
+  {
+    "file": "backend/api/src/services/product.service.ts",
+    "runtimeUnchanged": true,
+    "emittedSha256": "a38eadc776a4976912281f996490a20365ba6ac73d723b5684fb28c063064245"
+  },
+  {
+    "file": "backend/api/src/services/settings.service.ts",
+    "runtimeUnchanged": true,
+    "emittedSha256": "3286660fc5fc621011ed0ae2b55fbb6547b53b9909a3250737a0ab73011cfed7"
+  }
+]

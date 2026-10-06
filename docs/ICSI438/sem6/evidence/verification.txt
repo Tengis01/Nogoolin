@@ -1,0 +1,46 @@
+Node v26.9.0
+Scope: Sem6 service documentation; local repository doubles, no live database.
+
+$ npm run check
+
+> check
+> node check-docs.mjs
+
+Documentation coverage: 44/44; 6 service modules.
+
+Exit: 0
+
+$ npm run test
+
+> test
+> node test-documentation.mjs
+
+✔ guest inquiry snippet: null customer ID is accepted (0.704812ms)
+✔ unknown referenced product rejects with documented 404 code (0.38232ms)
+✔ listOwn returns an array, without a pagination envelope (0.480904ms)
+✔ empty admin list keeps total_pages at 1 (0.248477ms)
+✔ service does not enforce closed-to-new transition prohibition (0.164537ms)
+✔ missing inquiry rejects before logging audit (0.126485ms)
+✔ audit failure propagates and does not roll back prior status mutation (0.146678ms)
+✔ all JSDoc snippets type-check with declared repository/UUID prerequisites (575.752179ms)
+✔ reflection catches seeded ghost method/type, accepts corrected reference list (199.18578ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 781.911248
+
+Exit: 0
+
+$ npm run docs
+
+> docs
+> typedoc --options ../typedoc.json
+
+[info] html generated at /home/tengis/Documents/Tengis/Nogoolin/docs/ICSI438/sem6/reference
+[info] json generated at /home/tengis/Documents/Tengis/Nogoolin/docs/ICSI438/sem6/evidence/reference.json
+
+Exit: 0

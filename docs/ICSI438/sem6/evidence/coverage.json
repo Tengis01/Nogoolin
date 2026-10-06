@@ -1,0 +1,316 @@
+{
+  "scope": "six backend service modules; not all repository exports",
+  "modules": 6,
+  "documented": 44,
+  "total": 44,
+  "rows": [
+    {
+      "file": "backend/api/src/services/cart.service.ts",
+      "symbol": "createCartService",
+      "kind": "FunctionDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/cart.service.ts",
+      "symbol": "createCartService.list",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/cart.service.ts",
+      "symbol": "createCartService.add",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/cart.service.ts",
+      "symbol": "createCartService.remove",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/cart.service.ts",
+      "symbol": "CartService",
+      "kind": "TypeAliasDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService",
+      "kind": "FunctionDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService.listActive",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService.listAdmin",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService.getBySlug",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService.create",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService.update",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "createCategoryService.remove",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/category.service.ts",
+      "symbol": "CategoryService",
+      "kind": "TypeAliasDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/inquiry.service.ts",
+      "symbol": "createInquiryService",
+      "kind": "FunctionDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/inquiry.service.ts",
+      "symbol": "createInquiryService.submit",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/inquiry.service.ts",
+      "symbol": "createInquiryService.listOwn",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/inquiry.service.ts",
+      "symbol": "createInquiryService.listAdmin",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/inquiry.service.ts",
+      "symbol": "createInquiryService.updateStatus",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/inquiry.service.ts",
+      "symbol": "InquiryService",
+      "kind": "TypeAliasDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadFile",
+      "kind": "InterfaceDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadFile.filename",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadFile.mimetype",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadFile.data",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadFile.truncated",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadFile.altText",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadResult",
+      "kind": "InterfaceDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadResult.data",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "UploadResult.rejected",
+      "kind": "Property",
+      "documented": true,
+      "example": false
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "createMediaService",
+      "kind": "FunctionDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "createMediaService.uploadImages",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "createMediaService.updateImage",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "createMediaService.deleteImage",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/media.service.ts",
+      "symbol": "MediaService",
+      "kind": "TypeAliasDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService",
+      "kind": "FunctionDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService.listPublic",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService.listAdmin",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService.getPublishedBySlug",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService.create",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService.update",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "createProductService.remove",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/product.service.ts",
+      "symbol": "ProductService",
+      "kind": "TypeAliasDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/settings.service.ts",
+      "symbol": "createSettingsService",
+      "kind": "FunctionDeclaration",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/settings.service.ts",
+      "symbol": "createSettingsService.getPublicSettings",
+      "kind": "Method",
+      "documented": true,
+      "example": true
+    },
+    {
+      "file": "backend/api/src/services/settings.service.ts",
+      "symbol": "SettingsService",
+      "kind": "TypeAliasDeclaration",
+      "documented": true,
+      "example": true
+    }
+  ]
+}

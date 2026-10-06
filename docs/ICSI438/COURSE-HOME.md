@@ -25,8 +25,9 @@
 | [Sem3](sem3/README.md) | 15 FR + 5 NFR, 20-row matrix, 5 mock UI, UE-3, merged 17 хуудас | 🟡 v1.0 draft; peer review ба 80% trial execution алгассан |
 | [Sem4](sem4/README.md) | arc42/C4, 3 MADR, architecture mapping, UE-4, merged 19 хуудас | 🟡 Локал багц бэлэн; remote submission батлагдаагүй, persona тайлбарын ялгаа бий |
 | [Sem5](sem5/README.md) | 5-operation OpenAPI, local Swagger/Redoc, UE-5 Python, audit, PDF | 🟡 Локал багц бэлэн; live sample, 4/5 audit, public hosting дутуу |
+| [Sem6](sem6/README.md) | 44-symbol JSDoc/TypeDoc, controlled audit, 9 tests, CI config, issue draft, PDF | 🟡 Локал багц бэлэн; GitLab runtime/Pages/issues, independent audit ба бүх public scope дутуу |
 
-Sem6–Sem15-ийн хүлээлтийг [roadmap](COURSE-ROADMAP.md), [progress](WEEKLY-PROGRESS.md)-оос үзнэ. Хоосон seminar хавтас урьдчилан үүсгээгүй.
+Sem7–Sem15-ийн хүлээлтийг [roadmap](COURSE-ROADMAP.md), [progress](WEEKLY-PROGRESS.md)-оос үзнэ. Хоосон seminar хавтас урьдчилан үүсгээгүй.
 
 ## Important Knowledge
 
@@ -38,7 +39,7 @@ External resources нь handout/эх баримтын reference; энэ index х
 
 ## Current Focus
 
-- Current seminar: Sem5-ийн локал лабораторийн багц бэлэн; course DoD нээлттэй.
-- Current topic: OpenAPI 3.0, code sample quality.
-- Current problem: Corg.ly-ийн батлагдсан server/response, public hosting, 4/5 audit evidence дутуу; FR-03 phone validation кодтой зөрсөн.
-- Next task: [Sem5 README](sem5/README.md)-ийн нээлттэй шалгуурыг бодит sandbox/hosting мэдээлэл ирэхэд нөхөх; W6 handout-ийг унших.
+- Current seminar: [Sem6](sem6/README.md)-ийн локал багц бэлэн; external DoD нээлттэй.
+- Current topic: JSDoc/TypeDoc, source verification, AI audit, GitLab CI.
+- Current problem: GitLab project байхгүй; independent manual/GPT-4-or-Claude audit болон repository-wide public coverage нотолгоо бүрэн биш. Sem5 runtime/public болон phone drift мөн нээлттэй.
+- Next task: GitLab project бий болсон үед Sem6 export/CI/Pages/issues шалгах; independent audit-ийг нөхөх. Sem7-ийн тусгай handout ирвэл microcopy repair бэлтгэх.

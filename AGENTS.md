@@ -52,6 +52,12 @@ Root `test` delegates to packages: API has a real test script; web, mobile, and 
 - Preserve existing project-specific guidance in CLAUDE.md and authoritative specs; shared UI preferences are defaults, not a redesign mandate.
 - Existing README status and course paths are stale; consult current project context and actual paths. Preserve the nested course AGENTS.md.
 
+## Specification and external docs
+
+- Use OpenSpec for medium/large features, ambiguous requirements, architecture or schema/API changes, and significant refactors. Skip it for low-risk trivial edits.
+- Before implementing an OpenSpec change, review its approved proposal, spec, and tasks; stay within scope and verify the result against the spec. A draft proposal is not approval to implement.
+- Use targeted Context7 CLI documentation when a library API or version matters; prefer project-local source for project behavior. Do not fetch broad docs by default.
+
 ## Verification
 
 Applicable configured checks: `pnpm run build` from `.`, `pnpm run lint` from `.`, `pnpm run type-check` from `.`, `pnpm run test` from `.`.

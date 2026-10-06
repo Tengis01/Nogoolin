@@ -1,0 +1,9 @@
+tools/node_modules/
+tmp/
+latex/*.aux
+latex/*.fls
+latex/*.fdb_latexmk
+latex/*.log
+latex/*.out
+latex/*.xdv
+*.synctex.gz

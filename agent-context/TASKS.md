@@ -65,6 +65,11 @@
 
 ## Log (append after every task, newest first)
 
+### 2026-09-30 — OpenSpec and Context7 CLI foundation
+- **Done:** Initialized official OpenSpec only in Nogoolin for Codex and Hermes. Added the unapproved, unimplemented `demo-catalog-filter-summary` proposal/spec/design/tasks to demonstrate the workflow; strict validation passed. Added concise OpenSpec and targeted Context7 guidance to AGENTS.md and the shared vault rules. Context7 CLI's narrow Next.js documentation lookup worked anonymously.
+- **Context7 integration:** Its standard `setup --cli --codex` required device login, so installed the public official `find-docs` skill directly from `/upstash/context7` using `ctx7 skills install` into the standard universal skills directory; Hermes discovers the same skill through a shared-vault symlink. Documentation queries work anonymously; no credentials or MCP configured. No application code, API, schema, or existing course work was changed for this setup.
+- **Next:** If the owner approves the demo feature later, review its spec before implementation. Use Context7 only when external version-sensitive documentation is needed.
+
 ### 2026-07-26 — Phase 4 web UI: inquiry form, wishlist, profile, admin inbox (`feature/inquiry-ui`)
 - **Done (web only — mobile untouched per task):** 4 new routes —
   `/products/[slug]/inquiry` (WF §3.6 dedicated page + WF-INQ-04 success),
@@ -471,3 +476,28 @@
 - **Instruction alignment:** Linked the vault rules from `docs/ICSI438/AGENTS.md` and replaced the stale requirement to screenshot every changed PDF page with targeted QA only for new layouts, suspected defects or explicit requests.
 - **Verification:** Checked all Markdown file paths and heading anchors in the four edited knowledge files, reviewed the course instruction diff and preserved existing content. No PDF rerender, app tests or package installation were needed for this documentation-only change.
 - **Next:** Apply the course workflow before the next seminar and reuse the approved print/diagram build profile; update only newly verified lessons.
+
+## 2026-09-29 — ICSI438 durable course knowledge foundation
+
+Analyzed the two W01–W15 combined handout PDFs; added COURSE-HOME/ROADMAP, weekly tracker, documentation standard/template, reusable knowledge notes and Sem5 source/preparation index. Preserved existing Sem1–Sem4/PDF/code; marked external review/test/submission gaps explicitly. Shared course-maintainer skill keeps Obsidian course docs authoritative. Next: use Sem5's actual handout for OpenAPI/code sample preparation; no implementation, deployment, new coursework submission or scheduled automation executed. See docs/ICSI438/COURSE-HOME.md.
+
+## 2026-10-01–02 — ICSI438 Seminar 5 local lab draft
+
+- **Done:** Read the specific W5 handout and targeted Bhatti Ch.5/Chinchilla Ch.6 pages; built a five-operation OpenAPI 3.0.3 slice from actual Nogoolin controllers/Zod schemas, reusable security/error/data schemas, examples, and Sem3/Sem4 trace links. Added three editable UE-5 Corg.ly Python samples, honest five-axis audit (3.6/5), exactly 100-word Swagger-vs-Redoc decision, reflection, course-consistent editable TeX and five-page A4 PDF. Built local Swagger UI and Redoc HTML from the same YAML, pinned Swagger UI dependency, updated Sem5 README and course progress.
+- **Verified:** Redocly lint valid/0 errors (two metadata/local-server warnings), Python syntax, 100-word count, Redoc build, local HTTP 200 for both HTML pages/YAML/Swagger asset, Markdown links, PDF A4/page count and no TeX overfull/missing glyph/compile errors. No routine PDF screenshots. Existing app code untouched.
+- **Open:** Corg.ly server/field contract and real returned payload unavailable; samples not live-tested. Public Swagger/Redoc URLs, functional Try-It-Out, workspace upload, CI bonus, commit/push, and grade not claimed; audit remains below 4/5. Sem3 FR-03 says eight digits but current `phoneSchema` allows 8–15 characters with punctuation; mini-spec follows implementation and documents drift.
+- **Next:** Resolve phone rule in SRS or code by product decision; obtain a real Corg.ly sandbox/contract or approved mock, capture responses, repeat audit, and publish/verify two URLs only when hosting is provided and authorized. Continue to W6 handout when available.
+
+## 2026-10-05 — Sem5 repo and renderer links in report
+
+- **Done:** Added the `origin`/`main`-derived GitHub URL for `docs/ICSI438/sem5` and identified `renderers/redoc.html` and `renderers/swagger.html` near the start of the Seminar 5 report and README. Regenerated the editable TeX and five-page PDF.
+- **Verified:** PDF contains the visible URL and clickable GitHub/renderer annotations; A4/page count and LaTeX log remain clean, Markdown local links resolve, `git diff --check` passed. Remote GitHub page availability was not confirmed; no push or publication occurred.
+- **Next:** Keep the link aligned if the remote branch/path changes; remaining Sem5 runtime/public DoD is unchanged.
+
+## 2026-10-06 — ICSI438 Seminar 6 local code-documentation package
+
+- **Source/scope:** Read the two-page Sprint 06 handout, relevant current services/controller/schema and targeted Bhatti Ch.4/5 + Chinchilla Ch.3/6/7/9 pages. Specific handout supersedes the narrow W06 roadmap preparation. User confirmed no GitLab project exists.
+- **Done:** Added structured JSDoc to all 44 symbols of six selected backend service modules (23 methods); internal-helper exclusion explanations; corrected the misleading inquiry lifecycle comment. Built TypeDoc HTML/JSON, AST inventory, 37 snippet type-checks, source-based inquiry audit/diff and a clearly disclosed controlled faulty draft/negative fixture. Added warning-as-error GitLab CI include/Pages jobs, an allowlisted standalone source export and mobile encrypted-session issue draft/local TODO link. Created editable Markdown/TeX and five-page A4 sem6_merged.pdf using the approved NUM/course template, GitHub Sem6 URL and on-save workspace. Updated course home/roadmap/progress and reusable knowledge.
+- **Verified:** 44/44 scoped documentation; 9/9 tests (7 inquiry behavior, snippet compiler check, reflection); TypeDoc zero warnings; six services plus mobile emitted JavaScript unchanged. Clean standalone bundle cached install/check/test/build passed. CI YAML parse/include/job structure, local generated HTML/Markdown links and PDF required content/clickable URL/A4/pages/no overfull or missing glyph/compile errors checked. No routine PDF screenshots.
+- **Open/limits:** No GitLab pipeline execution/CI Lint/Pages URL/issues/submission/grade/commit/push. Scope is six service modules, not every repo export. Baseline is AI-assisted, not falsely attributed to independent manual authoring; controlled/seeded faults are not spontaneous GPT-4/Claude output or discovered hallucinations. Those literal handout criteria remain open. Product behavior unchanged; pre-existing unrelated edits preserved.
+- **Next:** Owner reviews local PDF/reference. If a GitLab project is created, export only the allowlisted source and verify actual CI/Pages/issue IDs. Obtain independent manual/model comparison if required; use the specific Sem7 handout next.

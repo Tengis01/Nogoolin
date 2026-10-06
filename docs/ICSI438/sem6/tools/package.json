@@ -1,0 +1,17 @@
+{
+  "name": "nogoolin-sem6-documentation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs": "typedoc --options ../typedoc.json",
+    "check": "node check-docs.mjs",
+    "test": "node test-documentation.mjs",
+    "verify": "node run-verify.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "typedoc": "0.28.14",
+    "typescript": "5.7.3",
+    "zod": "3.24.1"
+  }
+}

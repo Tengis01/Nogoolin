@@ -1,0 +1,445 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  mongolian,
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off,,provide=*]{babel}
+\else
+\usepackage[bidi=default,shorthands=off,,provide=*]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}[Scale=0.86]
+\usepackage[a4paper,left=3cm,right=2cm,top=2cm,bottom=2cm,includefoot,headheight=15pt]{geometry}
+\usepackage{ragged2e,indentfirst,xurl}
+\usepackage{longtable,booktabs,array,calc,graphicx}
+\usepackage{xcolor,fancyhdr,titlesec,enumitem,float}
+\definecolor{ink}{HTML}{19354A}
+\definecolor{accent}{HTML}{167D8D}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titleformat{\subsubsection}{\fontsize{11.5}{13.5}\selectfont\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{1.25cm}{0pt}{8pt}
+\titlespacing*{\subsection}{1.25cm}{8pt}{4pt}
+\titlespacing*{\subsubsection}{1.25cm}{6pt}{3pt}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\setlist{nosep,leftmargin=1.5em,topsep=3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily ICSI438 / SEMINAR 06}
+\fancyhead[R]{\small\sffamily Nogoolin / MN}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\AtBeginDocument{\fontsize{10.5}{12.5}\selectfont\justifying\setlength{\parindent}{1.25cm}}
+
+
+\AtBeginDocument{\renewcommand{\figurename}{Зураг}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdflang={mn},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\input{sem6-title.tex}
+
+\section{1. Кодын API
+documentation}\label{ux43aux43eux434ux44bux43d-api-documentation}
+
+Nogoolin-ийн backend service-үүдийг JSDoc-оор тайлбарлаж, TypeDoc-оор
+HTML reference үүсгэв. Үндсэн төсөл TypeScript тул handout-ийн
+JSDoc/TypeDoc хувилбарыг сонгосон. UE-6-ийн Python class-ийн оронд
+inquiry service-ийн factory болон method-уудыг ашиглав.
+
+Sem6-ийн эх ба файлууд:
+\url{https://github.com/Tengis01/Nogoolin/tree/main/docs/ICSI438/sem6}.
+\href{reference/index.html}{reference/} дотор generated API reference,
+\href{audit/provenance.md}{audit/} дотор харьцуулалт,
+\href{tools/package.json}{tools/} дотор build/test хэрэгслүүд бий.
+
+\subsection{1.1 Хамрах хүрээ ба өмнөх ажлын
+холбоо}\label{ux445ux430ux43cux440ux430ux445-ux445ux4afux440ux44dux44d-ux431ux430-ux4e9ux43cux43dux4e9ux445-ux430ux436ux43bux44bux43d-ux445ux43eux43bux431ux43eux43e}
+
+Cart, category, inquiry, media, product, settings гэсэн зургаан service
+модулийг хамруулсан. Нийт 44 symbol: 6 factory, 23 method, 6 service
+type, 2 media interface, 7 interface field. Эдгээрийн \textbf{44/44 нь
+тайлбартай}; function/method бүр parameter, return, error, жишээтэй.
+Controller, database adapter, hook болон frontend нь энэ reference-ийн
+entry point биш. Төслийн бүх export-ийн бүрэн coverage гэж үзэхгүй.
+
+Sem3-ийн inquiry шаардлага нь service-ийн submit үйлдэлтэй, Sem4-ийн
+Controller → Service → Repository бүтэц нь тайлбарын хариуцлагын
+заагтай, Sem5-ийн inquiry endpoint нь controller-оор энэ service дуудах
+урсгалтай холбогдоно. HTTP contract ба code reference хоёрын зорилго
+ялгаатай.
+
+\subsection{1.2 Inquiry service-ийн нэг
+жишээ}\label{inquiry-service-ux438ux439ux43d-ux43dux44dux433-ux436ux438ux448ux44dux44d}
+
+Жишээнүүдэд Ногоон Дарь эх бүтээгдэхүүнтэй холбоотой inquiry ашиглав.
+Service factory-д repository dependency өгнө. UUID болон
+repository-уудыг caller урьдчилан бэлтгэсэн байх нөхцөлийг reference-ийн
+эхэнд тайлбарласан.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{/**}
+\CommentTok{ * Inquiry үүсгэнэ; product\_id байвал бүтээгдэхүүнийг шалгана.}
+\CommentTok{ * }\AnnotationTok{@param}\CommentTok{ }\CommentVarTok{input}\CommentTok{ {-} Controller{-}оор schema шалгасан input.}
+\CommentTok{ * }\AnnotationTok{@param}\CommentTok{ }\CommentVarTok{customerId}\CommentTok{ {-} JWT subject UUID эсвэл зочинд null.}
+\CommentTok{ * }\AnnotationTok{@returns}\CommentTok{ Repository{-}ийн үүсгэсэн Inquiry.}
+\CommentTok{ * }\AnnotationTok{@throws}\CommentTok{ }\CommentVarTok{PRODUCT\_NOT\_FOUND}\CommentTok{ (404), repository failure.}
+\CommentTok{ */}
+\KeywordTok{const}\NormalTok{ inquiry }\OperatorTok{=} \ControlFlowTok{await}\NormalTok{ service}\OperatorTok{.}\FunctionTok{submit}\NormalTok{(\{}
+\NormalTok{  customer\_name}\OperatorTok{:} \StringTok{"Тест хэрэглэгч"}\OperatorTok{,}
+\NormalTok{  phone}\OperatorTok{:} \StringTok{"99112233"}\OperatorTok{,}
+\NormalTok{  message}\OperatorTok{:} \StringTok{"Ногоон Дарь эх байгаа юу?"}
+\NormalTok{\}}\OperatorTok{,} \KeywordTok{null}\NormalTok{)}\OperatorTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+Input validation болон authentication нь controller/schema-д хийгддэг.
+Service нь JWT шалгахгүй. Non-exported helper-үүдийг implementation
+detail гэж тайлбарлаж, шууд public API болгон гаргаагүй. Зургаан
+service-ийн comment засварын өмнөх ба дараах emitted JavaScript ижил
+гарсан тул runtime үйлдэл өөрчлөгдөөгүй.
+
+\clearpage
+
+\section{2. AI audit ба эхтэй тулгасан
+засвар}\label{ai-audit-ux431ux430-ux44dux445ux442ux44dux439-ux442ux443ux43bux433ux430ux441ux430ux43d-ux437ux430ux441ux432ux430ux440}
+
+Bhatti Ch.5-ийн Explained, Concise, Clear, Usable, Trustworthy гэсэн
+таван зарчмыг inquiry module-д хэрэглэв. Нэг controlled faulty draft-ийг
+эхтэй тулгасан baseline-тай харьцуулж diff, audit хүснэгт,
+Use--Verify--Cite log хадгалсан.
+
+\subsection{2.1 Bhatti-ийн таван
+зарчим}\label{bhatti-ux438ux439ux43d-ux442ux430ux432ux430ux43d-ux437ux430ux440ux447ux438ux43c}
+
+Доорх 0--5 оноо нь локал self-assessment; багшийн болон peer-ийн үнэлгээ
+биш.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Зарчим
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Draft → baseline
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Засварын гол үр дүн
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Explained & 2 → 4 & Validation/auth болон service behavior-ийн зааг
+тодорхой. \\
+Concise & 4 → 4 & Method бүрийн зорилгыг богино бичсэн. \\
+Clear & 2 → 4 & Array ба pagination wrapper-ийг ялгасан. \\
+Usable & 2 → 4 & Domain жишээ, dependency нөхцөл, snippet type-check. \\
+Trustworthy & 1 → 4 & Source ба local test-тэй тулгасан; live test
+хийгдээгүй. \\
+\end{longtable}
+
+Дундаж нь draft 2.2/5, baseline 4.0/5. Бүрэн audit нь тусдаа Markdown
+файлд байна.
+
+\subsection{2.2 Гурван
+засвар}\label{ux433ux443ux440ux432ux430ux43d-ux437ux430ux441ux432ux430ux440}
+
+\textbf{C1 --- Validation.} Draft нь submit утсыг яг найман цифр эсэхийг
+өөрөө шалгана гэсэн. Бодит implementation-д ийм шалгалт байхгүй.
+Controller input schema хэрэглэж, service зөвхөн product байгаа эсэхийг
+шалган create дууддаг гэж зассан. Sem5-д тэмдэглэсэн SRS--phone schema
+drift хэвээр байгаа; энэ ажлаар бүтээгдэхүүний дүрэм өөрчлөөгүй.
+
+\textbf{C2 --- Return.} Draft нь listOwn pagination metadata буцаана
+гэсэн. Бодит return нь Inquiry array; хоосон үед хоосон array буцаадгийг
+test шалгасан.
+
+\textbf{C3 --- Status ба transaction.} Draft нь зөвхөн new → contacted →
+closed дараалалтай, update ба audit нэг transaction гэсэн. Service нь
+шилжилтийн дарааллыг хориглодоггүй. Audit алдаа гарсан ч өмнөх status
+update rollback болохгүйг local double test шалгасан. Анхны кодын
+lifecycle comment-ийг мөн бодит implementation-тэй нийцүүлсэн.
+
+\subsection{2.3 Гарал ба hallucination
+test}\label{ux433ux430ux440ux430ux43b-ux431ux430-hallucination-test}
+
+Baseline нь AI-assisted, эх кодтой тулгасан хувилбар. Controlled
+draft-ийн алдааг зориуд audit exercise-д оруулсан. Үүнийг Тэнгис бие
+даан гараар бичсэн эсвэл GPT-4/Claude-ийн санамсаргүй алдаа олсон гэж
+үзэхгүй. Одоогийн assistant нь Codex/GPT-6.
+
+Reflection test-д байхгүй getInquiryById method болон InquiryReceipt
+type-ийг negative fixture болгон өгсөн. Test эдгээрийг илрүүлж,
+corrected reference list-ийг зөвшөөрсөн. Энэ нь detector ажиллах
+нотолгоо; бодит model output-оос invented API олсон шалгуурын нотолгоо
+биш. Independent manual review болон тухайн output-ийн audit нээлттэй.
+
+\clearpage
+
+\section{3. Чанар ба автомат
+build}\label{ux447ux430ux43dux430ux440-ux431ux430-ux430ux432ux442ux43eux43cux430ux442-build}
+
+\subsection{3.1 Chinchilla-ийн зөвлөгөөг хэрэглэсэн
+нь}\label{chinchilla-ux438ux439ux43d-ux437ux4e9ux432ux43bux4e9ux433ux4e9ux4e9ux433-ux445ux44dux440ux44dux433ux43bux44dux441ux44dux43d-ux43dux44c}
+
+Handout ``Six Principles'' гэж нэрлэсэн ч зургаан нэрийг жагсаагаагүй.
+Доорх checklist нь Ch.3 болон Ch.7-ийн зөвлөгөөг энэ ажилд хэрэглэхээр
+нэгтгэсэн.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Шалгалт
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Энэ ажилд хэрэглэсэн нь
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Нэг мөр нэр томьёо ба domain & Ногоон Дарь эх → inquiry; тогтмол
+method/type нэр. \\
+Үйлдэл, хариуцагч тодорхой & Controller шалгалт ба service үйлдлийг
+ялгасан. \\
+Богино, хэрэгтэй тайлбар & Summary, parameter, result, error
+дараалалтай. \\
+Бодит хэрэглээтэй жишээ & Guest inquiry болон admin status update. \\
+Prerequisite тодорхой & Dependency, UUID, Buffer-ийн нөхцөлтэй. \\
+Жишээг шалгаж хадгалах & Snippet type-check, local test, strict
+build. \\
+\end{longtable}
+
+\subsection{3.2 TypeDoc ба GitLab
+CI}\label{typedoc-ux431ux430-gitlab-ci}
+
+TypeDoc 0.28.14, TypeScript 5.7.3 болон холбогдох dependency-г Sem6-ийн
+lockfile-д тогтоосон. Build нь compiler error, missing documentation
+болон invalid link-ийг шалгана; warning гарвал амжилтгүй дуусна.
+Scope-оос гаднах repository/schema contract-д зориулан notExported
+шалгалтыг унтраасан бөгөөд шалтгааныг reference index-д бичсэн.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npm ci {-}{-}prefix docs/ICSI438/sem6/tools}
+\NormalTok{npm run verify {-}{-}prefix docs/ICSI438/sem6/tools}
+\NormalTok{python3 docs/ICSI438/sem6/latex/build.py}
+\end{Highlighting}
+\end{Shaded}
+
+Командуудыг Nogoolin root-оос ажиллуулна. Verifier нь coverage → test →
+TypeDoc гэсэн дарааллаар ажиллаж verification log хадгална. TeX-ийн
+compile нь Markdown-оос дахин үүсгэхгүй; Ctrl+S нь LaTeX Workshop-оор
+PDF шинэчилнэ.
+
+GitLab pipeline-д docs-build job HTML reference үүсгэж public artifact
+гаргана. Default branch дээр publish-docs job тэр artifact-ийг GitLab
+Pages-д нийтлэхээр тохируулсан. Root CI файл нь Sem6-ийн CI файлыг
+include хийдэг. Тусдаа GitLab repo ашиглахад шаардлагатай
+source/config-ийг сонгон export хийх хэрэгсэл мөн бэлдсэн.
+
+\subsection{3.3 Бодит
+verification}\label{ux431ux43eux434ux438ux442-verification}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Шалгалт
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Үр дүн
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Public symbol inventory & Service scope-д 44/44. \\
+Зан төлөв ба snippet/reflection & 9 test давсан; snippet-ууд type-check
+давсан. \\
+TypeDoc HTML & Local build амжилттай, warning байхгүй. \\
+Runtime өөрчлөгдсөн эсэх & Зургаан service-ийн JavaScript output
+ижил. \\
+CI YAML & Parse, include path, job dependency бүтэц шалгасан. \\
+GitLab pipeline / Pages & Project байхгүй тул ажиллуулаагүй. \\
+\end{longtable}
+
+\clearpage
+
+\section{4. Technical debt ба
+дүгнэлт}\label{technical-debt-ux431ux430-ux434ux4afux433ux43dux44dux43bux442}
+
+\subsection{4.1 TODO/FIXME
+бүртгэл}\label{todofixme-ux431ux4afux440ux442ux433ux44dux43b}
+
+Backend, packages болон apps-ийн TS/TSX эхээс нэг TODO олдсон: mobile
+auth session AsyncStorage-д хадгалагдаж байгаа бөгөөд encrypted
+storage-д шилжүүлэх хэрэгтэй. Хуучин Phase 2 хугацааны тэмдэглэгээг авч,
+local issue draft-тай холбосон. Authentication кодын үйлдлийг
+өөрчлөөгүй.
+
+Issue draft-д session encryption, restore/refresh, logout cleanup,
+existing session migration, storage failure болон Android/iOS
+verification-ийн acceptance criteria бий. GitLab project байхгүй учраас
+issue ID зохиогоогүй; бодит issue үүсэх хүртэл энэ шалгуур нээлттэй.
+Файл нь issues хавтас дотор байна.
+
+\subsection{4.2 Reflection}\label{reflection}
+
+\textbf{Bhatti-аас авсан санаа.} Миний хувьд Trustworthy зарчим хамгийн
+хэрэгтэй байлаа. Зөв хэлбэртэй JSDoc өөрөө зөв тайлбарын баталгаа биш.
+Жишээлбэл status-ийн сумтай тайлбарыг хараад шилжилтийн хориг байна гэж
+ойлгож болох ч код нь түүнийг хэрэгжүүлээгүй. Тайлбарын claim бүрийг
+implementation эсвэл test-тэй холбох нь ийм зөрүүг илрүүлнэ.
+
+\textbf{Chinchilla-аас үргэлжлүүлэх зүйл.} Нэг domain example-ийг баримт
+даяар үргэлжлүүлэх нь method бүрт шинэ нөхцөл ойлгох ачааллыг багасгаж
+байна. Цаашид жишээнүүдийн dependency нөхцөлийг эхэнд нь тайлбарлаж,
+type-check болон test-ийг build-тэй холбоно.
+
+\textbf{Ном ба бодит ажлын ялгаа.} Номонд жишээг шалгаж, review хийж,
+нийтлэн хадгалах workflow ярьдаг. Энэ ажилд локал build/test бэлэн
+болсон боловч GitLab project, бие даасан manual review болон бодит AI
+output-ийн харьцуулалтын нотолгоо бүрэн биш. Эдгээрийг локал PDF-ээр
+орлуулахгүй гэж үзлээ.
+
+\subsection{4.3 Үлдсэн
+шалгуур}\label{ux4afux43bux434ux441ux44dux43d-ux448ux430ux43bux433ux443ux443ux440}
+
+GitLab CI green, live Pages URL, бодит issue дугаар болон
+repository-wide public symbol coverage батлагдаагүй. UE-6-ийн
+independent manual authoring, GPT-4/Claude response болон spontaneous
+invented API audit мөн нээлттэй. Одоогийн багц нь TypeScript хувилбарын
+локал implementation ба controlled audit exercise юм.
+
+\subsection{4.4 Эх
+сурвалж}\label{ux44dux445-ux441ux443ux440ux432ux430ux43bux436}
+
+\begin{itemize}
+\tightlist
+\item
+  Sprint 06 Lab Instructions, х.1--2: US-6.1--6.4, UE-6, DoD.
+\item
+  Bhatti et al., Docs for Developers: Ch.4 х.79; Ch.5 х.86--94.
+\item
+  Chinchilla, Technical Writing for Software Developers: Ch.3 х.28--33;
+  Ch.6 х.69--82; Ch.7 х.89--92; Ch.9 х.123.
+\item
+  \href{https://typedoc.org/documents/Options.Validation.html}{TypeDoc
+  validation}.
+\item
+  \href{https://docs.gitlab.com/user/project/pages/getting_started/pages_from_scratch/}{GitLab
+  Pages workflow}.
+\item
+  Nogoolin source, Sem6 symbol inventory, audit diff ба verification
+  log.
+\end{itemize}
+
+\end{document}

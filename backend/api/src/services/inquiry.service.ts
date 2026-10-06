@@ -11,11 +11,29 @@ import type {
 } from '../repositories/types.js';
 import { notFound } from '../lib/errors.js';
 
+// @internal — pagination хэлбэр нь service return-д харагдана; тусдаа supported API биш.
 interface Paginated<T> {
   data: T[];
   meta: { page: number; limit: number; total: number; total_pages: number };
 }
 
+/**
+ * Зочин болон нэвтэрсэн хэрэглэгчийн inquiry service үүсгэнэ.
+ *
+ * @param inquiries - Inquiry хадгалах, унших repository.
+ * @param products - Холбогдох бүтээгдэхүүнийг шалгах repository.
+ * @param auditLogs - Admin төлөв өөрчилсөн үйлдлийг бүртгэх repository.
+ * @returns submit, listOwn, listAdmin, updateStatus method бүхий service.
+ * @throws Factory өөрөө алдаа шидэхгүй.
+ * @example
+ * ```ts
+ * const service = createInquiryService(
+ *   inquiryRepository,
+ *   productRepository,
+ *   auditLogRepository
+ * );
+ * ```
+ */
 export function createInquiryService(
   inquiries: InquiryRepository,
   products: ProductRepository,
@@ -24,6 +42,25 @@ export function createInquiryService(
   return {
     // UC-G-007 / FR-INQ-001..003 — guest OR authenticated submission.
     // customerId is the JWT subject when present, else null (guest).
+    /**
+     * Inquiry үүсгэнэ; product_id өгөгдвөл бүтээгдэхүүн байгаа эсэхийг шалгана.
+     *
+     * @param input - Controller-оор inquiryInputSchema шалгасан input; email талбаргүй.
+     * @param customerId - JWT subject UUID эсвэл зочинд null; caller өөрөө баталгаажуулна.
+     * @returns Repository-ийн үүсгэсэн Inquiry; input validation болон auth энэ method-д хийгдэхгүй.
+     * @throws PRODUCT_NOT_FOUND (404) — product_id олдохгүй; repository алдаа өөрчлөгдөхгүй дамжина.
+     * @example
+     * ```ts
+     * const inquiry = await service.submit(
+     *   {
+     *     customer_name: "Тест хэрэглэгч",
+     *     phone: "99112233",
+     *     message: "Ногоон Дарь эх байгаа юу?"
+     *   },
+     *   null
+     * );
+     * ```
+     */
     async submit(input: InquiryInput, customerId: string | null): Promise<Inquiry> {
       // A referenced product must exist (clean 404 instead of an FK 500).
       if (input.product_id) {
@@ -34,11 +71,33 @@ export function createInquiryService(
     },
 
     // "Inquiry history" — a customer reads only their own (migration 0007).
+    /**
+     * Өгсөн хэрэглэгчийн inquiry жагсаалтыг repository-оос уншина.
+     *
+     * @param customerId - Controller-оор баталгаажсан хэрэглэгчийн UUID; service JWT шалгахгүй.
+     * @returns Inquiry[]; хоосон жагсаалт байж болно, pagination wrapper байхгүй.
+     * @throws Repository-ийн алдаа өөрчлөгдөхгүй дамжина.
+     * @example
+     * ```ts
+     * const inquiries = await service.listOwn(customerId);
+     * ```
+     */
     async listOwn(customerId: string): Promise<Inquiry[]> {
       return inquiries.listByCustomer(customerId);
     },
 
     // FR-INQ-004/006 — admin inbox, newest first, filterable + paginated.
+    /**
+     * Admin inquiry жагсаалтад pagination metadata нэмнэ.
+     *
+     * @param query - Schema шалгасан AdminInquiryListQuery; page ≥ 1, limit 1–50.
+     * @returns Inquiry data болон page/limit/total/total_pages; хоосон үед total_pages = 1.
+     * @throws Repository-ийн алдаа өөрчлөгдөхгүй дамжина.
+     * @example
+     * ```ts
+     * const page = await service.listAdmin({ page: 1, limit: 12, status: "new" });
+     * ```
+     */
     async listAdmin(query: AdminInquiryListQuery): Promise<Paginated<Inquiry>> {
       const result = await inquiries.listAll(query);
       return {
@@ -52,7 +111,20 @@ export function createInquiryService(
       };
     },
 
-    // UC-ADM-010 / FR-INQ-005 — status lifecycle new → contacted → closed.
+    // UC-ADM-010 / FR-INQ-005 — accepted status values; transition order is not enforced here.
+    /**
+     * Inquiry status-ийг зассаны дараа admin audit бүртгэнэ.
+     *
+     * @param id - Inquiry UUID.
+     * @param status - Шалгасан new, contacted эсвэл closed утга; шилжилтийн дарааллыг service хориглохгүй.
+     * @param adminId - Controller-оор admin эрх баталгаажсан UUID.
+     * @returns Зассан Inquiry.
+     * @throws INQUIRY_NOT_FOUND (404); repository/audit алдаа дамжина. Audit бүтэлгүйтвэл status өөрчлөлт rollback хийгдэхгүй.
+     * @example
+     * ```ts
+     * const inquiry = await service.updateStatus(inquiryId, "contacted", adminId);
+     * ```
+     */
     async updateStatus(
       id: string,
       status: InquiryStatus,
@@ -72,4 +144,10 @@ export function createInquiryService(
   };
 }
 
+/** InquiryService нь createInquiryService-ийн method-уудын inferred contract.
+ * @example
+ * ```ts
+ * type Service = InquiryService;
+ * ```
+ */
 export type InquiryService = ReturnType<typeof createInquiryService>;
