@@ -6,7 +6,7 @@ public web catalog, admin panel, mobile app, and REST API.
 > 📚 **Documentation-first project.** All specifications live in [`docs/`](./docs/)
 > and are authoritative. Start with [`docs/phase-0/01-vision.md`](docs/phase-0/01-vision.md)
 > and [`docs/phase-0/10-roadmap.md`](docs/phase-0/10-roadmap.md). AI-agent guidance is in
-> [`CLAUDE.md`](./CLAUDE.md).
+> [`AGENTS.md`](./AGENTS.md).
 
 ## Stack
 
@@ -26,7 +26,7 @@ apps/mobile/                 React Native + Expo app
 backend/api/                 Fastify REST API (Controller → Service → Repository)
 packages/shared-types/       Shared TypeScript types
 packages/validation-schemas/ Shared Zod schemas
-database/migrations/         Versioned SQL migrations
+supabase/migrations/         Versioned SQL migrations
 docs/                        Authoritative Phase 0 specifications
 ```
 
@@ -119,10 +119,10 @@ pnpm start                                    # then: Metro for the dev client
 
 ## Status
 
-⚠️ Project is in Phase 1 (Foundation) — DB schema + API scaffold exist; web
-and mobile apps are not initialized yet. See
-[`docs/phase-0/10-roadmap.md`](docs/phase-0/10-roadmap.md) and
-[`agent-context/PROGRESS.md`](./agent-context/PROGRESS.md) for live status.
+See the dated summary in [agent-context/PROGRESS.md](agent-context/PROGRESS.md)
+for recorded product milestones and [TASKS.md](agent-context/TASKS.md) for the
+queue. Historical test counts and runtime statements are not fresh verification.
+Course progress is tracked separately in [ICSI438](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/COURSE-HOME.md).
 
 ## Conventions
 
@@ -130,8 +130,8 @@ and mobile apps are not initialized yet. See
 - Branches: `main` (production) / `develop` (integration) / `feature/xxx`
 - No secrets in code — env vars only (`docs/phase-0/08-security.md` §11)
 
-## Documentation / ICSI405
+## Documentation / ICSI438
 
-[Баримтын индекс](docs/README.md) · [M2 багц](docs/ICSI405/sem2/README.md) · [SRS](docs/requirements/srs-template.md) · [SDD](docs/architecture/sdd-template.md).
+[Баримтын индекс](docs/README.md) · [M2 багц](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/README.md) · [SRS](docs/requirements/srs-template.md) · [SDD](docs/architecture/sdd-template.md).
 
-Өмнөх 01–10 цувралын эхүүд [docs/phase-0](docs/phase-0/README.md)-д, хичээлийн эхүүд [docs/ICSI405](docs/ICSI405/README.md)-д байна.
+Өмнөх 01–10 цувралын эхүүд [docs/phase-0](docs/phase-0/README.md)-д, хичээлийн эхүүд [ICSI438 GitLab repo](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/README.md)-д байна.

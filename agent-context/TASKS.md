@@ -1,8 +1,10 @@
 # Tasks — Active Queue
 
-> Kanban for what's happening in this repo right now. After EVERY task, append
-> an entry to the Log below (what was done, what's next). Newest log entries
-> at top.
+> Queue plus dated history. Product backlog below is carried from July 2026;
+> recheck source before assuming an item is still missing. Historical counts,
+> branch names and next steps describe their entry date, not today's state.
+> Read the queue and latest dated entries first; this file has both prepended
+> and appended history, so file order alone is not chronological.
 
 ## In Progress
 
@@ -24,11 +26,13 @@
 - [ ] Manual web-auth smoke test in browser (API RBAC covered by tests)
 - [ ] Merge feature branches → `main`; create `develop` branch
       (waiting for owner go-ahead — "wait user to tell" 2026-07-16)
+- [ ] Mobile inquiry form + wishlist (last recorded pending 2026-07-26)
 - [ ] Real eslint config; mobile encrypted session storage; native Google
       Sign-In (carried over)
 
-> Phase 4 (soft order/inquiry) can start in PARALLEL with the above —
-> nothing here blocks it (owner instruction, 2026-07-20 closeout).
+> Historical sequencing decision (2026-07-20): Phase 4 could start in parallel.
+> Its API/web milestones were subsequently recorded on 2026-07-26; consult
+> [PROGRESS.md](PROGRESS.md) for that record and the remaining mobile work.
 
 ## Done
 
@@ -501,3 +505,88 @@ Analyzed the two W01–W15 combined handout PDFs; added COURSE-HOME/ROADMAP, wee
 - **Verified:** 44/44 scoped documentation; 9/9 tests (7 inquiry behavior, snippet compiler check, reflection); TypeDoc zero warnings; six services plus mobile emitted JavaScript unchanged. Clean standalone bundle cached install/check/test/build passed. CI YAML parse/include/job structure, local generated HTML/Markdown links and PDF required content/clickable URL/A4/pages/no overfull or missing glyph/compile errors checked. No routine PDF screenshots.
 - **Open/limits:** No GitLab pipeline execution/CI Lint/Pages URL/issues/submission/grade/commit/push. Scope is six service modules, not every repo export. Baseline is AI-assisted, not falsely attributed to independent manual authoring; controlled/seeded faults are not spontaneous GPT-4/Claude output or discovered hallucinations. Those literal handout criteria remain open. Product behavior unchanged; pre-existing unrelated edits preserved.
 - **Next:** Owner reviews local PDF/reference. If a GitLab project is created, export only the allowlisted source and verify actual CI/Pages/issue IDs. Obtain independent manual/model comparison if required; use the specific Sem7 handout next.
+
+## 2026-10-07 — AI context consolidation and structure/storage review
+
+- **Found:** duplicated stack/rules/status in AGENTS/CLAUDE/MEMORY/PROJECT_BRIEF;
+  stale Phase 1 brief, contradictory archived phase labels, and six duplicated
+  OpenSpec workflow bodies with only provider invocation wording differences.
+- **Changed:** AGENTS is the shared rule source; CLAUDE and MEMORY route to it
+  and relevant evidence. PROJECT_BRIEF content is routed through MEMORY and
+  original vision/scope sources. Hermes metadata/entry points load canonical
+  .agents workflows. Product records retain dates; archived checklists are
+  marked historical. README course/migration/status paths corrected.
+- **Storage review:** system TeX installation is shared; local dependency/tmp
+  trees account for most repository storage. Cleanup/template/tool migration
+  remains a plan, not implemented by this documentation task.
+- **Validation:** local links, skill metadata/shared-body routing, historical
+  record preservation and focused diff checked; no app/PDF rebuild required.
+  Bundled skill validator rejects an unchanged OpenSpec compatibility key;
+  standard fields/body passed separately with that extension omitted only in
+  temporary validation copies. Hermes runtime discovery was not exercised.
+- **Next:** use task-specific source and fresh evidence; perform the separate
+  storage/template cleanup plan when requested. No product behavior changed.
+
+## 2026-10-07 — Documentation conversation handoff
+
+- Saved [DOCUMENTATION-ICSI438](../../00-Vault/Handoffs/DOCUMENTATION-ICSI438.md)
+  with accepted scope/style, dated local verification, open criteria and the
+  unimplemented storage plan; linked existing sources instead of copying them.
+- Checked eight sections and local links/anchors. No raw chat archive, app source,
+  tool configuration, PDF rebuild or external publication in this task.
+- Next: new agent reads the minimal handoff/startup set and follows the user's
+  next selected task; preserve the existing uncommitted context cleanup.
+
+## 2026-10-07 — Locate original UI prototype
+
+Confirmed `docs/nogoolin-prototype-a-v4.html` exists and is linked from the documentation index; returned its path. No design changes.
+
+## 2026-10-08 — Standalone Nogoolin concept B
+
+- **Done:** Added `docs/nogoolin-prototype-b-codex.html` as a separate Mongolian
+  public-flow concept (home, searchable/filterable catalog, product detail,
+  inquiry). Kept prototype A intact. The new direction uses an editorial
+  ceramic-garden palette, authored SVG product studies and an optional
+  Three.js hero with a static fallback. Demo inquiry is local-only and clearly
+  says it does not send or retain personal data.
+- **Verified:** 19 earlier browser assertions passed; final desktop/mobile
+  visual review passed at 1440px and 390px with no horizontal overflow, and
+  focus on the main region has no outline. Inline JavaScript syntax and
+  `git diff --check` passed. Impeccable detector reported only its generic
+  cream-palette warning; this palette is an intentional fit for the ceramic
+  product concept. Remote font/Three.js loading was blocked in the local
+  browser, so the final visual check used the static SVG fallback.
+- **Next:** Review the standalone concept in a normal browser; implementation
+  remains a design prototype, not an integration into the application.
+
+## 2026-10-08 — Durable UI handoff
+
+- Saved [NOGOOLIN-UI-CONCEPT-B](../../00-Vault/Handoffs/NOGOOLIN-UI-CONCEPT-B.md)
+  with scope, accepted decisions, verified prototype state, external-loading
+  limits, next steps and the minimum agent reading set. Linked it from the
+  AI workspace handoff instead of duplicating the UI details there.
+- **Next:** Future UI work starts from this handoff and rechecks current source
+  per AGENTS.md; no app integration was authorized by the handoff task.
+
+## 2026-10-14 — ICSI438 course docs split into a GitLab repo
+
+- **Done:** Moved `docs/ICSI438` to its own repo,
+  [gitlab.com/Tengis01/icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin)
+  (local `/home/tengis/Documents/Tengis/ICSI438`), history kept via
+  `git filter-repo`. It pins this repo as the `product/` submodule (`885e591`).
+  Removed `docs/ICSI438` and the root `.gitlab-ci.yml` here; product docs
+  (arc42, SRS, ADRs, traceability) and the mobile session comment now link to
+  the GitLab copies.
+- **History rewrite:** With owner approval, rewrote this repo's history to drop
+  books, lectures and lab handout PDFs from every commit, then force-pushed
+  `main` and `chore/phase3-closeout`. Old SHAs such as `424e6af` are gone; do
+  not push from any older clone. GitHub may still serve cached old commits by
+  SHA until GitHub Support purges them (not requested yet).
+- **Verified:** Rewritten HEAD tree is identical to the pre-rewrite tree
+  (15 commits, pack 18.8 → 3.8 MiB). Deploy workflows were not triggered
+  (path filters). GitLab pipeline `2945035909`: `sem5-openapi`, `sem6-docs`,
+  `pages` all passed; Pages is public at <https://icsi438-nogoolin-442a5f.gitlab.io/>.
+- **Next:** Course work continues in the ICSI438 repo; see
+  [DOCUMENTATION-ICSI438 handoff](../../00-Vault/Handoffs/DOCUMENTATION-ICSI438.md).
+  Uncommitted owner changes in this repo (AGENTS.md, agent-context/*, README.md,
+  .hermes skills) were preserved and remain uncommitted.

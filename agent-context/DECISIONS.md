@@ -3,6 +3,11 @@
 > Append-only, **newest at top**. One line of rationale each — full reasoning
 > lives in `docs/phase-0/10-roadmap.md` §2 and the doc changelogs. Do not relitigate.
 
+Decisions record intent, not proof of deployed or implemented behavior. Read
+later amendments first: ADR-011 supersedes ADR-009's migration path; D-07
+defers the per-product viewer despite the original model-generation plan.
+The current architecture record index is [here](../docs/architecture/README.md).
+
 ## Finalized
 
 | # | Date | Decision | Rationale |

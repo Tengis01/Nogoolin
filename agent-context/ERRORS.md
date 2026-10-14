@@ -1,5 +1,17 @@
 # Errors Log
 
+## 2026-10-07 — Context cleanup tooling checks
+
+- **Patch:** delete/add of the same path in one apply_patch was rejected before
+  mutation. Replaced existing text directly and used a separate delete for the
+  merged brief; verified the focused diff afterward.
+- **Skill validation:** bundled skill-creator quick_validate rejects the
+  pre-existing OpenSpec `compatibility` frontmatter key. Kept provider metadata
+  unchanged; checked YAML/name, canonical targets and metadata equality
+  separately. Do not claim that bundled validator passed.
+- **Discovery:** guessed helper/README paths did not exist; used actual file
+  inventory instead. Discover filenames before assuming another module's layout.
+
 > Running log of every error/bug hit during development: what broke, root
 > cause, fix applied. Append newest first. Keep entries short and factual —
 > this file exists so the same bug is never debugged twice.

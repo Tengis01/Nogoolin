@@ -1,20 +1,32 @@
-# Progress — Actual Repo State
+# Progress — Recorded Product State
 
-> Mirrors `docs/phase-0/10-roadmap.md` checklists but reflects what is REALLY done in
-> this repo. Update when tasks complete. Last verified: **2026-07-16**.
+## Summary and evidence dates
+
+- Product engineering entries below were last recorded on **2026-07-26**.
+  They are historical results, not a fresh runtime/branch/deployment check.
+- Last recorded: Phase 2 catalog work complete; Phase 3 web intro/hero verified
+  with placeholder assets, real GLB/mobile Rive/home content still pending;
+  Phase 4 inquiry/wishlist API and web UI recorded complete, mobile pending.
+- Current product task queue: [TASKS.md](TASKS.md). Course-only work is tracked
+  in [ICSI438 progress](../docs/ICSI438/WEEKLY-PROGRESS.md), not as product phases.
+- The 2026-10-06 Sem6 evidence covers six service modules and local repository
+  doubles. It does not revalidate the whole app, live Supabase or deployment.
+- Phase 1's original Docker/runtime blocker was recorded resolved in the
+  2026-07-19 entry below. The empty table-grants migration remains a separately
+  recorded gap; check actual files/runtime before relying on a fresh reset.
+
+## Dated product records
 
 ## Phase 0 — Documentation & Planning ✅ COMPLETE (2026-07-05)
 
-All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
-07 > 02 > prototypes. Finalized decisions in `DECISIONS.md`.
+Original specifications (EN + MN) live in `docs/phase-0/`. For source selection
+and later amendments follow [AGENTS.md](../AGENTS.md).
 
 ## Phase 1 — Foundation ✅ COMPLETE (2026-07-17)
 
-> Caveat: code-complete and build-verified (all packages type-check; web
-> production build passes; expo prebuild generates the native project), but
-> END-TO-END RUNTIME verification against the local Supabase stack is still
-> pending — Docker wasn't running during development (ERRORS.md 2026-07-16).
-> First action of Phase 2: `pnpm exec supabase start` + auth smoke test.
+> Historical caveat (2026-07-16): build/type checks passed, but Docker was not
+> running, so runtime verification was pending at that milestone. The
+> 2026-07-19 runtime closeout below recorded this blocker resolved.
 
 ### Week 1 — Repo & Infrastructure
 - [x] Monorepo skeleton (`apps/web`, `apps/mobile`, `backend/api`, `packages/*`,
@@ -39,9 +51,8 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
 - [x] RLS policies per docs/phase-0/08 §6 (all tables + is_admin() + auth trigger)
 - [x] `packages/validation-schemas` Zod schemas (entities + input schemas)
 - [x] `pnpm-lock.yaml` generated; api + validation-schemas type-check clean
-- [ ] Migrations verified against a running local stack — blocked: Docker
-      Desktop daemon not running (see ERRORS.md 2026-07-16); run
-      `pnpm exec supabase start` once Docker is up
+- [x] Original migration-runtime blocker recorded resolved in the
+      2026-07-19 Phase 1 runtime closeout below; no fresh runtime check here
 
 ### Week 3 — Auth & Admin Scaffold
 - [x] Email auth: signup/login/logout/password-reset (web via @supabase/ssr
@@ -59,11 +70,12 @@ All 10 spec docs (EN + MN) exist in `docs/`. Conflict precedence
 - Token config: 15-min access JWT + 7-day sessions (timebox) + refresh
   rotation — supabase/config.toml
 
-### Remaining polish (non-blocking)
-- Runtime auth smoke test against running local stack (see caveat above)
+### Follow-up from the Phase 1 milestone (historical)
+- Runtime blocker later recorded resolved; check TASKS.md for any remaining
+  browser-auth smoke test rather than repeating the old Docker blocker
 - Real eslint configs (lint currently aliases `tsc --noEmit`)
 - Mobile session storage: AsyncStorage now; docs/phase-0/08 §5.2 wants encrypted
-  storage — TODO(Phase 2) noted in apps/mobile/lib/supabase.ts
+  storage — current local issue draft: [session storage](../docs/ICSI438/sem6/issues/mobile-session-storage.md)
 
 ## Phase 2 — Product System ✅ COMPLETE (2026-07-19)
 
@@ -127,7 +139,7 @@ production blocks nothing.**
 ## (previous Phase 3 section)
 Non-negotiables recap: deity never moves; NO lateral camera translate
 (setViewOffset only); locked arc numbers; skip ≤1s; fallbacks. See
-design.md + MEMORY.md rule 3 before ANY Three.js change.
+[design.md](design.md) and [AGENTS.md](../AGENTS.md) before any Three.js change.
 
 ### Done (2026-07-20) — intro camera system (`feature/intro-camera-system`)
 - [x] Persistent-canvas hero (WF-HERO-01): ONE R3F canvas across
@@ -163,13 +175,13 @@ design.md + MEMORY.md rule 3 before ANY Three.js change.
 > 360° per-product viewer REMOVED from Phase 3 scope — deferred post-MVP
 > (D-07, 2026-07-20). Detail pages ship with the photo gallery only.
 
-## Phase 4 — Soft Order / Inquiry 🟡 IN PROGRESS (API core done)
+## Phase 4 — Soft Order / Inquiry — API and web milestones (2026-07-26)
 
 **Status (2026-07-26):** the soft inquiry system + wishlist/cart-draft API is
 built, applied to the local stack, and E2E-tested (12 new integration tests,
 34/34 green). Started in PARALLEL with the Phase 3 asset wait, per owner
-instruction. UI (web/mobile) is intentionally NOT built yet — API only, same
-as Phase 2 Week 1.
+instruction. At that API milestone, UI was not built yet. The later web UI milestone
+below supersedes this statement; mobile remained pending.
 
 ### Done (2026-07-26) — inquiry + cart API (`feature/inquiry-api`)
 - [x] Migration 0007: `inquiries.customer_id` (nullable, links auth submitter;
@@ -236,6 +248,13 @@ as Phase 2 Week 1.
       `apps/web/src/lib/inquiry-form-schema.ts` into
       `packages/validation-schemas` so both clients share it
 
+<details>
+<summary>Archived initial milestones — superseded status/checklists</summary>
+
+The following checklist preserves the original record. Unchecked items and
+“not started” labels describe that earlier moment, not the current queue;
+use the summary above and TASKS.md for recorded remaining work.
+
 ## Phase 2 (archive of week 1–2 log)
 
 ### Done (2026-07-19) — Category/Product/Image API (`feature/product-category-api`)
@@ -275,7 +294,8 @@ as Phase 2 Week 1.
 - [ ] Mobile: listing + detail core screens
 - [ ] SEO pass on listing/detail (meta, OG, sitemap)
 - [ ] GLB (model-assets) upload endpoint — Phase 3 with the 360° viewer
-## Phase 3 — Premium Experience ⬜ NOT STARTED (highest-risk phase)
-## Phase 4 — Soft Order / Inquiry ⬜ NOT STARTED
-## Phase 5 — Delivery-Ready Structure ⬜ NOT STARTED
-## Phase 6 — Launch Preparation ⬜ NOT STARTED
+The initial plan marked later phases unstarted. Later Phase 3/4 milestones
+above supersede that initial status; this archive supplies no Phase 5/6
+completion evidence.
+
+</details>

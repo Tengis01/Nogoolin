@@ -1,5 +1,10 @@
 # DB Schema — Condensed Reference
 
+This is a design/migration summary, not a live database inspection. For actual
+DDL and grants read [migrations](../supabase/migrations/); verify the running
+database before claiming policies, grants or migrations are applied. Intended
+order tables do not establish implemented checkout/order API behavior.
+
 > Condensed from `docs/phase-0/04-er-diagram.md` (v1.0.0) + `docs/phase-0/08-security.md` §6.
 > 11 entities originally; **+1 `cart_items` (migration 0007, Phase 4)** = 12.
 > All `uuid` PKs (IDOR mitigation), RLS enabled on ALL tables from the first
