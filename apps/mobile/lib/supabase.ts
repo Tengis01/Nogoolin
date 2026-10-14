@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 // to every request (docs/phase-0/09 §10.3).
 //
 // TODO: move session storage to encrypted storage per docs/phase-0/08 §5.2.
-// Tracked in docs/ICSI438/sem6/issues/mobile-session-storage.md;
+// Tracked in https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem6/issues/mobile-session-storage.md;
 // GitLab issue ID is pending. Verify current platform limits before implementation.
 export const supabase = createClient(
   process.env.EXPO_PUBLIC_SUPABASE_URL!,

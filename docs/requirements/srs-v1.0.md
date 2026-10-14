@@ -80,7 +80,7 @@ Nogoolin нь Next.js web, Fastify REST API, Supabase PostgreSQL/Auth/Storage б
 - **Admin:** хүсэлтүүдийг эрэмбэлж, шүүж, төлөв шинэчилнэ.
 - **Developer:** local орчинд API, web, auth болон өгөгдлийн урсгалыг шалгана.
 
-Persona-ийн эх нь [Week 2 нэмэлт](../ICSI438/sem2/wiki/persona-and-pivot.md). Шинэ stakeholder interview хийгдээгүй.
+Persona-ийн эх нь [Week 2 нэмэлт](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/wiki/persona-and-pivot.md). Шинэ stakeholder interview хийгдээгүй.
 
 ### 2.4 Хязгаарлалт
 
@@ -126,25 +126,25 @@ REST хүсэлт, хариу JSON форматтай. Огноо ISO 8601 UTC �
 
 **Requirement · must.** Зочин нийтлэгдсэн бүтээгдэхүүний inquiry form-д хүчинтэй нэр, утас, зурвас оруулж илгээхэд систем яг нэг inquiry үүсгэж, `201`, давтагдашгүй ID, `status=new`, `customer_id=null` буцаана.
 
-**Source / owner:** FR-INQ-001…003, inquiry controller/schema · Тэнгис. **Verification T-01:** нийтлэгдсэн бүтээгдэхүүн дээр guest хүсэлт илгээж status, ID, DB-ийн нэг мөр, null customer-ийг шалгана. Аль нэг нь зөрвөл fail. **Mock UI:** [MUI-01](../ICSI438/sem3/assets/01-inquiry-form.png). **Status:** Implemented; test execution not performed.
+**Source / owner:** FR-INQ-001…003, inquiry controller/schema · Тэнгис. **Verification T-01:** нийтлэгдсэн бүтээгдэхүүн дээр guest хүсэлт илгээж status, ID, DB-ийн нэг мөр, null customer-ийг шалгана. Аль нэг нь зөрвөл fail. **Mock UI:** [MUI-01](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/01-inquiry-form.png). **Status:** Implemented; test execution not performed.
 
 ### FR-02 — Нэвтэрсэн хэрэглэгчийн inquiry-г холбох
 
 **Requirement · must.** Нэвтэрсэн хэрэглэгч inquiry илгээхэд систем хэрэглэгчийн баталгаажсан session ID-г `customer_id` болгон хадгалж, client body дахь owner утгыг үл хэрэгсэнэ.
 
-**Source / owner:** migration 0007, optionalAuth, inquiry service · Тэнгис. **Verification T-02:** A customer-ийн token-оор илгээж, хадгалсан `customer_id=A`; body-д B ID оруулах боломжгүй/үл хэрэгссэн байхыг шалгана. **Mock UI:** [MUI-01](../ICSI438/sem3/assets/01-inquiry-form.png). **Status:** Implemented; not executed.
+**Source / owner:** migration 0007, optionalAuth, inquiry service · Тэнгис. **Verification T-02:** A customer-ийн token-оор илгээж, хадгалсан `customer_id=A`; body-д B ID оруулах боломжгүй/үл хэрэгссэн байхыг шалгана. **Mock UI:** [MUI-01](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/01-inquiry-form.png). **Status:** Implemented; not executed.
 
 ### FR-03 — Inquiry form-ийг баталгаажуулах
 
 **Requirement · must.** Нэр 2-оос цөөн тэмдэгт, утас 8 цифр биш, зурвас хоосон эсвэл product ID буруу үед web систем тухайн талбарын монгол алдааг үзүүлж, API inquiry мөр үүсгэхгүй.
 
-**Source / owner:** inquiry-form-schema, shared inquiryInputSchema, WF-INQ-01 · Тэнгис. **Verification T-03:** дөрвөн invalid input-ыг тус тус илгээж, field error/HTTP 400 эсвэл 404 болон DB row count өөрчлөгдөөгүйг шалгана. **Mock UI:** [MUI-01](../ICSI438/sem3/assets/01-inquiry-form.png). **Status:** Implemented; not executed.
+**Source / owner:** inquiry-form-schema, shared inquiryInputSchema, WF-INQ-01 · Тэнгис. **Verification T-03:** дөрвөн invalid input-ыг тус тус илгээж, field error/HTTP 400 эсвэл 404 болон DB row count өөрчлөгдөөгүйг шалгана. **Mock UI:** [MUI-01](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/01-inquiry-form.png). **Status:** Implemented; not executed.
 
 ### FR-04 — Inquiry баталгааг харуулах
 
 **Requirement · must.** Inquiry амжилттай хадгалагдмагц web form-ийг success төлөвөөр сольж, форматласан inquiry дугаар, хэрэглэгчийн утас болон каталог руу буцах холбоос харуулна.
 
-**Source / owner:** WF-INQ-04, `InquirySuccess`, inquiry-display · Тэнгис. **Verification T-04:** successful API response өгч, form алга болсон, дугаар/утас/link харагдсан, link `/products` нээснийг шалгана. **Mock UI:** [MUI-02](../ICSI438/sem3/assets/02-inquiry-success.png). **Status:** Implemented; not executed.
+**Source / owner:** WF-INQ-04, `InquirySuccess`, inquiry-display · Тэнгис. **Verification T-04:** successful API response өгч, form алга болсон, дугаар/утас/link харагдсан, link `/products` нээснийг шалгана. **Mock UI:** [MUI-02](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/02-inquiry-success.png). **Status:** Implemented; not executed.
 
 ### FR-05 — Inquiry rate limit хэрэгжүүлэх
 
@@ -156,25 +156,25 @@ REST хүсэлт, хариу JSON форматтай. Огноо ISO 8601 UTC �
 
 **Requirement · must.** Нэвтэрсэн customer өөрийн profile-оос зөвхөн өөрийн inquiry-г newest-first дарааллаар дугаар, бүтээгдэхүүн, огноо, төлөвтэй харна; guest `401` авна.
 
-**Source / owner:** `/inquiries/mine`, inquiry repository, profile UI · Тэнгис. **Verification T-06:** A/B хэрэглэгч тус бүр мөртэй үед A response-д зөвхөн A ID орсон, guest `401`, UI зөв талбаруудтайг шалгана. **Mock UI:** [MUI-03](../ICSI438/sem3/assets/03-inquiry-history.png). **Status:** Implemented; not executed.
+**Source / owner:** `/inquiries/mine`, inquiry repository, profile UI · Тэнгис. **Verification T-06:** A/B хэрэглэгч тус бүр мөртэй үед A response-д зөвхөн A ID орсон, guest `401`, UI зөв талбаруудтайг шалгана. **Mock UI:** [MUI-03](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/03-inquiry-history.png). **Status:** Implemented; not executed.
 
 ### FR-07 — Админ inquiry inbox харах
 
 **Requirement · must.** Баталгаажсан admin inquiry жагсаалтыг newest-first, page/limit metadata-тай харна; guest `401`, энгийн customer `403` авна.
 
-**Source / owner:** FR-INQ-004, FR-ADM-006, admin controller/table · Тэнгис. **Verification T-07:** хоёр өөр огноотой мөр үүсгээд дараалал, metadata, 401/403-г шалгана. **Mock UI:** [MUI-04](../ICSI438/sem3/assets/04-admin-inbox.png). **Status:** Implemented; not executed.
+**Source / owner:** FR-INQ-004, FR-ADM-006, admin controller/table · Тэнгис. **Verification T-07:** хоёр өөр огноотой мөр үүсгээд дараалал, metadata, 401/403-г шалгана. **Mock UI:** [MUI-04](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/04-admin-inbox.png). **Status:** Implemented; not executed.
 
 ### FR-08 — Админ inquiry шүүх
 
 **Requirement · should.** Admin inquiry inbox-ийг status, product ID болон date range-аар шүүхэд систем зөвхөн бүх идэвхтэй нөхцөлийг хангасан мөрүүдийг буцаана.
 
-**Source / owner:** FR-INQ-006, adminInquiryListQuerySchema · Тэнгис. **Verification T-08:** new/contacted, хоёр product, хоёр огнооны fixture дээр filter бүр болон хослолын ID-г шалгана. **Mock UI:** [MUI-04](../ICSI438/sem3/assets/04-admin-inbox.png). **Status:** Implemented; not executed.
+**Source / owner:** FR-INQ-006, adminInquiryListQuerySchema · Тэнгис. **Verification T-08:** new/contacted, хоёр product, хоёр огнооны fixture дээр filter бүр болон хослолын ID-г шалгана. **Mock UI:** [MUI-04](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/04-admin-inbox.png). **Status:** Implemented; not executed.
 
 ### FR-09 — Inquiry төлөв шинэчлэх
 
 **Requirement · must.** Admin inquiry төлөвийг `new`, `contacted`, `closed` утгын аль нэгээр шинэчлэхэд API шинэ төлөвтэй мөрийг буцааж, audit log-д admin, entity ID, action, status-ийг нэмнэ.
 
-**Source / owner:** FR-INQ-005, inquiryStatusPatchSchema, audit log repository · Тэнгис. **Verification T-09:** valid transition бүр `200` ба audit row үүсгэсэн; invalid status `400`, unknown ID `404`, customer `403` болохыг шалгана. **Mock UI:** [MUI-04](../ICSI438/sem3/assets/04-admin-inbox.png). **Status:** Implemented; not executed.
+**Source / owner:** FR-INQ-005, inquiryStatusPatchSchema, audit log repository · Тэнгис. **Verification T-09:** valid transition бүр `200` ба audit row үүсгэсэн; invalid status `400`, unknown ID `404`, customer `403` болохыг шалгана. **Mock UI:** [MUI-04](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/04-admin-inbox.png). **Status:** Implemented; not executed.
 
 ### FR-10 — Wishlist-д нэвтрэлт шаардах
 
@@ -188,25 +188,25 @@ REST хүсэлт, хариу JSON форматтай. Огноо ISO 8601 UTC �
 
 **Source / owner:** cart service/controller, SaveButton · Тэнгис.
 
-**Verification T-11:** published, draft, unknown fixture дээр POST response ба DB мөрийг шалгана. **Mock UI:** [MUI-05](../ICSI438/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
+**Verification T-11:** published, draft, unknown fixture дээр POST response ба DB мөрийг шалгана. **Mock UI:** [MUI-05](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
 
 ### FR-12 — Wishlist давхардлыг хориглох
 
 **Requirement · must.** Нэг хэрэглэгч нэг бүтээгдэхүүнийг давтан хадгалахад систем хамгийн ихдээ нэг `(user_id, product_id)` мөр хадгалж, wishlist-д нэг карт харуулна.
 
-**Source / owner:** cart repository, unique migration constraint · Тэнгис. **Verification T-12:** ижил POST-ыг хоёр удаа явуулж, хоёул амжилттай боловч DB/list count=1 байхыг шалгана. **Mock UI:** [MUI-05](../ICSI438/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
+**Source / owner:** cart repository, unique migration constraint · Тэнгис. **Verification T-12:** ижил POST-ыг хоёр удаа явуулж, хоёул амжилттай боловч DB/list count=1 байхыг шалгана. **Mock UI:** [MUI-05](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
 
 ### FR-13 — Wishlist жагсаах
 
 **Requirement · must.** Нэвтэрсэн хэрэглэгч wishlist-ээ нээхэд систем зөвхөн өөрийн хадгалсан бүтээгдэхүүнийг newest-first дарааллаар нэр, зураг, үнэ, stock status-тай харуулна; хоосон үед каталогийн холбоостой empty state үзүүлнэ.
 
-**Source / owner:** cart repository, WishlistGrid · Тэнгис. **Verification T-13:** A/B хэрэглэгчийн fixture, хоёр огноо болон empty account ашиглан ownership, order, fields, empty link-ийг шалгана. **Mock UI:** [MUI-05](../ICSI438/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
+**Source / owner:** cart repository, WishlistGrid · Тэнгис. **Verification T-13:** A/B хэрэглэгчийн fixture, хоёр огноо болон empty account ашиглан ownership, order, fields, empty link-ийг шалгана. **Mock UI:** [MUI-05](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
 
 ### FR-14 — Wishlist-ээс хасах
 
 **Requirement · must.** Нэвтэрсэн хэрэглэгч хадгалсан бүтээгдэхүүнийг хасахад API `204` буцааж, UI картаа арилгана; ижил DELETE-г дахин хийхэд мөн `204` буцааж бусдын мөрийг өөрчлөхгүй.
 
-**Source / owner:** cart remove service/repository, wishlist store · Тэнгис. **Verification T-14:** A/B хэрэглэгч ижил product хадгалсан үед A хоёр удаа DELETE хийж, A-д 0, B-д 1 мөр үлдсэнийг шалгана. **Mock UI:** [MUI-05](../ICSI438/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
+**Source / owner:** cart remove service/repository, wishlist store · Тэнгис. **Verification T-14:** A/B хэрэглэгч ижил product хадгалсан үед A хоёр удаа DELETE хийж, A-д 0, B-д 1 мөр үлдсэнийг шалгана. **Mock UI:** [MUI-05](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem3/assets/05-wishlist.png). **Status:** Implemented; not executed.
 
 ### FR-15 — Hero fallback-аас каталогт хүрэх
 

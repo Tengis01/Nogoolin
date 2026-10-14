@@ -26,7 +26,7 @@ IEEE 830-1998-ийн агуулгын бүтцийг ISO/IEC/IEEE 29148:2018-и�
 
 **2.2 Гол үйлдлүүд.** *[Хэрэглэгчийн зорилгоор бүлэглэсэн үйлдлийн жагсаалт; FR ID холбоос.]* Эхлэх жишээ: асуулга илгээх FR-01, бүтээгдэхүүн хадгалах FR-02.
 
-**2.3 Хэрэглэгчийн онцлог.** *[Дүр, зорилго, мэдлэг, хүндрэл, W1 persona-ийн эх.]* Guest, customer, admin-ийг ялгана; [persona нэмэлт](../ICSI438/sem2/wiki/persona-and-pivot.md)-ээс эхэлнэ.
+**2.3 Хэрэглэгчийн онцлог.** *[Дүр, зорилго, мэдлэг, хүндрэл, W1 persona-ийн эх.]* Guest, customer, admin-ийг ялгана; [persona нэмэлт](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/wiki/persona-and-pivot.md)-ээс эхэлнэ.
 
 **2.4 Хязгаарлалт.** *[Бизнес, орчин, нөөцийн зайлшгүй хязгаар ба үндэслэл.]* Эхлэл: ганцаар хөгжүүлэх, монгол интерфэйс, хүргэлт идэвхгүй.
 
@@ -121,4 +121,4 @@ IEEE 830-1998-ийн агуулгын бүтцийг ISO/IEC/IEEE 29148:2018-и�
 
 Өөрчлөхдөө ID-г хадгалж, source, шалгуур, matrix, review огноог хамтад нь шинэчилнэ. Тестийн нотолгоо байхгүй бол verified гэж тэмдэглэхгүй. Бүрэн SRS (15 FR + 5 NFR) нь W3/M3-ын ажил.
 
-**Эх:** [W2 handout](../ICSI438/sem2/Software_Project_Documentation_Week_02_Handout.pdf), [Lecture 02, слайд 4–8](<../ICSI438/lecture/Lecture_02 Why Documentation Documentation Standards.pdf>); [IEEE 830-1998](https://www.math.uaa.alaska.edu/~afkjm/cs401/IEEE830.pdf), §4.3, §5; [ISO/IEC/IEEE 29148:2018](https://standards.ieee.org/ieee/29148/6937/). Хичээлийн унших чиглэл: Bhatti бүлэг 2, х. 23–44 (хүрээ), бүлэг 4, х. 67–81 (шаардлагын эх ба уншигч); Chinchilla бүлэг 5, х. 53–55 (хүлээлт, таамаг, одоогийн дуусах нөхцөл).
+**Эх:** W2 handout (хичээлийн хувийн материал, нийтлээгүй), Lecture 02, слайд 4–8 (хичээлийн хувийн материал, нийтлээгүй); [IEEE 830-1998](https://www.math.uaa.alaska.edu/~afkjm/cs401/IEEE830.pdf), §4.3, §5; [ISO/IEC/IEEE 29148:2018](https://standards.ieee.org/ieee/29148/6937/). Хичээлийн унших чиглэл: Bhatti бүлэг 2, х. 23–44 (хүрээ), бүлэг 4, х. 67–81 (шаардлагын эх ба уншигч); Chinchilla бүлэг 5, х. 53–55 (хүлээлт, таамаг, одоогийн дуусах нөхцөл).

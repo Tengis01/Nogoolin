@@ -52,9 +52,9 @@ Nogoolin нь Монголын шашны бүтээгдэхүүний ката�
 
 Arc42 §3 нь системийн хил, хэрэглэгч болон хөрш системийг харуулна. C4 System Context нь Nogoolin-ийг нэг black box болгон үзүүлж, дотоод технологийн дэлгэрэнгүйг §5 руу үлдээв.
 
-![C4-01 — Nogoolin System Context](../ICSI438/sem4/assets/c4-01-system-context.svg){width=100%}
+![C4-01 — Nogoolin System Context](https://gitlab.com/Tengis01/icsi438-nogoolin/-/raw/main/sem4/assets/c4-01-system-context.svg){width=100%}
 
-*Mermaid эх: [c4-01-system-context.mmd](../ICSI438/sem4/diagrams/c4-01-system-context.mmd).*
+*Mermaid эх: [c4-01-system-context.mmd](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem4/diagrams/c4-01-system-context.mmd).*
 
 **Зургийн тэмдэглэгээ:** Person нь хүний role, Software System нь нэг систем, Container нь ажиллах application, Component нь API доторх нэгж. Цэнхэр хүрээ Nogoolin-ийн эзэмшил, саарал хүрээ external system. Сум бүр data flow label-тай. Mermaid flowchart дээр C4 type, name, technology, responsibility-г ил тод бичсэн; runtime нь C4-ийн зөвшөөрсөн sequence style.
 
@@ -81,11 +81,11 @@ W1-д нэг хөгжүүлэгч persona, Тэнгис, болон P1/P2/P3 pai
 
 | External actor | W1 холбоо | Nogoolin-д тайлбарласан холбоо |
 |---|---|---|
-| Зочин | [P3: local/pipeline ялгаа](../ICSI438/sem1/wiki/02_audience_persona.md) | Inquiry response ба алдаа аль API/DB хэсэгт гарсныг ялгах |
-| Customer | [P1: session алдагдах](../ICSI438/sem1/wiki/02_audience_persona.md) | Session, own inquiry, wishlist boundary; P-NG-01 |
-| Админ | [P1, P3](../ICSI438/sem1/wiki/02_audience_persona.md) | JWT/role болон data query/audit-ийг тусад нь шалгах |
+| Зочин | [P3: local/pipeline ялгаа](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem1/wiki/02_audience_persona.md) | Inquiry response ба алдаа аль API/DB хэсэгт гарсныг ялгах |
+| Customer | [P1: session алдагдах](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem1/wiki/02_audience_persona.md) | Session, own inquiry, wishlist boundary; P-NG-01 |
+| Админ | [P1, P3](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem1/wiki/02_audience_persona.md) | JWT/role болон data query/audit-ийг тусад нь шалгах |
 
-Энэ нь гурван role-ийг W1-ийн нэг persona-тай холбосон mapping; W1-д гурван тусдаа persona байсан гэж зарлаагүй. [W2 pivot](../ICSI438/sem2/wiki/persona-and-pivot.md) нь шилжилтийн үндэслэлийг хадгална.
+Энэ нь гурван role-ийг W1-ийн нэг persona-тай холбосон mapping; W1-д гурван тусдаа persona байсан гэж зарлаагүй. [W2 pivot](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/wiki/persona-and-pivot.md) нь шилжилтийн үндэслэлийг хадгална.
 
 # 4. Шийдлийн стратеги
 
@@ -104,9 +104,9 @@ W1-д нэг хөгжүүлэгч persona, Тэнгис, болон P1/P2/P3 pai
 
 ## 5.1 Level 1 — Container view
 
-![C4-02 — Nogoolin Container View](../ICSI438/sem4/assets/c4-02-container.svg){width=100%}
+![C4-02 — Nogoolin Container View](https://gitlab.com/Tengis01/icsi438-nogoolin/-/raw/main/sem4/assets/c4-02-container.svg){width=100%}
 
-*Mermaid эх: [c4-02-container.mmd](../ICSI438/sem4/diagrams/c4-02-container.mmd).*
+*Mermaid эх: [c4-02-container.mmd](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem4/diagrams/c4-02-container.mmd).*
 
 | Container | Үүрэг | Технологи ба code location |
 |---|---|---|
@@ -120,9 +120,9 @@ W1-д нэг хөгжүүлэгч persona, Тэнгис, болон P1/P2/P3 pai
 
 ## 5.2 Level 2 — Fastify API component view
 
-![C4-03 — Fastify API Component View](../ICSI438/sem4/assets/c4-03-api-component.svg){width=100%}
+![C4-03 — Fastify API Component View](https://gitlab.com/Tengis01/icsi438-nogoolin/-/raw/main/sem4/assets/c4-03-api-component.svg){width=100%}
 
-*Mermaid эх: [c4-03-api-component.mmd](../ICSI438/sem4/diagrams/c4-03-api-component.mmd).*
+*Mermaid эх: [c4-03-api-component.mmd](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem4/diagrams/c4-03-api-component.mmd).*
 
 | Component | Үүрэг | Хил ба requirement |
 |---|---|---|
@@ -154,25 +154,25 @@ Controller дотор business logic, service дотор шууд database query
 
 ## 6.1 Inquiry илгээх
 
-![C4-D01 — Inquiry Runtime](../ICSI438/sem4/assets/c4-d01-inquiry.svg){width=100%}
+![C4-D01 — Inquiry Runtime](https://gitlab.com/Tengis01/icsi438-nogoolin/-/raw/main/sem4/assets/c4-d01-inquiry.svg){width=100%}
 
-*Mermaid эх: [c4-d01-inquiry.mmd](../ICSI438/sem4/diagrams/c4-d01-inquiry.mmd).*
+*Mermaid эх: [c4-d01-inquiry.mmd](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem4/diagrams/c4-d01-inquiry.mmd).*
 
 Guest эсвэл customer form илгээхэд client ба API ижил Zod contract ашиглана. Hook нь optional session, input болон rate limit-ийг шалгана. Service нь inquiry үүсгэж repository-оор PostgreSQL-д хадгална. Invalid input `400`, хэтрэлт `429`, амжилт `201` байна. Энэ scenario FR-01…06, NFR-01, NFR-04, NFR-05-тай холбоотой.
 
 ## 6.2 Wishlist жагсаалт ба хадгалалт
 
-![C4-D02 — Wishlist Runtime](../ICSI438/sem4/assets/c4-d02-wishlist.svg){width=100%}
+![C4-D02 — Wishlist Runtime](https://gitlab.com/Tengis01/icsi438-nogoolin/-/raw/main/sem4/assets/c4-d02-wishlist.svg){width=100%}
 
-*Mermaid эх: [c4-d02-wishlist.mmd](../ICSI438/sem4/diagrams/c4-d02-wishlist.mmd).*
+*Mermaid эх: [c4-d02-wishlist.mmd](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem4/diagrams/c4-d02-wishlist.mmd).*
 
 Guest API түвшинд `401` авна. Customer session баталгаажсаны дараа service published product болон ownership-ийг шалгаж, repository unique user-product constraint-тай ажиллана. Remove нь idempotent байна. Энэ scenario FR-10…14 ба NFR-01-ийг хамарна.
 
 ## 6.3 Админ inquiry төлөв шинэчлэх
 
-![C4-D03 — Admin Inquiry Runtime](../ICSI438/sem4/assets/c4-d03-admin-inquiry.svg){width=100%}
+![C4-D03 — Admin Inquiry Runtime](https://gitlab.com/Tengis01/icsi438-nogoolin/-/raw/main/sem4/assets/c4-d03-admin-inquiry.svg){width=100%}
 
-*Mermaid эх: [c4-d03-admin-inquiry.mmd](../ICSI438/sem4/diagrams/c4-d03-admin-inquiry.mmd).*
+*Mermaid эх: [c4-d03-admin-inquiry.mmd](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem4/diagrams/c4-d03-admin-inquiry.mmd).*
 
 Admin inbox command API-д очиход JWT ба role шалгана. Schema зөвшөөрөгдсөн status утгыг шалгаж, service шинэчлэлт хийж, primary update амжилттай болсны дараа audit row нэмнэ. Customer `403`, invalid status `400`, unknown ID `404` авна. Энэ scenario FR-07…09 ба NFR-01-тэй холбоотой.
 

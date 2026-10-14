@@ -36,6 +36,6 @@ Supabase PostgreSQL, Auth, Storage-г ашиглана. Local development ба s
 
 ## Persona pain point ба confirmation
 
-[W1 persona](../../ICSI438/sem1/wiki/02_audience_persona.md)-ийн **P1: session алдагдах; P-NG-01, мөн P2: schema/producer contract нийцэл** хэрэгцээтэй холбов. Энэ нь RAG кейсээс Nogoolin руу шилжүүлсэн тайлбарласан холбоо; уг алдаа Nogoolin-д болсон гэж үзээгүй. [W2 pivot](../../ICSI438/sem2/wiki/persona-and-pivot.md) шилжилтийг тайлбарлана.
+[W1 persona](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem1/wiki/02_audience_persona.md)-ийн **P1: session алдагдах; P-NG-01, мөн P2: schema/producer contract нийцэл** хэрэгцээтэй холбов. Энэ нь RAG кейсээс Nogoolin руу шилжүүлсэн тайлбарласан холбоо; уг алдаа Nogoolin-д болсон гэж үзээгүй. [W2 pivot](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/wiki/persona-and-pivot.md) шилжилтийг тайлбарлана.
 
 Confirmation: decision log болон одоогийн code structure-тай static check хийсэн; шинэ runtime test энэ ажлаар ажиллуулаагүй.

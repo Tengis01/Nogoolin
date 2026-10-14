@@ -9,7 +9,7 @@
 
 ## Context
 
-Web, admin, mobile нэг API ашиглана. Field, HTTP status болон auth boundary зөрвөл client зөв request илгээсэн ч өөр орчинд буруу үр дүн авна. W1-ийн [P2 schema/producer нийцэл, P3 local/pipeline ялгаа](../../ICSI438/sem1/wiki/02_audience_persona.md)-г шинэ төсөлд contract drift-ийн эрсдэлтэй холбов. W1 vector dimension нь Nogoolin-ийн өгөгдлийн талбар биш.
+Web, admin, mobile нэг API ашиглана. Field, HTTP status болон auth boundary зөрвөл client зөв request илгээсэн ч өөр орчинд буруу үр дүн авна. W1-ийн [P2 schema/producer нийцэл, P3 local/pipeline ялгаа](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem1/wiki/02_audience_persona.md)-г шинэ төсөлд contract drift-ийн эрсдэлтэй холбов. W1 vector dimension нь Nogoolin-ийн өгөгдлийн талбар биш.
 
 ## Decision Drivers
 

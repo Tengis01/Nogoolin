@@ -33,4 +33,4 @@ Chinchilla-ийн х. 53–55 дахь аргаас: **хэн юу хүлээж 
 
 M2-ийн бэлэн багц: SRS/SDD загвар, 5 шаардлага, 8 баганат traceability, persona холбоо, review draft. Ярилцлага хийгдээгүй; peer review илгээх, нийтлэх/submission алхмыг хэрэглэгчийн заавраар алгассан. W1 persona-ийн шинэ төсөлд шилжүүлсэн холбоог reviewer-ээр баталгаажуулах шаардлагатай.
 
-**Эх:** [Vision](../phase-0/01-vision.md), [Roadmap](../phase-0/10-roadmap.md), [D-07 / ADR-011](../../agent-context/DECISIONS.md), [W2 handout](../ICSI438/sem2/Software_Project_Documentation_Week_02_Handout.pdf); Chinchilla, бүлэг 5, хэвлэмэл х. 53–55 (локал номын PDF х. 74–76).
+**Эх:** [Vision](../phase-0/01-vision.md), [Roadmap](../phase-0/10-roadmap.md), [D-07 / ADR-011](../../agent-context/DECISIONS.md), W2 handout (хичээлийн хувийн материал, нийтлээгүй); Chinchilla, бүлэг 5, хэвлэмэл х. 53–55 (локал номын PDF х. 74–76).
