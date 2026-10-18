@@ -1,5 +1,7 @@
 # Хөгжүүлэлтийн Замын Зураг (Development Roadmap)
 
+> **Legacy (2026-10-18).** Superseded by [Roadmap v2](../project/roadmap.md) (PH0–PH8). Kept as source material; phase numbers here are the old scheme.
+
 **Баримт:** `docs/phase-0/10-roadmap_mn.md`
 **Төсөл:** Nogoolin — Premium шашны бүтээгдэхүүний каталог платформ
 **Хувилбар:** 1.0.0

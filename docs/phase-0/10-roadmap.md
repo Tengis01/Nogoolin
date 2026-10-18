@@ -1,5 +1,7 @@
 # Development Roadmap
 
+> **Legacy (2026-10-18).** Superseded by [Roadmap v2](../project/roadmap.md) (PH0–PH8). Kept as source material; phase numbers here are the old scheme.
+
 **Document:** `docs/phase-0/10-roadmap.md`
 **Project:** Nogoolin — Premium Religious Product Catalog Platform
 **Version:** 1.0.0

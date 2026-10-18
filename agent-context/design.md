@@ -1,5 +1,9 @@
 # Design Reference — v4 (locked)
 
+> **⚠ Superseded direction (D-08, 2026-10-14).** Concept C ([prototype](../docs/nogoolin-prototype-c.html)) is the main design.
+> This v4 reference still governs **current production code** until the staged C migration in
+> [roadmap v2](../docs/project/roadmap.md) PH5. Do not start new v4-only visual work; see [DECISIONS D-08](DECISIONS.md).
+
 > Condensed from `docs/phase-0/07-uiux-wireframes.md` (v1.0.0, Approved). That doc has
 > **highest precedence** on any conflict (07 > 02-requirements > prototypes).
 > All values are exact — no "approximate" values, no hardcoded hex outside tokens.

@@ -2,6 +2,9 @@
 
 ## Summary and evidence dates
 
+- **2026-10-18:** phases were renumbered in [Roadmap v2](../docs/project/roadmap.md#хуучин--шинэ-mapping)
+  (PH0–PH8). Entries below keep the old Phase 0–6 names; use that mapping table.
+
 - Product engineering entries below were last recorded on **2026-07-26**.
   They are historical results, not a fresh runtime/branch/deployment check.
 - Last recorded: Phase 2 catalog work complete; Phase 3 web intro/hero verified

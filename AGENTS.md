@@ -1,3 +1,5 @@
+claud
+
 # Nogoolin — Shared agent instructions
 
 This is the canonical project instruction file for every AI agent.

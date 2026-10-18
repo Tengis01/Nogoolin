@@ -590,3 +590,55 @@ Confirmed `docs/nogoolin-prototype-a-v4.html` exists and is linked from the docu
   [DOCUMENTATION-ICSI438 handoff](../../00-Vault/Handoffs/DOCUMENTATION-ICSI438.md).
   Uncommitted owner changes in this repo (AGENTS.md, agent-context/*, README.md,
   .hermes skills) were preserved and remain uncommitted.
+
+## 2026-10-14 — Standalone Nogoolin prototype C
+
+- **Done:** Added `docs/nogoolin-prototype-c.html` (single standalone file,
+  ~173 KB; A and B untouched). Intro reuses prototype A's 3D scene but is
+  click-driven: 4 clicks/keys move the camera on circular arcs around the deity
+  (upper-right start → left → right → left → centre, burst-then-decelerate
+  easing), one sentence per step, final «НОГООЛИН» + [Эхлэх] → morph to a home
+  hero (deity right via `setViewOffset`). Site below uses the «thangka mount»
+  world (jade/paper/gold-line, maroon accent, Literata + Golos Text), authored
+  SVG studio renders labelled «Demo дүрслэл», and working home, categories,
+  products (filter/search/pagination/empty), detail (tabs, drag-only 360°
+  placeholder), inquiry (07 §3.6.2 strings, local-only demo success), about,
+  not-found and mobile menu. Built from fragments by parallel subagents.
+- **Spec deviations (prototype only, owner request):** click-driven orbital
+  intro replaces WF-INTRO-02's single automatic arc and WF-MO-03's camera
+  limits; home hero is taller than 35vh/42vh; the C palette differs from v4
+  tokens. Production adoption needs a DECISIONS.md entry first.
+- **Verified:** Inline JS `node --check`; Playwright CLI at 1440×900 and
+  390×844 with a local Three.js r128 copy: intro steps/keyboard/skip/replay/
+  reduced-motion, all routes, inquiry errors/success, no horizontal overflow,
+  no console errors except blocked fonts. One fix batch + one recheck.
+  Impeccable detect: 2 remaining warnings (scroll-lock clip during intro;
+  cream background, intentional).
+- **Not verified:** Google Fonts and the Three.js CDN were blocked in the test
+  browser (fallback fonts; local three copy). No commit/push.
+- **Next:** Owner reviews C in a normal browser; adjust intro sentences/timing.
+
+## 2026-10-18 — SMART goals, D-08, roadmap v2, Document Register, SRS v2
+
+- **Done:**
+  - `docs/project/project-goals.md`: main goal plus SMART goals G1–G6. Each goal has an outcome, a metric and a measurement method, plus a segment table, non-goals, risks and proposed dates. Launch is proposed for 2027-01-29.
+  - D-08 (Concept C is the main design) is in `agent-context/DECISIONS.md`. D-02 is resolved as maroon accent only. `design.md` has a superseded banner.
+  - `docs/project/roadmap.md` is roadmap v2 with PH0–PH8 and an old→new mapping. The old 10-roadmap (EN/MN) is marked legacy, and PROGRESS links to the mapping.
+  - `docs/README.md` is now the Document Register: Doc IDs, statuses, a seminar → doc mapping, and a document-clarity checklist.
+  - SRS v2 (`docs/requirements/srs-v2.md`): 308 blocks, 247 of them leaf requirements, with sparse hierarchical IDs (FR/NFR-<AREA>-100/110/111). It ships with `traceability-v2.md` (247 rows) and `id-mapping.md` (202/202 old IDs). Area sections were written by 3 parallel subagents, then merged and consistency-checked.
+  - ADVANCED-WEB-GUIDE findings F-01…F-12 are reflected in all of the above.
+- **Verified:**
+  - A script checked for 0 duplicate IDs, 0 unmapped old IDs, 0 undefined mapping targets, and one trace row per leaf.
+  - All internal links and anchors in the new and changed docs resolve.
+  - `git diff --check` is clean.
+- **Not verified:**
+  - Implementation status was read from code only; no tests were run.
+  - No owner review has happened, and all dates and thresholds are proposals.
+  - Two links in PROGRESS.md (`../docs/ICSI438/...`) were already broken before this change and are left as-is.
+- **Next:**
+  1. Owner approves G1–G6 and the dates, gives the course's names for the 5 requirement checks, and answers SRS v2 §8.
+  2. Separate security tasks, one small diff each:
+     - F-05 / NFR-SEC-240: escape the JSON-LD at `apps/web/src/app/products/[slug]/page.tsx:85`.
+     - NFR-SEC-350: check at runtime whether a customer can change their own `users.role` through the `users_update_own` RLS policy.
+     - FR-SET-220: `orders_insert_own` does not check `delivery_enabled`.
+  3. Start PH2 (perf baseline, DESIGN.md token hierarchy).

@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ногоолин — Prototype C</title>
+<meta name="description" content="Ногоолин — сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах. Prototype C (standalone demo).">
+<meta name="theme-color" content="#1B4634">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400..600;1,7..72,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ===== Nogoolin Prototype C — shared tokens (owned by integrator; forks must not edit) ===== */
+:root{
+  /* intro / dark zone — inherited from approved v4 intro (user likes A's intro) */
+  --n-bg0:#245842; --n-bg1:#1B4634; --n-bg2:#123527;
+  --n-text:#F5F2E6; --n-muted:#B4CDBD;
+  --saff:#F2C94C; --n-line:rgba(242,201,76,.30);
+
+  /* site world — «Тангкагийн хүрээ» */
+  --jade-950:#0A281F; --jade-900:#0E3529; --jade-800:#154434; --jade-700:#1D5442; --jade-500:#2F7A5D;
+  --jade-100:#E3ECE5; --jade-50:#EEF3EE;
+  --paper:#F6F2E9; --paper-2:#EFE9DC; --paper-3:#E6DECD;
+  --ink:#18241E; --ink-2:#3C4A42; --ink-3:#5E6B63;      /* ink-3 ≥4.5:1 on --paper */
+  --gold:#B08A3E; --gold-hi:#D8B66A; --gold-line:rgba(176,138,62,.55);
+  --maroon:#6B1E28; --maroon-2:#8A2A35;
+  --hair:rgba(24,36,30,.14); --hair-strong:rgba(24,36,30,.28);
+  --on-jade:#F3EFE4; --on-jade-2:#B9CFC2;               /* text on jade fields */
+  --error:#A3382B;                                       /* form errors (≥4.5:1 on paper) */
+
+  /* type */
+  --f-display:'Literata', 'PT Serif', Georgia, serif;
+  --f-body:'Golos Text', 'Segoe UI', system-ui, sans-serif;
+  --fs-body:17px; --lh-body:1.6;
+  --fs-sm:15px; --fs-xs:13.5px;
+  --fs-h1:clamp(40px, 5.2vw, 76px);
+  --fs-h2:clamp(30px, 3.4vw, 48px);
+  --fs-h3:clamp(21px, 1.9vw, 26px);
+  --fs-display:clamp(56px, 9vw, 96px);
+
+  /* space — 8px scale */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px; --s10:128px;
+
+  /* layout */
+  --container:1240px;
+  --gutter:clamp(20px, 5vw, 64px);
+  --nav-h:72px;
+  --radius:2px;
+
+  /* motion */
+  --ease-out:cubic-bezier(.16,1,.3,1);       /* expo-ish out */
+  --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --t-fast:.18s; --t:.32s; --t-slow:.6s;
+
+  --z-nav:50; --z-hero-ui:20; --z-overlay:80;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--fs-body);line-height:var(--lh-body);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-variant-numeric:lining-nums}
+body.lock{height:100vh;overflow:hidden}
+img,svg,canvas{display:block;max-width:100%}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;line-height:1.12;letter-spacing:-.015em;margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+a{color:inherit;text-underline-offset:.22em;text-decoration-thickness:1px}
+button{font:inherit;color:inherit;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit}
+::selection{background:var(--jade-700);color:var(--on-jade)}
+:focus-visible{outline:2px solid var(--maroon);outline-offset:3px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.container{width:100%;max-width:calc(var(--container) + 2*var(--gutter));margin-inline:auto;padding-inline:var(--gutter)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* buttons — rectangular, radius 2px */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 26px;border-radius:var(--radius);
+  border:1px solid transparent;font-family:var(--f-body);font-size:15.5px;font-weight:500;letter-spacing:.01em;text-decoration:none;
+  transition:background var(--t) var(--ease-out),color var(--t) var(--ease-out),border-color var(--t) var(--ease-out)}
+.btn-primary{background:var(--jade-900);color:var(--on-jade)}
+.btn-primary:hover{background:var(--jade-700)}
+.btn-line{background:transparent;border-color:var(--hair-strong);color:var(--ink)}
+.btn-line:hover{border-color:var(--ink)}
+.btn-on-dark{background:transparent;border-color:rgba(242,201,76,.55);color:var(--n-text)}
+.btn-on-dark:hover{border-color:var(--saff);background:rgba(242,201,76,.08)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+
+/* ===== art.css — thangka-mount frame + studio renders (Fork B) ===== */
+.art-svg{display:block;width:100%;height:100%}
+.art-orn{display:inline-block;vertical-align:middle;flex:none}
+.art-tag{position:absolute;left:12px;bottom:12px;z-index:1;padding:3px 8px;border-radius:var(--radius);background:rgba(246,242,233,.92);color:var(--ink-2);font:500 11.5px/1.3 var(--f-body);letter-spacing:.02em;pointer-events:none}
+
+/* shared painting area: 4:5, thin gold inner rule */
+.tk-frame{--tk-door-w:30%;position:relative;width:100%;max-width:100%}
+.tk-art{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:var(--radius);background:var(--jade-100)}
+.tk-art>svg{position:absolute;inset:0}
+.tk-art::after{content:"";position:absolute;inset:clamp(6px,2.2%,12px);border:1px solid var(--gold-line);pointer-events:none}
+
+/* 'door' — catalog cards: image, then a short maroon «door» strip under a thin gold rule */
+.tk-frame--door .tk-door{display:block;width:var(--tk-door-w);height:9px;margin:0 auto;background:var(--maroon);
+  border-top:1px solid var(--gold);box-shadow:inset 0 -1px 0 rgba(216,182,106,.35);
+  transition:width var(--t) var(--ease-out)}
+.tk-frame--door:hover .tk-door,a:hover>.tk-frame--door .tk-door,a:focus-visible>.tk-frame--door .tk-door{width:calc(var(--tk-door-w) + 10%)}
+
+/* 'full' — detail page: brocade mount, red/yellow rainbow strips, door panel, dowels */
+.tk-frame--full{padding-inline:3.5%}
+.tk-mount{position:relative;padding:7% 9% 0;
+  background-color:var(--jade-900);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M7 1.5 12.5 7 7 12.5 1.5 7Z' fill='none' stroke='%23D8B66A' stroke-opacity='.11' stroke-width='.8'/%3E%3Ccircle cx='7' cy='7' r='.9' fill='%23D8B66A' fill-opacity='.14'/%3E%3C/svg%3E"),
+    linear-gradient(90deg,rgba(255,255,255,.05),transparent 40%,rgba(0,0,0,.14));
+  box-shadow:0 18px 34px -18px rgba(10,40,31,.55)}
+.tk-rainbow{position:relative;padding:5px;background:var(--gold)}
+.tk-rainbow::before{content:"";position:absolute;inset:2px;background:var(--maroon-2)}
+.tk-rainbow .tk-art{border-radius:0}
+.tk-door-panel{position:relative;display:block;width:30%;aspect-ratio:1/.82;margin:6% auto 0;
+  background:linear-gradient(90deg,rgba(255,255,255,.06),transparent 45%,rgba(0,0,0,.18)),var(--maroon);
+  border:1px solid var(--gold);border-bottom:0}
+.tk-door-panel::after{content:"";position:absolute;inset:9%;border:1px solid var(--gold-line)}
+.tk-dowel{display:block;position:relative;border-radius:6px;
+  background:linear-gradient(180deg,#8A5A31,#5C3A1E 60%,#3F2412)}
+.tk-dowel::before,.tk-dowel::after{content:"";position:absolute;top:-2px;bottom:-2px;width:clamp(8px,3%,16px);border-radius:3px;
+  background:linear-gradient(90deg,#4E3712,#C79E4A 35%,#E9CF8C 50%,#86632A 80%,#3F2C0F)}
+.tk-dowel::before{left:0}.tk-dowel::after{right:0}
+.tk-dowel--top{height:8px;width:94%;margin:0 auto -1px}
+.tk-dowel--bottom{height:12px;width:107%;margin:-1px 0 0 -3.5%}
+
+@media (max-width:480px){
+  .tk-mount{padding:6% 7% 0}
+  .tk-rainbow{padding:4px}
+  .tk-dowel--bottom{width:104%;margin-left:-2%}
+}
+
+/* ===== Intro + home-state hero (Fork A) — everything lives inside #hero ===== */
+#hero{
+  --intro-scrim:rgba(16,46,34,.9);
+  position:relative;overflow:hidden;isolation:isolate;color:var(--n-text);
+  background:radial-gradient(ellipse at 50% 30%, var(--n-bg0) 0%, var(--n-bg1) 78%);
+  height:100vh;height:100svh;min-height:480px;
+}
+#hero.is-home{height:clamp(520px, 74vh, 780px)}
+@media (max-width:700px){#hero.is-home{height:88vh;height:88svh;min-height:600px}}
+
+#hero .intro-canvas{position:absolute;inset:0;z-index:0}
+#hero .intro-canvas canvas{display:block}
+
+/* loading: a fade in from the fog, not a camera move */
+#hero .intro-veil{position:absolute;inset:0;z-index:1;background:var(--n-bg1);opacity:1;pointer-events:none;
+  transition:opacity .6s var(--ease-out)}
+#hero.is-ready .intro-veil{opacity:0}
+
+/* scrims keep type legible over the 3D field */
+#hero .intro-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .7s var(--ease-out);
+  background:linear-gradient(to top, var(--intro-scrim) 0%, rgba(16,46,34,.55) 22%, rgba(16,46,34,0) 48%)}
+#hero[data-phase="final"] .intro-scrim{opacity:1}
+#hero[data-phase="home"] .intro-scrim,#hero[data-phase="fallback"] .intro-scrim{opacity:1;
+  background:linear-gradient(90deg, rgba(16,46,34,.82) 0%, rgba(16,46,34,.45) 34%, rgba(16,46,34,0) 58%)}
+
+/* the whole field is the "continue" control during the intro */
+#hero .intro-stage{position:absolute;inset:0;z-index:3;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+#hero .intro-stage:focus-visible{box-shadow:none}
+#hero.is-kbd .intro-stage:focus-visible{box-shadow:inset 0 0 0 2px rgba(242,201,76,.45)}
+#hero[data-phase="home"] .intro-stage,#hero[data-phase="fallback"] .intro-stage,#hero[data-phase="morph"] .intro-stage{display:none}
+
+/* small mark + skip (intro only) */
+#hero .intro-mark{position:absolute;z-index:4;top:24px;left:var(--gutter);display:flex;align-items:center;gap:12px;
+  font-size:13.5px;letter-spacing:.28em;font-weight:500;color:var(--n-text);pointer-events:none}
+#hero .intro-mark svg{width:22px;height:22px;color:var(--saff)}
+#hero .intro-skip{position:absolute;z-index:5;top:18px;right:var(--gutter);display:inline-flex;align-items:center;gap:8px;
+  min-height:40px;padding:0 16px;border-radius:var(--radius);background:rgba(18,53,39,.35);border:1px solid var(--n-line);
+  color:var(--n-muted);font-size:14.5px;letter-spacing:.02em;transition:color var(--t) var(--ease-out),border-color var(--t) var(--ease-out)}
+#hero .intro-skip:hover{color:var(--n-text);border-color:var(--saff)}
+#hero .intro-skip svg{width:14px;height:14px}
+#hero .intro-mark,#hero .intro-skip{transition:opacity .4s var(--ease-out),visibility 0s}
+#hero[data-phase="home"] .intro-mark,#hero[data-phase="home"] .intro-skip,
+#hero[data-phase="fallback"] .intro-mark,#hero[data-phase="fallback"] .intro-skip,
+#hero[data-phase="morph"] .intro-mark,#hero[data-phase="morph"] .intro-skip{opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+
+/* ---- key sentences: blur out fast, reveal word by word ---- */
+#hero .intro-lines{position:absolute;inset:0;z-index:4;pointer-events:none}
+#hero[data-phase="home"] .intro-lines,#hero[data-phase="fallback"] .intro-lines{display:none}
+#hero .intro-line{position:absolute;top:50%;margin:0;max-width:min(14.5em, 34vw);
+  font-family:var(--f-display);font-weight:400;font-size:clamp(28px, 2.7vw, 42px);line-height:1.22;letter-spacing:-.01em;
+  color:var(--n-text);text-shadow:0 2px 28px rgba(10,30,22,.6);
+  transform:translateY(-50%);opacity:0;visibility:hidden;filter:blur(8px);
+  transition:opacity .24s ease-in,filter .24s ease-in,visibility 0s linear .24s}
+#hero .intro-line[data-side="left"]{left:max(var(--gutter), 7vw)}
+#hero .intro-line[data-side="right"]{right:max(var(--gutter), 7vw);text-align:right}
+#hero .intro-line::before{content:"";display:block;width:48px;height:1px;margin-bottom:22px;background:var(--saff);
+  transform:scaleX(0);transform-origin:left}
+#hero .intro-line[data-side="right"]::before{margin-left:auto;transform-origin:right}
+#hero .intro-line .w{display:inline-block}
+#hero .intro-line.is-in{opacity:1;visibility:visible;filter:none;transition:none}
+#hero .intro-line.is-in::before{animation:introRule .9s var(--ease-out) .05s both}
+#hero .intro-line.is-in .w{animation:introWord .82s var(--ease-out) both;animation-delay:calc(var(--i) * 65ms + 60ms)}
+
+@keyframes introWord{
+  from{opacity:0;filter:blur(10px);transform:translateY(.34em)}
+  to{opacity:1;filter:blur(0);transform:none}
+}
+@keyframes introRule{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ---- final: wordmark + tagline + start ---- */
+#hero .intro-final{position:absolute;left:var(--gutter);right:var(--gutter);bottom:clamp(96px, 13vh, 136px);z-index:4;
+  display:flex;flex-direction:column;align-items:center;text-align:center;pointer-events:none;
+  opacity:0;visibility:hidden;transition:opacity .3s ease-in,visibility 0s linear .3s}
+#hero .intro-final.is-in{opacity:1;visibility:visible;transition:none}
+#hero .intro-wordmark{font-family:var(--f-display);font-weight:500;font-size:clamp(44px, 9vw, 96px);line-height:1;
+  letter-spacing:.12em;margin-right:-.12em;color:var(--n-text)}
+#hero .intro-wordmark span{color:var(--saff)}
+#hero .intro-tagline{margin-top:18px;font-size:clamp(17px, 1.5vw, 20px);color:var(--n-muted);letter-spacing:.01em}
+#hero .intro-start{margin-top:32px;min-width:180px;min-height:52px;font-size:16px;letter-spacing:.06em;pointer-events:auto}
+#hero .intro-final.is-in .intro-wordmark{animation:introMark 1.15s var(--ease-out) both}
+#hero .intro-final.is-in .intro-tagline{animation:introWord .8s var(--ease-out) .28s both}
+#hero .intro-final.is-in .intro-start{animation:introWord .8s var(--ease-out) .46s both}
+#hero .intro-start.is-nudge{animation:introNudge .7s var(--ease-out)!important}
+@keyframes introMark{
+  from{opacity:0;filter:blur(14px);letter-spacing:.32em;margin-right:-.32em}
+  to{opacity:1;filter:blur(0);letter-spacing:.12em;margin-right:-.12em}
+}
+@keyframes introNudge{
+  0%{box-shadow:0 0 0 0 rgba(242,201,76,.55)}
+  100%{box-shadow:0 0 0 16px rgba(242,201,76,0)}
+}
+
+/* ---- hint + progress ---- */
+#hero .intro-foot{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom, 0px));z-index:4;
+  display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:none;transition:opacity .4s var(--ease-out)}
+#hero[data-phase="home"] .intro-foot,#hero[data-phase="fallback"] .intro-foot,#hero[data-phase="morph"] .intro-foot{opacity:0;visibility:hidden}
+#hero .intro-hint{margin:0;font-size:15px;letter-spacing:.04em;color:var(--n-muted);animation:introHint 2.8s ease-in-out infinite;
+  transition:opacity .3s}
+#hero:not([data-step="0"]) .intro-hint{opacity:0;animation:none}
+#hero .intro-progress{display:flex;align-items:center;gap:8px}
+#hero .intro-progress .tick{position:relative;width:28px;height:1px;overflow:hidden;background:rgba(245,242,230,.26)}
+#hero .intro-progress .tick::after{content:"";position:absolute;inset:0;background:var(--saff);transform:scaleX(0);transform-origin:left;
+  transition:transform .9s var(--ease-out)}
+#hero .intro-progress .tick.is-on::after{transform:scaleX(1)}
+#hero .intro-count{margin-left:10px;min-width:3.2em;font-size:13.5px;letter-spacing:.08em;color:var(--n-muted);transition:opacity .3s}
+#hero[data-step="0"] .intro-count{opacity:0}
+@keyframes introHint{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ---- home state: copy left, deity right (setViewOffset) ---- */
+#hero .intro-home{position:absolute;inset:0;z-index:4;display:flex;align-items:center;padding-top:var(--nav-h);
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,visibility 0s linear .2s}
+#hero[data-phase="home"] .intro-home,#hero[data-phase="fallback"] .intro-home{opacity:1;visibility:visible;pointer-events:auto;transition:none}
+#hero .intro-home .container{width:100%}
+#hero .intro-home-title{max-width:11.5em;font-size:clamp(36px, 4.4vw, 62px);line-height:1.06;letter-spacing:-.02em;color:var(--n-text);font-weight:500}
+#hero .intro-home-title:focus{outline:none}
+#hero .intro-home-lead{margin-top:22px;max-width:31em;font-size:var(--fs-body);line-height:1.6;color:var(--n-muted)}
+#hero .intro-home-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+#hero[data-phase="home"] .intro-home-title,#hero[data-phase="fallback"] .intro-home-title{animation:introWord .9s var(--ease-out) both}
+#hero[data-phase="home"] .intro-home-lead,#hero[data-phase="fallback"] .intro-home-lead{animation:introWord .9s var(--ease-out) .12s both}
+#hero[data-phase="home"] .intro-home-actions,#hero[data-phase="fallback"] .intro-home-actions{animation:introWord .9s var(--ease-out) .22s both}
+#hero.is-instant .intro-home *{animation:none!important}
+
+#hero .intro-btn-solid{background:var(--n-text);color:var(--jade-900)}
+#hero .intro-btn-solid:hover{background:#FFFFFF}
+#hero .btn:focus-visible{outline:2px solid var(--saff);outline-offset:3px}
+#hero .intro-start:focus-visible{outline:none}
+#hero.is-kbd .intro-start:focus-visible{outline:2px solid var(--saff);outline-offset:3px}
+
+/* honest placeholder note */
+#hero .intro-note{position:absolute;z-index:4;right:var(--gutter);bottom:18px;margin:0;font-size:13px;letter-spacing:.02em;
+  color:rgba(180,205,189,.78);pointer-events:none}
+#hero[data-phase="intro"] .intro-note,#hero[data-phase="final"] .intro-note{bottom:calc(30px + env(safe-area-inset-bottom, 0px))}
+#hero[data-phase="morph"] .intro-note{opacity:0}
+
+/* ---- no WebGL / no Three.js: static hero ---- */
+#hero .intro-fallback{display:none;position:absolute;z-index:1;right:7vw;top:50%;width:min(38vw, 440px);aspect-ratio:1;
+  transform:translateY(-44%);color:var(--saff);opacity:.9;pointer-events:none}
+#hero .intro-fallback svg{width:100%;height:100%}
+#hero.is-fallback{background:radial-gradient(ellipse at 72% 42%, var(--n-bg0) 0%, var(--n-bg1) 72%)}
+#hero.is-fallback .intro-fallback{display:block}
+#hero.is-fallback .intro-veil{opacity:0}
+
+/* ---- mobile: sentences + copy at the bottom, deity raised ---- */
+@media (max-width:700px){
+  #hero .intro-mark{top:20px}
+  #hero .intro-mark span{letter-spacing:.22em}
+  #hero .intro-line{top:auto;bottom:calc(112px + env(safe-area-inset-bottom, 0px));left:var(--gutter)!important;right:var(--gutter)!important;
+    max-width:none;transform:none;text-align:left!important;font-size:clamp(25px, 6.8vw, 30px)}
+  #hero .intro-line::before{margin-left:0!important;transform-origin:left!important;margin-bottom:16px}
+  #hero .intro-lines::before{content:"";position:absolute;inset:auto 0 0 0;height:58%;
+    background:linear-gradient(to top, var(--intro-scrim) 0%, rgba(16,46,34,.5) 40%, rgba(16,46,34,0) 100%)}
+  #hero .intro-lines::before{transition:opacity .5s var(--ease-out)}
+  #hero[data-step="0"] .intro-lines::before{opacity:.6}
+  #hero[data-phase="final"] .intro-lines::before,#hero[data-phase="morph"] .intro-lines::before{opacity:0}
+  #hero .intro-final{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
+  #hero .intro-wordmark{font-size:clamp(42px, 11.5vw, 60px)}
+  #hero .intro-start{margin-top:26px;width:100%;max-width:320px}
+  #hero[data-phase="home"] .intro-scrim,#hero[data-phase="fallback"] .intro-scrim{
+    background:linear-gradient(to top, var(--intro-scrim) 0%, rgba(16,46,34,.7) 36%, rgba(16,46,34,0) 70%)}
+  #hero .intro-home{align-items:flex-end;padding-bottom:28px}
+  #hero .intro-home-title{font-size:clamp(30px, 8.4vw, 38px);max-width:12em}
+  #hero .intro-home-lead{margin-top:14px;font-size:16px}
+  #hero .intro-home-actions{margin-top:22px}
+  #hero .intro-home-actions .btn{flex:1 1 auto}
+  #hero .intro-note{bottom:auto;top:calc(var(--nav-h) + 2px);left:var(--gutter);right:var(--gutter);white-space:normal;font-size:11.5px;line-height:1.4}
+  #hero[data-phase="intro"] .intro-note,#hero[data-phase="final"] .intro-note{display:none}
+  #hero .intro-fallback{right:-14vw;top:30%;width:78vw;opacity:.55}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #hero .intro-hint{animation:none;opacity:1}
+}
+
+/* ===== Prototype C — site (Fork C): nav, router views, footer ===== */
+:root{
+  --site-field:#FFFCF6;                 /* input surface, a step lighter than --paper */
+  --site-fade:rgba(246,242,233,0);      /* --paper at 0 alpha, for edge fades */
+}
+
+/* contract-required global states */
+body:not([data-route="home"]) #hero{display:none}
+body[data-intro="on"] #nav,
+body[data-intro="on"] #app,
+body[data-intro="on"] #footer{visibility:hidden}
+body:not([data-route="home"]) #app,
+body.site-no-hero #app{padding-top:var(--nav-h)}
+#app{outline:none;min-height:60vh}
+
+html{scrollbar-color:var(--jade-700) var(--paper-2)}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:var(--paper-2)}
+::-webkit-scrollbar-thumb{background:var(--jade-700);border:3px solid var(--paper-2);border-radius:6px}
+::placeholder{color:var(--ink-3);opacity:1}
+input,textarea{caret-color:var(--jade-700)}
+
+.skip-link{position:fixed;left:16px;top:-64px;z-index:100;background:var(--jade-900);color:var(--on-jade);padding:12px 18px;border-radius:var(--radius);text-decoration:none;font-size:var(--fs-sm);transition:top var(--t) var(--ease-out)}
+.skip-link:focus{top:12px}
+
+.site-arrow{flex:0 0 auto;transition:transform var(--t) var(--ease-out)}
+.site-link{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-sm);font-weight:500;color:var(--ink);text-decoration:none;white-space:nowrap}
+.site-link span{background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:2px}
+.site-link:hover .site-arrow{transform:translateX(4px)}
+
+/* ---------- nav ---------- */
+#nav{position:fixed;inset:0 0 auto 0;z-index:var(--z-nav);height:var(--nav-h);color:var(--ink);background:transparent;
+  transition:background-color var(--t) var(--ease-out),box-shadow var(--t) var(--ease-out),color var(--t) var(--ease-out)}
+#nav.is-solid,#nav.is-open{background:var(--paper);box-shadow:0 1px 0 var(--hair)}
+body[data-route="home"] #nav:not(.is-solid):not(.is-open){color:var(--n-text);background:linear-gradient(rgba(14,53,41,.42),rgba(14,53,41,0))}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s5);height:100%}
+.nav-logo{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:inherit;min-height:44px}
+.nav-logo svg{width:28px;height:28px;color:var(--gold)}
+body[data-route="home"] #nav:not(.is-solid):not(.is-open) .nav-logo svg{color:var(--saff)}
+.wordmark{font-family:var(--f-display);font-weight:500;font-size:17px;letter-spacing:.2em;line-height:1}
+.nav-links{display:flex;gap:var(--s6);list-style:none;margin:0;padding:0}
+.nav-links a{position:relative;display:inline-block;padding:10px 0;font-size:15.5px;color:var(--ink-2);text-decoration:none;transition:color var(--t) var(--ease-out)}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform var(--t) var(--ease-out)}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--ink)}
+.nav-links a:hover::after,.nav-links a[aria-current="page"]::after{transform:scaleX(1)}
+body[data-route="home"] #nav:not(.is-solid):not(.is-open) .nav-links a{color:var(--n-muted)}
+body[data-route="home"] #nav:not(.is-solid):not(.is-open) .nav-links a:hover,
+body[data-route="home"] #nav:not(.is-solid):not(.is-open) .nav-links a[aria-current="page"]{color:var(--n-text)}
+body[data-route="home"] #nav:not(.is-solid):not(.is-open) :focus-visible{outline-color:var(--saff)}
+.nav-burger{display:none;width:44px;height:44px;margin-right:-10px;align-items:center;justify-content:center;background:none;border:0;color:inherit;border-radius:var(--radius)}
+.nav-burger line{transition:transform var(--t) var(--ease-out),opacity var(--t) var(--ease-out);transform-origin:12px 12px}
+.nav-burger[aria-expanded="true"] .b1{transform:translateY(3.5px) rotate(45deg)}
+.nav-burger[aria-expanded="true"] .b2{transform:translateY(-3.5px) rotate(-45deg)}
+.nav-panel{position:absolute;top:var(--nav-h);left:0;right:0;background:var(--paper);box-shadow:0 1px 0 var(--hair),0 18px 30px -18px rgba(14,53,41,.28);color:var(--ink)}
+.nav-panel ul{list-style:none;margin:0;padding:var(--s2) var(--gutter) var(--s5)}
+.nav-panel li+li{border-top:1px solid var(--hair)}
+.nav-panel a{display:flex;align-items:center;justify-content:space-between;min-height:56px;font-size:17px;text-decoration:none;color:var(--ink-2)}
+.nav-panel a[aria-current="page"]{color:var(--ink);font-weight:500}
+@media (max-width:880px){
+  .nav-links{display:none}
+  .nav-burger{display:inline-flex}
+}
+
+/* ---------- shared page structure ---------- */
+.sec{padding-block:var(--s9)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s5);margin-bottom:var(--s6)}
+.sec-head h2{font-size:var(--fs-h2)}
+.page-head{padding-top:var(--s8);padding-bottom:var(--s6)}
+.page-head h1{font-size:var(--fs-h1)}
+.page-lead{margin-top:var(--s4);max-width:60ch;color:var(--ink-2)}
+.count{margin-top:var(--s3);font-size:var(--fs-sm);color:var(--ink-3)}
+
+/* the one authored motion: framed images unroll top-down like a thangka on route enter */
+@keyframes site-unroll{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+#app.is-entering .site-unroll{animation:site-unroll .95s var(--ease-out) both;animation-delay:calc(var(--i,0) * 70ms)}
+
+/* ---------- product item (catalog, featured, related) ---------- */
+.pi{min-width:0}
+.pi-link{display:block;color:inherit;text-decoration:none}
+.pi-media{position:relative}
+.pi-360{position:absolute;top:12px;right:12px;padding:3px 7px;font-size:12px;font-weight:500;letter-spacing:.08em;color:var(--ink);background:var(--paper);border:1px solid var(--hair);border-radius:var(--radius)}
+.pi-title{margin-top:var(--s4);font-size:20px;line-height:1.28;letter-spacing:-.005em}
+.pi-name{background:linear-gradient(var(--gold),var(--gold)) 0 100%/0 1px no-repeat;padding-bottom:2px;transition:background-size var(--t) var(--ease-out)}
+.pi-link:hover .pi-name,.pi-link:focus-visible .pi-name{background-size:100% 1px}
+.pi-meta{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);margin-top:var(--s2);font-size:var(--fs-sm);color:var(--ink-3)}
+.pi-price{font-size:16.5px;font-weight:500;color:var(--ink);white-space:nowrap}
+.pi-status{margin-top:4px;font-size:var(--fs-xs);color:var(--ink-3)}
+.pi-sum{margin-top:var(--s3);color:var(--ink-2);max-width:52ch}
+.pi--lead .pi-title{font-size:clamp(24px,2.3vw,32px);line-height:1.2}
+
+/* ---------- home ---------- */
+.home-first{padding-top:var(--s8)}
+.cat-wrap{position:relative}
+.cat-wrap::after{content:"";position:absolute;top:1px;bottom:1px;right:0;width:24px;background:linear-gradient(to right,var(--site-fade),var(--paper));pointer-events:none;opacity:0;transition:opacity var(--t)}
+.cat-wrap.has-overflow::after{opacity:1}
+.cat-row{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);overscroll-behavior-x:contain}
+.cat-row::-webkit-scrollbar{display:none}
+.cat-item{flex:1 0 auto;min-width:164px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:var(--s5) var(--s5) var(--s5) 0;color:inherit;text-decoration:none}
+.cat-item+.cat-item{padding-left:var(--s5);border-left:1px solid var(--hair)}
+.cat-item:focus-visible{outline-offset:-3px}
+.cat-name{font-family:var(--f-display);font-size:clamp(22px,1.9vw,27px);line-height:1.15;padding-bottom:4px;white-space:nowrap;
+  background:linear-gradient(var(--gold),var(--gold)) 0 100%/0 1px no-repeat;transition:background-size var(--t) var(--ease-out)}
+.cat-item:hover .cat-name,.cat-item:focus-visible .cat-name{background-size:100% 1px}
+.cat-count{font-size:var(--fs-xs);color:var(--ink-3)}
+
+.feat{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:var(--s7) var(--s6)}
+.feat-side{display:grid;gap:var(--s7);align-content:start}
+
+.tara{background:var(--jade-900);color:var(--on-jade)}
+.tara-in{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:var(--s8);align-items:end;padding-block:var(--s10)}
+.tara-orn{width:56px;height:56px;color:var(--gold-hi);margin-bottom:var(--s5)}
+.tara blockquote{margin:0}
+.tara blockquote p{font-family:var(--f-display);font-size:clamp(27px,3vw,42px);line-height:1.24;letter-spacing:-.01em;text-wrap:balance}
+.tara cite{display:block;margin-top:var(--s5);font-style:normal;font-size:var(--fs-sm);color:var(--on-jade-2);letter-spacing:.02em}
+.tara-side{padding-top:var(--s5);border-top:1px solid var(--gold-line)}
+.tara-side p{color:var(--on-jade-2);line-height:1.72;letter-spacing:.005em}
+.tara .site-link{margin-top:var(--s5);color:var(--on-jade)}
+.tara :focus-visible{outline-color:var(--gold-hi)}
+
+.how{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.1fr);gap:var(--s8)}
+.how h2{font-size:var(--fs-h2)}
+.how-lead{margin-top:var(--s4);color:var(--ink-2);max-width:40ch}
+.how ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s6)}
+.how li{padding-top:var(--s5);border-top:1px solid var(--hair-strong)}
+.how-n{display:block;margin-bottom:var(--s5);font-family:var(--f-display);font-size:44px;line-height:1;color:var(--jade-700)}
+.how h3{font-size:22px;margin-bottom:var(--s2)}
+.how li p{color:var(--ink-2)}
+
+.closing{display:grid;justify-items:center;gap:var(--s5);text-align:center;padding-block:var(--s9) var(--s10);border-top:1px solid var(--hair)}
+.closing-orn{width:min(300px,70%);color:var(--gold)}
+.closing h2{font-size:var(--fs-h2);max-width:18ch}
+.btn-row{display:flex;flex-wrap:wrap;gap:var(--s3)}
+.closing .btn-row{justify-content:center}
+
+/* ---------- categories ---------- */
+.cat-list{list-style:none;margin:0 0 var(--s9);padding:0;border-top:1px solid var(--hair-strong)}
+.cat-list li{border-bottom:1px solid var(--hair)}
+.cl-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) auto 28px;gap:var(--s6);align-items:center;padding:var(--s6) var(--s3);margin-inline:calc(var(--s3) * -1);color:inherit;text-decoration:none;transition:background-color var(--t) var(--ease-out)}
+.cl-row:hover{background:var(--paper-2)}
+.cl-row:focus-visible{outline-offset:-2px}
+.cl-name{font-family:var(--f-display);font-size:clamp(26px,2.6vw,36px);line-height:1.15}
+.cl-blurb{color:var(--ink-2)}
+.cl-count{font-size:var(--fs-sm);color:var(--ink-3);white-space:nowrap}
+.cl-row .site-arrow{color:var(--ink-2)}
+.cl-row:hover .site-arrow{transform:translateX(4px);color:var(--ink)}
+.cl-row.is-empty .cl-name{color:var(--ink-3)}
+
+/* ---------- products ---------- */
+.toolbar{display:flex;align-items:center;gap:var(--s5);padding-block:var(--s2);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.filters{display:flex;flex-wrap:nowrap;gap:2px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none;margin-left:-14px}
+.filters::-webkit-scrollbar{display:none}
+.f-btn{position:relative;flex:0 0 auto;min-height:44px;padding:0 14px;background:none;border:0;border-radius:var(--radius);font-size:15.5px;color:var(--ink-3);white-space:nowrap;transition:color var(--t) var(--ease-out)}
+.f-btn:hover{color:var(--ink)}
+.f-btn:focus-visible{outline-offset:-3px}
+.f-btn[aria-pressed="true"]{color:var(--ink);font-weight:500}
+.f-btn[aria-pressed="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:2px;background:var(--maroon)}
+.search{position:relative;flex:0 0 300px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink-3);pointer-events:none}
+.search input{width:100%;height:44px;padding:0 14px 0 40px;background:var(--site-field);border:1px solid var(--hair-strong);border-radius:var(--radius);font-size:16px;transition:border-color var(--t) var(--ease-out)}
+.search input:hover{border-color:var(--ink-3)}
+.search input:focus{outline:none;border-color:var(--jade-700);box-shadow:0 0 0 3px rgba(29,84,66,.16)}
+.search input::-webkit-search-cancel-button{filter:grayscale(1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--s7) var(--s6);padding-block:var(--s7)}
+.pager{display:flex;justify-content:center;align-items:center;gap:var(--s1);padding-bottom:var(--s9)}
+.pager a,.pager span{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:0 10px;border:1px solid transparent;border-radius:var(--radius);font-size:var(--fs-sm);color:var(--ink-2);text-decoration:none}
+.pager a:hover{border-color:var(--hair-strong);color:var(--ink)}
+.pager a[aria-current="page"]{border-color:var(--ink);color:var(--ink);font-weight:500}
+.pager span[aria-disabled="true"]{color:var(--ink-3);opacity:.45}
+.empty{display:grid;justify-items:center;gap:var(--s5);text-align:center;padding:var(--s9) 0 var(--s10)}
+.empty-orn{width:90px;height:90px;color:var(--gold);opacity:.6}
+.empty p{max-width:40ch;color:var(--ink-2)}
+
+/* ---------- detail ---------- */
+.crumbs{padding-top:var(--s6)}
+.crumbs ol{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;font-size:var(--fs-sm);color:var(--ink-3)}
+.crumbs li+li::before{content:"/";margin-right:8px;color:var(--ink-3);opacity:.6}
+.crumbs a{color:var(--ink-2);text-decoration:none}
+.crumbs a:hover{color:var(--ink);text-decoration:underline}
+.crumbs [aria-current]{color:var(--ink)}
+.detail{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s8);align-items:start;padding-top:var(--s5)}
+.d-stage{position:relative;width:100%;aspect-ratio:4/5}
+.d-photo,.d-photo>svg{width:100%;height:100%}
+.d-photo{position:relative}
+.d-viewer{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 32%,var(--n-bg0) 0%,var(--n-bg1) 72%,var(--n-bg2) 100%);touch-action:none;cursor:grab;user-select:none}
+.d-viewer.is-dragging{cursor:grabbing}
+.d-viewer canvas{display:block;width:100%;height:100%}
+.d-viewer:focus-visible{outline:2px solid var(--saff);outline-offset:-4px}
+.v-hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;padding:8px 12px;font-size:var(--fs-xs);color:var(--n-text);background:rgba(10,40,31,.78);border:1px solid var(--n-line);border-radius:var(--radius);white-space:nowrap;pointer-events:none;transition:opacity var(--t-slow) var(--ease-out)}
+.v-hint.is-gone{opacity:0}
+.v-tag{position:absolute;top:14px;left:14px;font-size:12px;letter-spacing:.06em;color:var(--n-muted);pointer-events:none}
+.seg{display:inline-flex;margin-top:var(--s4);border:1px solid var(--hair-strong);border-radius:var(--radius);padding:3px;gap:3px}
+.seg button{min-height:38px;padding:0 16px;background:none;border:0;border-radius:var(--radius);font-size:var(--fs-sm);color:var(--ink-2);transition:background-color var(--t) var(--ease-out),color var(--t) var(--ease-out)}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--jade-900);color:var(--on-jade)}
+.d-info{position:sticky;top:calc(var(--nav-h) + var(--s6))}
+.d-title{font-size:clamp(34px,3.6vw,52px);line-height:1.1}
+.d-buy{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3) var(--s5);margin-top:var(--s5)}
+.d-price{font-size:28px;font-weight:500;letter-spacing:-.01em}
+.d-avail{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-sm);color:var(--ink-2)}
+.d-avail::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--jade-500)}
+.d-avail.is-out{color:var(--ink-3)}
+.d-avail.is-out::before{background:transparent;box-shadow:inset 0 0 0 1px var(--ink-3)}
+.d-summary{margin-top:var(--s5);color:var(--ink-2);max-width:52ch;line-height:1.7}
+.d-cta{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s6)}
+.d-note{margin-top:var(--s4);font-size:var(--fs-sm);color:var(--ink-3);max-width:46ch}
+.d-meta{display:grid;grid-template-columns:auto 1fr;gap:0;margin:var(--s6) 0 0;border-top:1px solid var(--hair);font-size:var(--fs-sm)}
+.d-meta dt,.d-meta dd{margin:0;padding:12px 0;border-bottom:1px solid var(--hair)}
+.d-meta dt{color:var(--ink-3);padding-right:var(--s5)}
+.d-meta a{color:var(--ink)}
+.tabs{margin-top:var(--s9)}
+.tablist{display:flex;gap:var(--s6);border-bottom:1px solid var(--hair);overflow-x:auto;scrollbar-width:none}
+.tablist::-webkit-scrollbar{display:none}
+.tab{position:relative;flex:0 0 auto;min-height:52px;padding:0;background:none;border:0;font-size:16.5px;color:var(--ink-3);white-space:nowrap;transition:color var(--t) var(--ease-out)}
+.tab:hover{color:var(--ink)}
+.tab:focus-visible{outline-offset:-3px}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:500}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--jade-900)}
+.tabpanel{padding-top:var(--s6);max-width:70ch;line-height:1.75}
+.tabpanel:focus-visible{outline-offset:6px}
+.tabpanel p+p{margin-top:var(--s4)}
+.steps{list-style:none;margin:0;padding:0;counter-reset:st;display:grid;gap:var(--s5)}
+.steps li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:var(--s3);counter-increment:st}
+.steps li::before{content:counter(st);font-family:var(--f-display);font-size:24px;line-height:1.3;color:var(--jade-700)}
+.specs{display:grid;grid-template-columns:minmax(120px,.8fr) minmax(0,2fr);margin:0;border-top:1px solid var(--hair)}
+.specs dt,.specs dd{margin:0;padding:14px var(--s4) 14px 0;border-bottom:1px solid var(--hair)}
+.specs dt{color:var(--ink-3)}
+.related{padding-block:var(--s9)}
+.related .grid{padding-block:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* ---------- inquiry ---------- */
+.back{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-top:var(--s5);font-size:var(--fs-sm);color:var(--ink-2);text-decoration:none}
+.back:hover{color:var(--ink)}
+.back:hover .site-arrow{transform:translateX(-4px)}
+.inq{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:var(--s8);align-items:start;padding-bottom:var(--s9)}
+.demo-note{display:flex;gap:var(--s3);align-items:flex-start;margin-bottom:var(--s6);padding:var(--s3) var(--s4);font-size:var(--fs-sm);color:var(--ink-2);background:var(--paper-2);border:1px solid var(--hair);border-radius:var(--radius)}
+.demo-note::before{content:"";flex:0 0 auto;width:7px;height:7px;margin-top:8px;background:var(--maroon);transform:rotate(45deg)}
+.form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5) var(--s5)}
+.field{display:grid;gap:8px;align-content:start}
+.field--full{grid-column:1/-1}
+.field label{font-size:15px;font-weight:500}
+.opt{font-weight:400;color:var(--ink-3)}
+.input{width:100%;height:52px;padding:0 16px;background:var(--site-field);border:1px solid var(--hair-strong);border-radius:var(--radius);font-size:16px;transition:border-color var(--t) var(--ease-out),box-shadow var(--t) var(--ease-out)}
+textarea.input{height:auto;min-height:160px;padding:14px 16px;line-height:1.55;resize:vertical}
+.input:hover{border-color:var(--ink-3)}
+.input:focus{outline:none;border-color:var(--jade-700);box-shadow:0 0 0 3px rgba(29,84,66,.16)}
+.input[aria-invalid="true"]{border-color:var(--error)}
+.input[aria-invalid="true"]:focus{box-shadow:0 0 0 3px rgba(163,56,43,.16)}
+.err{font-size:14px;line-height:1.4;color:var(--error)}
+.err:empty{display:none}
+.form-foot{grid-column:1/-1;display:grid;gap:var(--s4);justify-items:start;margin-top:var(--s2)}
+.form-foot .note{font-size:var(--fs-sm);color:var(--ink-3);max-width:56ch}
+.btn .spin{width:18px;height:18px;animation:site-spin .8s linear infinite}
+@keyframes site-spin{to{transform:rotate(360deg)}}
+.inq-aside{position:sticky;top:calc(var(--nav-h) + var(--s6));padding:var(--s5);background:var(--paper-2);border-radius:var(--radius)}
+.inq-aside h2{font-family:var(--f-body);font-size:var(--fs-sm);font-weight:500;color:var(--ink-3);letter-spacing:.01em;padding-bottom:var(--s3);margin-bottom:var(--s4);border-bottom:1px solid var(--hair)}
+.sum{display:grid;grid-template-columns:112px minmax(0,1fr);gap:var(--s4);align-items:start;color:inherit;text-decoration:none}
+.sum-name{font-family:var(--f-display);font-size:20px;line-height:1.25}
+.sum-cat{margin-top:6px;font-size:var(--fs-xs);color:var(--ink-3)}
+.sum-price{margin-top:var(--s3);font-weight:500}
+.success{display:grid;justify-items:center;gap:var(--s4);max-width:34em;margin:0 auto;padding:var(--s9) 0 var(--s10);text-align:center}
+.success-orn{width:72px;height:72px;color:var(--gold)}
+.success h1{font-size:var(--fs-h2);outline:none}
+.inq-no{margin-top:var(--s2);padding:10px 18px;font-size:22px;font-weight:500;letter-spacing:.06em;border:1px solid var(--gold-line);border-radius:var(--radius)}
+.success p{color:var(--ink-2)}
+.success .note{font-size:var(--fs-sm);color:var(--ink-3)}
+.success .btn{margin-top:var(--s4)}
+
+/* ---------- about ---------- */
+.about-banner{display:grid;place-items:center;min-height:max(240px,28vh);padding:var(--s8) var(--gutter);text-align:center;color:var(--n-text);background:radial-gradient(ellipse at 50% 30%,var(--n-bg0) 0%,var(--n-bg1) 78%)}
+.about-orn{width:64px;height:64px;margin:0 auto var(--s4);color:var(--saff);opacity:.85}
+.about-banner h1{font-size:var(--fs-h1)}
+.about-banner p{margin-top:var(--s3);color:var(--n-muted)}
+.story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s8);padding-block:var(--s9)}
+.story-lead{font-family:var(--f-display);font-size:clamp(27px,2.7vw,38px);line-height:1.24;letter-spacing:-.01em}
+.story-body p{color:var(--ink-2);max-width:60ch}
+.story-body p+p{margin-top:var(--s4)}
+.ph-tag{display:inline-block;margin-bottom:var(--s5);padding:4px 10px;font-size:var(--fs-xs);color:var(--ink-3);border:1px dashed var(--hair-strong);border-radius:var(--radius)}
+.values-band{background:var(--paper-2);border-block:1px solid var(--hair)}
+.values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s7);padding-block:var(--s8)}
+.values h2{font-size:var(--fs-h3);margin-bottom:var(--s3)}
+.values p{color:var(--ink-2)}
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s8);padding-block:var(--s9)}
+.contact h2{font-size:var(--fs-h2)}
+.contact-dl{display:grid;grid-template-columns:auto 1fr;gap:0;margin:0;border-top:1px solid var(--hair)}
+.contact-dl dt,.contact-dl dd{margin:0;padding:14px 0;border-bottom:1px solid var(--hair)}
+.contact-dl dt{color:var(--ink-3);padding-right:var(--s5)}
+.contact .btn{margin-top:var(--s6)}
+
+/* ---------- not found ---------- */
+.nf{display:grid;justify-items:center;gap:var(--s5);text-align:center;padding:var(--s10) 0}
+.nf h1{font-size:var(--fs-h1)}
+.nf p{color:var(--ink-2)}
+
+/* ---------- footer ---------- */
+#footer{background:var(--jade-950);color:var(--on-jade-2)}
+#footer :focus-visible{outline-color:var(--gold-hi)}
+.ft{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:var(--s7) var(--s6);padding-block:var(--s8) var(--s7)}
+.ft-brand .nav-logo{color:var(--on-jade)}
+.ft-brand .nav-logo svg{color:var(--gold-hi)}
+.ft-brand p{margin-top:var(--s4);max-width:30ch;font-size:var(--fs-sm);line-height:1.65}
+.ft h2{font-family:var(--f-body);font-size:var(--fs-sm);font-weight:500;color:var(--on-jade);margin-bottom:var(--s3)}
+.ft ul{list-style:none;margin:0;padding:0}
+.ft li a{display:inline-block;padding:6px 0;font-size:var(--fs-sm);color:var(--on-jade-2);text-decoration:none}
+.ft li a:hover{color:var(--on-jade);text-decoration:underline}
+.ft .btn{min-height:44px;padding:0 18px;font-size:var(--fs-sm);white-space:nowrap}
+.ft-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s3);padding-block:var(--s5);border-top:1px solid rgba(243,239,228,.14);font-size:var(--fs-xs)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .how{grid-template-columns:1fr;gap:var(--s6)}
+  .ft{grid-template-columns:1fr 1fr 1fr}
+  .ft-brand{grid-column:1/-1}
+}
+@media (max-width:880px){
+  .sec{padding-block:var(--s8)}
+  .feat{grid-template-columns:1fr}
+  .feat-side{grid-template-columns:1fr 1fr;gap:var(--s5)}
+  .tara-in{grid-template-columns:1fr;gap:var(--s6);padding-block:var(--s9)}
+  .detail,.inq{grid-template-columns:1fr;gap:var(--s6)}
+  .d-info,.inq-aside{position:static}
+  .inq-aside{order:-1}
+  .story,.contact{grid-template-columns:1fr;gap:var(--s5)}
+  .values{grid-template-columns:1fr;gap:var(--s6)}
+  .cl-row{grid-template-columns:minmax(0,1fr) auto;gap:var(--s2) var(--s4);padding-block:var(--s5)}
+  .cl-blurb{grid-column:1/-1;grid-row:2;font-size:var(--fs-sm)}
+  .cl-row .site-arrow{display:none}
+  .toolbar{flex-direction:column;align-items:stretch;gap:var(--s2);padding-bottom:var(--s3)}
+  .filters{margin-left:0;margin-inline:calc(var(--gutter) * -1);padding-inline:calc(var(--gutter) - 14px)}
+  .search{flex-basis:auto}
+  .related .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .related .grid > :nth-child(3){display:none}
+}
+@media (max-width:640px){
+  .how ol{grid-template-columns:1fr;gap:var(--s5)}
+  .how-n{font-size:34px;margin-bottom:var(--s3)}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s6) var(--s4)}
+  .pi-title{font-size:17px}
+  .pi-meta{flex-direction:column;gap:2px}
+  .pi-360{top:8px;right:8px}
+  .form-grid{grid-template-columns:1fr}
+  .ft{grid-template-columns:1fr 1fr}
+  .ft>div:last-child{grid-column:1/-1}
+  .tablist{gap:var(--s4)}
+  .tab{flex:1 1 0;min-width:0;white-space:normal;text-align:left;line-height:1.3;font-size:15.5px;padding-block:var(--s3)}
+  .d-price{font-size:24px}
+}
+@media (max-width:420px){
+  .feat-side{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  #app.is-entering .site-unroll{animation:none}
+  .btn .spin{animation:none}
+}
+
+/* ornament holders: size comes from the holder, not the SVG attributes */
+.tara-orn,.empty-orn,.about-orn,.success-orn,.closing-orn{display:block}
+.tara-orn>svg,.empty-orn>svg,.about-orn>svg,.success-orn>svg{width:100%;height:100%}
+.closing-orn>svg{width:100%;height:auto}
+
+</style>
+</head>
+<body class="lock" data-route="home" data-intro="on">
+<a class="skip-link" href="#app">Үндсэн агуулга руу шилжих</a>
+<header id="nav"></header>
+<section id="hero" aria-label="Ногоолин"></section>
+<main id="app" tabindex="-1"></main>
+<footer id="footer"></footer>
+<script>
+/* NG.data — demo catalog fixtures for Prototype C (Fork B).
+   All products, prices and descriptions are illustrative demo data, not a real inventory. */
+(function () {
+  'use strict';
+  window.NG = window.NG || {};
+
+  var categories = [
+    { slug: 'burhan-shuteen', name: 'Бурхан шүтээн', blurb: 'Тангка зураг болон гуулин шүтээн — гэрийн тахилын ширээний гол төв.' },
+    { slug: 'huj', name: 'Хүж', blurb: 'Занданмод, арц, эмийн ургамлаар хийсэн өдөр тутмын болон баярын хүж.' },
+    { slug: 'erkh', name: 'Эрх', blurb: 'Тарни, магтаал тоолоход хэрэглэх 108 ширхэгтэй эрх.' },
+    { slug: 'zul', name: 'Зул', blurb: 'Гэрэл өргөх тахилд зориулсан тосон зул ба гуулин зулын цом.' },
+    { slug: 'khadag', name: 'Хадаг', blurb: 'Хүндэтгэл, ерөөлийн бэлгэ тэмдэг болох торгон хадаг.' },
+    { slug: 'nom-sudar', name: 'Ном судар', blurb: 'Уламжлалт товхимол хэлбэрээр хавтасласан судар, магтаал.' },
+    { slug: 'takhiliin-ed', name: 'Тахилын эд', blurb: 'Тахилын цөгц, хонх, дорж зэрэг эд зүйлс энэ ангилалд удахгүй нэмэгдэнэ.' }
+  ];
+
+  var products = [
+    {
+      slug: 'green-tara-thangka', name: 'Ногоон Дарь Эхийн тангка', short: 'Ногоон Дарь Эхийн тангка',
+      category: 'burhan-shuteen', price: 380000, available: true, has3d: false, featured: true, art: 'thangka-tara',
+      summary: 'Ногоон Дарь Эхийг ногоон бие, баруун хөлөө тэнийлгэн суусан дүрээр зурсан, торгон хүрээтэй тангкагийн жишээ.',
+      description: [
+        'Ногоон Дарь Эх бол айдас, саад тотгороос хурдан аварч, үйлсийг бүтээгч бурхан. Баруун хөл нь тусламж руу яаран буухад бэлэн байгааг, зүүн гарт барьсан утпала цэцэг нь ариун сэтгэлийг бэлгэдэнэ.',
+        'Зураг нь уламжлалт ёсоор улаан, шар солонгон зурвас, хөх торгон хүрээ, доод хэсэгтээ «хаалга» хэмээх тусгай нөхөөстэй. Дэлгэц дээрх дүрслэл нь demo; бодит бүтээлийн хэмжээ, зураачийн тухай мэдээллийг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Тангкаг нарны шууд гэрэл, чийгтэй хананаас хол, нүдний түвшнээс дээгүүр өлгөнө.',
+        'Өлгөхдөө дээд модыг хоёр гараар барьж, зургийн гадаргууд хуруу хүргэхгүй.',
+        'Торгон бүтээлгийг тоосноос хамгаалах зорилгоор буулгаж хэвшинэ; хэрэглэх үедээ дээш нь эвхэж уяна.',
+        'Хадгалахдаа зурган талыг дотогш нь харуулж, доод модноос эхлэн сул ороож, хуурай газар тавина.'
+      ],
+      specs: [['Материал', 'Даавуун суурь, эрдэс будаг, торгон хүрээ (demo)'], ['Хэмжээ', 'Зургийн хэсэг 40 × 55 см, хүрээтэй 70 × 120 см'], ['Гарал үүсэл', 'Лавлах'], ['Савлагаа', 'Хатуу хоолой, торгон уут']]
+    },
+    {
+      slug: 'shakyamuni-thangka', name: 'Шагжмуни бурханы тангка', short: 'Шагжмуни бурханы тангка',
+      category: 'burhan-shuteen', price: 420000, available: false, has3d: false, featured: false, art: 'thangka-shakya',
+      summary: 'Газар гэрчлэх мудра үзүүлэн бадамлянхуан дээр заларсан Шагжмуни бурханы тангкагийн жишээ.',
+      description: [
+        'Шагжмуни бурхан баруун гараараа газар хүрч, зүүн гартаа бадар аяга барьсан дүрээр дүрслэгджээ. Энэ дүр нь гэгээрлийн мөчийг газар дэлхий гэрчилснийг бэлгэддэг.',
+        'Хүрээ нь гүн хөх торгоор хийгдсэн, улаан шар солонгон зурвастай. Одоогоор түр байхгүй — дахин ирэх хугацааг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Тахилын ширээний төв хэсэгт, бусад шүтээнээс дээгүүр байрлуулна.',
+        'Нарны шууд гэрэл болон утаа ихтэй газраас хол байлгана.',
+        'Тоосыг зөөлөн, хуурай өдөн сойзоор дээрээс доош чиглэлд арилгана.'
+      ],
+      specs: [['Материал', 'Даавуун суурь, эрдэс будаг, торгон хүрээ (demo)'], ['Хэмжээ', 'Зургийн хэсэг 45 × 60 см, хүрээтэй 75 × 130 см'], ['Гарал үүсэл', 'Лавлах'], ['Савлагаа', 'Хатуу хоолой, торгон уут']]
+    },
+    {
+      slug: 'green-tara-statue', name: 'Ногоон Дарь Эхийн гуулин шүтээн, 20 см', short: 'Ногоон Дарь Эхийн шүтээн',
+      category: 'burhan-shuteen', price: 690000, available: true, has3d: true, featured: true, art: 'statue',
+      summary: 'Давхар бадамлянхуан суурьтай, гэрэлтсэн хүрээтэй, 20 см өндөр гуулин шүтээний жишээ.',
+      description: [
+        'Ногоон Дарь Эхийг баруун хөлөө жижиг бадам дээр тэнийлгэсэн уламжлалт дүрээр цутгасан гуулин шүтээн. Ар талын гэрэлтсэн хүрээ, давхар бадамлянхуан суурь нь шүтээнийг тахилын ширээн дээр тод харагдуулна.',
+        'Шүтээний дотор тарни, шүтээний ёслол хийлгэх эсэхийг хүсэлтдээ дурдана уу. 360° харагдац нь хэлбэрийн орлуулга бөгөөд бодит загварын 3D скан биш.'
+      ],
+      usage: [
+        'Шүтээнийг хоёр гараар, суурийг нь барьж өргөнө; толгой, гараас нь барихгүй.',
+        'Тахилын ширээн дээр нүдний түвшнээс дээгүүр, цэвэр даавуун дэвсгэр дээр залж тавина.',
+        'Гуулины өнгийг хадгалахын тулд хуурай, зөөлөн даавуугаар арчина; химийн цэвэрлэгч хэрэглэхгүй.'
+      ],
+      specs: [['Материал', 'Гуулин, алтадмал өнгөлгөө (demo)'], ['Хэмжээ', 'Өндөр 20 см, суурийн өргөн 13 см'], ['Жин', 'Ойролцоогоор 1.4 кг'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'sandalwood-incense', name: 'Занданмодны хүж — 108 ширхэг', short: 'Занданмодны хүж',
+      category: 'huj', price: 45000, available: true, has3d: false, featured: false, art: 'incense-box',
+      summary: 'Зөөлөн, дулаан үнэртэй занданмодны 108 ширхэг хүж, хайрцагтай.',
+      description: [
+        'Занданмодны хүж нь өглөөний ном унших, бясалгал хийх үеийн тайван орчныг бүрдүүлэхэд тохиромжтой зөөлөн үнэртэй. Нэг ширхэг нь ойролцоогоор 30–40 минут асна.',
+        'Хайрцагны хэмжээ, орц, үйлдвэрлэгчийн мэдээллийг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Хүжийн үзүүрийг галд барьж, дөл гарсны дараа зөөлөн сэгсэрч унтраана — зөвхөн утаа гарах ёстой.',
+        'Хүжийг хүжийн сав эсвэл элстэй аяганд босоо хатгана.',
+        'Салхи, хөшиг, цаас зэрэг шатамхай зүйлээс хол байлгаж, асаалттай хүжийг хараа хяналтгүй орхихгүй.',
+        'Үнс бүрэн хөрсний дараа цэвэрлэнэ.'
+      ],
+      specs: [['Материал', 'Занданмодны нунтаг, ургамлын гаралтай холбогч (demo)'], ['Хэмжээ', 'Урт 21 см'], ['Тоо ширхэг', '108'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'juniper-incense', name: 'Арцны хүж — боодол', short: 'Арцны хүж',
+      category: 'huj', price: 18000, available: true, has3d: false, featured: false, art: 'incense-bundle',
+      summary: 'Ариусгал, сан тавихад хэрэглэдэг арцны модгүй, бүдүүн хүжийн боодол.',
+      description: [
+        'Арц нь Монгол, Төвдийн уламжлалд гэр орноо ариусгах, сан тавихад хамгийн өргөн хэрэглэгддэг ургамал. Модгүй бүдүүн хүж тул үнэр нь тод, утаа нь элбэг.',
+        'Боодлын жин, ширхгийн тоо болон түүхий эдийн гарлыг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Нэг ширхгийг боодлоос болгоомжтой салгана — модгүй хүж хугарамтгай.',
+        'Үзүүрийг асааж, дөлийг нь унтраагаад элстэй хүжийн саванд хатгана.',
+        'Гэрээ ариусгахдаа хаалга, цонхыг бага зэрэг нээж, утааг өрөөгөөр жигд тараана.'
+      ],
+      specs: [['Материал', 'Арцны нунтаг (demo)'], ['Хэмжээ', 'Урт 18 см, бүдүүн 6 мм'], ['Савлагаа', 'Цаасан бүс бүхий боодол'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'herbal-incense', name: 'Эмийн ургамлын хүж', short: 'Эмийн ургамлын хүж',
+      category: 'huj', price: 32000, available: true, has3d: false, featured: false, art: 'incense-herbal',
+      summary: 'Олон төрлийн ургамал холилдсон, уламжлалт жороор хийсэн модгүй хүж.',
+      description: [
+        'Эмийн ургамлын хүж нь гүн, ногоовтор үнэртэй бөгөөд бясалгал, ном уншлагын үеэр хэрэглэхэд тохиромжтой.',
+        'Найрлага дахь ургамлын жагсаалт болон харшил үүсгэж болох орцын талаарх мэдээллийг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Нэг удаад нэг ширхгийг асаана; бага өрөөнд хагас ширхэг хангалттай.',
+        'Асаасан хүжийг элстэй саванд хатгаж, агааржуулалттай орчинд хэрэглэнэ.',
+        'Чийгээс хамгаалж, битүү саванд хадгална.'
+      ],
+      specs: [['Материал', 'Холимог ургамлын нунтаг (demo)'], ['Хэмжээ', 'Урт 15 см'], ['Савлагаа', 'Даавуун бүс бүхий боодол'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'sandalwood-mala', name: 'Зандан модон эрх — 108 ширхэг', short: 'Зандан модон эрх',
+      category: 'erkh', price: 120000, available: true, has3d: true, featured: true, art: 'mala-sandal',
+      summary: 'Гурван тоолуур сувс, гуру сувс, цацагтай 108 ширхэгтэй занданмодон эрх.',
+      description: [
+        'Занданмодон эрх нь хэрэглэх тусам гарын дулаанаар үнэр нь сэргэж, өнгө нь гүнзгийрдэг. 108 сувс нь тарни, магтаалын тоог тоолоход зориулагдсан.',
+        '27, 54, 81 дэх сувсны оронд өнгөөр ялгарах тоолуур сувс хийсэн. Сувсны диаметр, утасны төрлийг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Эрхийг зүүн гартаа барьж, гуру сувсны хажуугийн эхний сувснаас эхлэн эрхий хуруугаараа өөр рүүгээ татаж тоолно.',
+        'Тарни бүрт нэг сувс шилжүүлнэ; гуру сувсыг тоолохгүй.',
+        'Нэг тойрог дуусахад гуру сувсыг давахгүй, эрхийг эргүүлж эсрэг чиглэлд үргэлжлүүлнэ.',
+        'Хэрэглээгүй үедээ даавуун уутанд хийж, шалан дээр тавихгүй.'
+      ],
+      specs: [['Материал', 'Зандан мод, хөвөн утас (demo)'], ['Хэмжээ', 'Сувс 8 мм'], ['Тоо ширхэг', '108 + гуру сувс'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'bodhi-mala', name: 'Бодь үрэн эрх — 108 ширхэг', short: 'Бодь үрэн эрх',
+      category: 'erkh', price: 165000, available: true, has3d: true, featured: false, art: 'mala-bodhi',
+      summary: 'Бодь модны үрээр хийсэн, жижиг хонхорхой гадаргуутай 108 ширхэгтэй эрх.',
+      description: [
+        'Бодь үр нь Будда гэгээрсэн модтой холбоотой тул эрхэнд хамгийн эрхэмлэгддэг материалын нэг. Хэрэглэх тусам гадаргуу нь гөлгөрч, өнгө нь бараандана.',
+        'Үрийн хэмжээ, өнгө харилцан адилгүй байдаг. Бодит барааны зургийг хүсэлтээр авах боломжтой.'
+      ],
+      usage: [
+        'Анх хэрэглэхийн өмнө хуурай, цэвэр гараар хэдэн өдөр барьж хэвшүүлнэ.',
+        'Ус, тос, сүрчигнээс хамгаална — үрийн гадаргуу хагарч болно.',
+        'Тоолохдоо занданмодон эрхтэй ижил журмаар, гуру сувсыг давахгүйгээр эргүүлнэ.'
+      ],
+      specs: [['Материал', 'Бодь модны үр, торгон утас (demo)'], ['Хэмжээ', 'Сувс 9–10 мм'], ['Тоо ширхэг', '108 + гуру сувс'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'brass-butter-lamp', name: 'Гуулин зулын цом', short: 'Гуулин зулын цом',
+      category: 'zul', price: 58000, available: true, has3d: true, featured: false, art: 'lamp',
+      summary: 'Хөлтэй, гүн аягатай, тосон зул өргөхөд зориулсан гуулин цом.',
+      description: [
+        'Зул өргөх нь мунхгийн харанхуйг билгийн гэрлээр арилгахыг бэлгэддэг тахил. Хөлтэй гуулин цом нь тахилын ширээн дээр тогтвортой зогсож, тосыг жигд хайлуулна.',
+        'Цомын багтаамж болон тохирох голын хэмжээг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Цомд хайлуулсан шар тос эсвэл ургамлын тос хийж, голыг төвд нь босгоно.',
+        'Голын үзүүрийг тосонд норгосны дараа асаана.',
+        'Асаалттай зулыг хөшиг, цаас, хадагнаас хол, хараа хяналттайгаар байлгана.',
+        'Цомыг хөрсний дараа халуун усаар угааж, хуурай даавуугаар арчина.'
+      ],
+      specs: [['Материал', 'Гуулин (demo)'], ['Хэмжээ', 'Өндөр 14 см, аяганы диаметр 9 см'], ['Багтаамж', 'Ойролцоогоор 120 мл'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'butter-lamp-set', name: 'Тосон зул — 12 ширхэг', short: 'Тосон зул, 12 ширхэг',
+      category: 'zul', price: 24000, available: true, has3d: true, featured: false, art: 'lamp-set',
+      summary: 'Бэлэн голтой, нэг удаагийн жижиг тосон зулын 12 ширхэгтэй багц.',
+      description: [
+        'Баяр ёслол, сар шинийн өдрүүдэд олон зул зэрэг өргөхөд зориулсан бэлэн зул. Нэг ширхэг нь ойролцоогоор 4 цаг асна.',
+        'Тосны төрөл (шар тос эсвэл ургамлын тос) болон шаталтын хугацааг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Зулыг тэгш, гал тэсвэртэй тавиур дээр хооронд нь зай авч байрлуулна.',
+        'Голын үзүүрийг асааж, дөл тогтворжтол салхинаас хамгаална.',
+        'Унтраахдаа үлээхгүй, тагаар эсвэл хуруувчаар дарж унтраана.'
+      ],
+      specs: [['Материал', 'Ургамлын тос, хөвөн гол, хөнгөн цагаан аяга (demo)'], ['Хэмжээ', 'Диаметр 4 см'], ['Тоо ширхэг', '12'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'blue-silk-khadag', name: 'Цэнхэр торгон хадаг', short: 'Цэнхэр торгон хадаг',
+      category: 'khadag', price: 15000, available: true, has3d: false, featured: false, art: 'khadag-blue',
+      summary: 'Өлзий хээ шигтгэсэн, хоёр үзүүртээ сэжүүртэй цэнхэр торгон хадаг.',
+      description: [
+        'Цэнхэр хадаг нь мөнх тэнгэрийн өнгийг бэлгэддэг бөгөөд Монголд хүндэтгэл, ерөөл илэрхийлэхэд хамгийн өргөн хэрэглэгддэг. Торгонд өлзий хээ шигтгэсэн.',
+        'Урт, өргөн болон хээний сонголтыг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Хадгийг уртааш нь хоёр нугалж, нугалсан ирмэгийг барьж буй хүн рүүгээ харуулна.',
+        'Хоёр гартаа дэлгэж, бага зэрэг бөхийн, хүндэтгэлтэйгээр барина.',
+        'Бурхан шүтээнд өргөхдөө шүтээний өмнө эсвэл хүзүүнд зөөлөн тавина.',
+        'Хадгийг газар тавих, хөл дээгүүр давуулахаас зайлсхийнэ.'
+      ],
+      specs: [['Материал', 'Торго (demo)'], ['Хэмжээ', '150 × 35 см'], ['Өнгө', 'Цэнхэр'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'white-khadag', name: 'Цагаан хадаг, 1.5 м', short: 'Цагаан хадаг',
+      category: 'khadag', price: 9000, available: true, has3d: false, featured: false, art: 'khadag-white',
+      summary: 'Ариун сэтгэлийг бэлгэдэх, нимгэн торгомсог даавуун цагаан хадаг.',
+      description: [
+        'Цагаан хадаг нь сэтгэлийн цагаан, ариун байдлыг бэлгэддэг. Ёслол, золголт, бурханд өргөх зэрэг өдөр тутмын хэрэглээнд тохиромжтой.',
+        'Олон ширхгээр авах тохиолдолд савлагааны сонголтыг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Хадгийг цэвэр, хуурай гараар барьж, нугалсан ирмэгийг хүлээн авагч руу харуулна.',
+        'Өргөсөн хадгийг тахилын ширээн дээр эвхэж хадгална.',
+        'Угаах шаардлагатай бол хүйтэн усаар гараар зөөлөн угаана.'
+      ],
+      specs: [['Материал', 'Торгомсог даавуу (demo)'], ['Хэмжээ', '150 × 30 см'], ['Өнгө', 'Цагаан'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'tara-praise-sutra', name: 'Дарь Эхийн хорин нэгэн магтаал', short: 'Хорин нэгэн Дарь Эхийн магтаал',
+      category: 'nom-sudar', price: 48000, available: true, has3d: true, featured: false, art: 'sutra-yellow',
+      summary: 'Шар даавуун боодолтой, модон хавтастай, уламжлалт товхимол хэлбэрийн магтаал.',
+      description: [
+        'Хорин нэгэн Дарь Эхийн магтаал нь өдөр тутмын уншлагад хамгийн их уншигддаг магтаалын нэг. Уламжлалт урт хуудастай товхимол хэлбэрээр, хоёр модон хавтасны дунд хавчуулж, шар даавуугаар боосон.',
+        'Төвд, монгол бичгийн хувилбар, хуудасны тоог хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Судрыг өндөр, цэвэр газар тавина; шалан дээр болон хөл дээгүүр тавихгүй.',
+        'Уншихын өмнө боодлыг зүүнээс баруун тийш задалж, дээд хавтсыг хойш нь тавина.',
+        'Уншсаны дараа хуудсуудыг дарааллаар нь эвлүүлж, хавтас, боодлоор нь буцааж боогоно.'
+      ],
+      specs: [['Материал', 'Цаас, модон хавтас, даавуун боодол (demo)'], ['Хэмжээ', '42 × 10 см'], ['Хэл', 'Төвд, монгол (лавлах)'], ['Гарал үүсэл', 'Лавлах']]
+    },
+    {
+      slug: 'heart-sutra', name: 'Билгийн зүрх судар', short: 'Билгийн зүрх судар',
+      category: 'nom-sudar', price: 36000, available: false, has3d: false, featured: false, art: 'sutra-maroon',
+      summary: 'Хүрэн улаан даавуун боодолтой, товхимол хэлбэрийн Билгийн зүрх судар.',
+      description: [
+        'Билгийн зүрх судар нь хоосон чанарын сургаалыг товч бөгөөд гүн утгатайгаар илэрхийлсэн судар. Ном уншлага, цээжлэхэд тохиромжтой хэмжээтэй.',
+        'Одоогоор түр байхгүй — дахин ирэх хугацааг хүсэлтээр лавлана уу.'
+      ],
+      usage: [
+        'Судрыг өндөр, цэвэр газар тавина.',
+        'Боодлыг задлахдаа хуудсыг дарааллаар нь барьж, салхинаас хамгаална.',
+        'Хадгалахдаа хүрэн улаан боодлоор сайтар ороож, хавтсыг уяна.'
+      ],
+      specs: [['Материал', 'Цаас, модон хавтас, даавуун боодол (demo)'], ['Хэмжээ', '36 × 9 см'], ['Хэл', 'Төвд, монгол (лавлах)'], ['Гарал үүсэл', 'Лавлах']]
+    }
+  ];
+
+  var catBySlug = {};
+  categories.forEach(function (c) { catBySlug[c.slug] = c; });
+  var prodBySlug = {};
+  products.forEach(function (p) { prodBySlug[p.slug] = p; });
+
+  function norm(s) { return String(s == null ? '' : s).toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim(); }
+
+  function list(opts) {
+    opts = opts || {};
+    var cat = opts.category && opts.category !== 'all' ? opts.category : '';
+    var q = norm(opts.q);
+    return products.filter(function (p) {
+      if (cat && p.category !== cat) return false;
+      if (!q) return true;
+      var c = catBySlug[p.category];
+      var hay = norm(p.name + ' ' + p.short + ' ' + (c ? c.name : '') + ' ' + p.slug.replace(/-/g, ' '));
+      return hay.indexOf(q) !== -1;
+    });
+  }
+
+  function money(n) {
+    var v = Math.round(Number(n) || 0);
+    return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '₮';
+  }
+
+  function related(slug, n) {
+    n = n == null ? 3 : n;
+    var p = prodBySlug[slug];
+    if (!p) return products.slice(0, n);
+    var same = products.filter(function (x) { return x.slug !== slug && x.category === p.category && x.available; });
+    var rest = products.filter(function (x) { return x.slug !== slug && x.category !== p.category && x.available && x.featured; });
+    var more = products.filter(function (x) { return x.slug !== slug && same.indexOf(x) === -1 && rest.indexOf(x) === -1 && x.available; });
+    return same.concat(rest, more).slice(0, n);
+  }
+
+  NG.data = {
+    categories: categories,
+    products: products,
+    bySlug: function (slug) { return prodBySlug[slug]; },
+    category: function (slug) { return catBySlug[slug]; },
+    count: function (slug) { return products.filter(function (p) { return p.category === slug; }).length; },
+    list: list,
+    money: money,
+    related: related
+  };
+})();
+
+</script>
+<script>
+/* NG.art — authored SVG "studio renders", thangka-mount frame, thin-line ornaments (Fork B).
+   Every render shares one studio: jade-grey seamless sweep, key light from upper-left,
+   soft contact shadow, fine grain. All imagery is demo illustration, labelled as such. */
+(function () {
+  'use strict';
+  window.NG = window.NG || {};
+
+  var seq = 0;
+  var W = 400, H = 500;
+
+  var ALT = {
+    'thangka-tara': 'Ногоон Дарь Эхийн тангка',
+    'thangka-shakya': 'Шагжмуни бурханы тангка',
+    'statue': 'Ногоон Дарь Эхийн гуулин шүтээн',
+    'incense-box': 'Занданмодны хүжийн хайрцаг',
+    'incense-bundle': 'Арцны хүжийн боодол',
+    'incense-herbal': 'Эмийн ургамлын хүжийн боодол',
+    'mala-sandal': 'Зандан модон эрх',
+    'mala-bodhi': 'Бодь үрэн эрх',
+    'lamp': 'Гуулин зулын цом',
+    'lamp-set': 'Тосон зулын багц',
+    'khadag-blue': 'Цэнхэр торгон хадаг',
+    'khadag-white': 'Цагаан хадаг',
+    'sutra-yellow': 'Шар боодолтой судар',
+    'sutra-maroon': 'Хүрэн улаан боодолтой судар'
+  };
+
+  /* ---------- small helpers ---------- */
+  function r1(v) { return Math.round(v * 10) / 10; }
+  function stops(list) {
+    return list.map(function (s) {
+      return '<stop offset="' + s[0] + '" stop-color="' + s[1] + '"' + (s[2] != null ? ' stop-opacity="' + s[2] + '"' : '') + '/>';
+    }).join('');
+  }
+  function lin(id, x1, y1, x2, y2, st) {
+    return '<linearGradient id="' + id + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '">' + stops(st) + '</linearGradient>';
+  }
+  function rad(id, cx, cy, r, st, fx, fy) {
+    return '<radialGradient id="' + id + '" cx="' + cx + '" cy="' + cy + '" r="' + r + '"' +
+      (fx != null ? ' fx="' + fx + '" fy="' + fy + '"' : '') + '>' + stops(st) + '</radialGradient>';
+  }
+  /* deterministic pseudo-random so renders are stable */
+  function rng(seed) { var s = seed; return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; }; }
+
+  var BRASS = [[0, '#4E3712'], [0.16, '#9C7631'], [0.3, '#E9CF8C'], [0.42, '#C79E4A'], [0.7, '#86632A'], [1, '#3F2C0F']];
+  var WOOD = [[0, '#8A5A31'], [0.5, '#6A4022'], [1, '#3F2412']];
+
+  /* endless knot (ulzii) as one path, centred on 0,0, extent ±17 before rotation */
+  var KNOT = 'M-9-12V12M-3-12V12M3-12V12M9-12V12M-12-9H12M-12-3H12M-12 3H12M-12 9H12' +
+    'M-3-12A3 3 0 0 1 3-12M-3 12A3 3 0 0 0 3 12M-12-3A3 3 0 0 0-12 3M12-3A3 3 0 0 1 12 3' +
+    'M-9-12C-9-22-22-9-12-9M9-12C9-22 22-9 12-9M12 9C22 9 9 22 9 12M-12 9C-22 9-9 22-9 12';
+
+  /* ---------- the shared studio ---------- */
+  function studioDefs(p) {
+    return lin(p + 'bg', 0, 0, 0, 1, [[0, '#DDE5DE'], [0.56, '#CCD7CE'], [0.7, '#BFCBC2'], [0.78, '#C6D1C8'], [1, '#D5DED6']]) +
+      rad(p + 'key', 0.18, 0.12, 0.8, [[0, '#FFFFFF', 0.55], [0.55, '#FFFFFF', 0.12], [1, '#FFFFFF', 0]]) +
+      rad(p + 'vig', 0.5, 0.45, 0.78, [[0.62, '#16302A', 0], [1, '#16302A', 0.2]]) +
+      '<filter id="' + p + 'blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>' +
+      '<filter id="' + p + 'soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.6"/></filter>' +
+      '<filter id="' + p + 'grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch" seed="' + (seq % 7) + '"/><feColorMatrix type="saturate" values="0"/></filter>';
+  }
+  function studioBack(p) {
+    return '<rect width="' + W + '" height="' + H + '" fill="url(#' + p + 'bg)"/>' +
+      '<rect width="' + W + '" height="' + H + '" fill="url(#' + p + 'key)"/>' +
+      /* the soft floor line of the sweep, never a hard horizon */
+      '<rect x="-20" y="338" width="440" height="26" fill="#FFFFFF" opacity=".16" filter="url(#' + p + 'blur)"/>';
+  }
+  function shadow(p, sh) {
+    var s = '';
+    if (sh) {
+      s += '<ellipse cx="' + sh.cx + '" cy="' + sh.cy + '" rx="' + sh.rx + '" ry="' + sh.ry + '" fill="#132B22" opacity="' + (sh.op || 0.4) + '" filter="url(#' + p + 'blur)"/>' +
+        '<ellipse cx="' + (sh.cx - 4) + '" cy="' + (sh.cy - 1) + '" rx="' + r1(sh.rx * 0.72) + '" ry="' + r1(sh.ry * 0.45) + '" fill="#0E2219" opacity="' + r1((sh.op || 0.4) * 0.9 * 100) / 100 + '" filter="url(#' + p + 'soft)"/>';
+    }
+    return s;
+  }
+  function studioFront(p) {
+    var s = '<rect width="' + W + '" height="' + H + '" fill="url(#' + p + 'vig)"/>' +
+      '<rect width="' + W + '" height="' + H + '" filter="url(#' + p + 'grain)" opacity=".07"/>';
+    return s;
+  }
+
+  /* ---------- seated figure (used by thangkas and the statue) ---------- */
+  /* utpala (blue lotus) — five pointed petals on a short calyx */
+  function utpala(x, y, sc, c) {
+    var g = '<g transform="translate(' + x + ' ' + y + ') scale(' + sc + ')">' +
+      '<path d="M-2.6 2.4Q0 4.2 2.6 2.4" stroke="#5C8B4A" stroke-width=".9" fill="none"/>';
+    [-64, -32, 0, 32, 64].forEach(function (a) {
+      g += '<path d="M0 1.2Q-2.1-2.6 0-7Q2.1-2.6 0 1.2Z" transform="rotate(' + a + ')" fill="#7FA3D4" stroke="' + c + '" stroke-width=".3"/>';
+    });
+    return g + '<circle r="1.2" fill="#F0E2A8"/></g>';
+  }
+
+  /* seated deity in thangka line style: soft fills under thin contour lines.
+     o: {skin, contour, feature, hair, crown, scarf, lap, seat, robe, extend, flowers, bowl} */
+  function figure(o) {
+    var C = ' stroke="' + o.contour + '" stroke-width=".5" stroke-linejoin="round"';
+    var F = ' stroke="' + o.feature + '" stroke-width=".45" stroke-linecap="round" fill="none"';
+    var f = '';
+    /* flowing scarf behind the arms */
+    if (!o.robe) {
+      f += '<path d="M187 153C178 156 175.5 170 177.5 182C179 194 172 203 166.5 207C173.5 205.5 181.5 197 182.4 184C183 172 182.6 162 189.5 156Z" fill="' + o.scarf + '"' + C + '/>' +
+        '<path d="M213 153C222 156 224.5 170 222.5 184C221.5 196 228.5 205 234 208.5C226.5 207 219 198.5 218.2 186C217.6 174 218 162 210.5 156Z" fill="' + o.scarf + '"' + C + '/>';
+    }
+    /* hair falling to the shoulders, ushnisha */
+    f += '<path d="M192.2 134Q191 145 189.5 153L193 151Q193.6 143 194.8 137ZM207.8 134Q209 145 210.5 153L207 151Q206.4 143 205.2 137Z" fill="' + o.hair + '"/>' +
+      '<ellipse cx="200" cy="127.2" rx="' + (o.robe ? 3.6 : 4.2) + '" ry="' + (o.robe ? 3.4 : 3) + '" fill="' + o.hair + '"/>';
+    /* extended right leg (viewer left) on a small lotus footrest */
+    if (o.extend) {
+      f += '<path d="M164.5 246Q172 249.6 179.5 246Q176.8 243.6 172 243.4Q167.2 243.6 164.5 246Z" fill="' + o.seat + '"' + C + '/>' +
+        '<path d="M166.4 245.2Q166.6 241.6 169.4 241.4Q170.2 243.2 169.6 245ZM174.6 245Q173.8 243.2 174.6 241.4Q177.4 241.6 177.6 245.2ZM170.4 244.6Q170.4 240.8 172 240Q173.6 240.8 173.6 244.6Z" fill="' + o.seat + '"' + C + '/>' +
+        '<path d="M177.8 210.5Q174.2 224 173 238.2L176.8 238.6Q178.6 225 183.2 212.4Z" fill="' + o.skin + '"' + C + '/>' +
+        '<path d="M172.2 237.6Q168.8 240.6 169.8 242.2Q173.6 243 177.4 241.4Q177.8 239.4 176.8 237.8Z" fill="' + o.skin + '"' + C + '/>' +
+        '<path d="M173 236.6Q175 237.4 177 236.8" stroke="' + o.crown + '" stroke-width=".7" fill="none"/>';
+    }
+    /* torso: shoulders, slim waist */
+    f += '<path d="M197.2 144.5L196.8 149.5H203.2L202.8 144.5Z" fill="' + o.skin + '"/>' +
+      '<path d="M188 152Q200 148.4 212 152Q215.6 154 215 159Q213 168 209.6 176Q208 183 210 190H190Q192 183 190.4 176Q187 168 185 159Q184.4 154 188 152Z" fill="' + o.skin + '"' + C + '/>';
+    if (o.robe) {
+      f += '<path d="M200.5 150Q207 149.4 212 152Q215.6 154 215 159Q213 168 209.6 176Q208 183 210 190H190Q191.4 182 192 176Q195 162 200.5 150Z" fill="' + o.robe + '"' + C + '/>' +
+        '<path d="M198 160Q203 170 206 188M202 156Q207 166 209 178" stroke="' + o.contour + '" stroke-width=".35" fill="none" opacity=".7"/>';
+    } else {
+      f += '<path d="M192.6 163.4Q195.6 166.8 198.4 164.6M201.6 164.6Q204.4 166.8 207.4 163.4" stroke="' + o.contour + '" stroke-width=".4" fill="none" opacity=".75"/>' +
+        '<path d="M190 153.4Q200 161.6 210 153.4M191.4 155Q200 170.6 208.6 155" stroke="' + o.crown + '" stroke-width=".7" fill="none"/>' +
+        '<circle cx="200" cy="170.4" r=".9" fill="' + o.crown + '"/>';
+    }
+    /* right arm (viewer left): boon-granting hand, palm out, near the right knee */
+    f += '<path d="M187 155Q181.4 165 180.8 176Q180.2 186 181.6 197.6H184.8Q184.2 187 185 177Q185.8 167 190.4 160Z" fill="' + o.skin + '"' + C + '/>' +
+      '<path d="M180.8 197.4Q179.4 203 180.8 207.6Q182.6 209.6 184.6 207.6Q185.8 203 185 197.4Z" fill="' + o.skin + '"' + C + '/>' +
+      '<path d="M181.4 167.4Q183.2 168.4 185.4 167.6M181 195.8Q183 196.8 185 195.8" stroke="' + o.crown + '" stroke-width=".7" fill="none"/>';
+    if (o.robe) {
+      /* left hand resting in the lap */
+      f += '<path d="M211 157Q218 163 220 174Q221 184 218.4 192L214.8 191Q216.6 182 216 174Q214.6 166 210 162Z" fill="' + o.skin + '"' + C + '/>' +
+        '<path d="M218.4 191.6Q211 198 203 200.2L203 196.6Q210 195 214.8 190.6Z" fill="' + o.skin + '"' + C + '/>';
+    } else {
+      /* left hand at the heart */
+      f += '<path d="M211 157Q218 163 220 174Q220.6 179 218 181L215.6 178.6Q216.4 170 210 162Z" fill="' + o.skin + '"' + C + '/>' +
+        '<path d="M218.6 180.8Q213 178.6 207.6 172.6L209.6 169.8Q214.4 174.2 217.6 176.8Z" fill="' + o.skin + '"' + C + '/>' +
+        '<ellipse cx="207.4" cy="170.6" rx="2.4" ry="2.1" fill="' + o.skin + '"' + C + '/>' +
+        '<path d="M216.2 166.6Q218 167.8 219.8 167" stroke="' + o.crown + '" stroke-width=".7" fill="none"/>';
+    }
+    /* lower garment over the folded left leg; tucked sole in front */
+    f += '<path d="M190 186Q200 184 210 186Q221 194 227 203Q231 210 226 215Q216 219.6 204 219H190Q184 218 181 214.6Q176 211 176.6 206.6Q178 199 183 194Q186 190 190 186Z" fill="' + (o.robe || o.lap) + '"' + C + '/>' +
+      '<path d="M181 214.6Q190 219 204 219Q216 219.6 226 215" stroke="' + o.crown + '" stroke-width=".8" fill="none"/>' +
+      '<path d="M192 196Q204 201 220 203M186 206Q200 210 222 210" stroke="' + o.contour + '" stroke-width=".35" fill="none" opacity=".6"/>' +
+      '<path d="M194.6 212Q199.2 210.6 203.2 212.4Q201.6 215.4 196.6 215Q194 214.2 194.6 212Z" fill="' + o.skin + '"' + C + '/>';
+    if (o.bowl) f += '<path d="M194.6 199.4Q200 207.6 205.4 199.4Z" fill="#2B231C"' + C + '/>';
+    /* head: serene face, crown or ushnisha, earrings */
+    f += '<ellipse cx="200" cy="137.4" rx="7.2" ry="8.6" fill="' + o.skin + '"' + C + '/>' +
+      '<path d="M192.9 135.4Q194 129.4 200 128.8Q206 129.4 207.1 135.4Q204 132.4 200 132.6Q196 132.4 192.9 135.4Z" fill="' + o.hair + '"/>' +
+      '<path d="M195.3 135.6Q197.1 134.7 198.8 135.4M201.2 135.4Q202.9 134.7 204.7 135.6" stroke="' + o.feature + '" stroke-width=".35" fill="none" opacity=".55"/>' +
+      '<path d="M195.7 137.6Q197.2 138.7 198.7 137.6M201.3 137.6Q202.8 138.7 204.3 137.6"' + F + '/>' +
+      '<path d="M200 138.2L199.6 140.6Q200 141 200.6 140.7"' + F + ' opacity=".6"/>' +
+      '<path d="M198.7 142.9Q200 143.6 201.3 142.9"' + F + '/>' +
+      '<circle cx="200" cy="134.1" r=".6" fill="' + o.feature + '"/>';
+    if (o.robe) {
+      f += '<path d="M192.9 137Q191.6 141 193 144.4M207.1 137Q208.4 141 207 144.4" stroke="' + o.contour + '" stroke-width=".5" fill="none"/>';
+    } else {
+      f += '<path d="M192.6 131.6Q200 129.6 207.4 131.6" stroke="' + o.crown + '" stroke-width="1.1" fill="none"/>';
+      [[193, 3.4], [196.5, 4.8], [200, 6.2], [203.5, 4.8], [207, 3.4]].forEach(function (l) {
+        var x = l[0], h = l[1];
+        f += '<path d="M' + r1(x - 1.6) + ' 131.6Q' + r1(x - 1.9) + ' ' + r1(131.6 - h) + ' ' + x + ' ' + r1(131 - h) + 'Q' + r1(x + 1.9) + ' ' + r1(131.6 - h) + ' ' + r1(x + 1.6) + ' 131.6Z" fill="' + o.crown + '"' + C + '/>' +
+          '<circle cx="' + x + '" cy="' + r1(130.4 - h * 0.45) + '" r=".55" fill="' + o.jewel + '"/>';
+      });
+      f += '<circle cx="192.6" cy="140.8" r="1.1" fill="' + o.crown + '"/><circle cx="207.4" cy="140.8" r="1.1" fill="' + o.crown + '"/>' +
+        '<path d="M192.6 141.9V144M207.4 141.9V144" stroke="' + o.crown + '" stroke-width=".6"/>';
+    }
+    if (o.flowers) {
+      f += '<path d="M207.6 170.4C212 164.6 219.4 159.6 223.6 152.6M184 200C179 186 175 166 176.4 153" stroke="#5C8B4A" stroke-width=".8" fill="none"/>' +
+        utpala(224.4, 151, 1, o.contour) + utpala(176.4, 152.4, 0.8, o.contour);
+    }
+    return f;
+  }
+
+  /* ---------- drawings ---------- */
+  var DRAW = {};
+
+  function thangka(v) {
+    return function (p) {
+      var d = lin(p + 'sky', 0, 0, 0, 1, [[0, v.sky1], [0.7, v.sky2], [1, v.sky3]]) +
+        lin(p + 'skin', 0, 0, 1, 0, [[0, v.skinHi], [0.55, v.skin], [1, v.skinLo]]) +
+        lin(p + 'wood', 0, 0, 0, 1, WOOD) +
+        lin(p + 'brass', 0, 0, 1, 0, BRASS) +
+        lin(p + 'lite', 0, 0, 1, 0, [[0, '#FFFFFF', 0.16], [0.45, '#FFFFFF', 0], [1, '#000000', 0.16]]) +
+        lin(p + 'rib', 0, 0, 1, 0, [[0, '#B4513C'], [0.5, '#8E3324'], [1, '#5E1E16']]) +
+        '<pattern id="' + p + 'brc" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M4.5 1L8 4.5L4.5 8L1 4.5Z" fill="none" stroke="' + v.brocadeHi + '" stroke-width=".7"/></pattern>' +
+        '<clipPath id="' + p + 'pc"><rect x="137" y="85" width="126" height="174"/></clipPath>';
+      var b = '<path d="M112 56L200 27L288 56" stroke="#4F4030" stroke-width="1.1" fill="none"/><circle cx="200" cy="27" r="2.2" fill="#3A3026"/>' +
+        '<rect x="126" y="66" width="168" height="378" fill="#0F241C" opacity=".32" filter="url(#' + p + 'blur)"/>' +
+        '<rect x="118" y="58" width="164" height="374" fill="' + v.brocade + '"/>' +
+        '<rect x="118" y="58" width="164" height="374" fill="url(#' + p + 'brc)" opacity=".55"/>' +
+        '<rect x="131" y="79" width="138" height="186" fill="#C9A04A"/>' +
+        '<rect x="134" y="82" width="132" height="180" fill="#8A2A35"/>' +
+        '<g clip-path="url(#' + p + 'pc)">' +
+        '<rect x="137" y="85" width="126" height="174" fill="url(#' + p + 'sky)"/>' +
+        '<ellipse cx="156" cy="102" rx="16" ry="5" fill="#FFFFFF" opacity=".28"/><ellipse cx="246" cy="110" rx="14" ry="4.5" fill="#FFFFFF" opacity=".24"/>' +
+        '<path d="M137 214L150 196L160 206L172 190L184 210L137 226Z" fill="#E9EFE7" opacity=".55"/>' +
+        '<path d="M263 212L252 194L242 204L230 192L218 212L263 226Z" fill="#E9EFE7" opacity=".5"/>' +
+        '<path d="M137 232Q160 214 182 226Q205 211 230 224Q248 214 263 222V259H137Z" fill="' + v.hill + '"/>' +
+        '<rect x="137" y="247" width="126" height="12" fill="' + v.water + '" opacity=".75"/>' +
+        '<ellipse cx="200" cy="186" rx="42" ry="56" fill="' + v.halo + '" stroke="#D8B66A" stroke-width=".9"/>' +
+        '<ellipse cx="200" cy="186" rx="36" ry="50" fill="none" stroke="#D8B66A" stroke-width=".5" opacity=".5"/>' +
+        '<circle cx="200" cy="138" r="17" fill="' + v.headHalo + '" stroke="#D8B66A" stroke-width=".8"/>' +
+        '<ellipse cx="200" cy="224" rx="40" ry="7.5" fill="' + v.seat + '"/>';
+      for (var i = -4; i <= 4; i++) {
+        var x = 200 + i * 8.6;
+        b += '<path d="M' + r1(x - 4.6) + ' 225Q' + r1(x) + ' 212 ' + r1(x + 4.6) + ' 225Z" fill="' + v.petal + '" stroke="' + v.petalLine + '" stroke-width=".4"/>';
+      }
+      b += '<ellipse cx="200" cy="220" rx="30" ry="3.8" fill="#F1ECDD"/>' +
+        figure({ skin: 'url(#' + p + 'skin)', contour: '#D8B66A', feature: v.feature, hair: '#1A2531', crown: '#D8B66A', jewel: '#B5413A', scarf: v.scarf, lap: v.lap, seat: v.petal, robe: v.robe, extend: v.extend, flowers: v.flowers, bowl: v.bowl }) +
+        '</g>' +
+        '<rect x="146" y="58" width="7" height="186" fill="url(#' + p + 'rib)"/><path d="M146 244L149.5 238L153 244V252L149.5 247L146 252Z" fill="#7A2B1F"/>' +
+        '<rect x="247" y="58" width="7" height="198" fill="url(#' + p + 'rib)"/><path d="M247 256L250.5 250L254 256V264L250.5 259L247 264Z" fill="#7A2B1F"/>' +
+        '<rect x="172" y="300" width="56" height="112" fill="#76232F" stroke="#C9A04A" stroke-width=".9"/>' +
+        '<rect x="178" y="306" width="44" height="100" fill="none" stroke="#C9A04A" stroke-width=".5" opacity=".55"/>' +
+        '<rect x="118" y="58" width="164" height="374" fill="url(#' + p + 'lite)"/>' +
+        '<rect x="108" y="51" width="184" height="8" rx="3.5" fill="url(#' + p + 'wood)"/>' +
+        '<rect x="101" y="50" width="10" height="10" rx="2" fill="url(#' + p + 'brass)"/><rect x="289" y="50" width="10" height="10" rx="2" fill="url(#' + p + 'brass)"/>' +
+        '<rect x="104" y="429" width="192" height="12" rx="5.5" fill="url(#' + p + 'wood)"/>' +
+        '<rect x="90" y="427" width="17" height="16" rx="3.5" fill="url(#' + p + 'brass)"/><rect x="293" y="427" width="17" height="16" rx="3.5" fill="url(#' + p + 'brass)"/>';
+      return { defs: d, body: b, sh: null, fit: [1.08, 200, 240] };
+    };
+  }
+
+  DRAW['thangka-tara'] = thangka({
+    brocade: '#1E4A3B', brocadeHi: '#3D7660', sky1: '#2B5A66', sky2: '#4B7A61', sky3: '#3E6B4E',
+    skin: '#3E9466', skinHi: '#6CBE8E', skinLo: '#2C7650', halo: '#24524C', headHalo: '#5E9C84',
+    seat: '#E7B7B0', petal: '#EEC4BC', petalLine: '#B98A84', hill: '#355F45', water: '#3A6C78',
+    feature: '#173226', scarf: '#C86A3C', robe: null, lap: '#A63C34', extend: true, flowers: true, bowl: false
+  });
+  DRAW['thangka-shakya'] = thangka({
+    brocade: '#262F4B', brocadeHi: '#4A5784', sky1: '#2C4A7A', sky2: '#56808A', sky3: '#46705C',
+    skin: '#D0A04A', skinHi: '#F4D891', skinLo: '#9A7128', halo: '#2C6654', headHalo: '#7FA98E',
+    seat: '#EBC6B0', petal: '#F0D0BC', petalLine: '#C49A86', hill: '#3B6450', water: '#3C5F82',
+    feature: '#4A3410', scarf: '#A13D2B', robe: '#A13D2B', extend: false, flowers: false, bowl: true
+  });
+
+  DRAW.statue = function (p) {
+    var d = lin(p + 'br', 0, 0, 1, 0, BRASS) +
+      lin(p + 'brd', 0, 0, 1, 0, [[0, '#3A280C'], [0.3, '#8A6A2E'], [0.6, '#5E4419'], [1, '#2C1F09']]) +
+      lin(p + 'brv', 0, 0, 0, 1, [[0, '#F0D79A'], [0.4, '#B88E3E'], [1, '#4A3412']]) +
+      rad(p + 'gl', 0.5, 0.45, 0.55, [[0, '#FFF3D2', 0.45], [1, '#FFF3D2', 0]]);
+    var b = '<circle cx="200" cy="232" r="118" fill="url(#' + p + 'gl)"/>' +
+      '<circle cx="200" cy="226" r="96" fill="none" stroke="url(#' + p + 'brd)" stroke-width="7"/>' +
+      '<circle cx="200" cy="226" r="87" fill="none" stroke="url(#' + p + 'br)" stroke-width="2.2" stroke-dasharray="1.5 5.2" stroke-linecap="round"/>' +
+      '<circle cx="200" cy="226" r="96" fill="none" stroke="#F3DDA0" stroke-width="1" opacity=".5" stroke-dasharray="60 540" stroke-dashoffset="-330"/>';
+    /* double lotus pedestal */
+    var i, x;
+    for (i = 0; i < 9; i++) { x = 137 + i * 15.75; b += '<path d="M' + r1(x - 8) + ' 360C' + r1(x - 9) + ' 346 ' + r1(x - 4) + ' 338 ' + r1(x) + ' 338C' + r1(x + 4) + ' 338 ' + r1(x + 9) + ' 346 ' + r1(x + 8) + ' 360Z" fill="url(#' + p + 'brd)"/>'; }
+    for (i = 0; i < 8; i++) { x = 145 + i * 15.75; b += '<path d="M' + r1(x - 9) + ' 362C' + r1(x - 10) + ' 344 ' + r1(x - 5) + ' 334 ' + r1(x) + ' 334C' + r1(x + 5) + ' 334 ' + r1(x + 10) + ' 344 ' + r1(x + 9) + ' 362Z" fill="url(#' + p + 'br)" stroke="#5A4216" stroke-width=".6"/>'; }
+    b += '<rect x="124" y="360" width="152" height="11" rx="3" fill="url(#' + p + 'br)"/>' +
+      '<path d="M124 365.5H276" stroke="#4A3412" stroke-width=".8" stroke-dasharray="2 3"/>';
+    for (i = 0; i < 9; i++) { x = 134 + i * 16.5; b += '<path d="M' + r1(x - 9) + ' 371C' + r1(x - 9) + ' 385 ' + r1(x - 5) + ' 392 ' + r1(x) + ' 392C' + r1(x + 5) + ' 392 ' + r1(x + 9) + ' 385 ' + r1(x + 9) + ' 371Z" fill="url(#' + p + 'br)" stroke="#5A4216" stroke-width=".6"/>'; }
+    b += '<rect x="122" y="388" width="156" height="10" rx="2" fill="url(#' + p + 'brd)"/><path d="M118 398H282L286 412H114Z" fill="url(#' + p + 'brd)"/>' +
+      '<path d="M114 412H286" stroke="#E9CF8C" stroke-width="1" opacity=".55"/>' +
+      '<g transform="translate(200 352) scale(2.2) translate(-200 -219)">' +
+      figure({ skin: 'url(#' + p + 'br)', contour: '#5A4216', feature: '#3A280C', hair: '#6E5220', crown: '#F0D79A', jewel: '#8A6A2E', scarf: 'url(#' + p + 'brd)', lap: 'url(#' + p + 'brv)', seat: 'url(#' + p + 'br)', robe: null, extend: true, flowers: false, bowl: false }) +
+      '<path d="M182 168Q181 182 182.6 196M195 134Q196 131 199 130.4" stroke="#FFF1C4" stroke-width=".5" fill="none" opacity=".55"/>' +
+      '</g>' +
+      '<path d="M176 160Q170 230 186 330" stroke="#FFF6DA" stroke-width="5" fill="none" opacity=".22" filter="url(#' + p + 'soft)"/>';
+    return { defs: d, body: b, sh: { cx: 214, cy: 413, rx: 104, ry: 12, op: 0.5 }, fit: [1.1, 200, 300] };
+  };
+
+  DRAW['incense-box'] = function (p) {
+    var d = lin(p + 'fr', 0, 0, 1, 0, [[0, '#86303B'], [1, '#5E1C26']]) +
+      lin(p + 'sd', 0, 0, 1, 0, [[0, '#4A141C'], [1, '#2E0B11']]) +
+      lin(p + 'tp', 0, 0, 1, 0, [[0, '#A44452'], [1, '#7A2632']]) +
+      lin(p + 'br', 0, 0, 1, 0, BRASS) +
+      lin(p + 'smk', 0, 1, 0, 0, [[0, '#FFFFFF', 0.55], [1, '#FFFFFF', 0]]);
+    var b = '<path d="M150 170L178 156H270L242 170Z" fill="url(#' + p + 'tp)"/>' +
+      '<path d="M160 168L184 158H258L236 168Z" fill="#1E070B"/>';
+    var R = rng(11), i, x, top;
+    for (i = 0; i < 15; i++) {
+      x = 168 + i * 5.6; top = 84 + R() * 26;
+      b += '<path d="M' + r1(x) + ' 166L' + r1(x + (R() - 0.5) * 6) + ' ' + r1(top) + '" stroke="' + (i % 3 ? '#8A4A2B' : '#9E5A35') + '" stroke-width="2.6" stroke-linecap="round"/>';
+    }
+    b += '<rect x="150" y="170" width="92" height="236" fill="url(#' + p + 'fr)"/>' +
+      '<path d="M242 170L270 156V392L242 406Z" fill="url(#' + p + 'sd)"/>' +
+      '<rect x="160" y="228" width="72" height="118" fill="#EFE6D2"/>' +
+      '<path d="M163 233H229M163 341H229" stroke="#B08A3E" stroke-width=".9"/>' +
+      '<g transform="translate(196 272) rotate(45) scale(.95)"><path d="' + KNOT + '" fill="none" stroke="#6B1E28" stroke-width="1.2" vector-effect="non-scaling-stroke"/></g>' +
+      '<rect x="174" y="306" width="44" height="2.2" fill="#6B1E28" opacity=".8"/><rect x="180" y="314" width="32" height="1.6" fill="#6B1E28" opacity=".5"/><rect x="184" y="321" width="24" height="1.6" fill="#6B1E28" opacity=".5"/>' +
+      '<rect x="150" y="170" width="18" height="236" fill="#FFFFFF" opacity=".07"/>' +
+      /* lit stick in a small brass dish */
+      '<ellipse cx="110" cy="410" rx="30" ry="5" fill="#132B22" opacity=".4" filter="url(#' + p + 'soft)"/>' +
+      '<ellipse cx="104" cy="404" rx="22" ry="5.5" fill="url(#' + p + 'br)"/><ellipse cx="104" cy="402.5" rx="17" ry="3.6" fill="#5A4216"/>' +
+      '<path d="M104 401L121 240" stroke="#7A3F25" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<path d="M120.2 247L121.2 236" stroke="#BEB4A6" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<circle cx="121.3" cy="235" r="7" fill="#FFB070" opacity=".4" filter="url(#' + p + 'soft)"/><circle cx="121.3" cy="235.5" r="2" fill="#FF8A3D"/>' +
+      '<path d="M121 231C108 205 136 186 122 160S110 112 131 82" stroke="url(#' + p + 'smk)" stroke-width="3.2" fill="none" filter="url(#' + p + 'soft)"/>' +
+      '<path d="M122 230C132 206 112 190 124 168S136 130 120 104" stroke="url(#' + p + 'smk)" stroke-width="1.4" fill="none" opacity=".7"/>';
+    return { defs: d, body: b, sh: { cx: 226, cy: 408, rx: 74, ry: 10, op: 0.48 }, fit: [1.1, 200, 300] };
+  };
+
+  function bundle(v) {
+    return function (p) {
+      var d = lin(p + 'st', 0, 0, 0, 1, [[0, v.hi], [0.5, v.base], [1, v.dark]]) +
+        lin(p + 'wr', 0, 0, 0, 1, [[0, v.wrapHi], [1, v.wrap]]);
+      var R = rng(v.seed), b = '<g transform="rotate(-13 200 360)">', i, y, x0, x1, ends = '';
+      for (i = 0; i < 9; i++) {
+        y = 318 + i * 6.2; x0 = 74 + R() * 12; x1 = 324 + R() * 12;
+        b += '<rect x="' + r1(x0) + '" y="' + r1(y) + '" width="' + r1(x1 - x0) + '" height="7" rx="3.5" fill="url(#' + p + 'st)" opacity="' + (i < 3 ? 0.88 : 1) + '"/>';
+        ends += '<ellipse cx="' + r1(x1 - 1) + '" cy="' + r1(y + 3.5) + '" rx="2.2" ry="3.2" fill="' + v.end + '"/>';
+      }
+      b += ends +
+        '<rect x="178" y="312" width="58" height="66" rx="3" fill="url(#' + p + 'wr)"/>' +
+        '<path d="M178 318H236M178 372H236" stroke="' + v.print + '" stroke-width=".8" opacity=".8"/>' +
+        '<g transform="translate(207 345) rotate(45) scale(.7)"><path d="' + KNOT + '" fill="none" stroke="' + v.print + '" stroke-width="1.1" vector-effect="non-scaling-stroke"/></g>' +
+        '<path d="M190 312V378M224 312V378" stroke="' + v.thread + '" stroke-width="1.3" opacity=".85"/>' +
+        '<rect x="178" y="312" width="58" height="10" fill="#FFFFFF" opacity=".12"/>' +
+        '</g>';
+      /* loose sticks in front with their own soft shadows */
+      var loose = [[112, 414, 250, 404], [150, 428, 298, 432], [218, 410, 330, 394]];
+      loose.forEach(function (s) {
+        b += '<path d="M' + (s[0] + 6) + ' ' + (s[1] + 6) + 'L' + (s[2] + 6) + ' ' + (s[3] + 6) + '" stroke="#132B22" stroke-width="7" opacity=".28" filter="url(#' + p + 'soft)"/>' +
+          '<path d="M' + s[0] + ' ' + s[1] + 'L' + s[2] + ' ' + s[3] + '" stroke="' + v.base + '" stroke-width="6.5" stroke-linecap="round"/>' +
+          '<path d="M' + s[0] + ' ' + (s[1] - 1.6) + 'L' + s[2] + ' ' + (s[3] - 1.6) + '" stroke="' + v.hi + '" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>';
+      });
+      return { defs: d, body: b, sh: { cx: 210, cy: 396, rx: 150, ry: 16, op: 0.42 }, fit: [1.22, 205, 340] };
+    };
+  }
+  DRAW['incense-bundle'] = bundle({ seed: 5, hi: '#D2B386', base: '#A5845A', dark: '#6E5534', end: '#C9AE84', wrap: '#E6DBC3', wrapHi: '#F4EDDD', print: '#6B1E28', thread: '#6B1E28' });
+  DRAW['incense-herbal'] = bundle({ seed: 9, hi: '#A39461', base: '#706240', dark: '#463C24', end: '#8E8458', wrap: '#6E1F2A', wrapHi: '#8C3240', print: '#D8B66A', thread: '#D8B66A' });
+
+  function mala(v) {
+    return function (p) {
+      var d = rad(p + 'bd', 0.5, 0.5, 0.55, [[0, v.hi], [0.45, v.base], [1, v.dark]], 0.34, 0.3) +
+        rad(p + 'cb', 0.5, 0.5, 0.55, [[0, '#C9545E'], [0.5, '#8F2B33'], [1, '#4B1218']], 0.34, 0.3) +
+        lin(p + 'ts', 0, 0, 1, 0, [[0, v.tasselHi], [0.5, v.tassel], [1, v.tasselLo]]) +
+        lin(p + 'br', 0, 0, 1, 0, BRASS);
+      var cx = 200, cy = 312, rx = 130, ry = 58, N = 56, beads = [], i, t, x, y, r;
+      for (i = 1; i < N; i++) {
+        t = Math.PI / 2 + (i / N) * Math.PI * 2;
+        x = cx + rx * Math.cos(t); y = cy + ry * Math.sin(t);
+        r = 6.6 + 3.2 * ((y - (cy - ry)) / (2 * ry));
+        beads.push({ x: x, y: y, r: r, counter: i === 14 || i === 28 || i === 42 });
+      }
+      beads.sort(function (a, b2) { return a.y - b2.y; });
+      var b = '<ellipse cx="' + (cx + 8) + '" cy="' + (cy + 10) + '" rx="' + rx + '" ry="' + ry + '" fill="none" stroke="#132B22" stroke-width="16" opacity=".26" filter="url(#' + p + 'blur)"/>' +
+        '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="none" stroke="' + v.string + '" stroke-width="1.1"/>';
+      beads.forEach(function (bd) {
+        b += '<circle cx="' + r1(bd.x) + '" cy="' + r1(bd.y) + '" r="' + r1(bd.r) + '" fill="url(#' + p + (bd.counter ? 'cb' : 'bd') + ')"/>';
+        if (v.pits && !bd.counter) b += '<circle cx="' + r1(bd.x + bd.r * 0.28) + '" cy="' + r1(bd.y + bd.r * 0.22) + '" r="' + r1(bd.r * 0.17) + '" fill="' + v.dark + '" opacity=".45"/>';
+      });
+      /* guru bead, cap and tassel lying toward the viewer */
+      var gy = cy + ry + 4;
+      b += '<path d="M188 ' + (gy + 16) + 'Q176 428 168 450L232 450Q224 428 212 ' + (gy + 16) + 'Z" fill="#132B22" opacity=".3" filter="url(#' + p + 'soft)" transform="translate(6 2)"/>' +
+        '<path d="M194 ' + (gy + 18) + 'Q180 426 172 448L228 448Q220 426 206 ' + (gy + 18) + 'Z" fill="url(#' + p + 'ts)"/>';
+      for (i = 0; i < 13; i++) {
+        x = 175 + i * 4.2;
+        b += '<path d="M200 ' + (gy + 20) + 'Q' + r1((200 + x) / 2) + ' 428 ' + r1(x) + ' 447" stroke="' + (i % 2 ? v.tasselLo : v.tasselHi) + '" stroke-width=".7" fill="none" opacity=".6"/>';
+      }
+      b += '<rect x="193" y="' + (gy + 10) + '" width="14" height="11" rx="2.5" fill="url(#' + p + 'br)"/>' +
+        '<circle cx="200" cy="' + gy + '" r="12.5" fill="url(#' + p + 'bd)"/>' +
+        '<circle cx="200" cy="' + gy + '" r="12.5" fill="none" stroke="' + v.dark + '" stroke-width=".6" opacity=".4"/>';
+      return { defs: d, body: b, sh: null, fit: [1.15, 200, 300] };
+    };
+  }
+  DRAW['mala-sandal'] = mala({ hi: '#EDBF8A', base: '#B07443', dark: '#5A3318', string: '#6B1E28', tassel: '#7A2632', tasselHi: '#A64452', tasselLo: '#4E1720', pits: false });
+  DRAW['mala-bodhi'] = mala({ hi: '#F4E6C8', base: '#C7AB7A', dark: '#77603C', string: '#8A2A35', tassel: '#C0702E', tasselHi: '#E39A52', tasselLo: '#874A19', pits: true });
+
+  function cupGeom(lit, p) {
+    var g = '<path d="M-26 0Q-24 26-10 34H10Q24 26 26 0Z" fill="url(#' + p + 'br)"/>' +
+      '<path d="M-12 34L-16 44H16L12 34Z" fill="url(#' + p + 'br)"/>' +
+      '<ellipse cx="0" cy="44" rx="16" ry="3" fill="url(#' + p + 'br)"/>' +
+      '<ellipse cx="0" cy="0" rx="26" ry="6" fill="url(#' + p + 'brd)"/>' +
+      '<ellipse cx="0" cy="1" rx="22" ry="4.4" fill="url(#' + p + 'bt)"/>' +
+      '<path d="M0 1V-9" stroke="#2E2216" stroke-width="1.6"/>';
+    if (lit) {
+      g += '<ellipse cx="0" cy="-20" rx="13" ry="20" fill="#FFC66B" opacity=".38" filter="url(#' + p + 'soft)"/>' +
+        '<path d="M0-36C7-22 6-13 0-9C-6-13-7-22 0-36Z" fill="url(#' + p + 'fl)"/>';
+    }
+    return g;
+  }
+
+  DRAW.lamp = function (p) {
+    var d = lin(p + 'br', 0, 0, 1, 0, BRASS) +
+      lin(p + 'brd', 0, 0, 1, 0, [[0, '#3A280C'], [0.35, '#9A7838'], [0.6, '#5E4419'], [1, '#2C1F09']]) +
+      lin(p + 'bt', 0, 0, 0, 1, [[0, '#F6E7BA'], [1, '#D6BC84']]) +
+      rad(p + 'fl', 0.5, 0.62, 0.6, [[0, '#FFFFF2'], [0.32, '#FFE58E'], [0.72, '#FFA43E'], [1, '#E2602A', 0.9]]) +
+      rad(p + 'wm', 0.5, 0.36, 0.6, [[0, '#FFD98F', 0.5], [0.5, '#FFD98F', 0.12], [1, '#FFD98F', 0]]);
+    var b = '<rect width="400" height="500" fill="url(#' + p + 'wm)"/>' +
+      '<path d="M146 404Q150 384 182 376H218Q250 384 254 404Z" fill="url(#' + p + 'br)"/>' +
+      '<ellipse cx="200" cy="404" rx="54" ry="9" fill="url(#' + p + 'brd)"/>' +
+      '<path d="M190 376Q194 360 192 352H208Q206 360 210 376Z" fill="url(#' + p + 'br)"/>' +
+      '<ellipse cx="200" cy="344" rx="17" ry="9.5" fill="url(#' + p + 'br)"/>' +
+      '<path d="M192 336Q196 318 189 298H211Q204 318 208 336Z" fill="url(#' + p + 'br)"/>' +
+      '<path d="M134 214Q138 282 189 298H211Q262 282 266 214Z" fill="url(#' + p + 'br)"/>' +
+      '<path d="M144 232Q150 272 182 288" stroke="#FFF2C8" stroke-width="6" fill="none" opacity=".35" filter="url(#' + p + 'soft)"/>' +
+      '<ellipse cx="200" cy="214" rx="66" ry="13" fill="url(#' + p + 'brd)"/>' +
+      '<ellipse cx="200" cy="216" rx="58" ry="10" fill="url(#' + p + 'bt)"/>' +
+      '<path d="M200 216V198" stroke="#2E2216" stroke-width="2"/>' +
+      '<ellipse cx="200" cy="176" rx="24" ry="38" fill="#FFC66B" opacity=".42" filter="url(#' + p + 'soft)"/>' +
+      '<path d="M200 140C214 166 212 190 200 199C188 190 186 166 200 140Z" fill="url(#' + p + 'fl)"/>' +
+      '<path d="M144 214Q170 205 200 204" stroke="#FFE7A8" stroke-width="1.6" fill="none" opacity=".7"/>';
+    return { defs: d, body: b, sh: { cx: 212, cy: 406, rx: 76, ry: 10, op: 0.5 }, fit: [1.08, 200, 300] };
+  };
+
+  DRAW['lamp-set'] = function (p) {
+    var d = lin(p + 'br', 0, 0, 1, 0, [[0, '#59626A'], [0.3, '#E2E6E8'], [0.5, '#A7B0B6'], [1, '#3E464C']]) +
+      lin(p + 'brd', 0, 0, 1, 0, [[0, '#30373C'], [0.5, '#7D878E'], [1, '#262C30']]) +
+      lin(p + 'bt', 0, 0, 0, 1, [[0, '#F6E9C2'], [1, '#D9C18B']]) +
+      rad(p + 'fl', 0.5, 0.62, 0.6, [[0, '#FFFFF2'], [0.32, '#FFE58E'], [0.72, '#FFA43E'], [1, '#E2602A', 0.9]]) +
+      rad(p + 'wm', 0.5, 0.6, 0.62, [[0, '#FFD98F', 0.42], [1, '#FFD98F', 0]]);
+    var b = '<rect width="400" height="500" fill="url(#' + p + 'wm)"/>';
+    var set = [[112, 312, 0.72, 0], [170, 306, 0.72, 1], [230, 306, 0.72, 0], [288, 312, 0.72, 1],
+      [140, 372, 1, 1], [200, 366, 1, 1], [260, 372, 1, 0]];
+    set.forEach(function (s) {
+      b += '<ellipse cx="' + (s[0] + 6 * s[2]) + '" cy="' + (s[1] + 45 * s[2]) + '" rx="' + r1(26 * s[2]) + '" ry="' + r1(5 * s[2]) + '" fill="#132B22" opacity=".42" filter="url(#' + p + 'soft)"/>' +
+        '<g transform="translate(' + s[0] + ' ' + s[1] + ') scale(' + s[2] + ')">' + cupGeom(!!s[3], p) + '</g>';
+    });
+    return { defs: d, body: b, sh: null, fit: [1.3, 200, 350] };
+  };
+
+  function khadag(v) {
+    return function (p) {
+      var d = lin(p + 'sk', 0, 0, 1, 0, [[0, v.dark], [0.22, v.base], [0.42, v.hi], [0.62, v.base], [1, v.dark]]) +
+        lin(p + 'sk2', 0, 0, 1, 0, [[0, v.dark], [0.5, v.base], [1, v.dark]]) +
+        lin(p + 'rl', 0, 0, 0, 1, [[0, '#F0D79A'], [0.5, '#B88E3E'], [1, '#5E4419']]) +
+        '<pattern id="' + p + 'wv" width="26" height="26" patternUnits="userSpaceOnUse"><g transform="translate(13 13) rotate(45) scale(.32)"><path d="' + KNOT + '" fill="none" stroke="' + v.weave + '" stroke-width="2.4"/></g></pattern>';
+      /* folded silk laid on the floor in a receding S, with one twist; width grows toward the viewer */
+      var P = [[300, 238], [-6, 282], [432, 352], [146, 446]];
+      function at(t) {
+        var u = 1 - t, a = u * u * u, b2 = 3 * u * u * t, c = 3 * u * t * t, e = t * t * t;
+        var x = a * P[0][0] + b2 * P[1][0] + c * P[2][0] + e * P[3][0];
+        var y = a * P[0][1] + b2 * P[1][1] + c * P[2][1] + e * P[3][1];
+        var dx = 3 * u * u * (P[1][0] - P[0][0]) + 6 * u * t * (P[2][0] - P[1][0]) + 3 * t * t * (P[3][0] - P[2][0]);
+        var dy = 3 * u * u * (P[1][1] - P[0][1]) + 6 * u * t * (P[2][1] - P[1][1]) + 3 * t * t * (P[3][1] - P[2][1]);
+        var L = Math.sqrt(dx * dx + dy * dy) || 1;
+        var w = 12 + 36 * t;
+        if (t > 0.34 && t < 0.62) w *= Math.max(0.06, Math.abs(Math.cos(Math.PI * (t - 0.34) / 0.28)));
+        /* the ribbon lies flat: squash its across-width vertically for floor perspective */
+        return { x: x, y: y, nx: -dy / L * w, ny: dx / L * w * 0.62, tx: dx / L, ty: dy / L };
+      }
+      function band(t0, t1) {
+        var l = [], r = [], i, q, n = 26;
+        for (i = 0; i <= n; i++) { q = at(t0 + (t1 - t0) * i / n); l.push(r1(q.x + q.nx) + ' ' + r1(q.y + q.ny)); r.push(r1(q.x - q.nx) + ' ' + r1(q.y - q.ny)); }
+        return 'M' + l.join('L') + 'L' + r.reverse().join('L') + 'Z';
+      }
+      function line(t0, t1, off) {
+        var pts = [], i, q, n = 20;
+        for (i = 0; i <= n; i++) { q = at(t0 + (t1 - t0) * i / n); pts.push(r1(q.x + q.nx * off) + ' ' + r1(q.y + q.ny * off)); }
+        return 'M' + pts.join('L');
+      }
+      var A = band(0, 0.48), B = band(0.48, 1);
+      var b = '<g opacity=".3" filter="url(#' + p + 'blur)" transform="translate(7 7)"><path d="' + A + '" fill="#132B22"/><path d="' + B + '" fill="#132B22"/></g>' +
+        '<path d="' + A + '" fill="url(#' + p + 'sk2)" stroke="' + v.dark + '" stroke-width=".6"/><path d="' + A + '" fill="url(#' + p + 'wv)" opacity="' + v.weaveOp + '"/>' +
+        '<path d="' + line(0.02, 0.36, 0.2) + '" stroke="' + v.hi + '" stroke-width="2.4" fill="none" opacity=".45" filter="url(#' + p + 'soft)"/>' +
+        '<path d="' + B + '" fill="url(#' + p + 'sk)" stroke="' + v.dark + '" stroke-width=".6"/><path d="' + B + '" fill="url(#' + p + 'wv)" opacity="' + v.weaveOp + '"/>' +
+        '<path d="' + line(0.6, 0.98, -0.25) + '" stroke="' + v.hi + '" stroke-width="4" fill="none" opacity=".55" filter="url(#' + p + 'soft)"/>' +
+        '<path d="' + line(0.62, 0.98, 0.55) + '" stroke="' + v.dark + '" stroke-width="3" fill="none" opacity=".22" filter="url(#' + p + 'soft)"/>' +
+        '<path d="' + line(0.66, 0.99, 0) + '" stroke="' + v.dark + '" stroke-width=".8" fill="none" opacity=".35"/>';
+      /* fringe at the near end, continuing the direction of travel */
+      var q = at(1), i, k, fx, fy;
+      for (i = 0; i <= 26; i++) {
+        k = -1 + 2 * i / 26; fx = q.x + q.nx * k; fy = q.y + q.ny * k;
+        b += '<path d="M' + r1(fx) + ' ' + r1(fy) + 'l' + r1(q.tx * 10 + (i % 3 - 1) * 0.8) + ' ' + r1(q.ty * 10) + '" stroke="' + v.fringe + '" stroke-width=".9"/>';
+      }
+      return { defs: d, body: b, sh: null, fit: [1.08, 200, 360] };
+    };
+  }
+  DRAW['khadag-blue'] = khadag({ dark: '#1F4470', base: '#3B6EA6', hi: '#A9CAEC', weave: '#FFFFFF', weaveOp: 0.16, fringe: '#3B6EA6' });
+  DRAW['khadag-white'] = khadag({ dark: '#B7B2A4', base: '#E8E4DA', hi: '#FFFFFF', weave: '#9E9888', weaveOp: 0.3, fringe: '#CFCABD' });
+
+  function sutra(v) {
+    return function (p) {
+      var d = lin(p + 'cl', 0, 0, 1, 1, [[0, v.hi], [0.55, v.base], [1, v.dark]]) +
+        lin(p + 'wd', 0, 0, 1, 0, [[0, '#9A6838'], [0.6, '#6E4426'], [1, '#4A2C15']]) +
+        lin(p + 'wt', 0, 0, 1, 0, [[0, '#B7834F'], [1, '#7C4F2B']]) +
+        lin(p + 'pg', 0, 0, 0, 1, [[0, '#F3EAD3'], [1, '#D9CCAA']]) +
+        '<pattern id="' + p + 'ln" width="6" height="3" patternUnits="userSpaceOnUse"><path d="M0 2.5H6" stroke="#B9AA86" stroke-width=".6"/></pattern>';
+      var b = '<path d="M52 372L196 296L358 352L214 456Z" fill="#132B22" opacity=".3" filter="url(#' + p + 'blur)" transform="translate(8 6)"/>' +
+        '<path d="M52 372L196 296L358 352L214 456Z" fill="url(#' + p + 'cl)"/>' +
+        '<path d="M92 380Q150 392 214 426M260 360Q290 380 300 402M120 352Q170 330 210 322" stroke="' + v.dark + '" stroke-width="2.2" fill="none" opacity=".35" filter="url(#' + p + 'soft)"/>' +
+        '<path d="M100 374Q160 384 214 414" stroke="' + v.hi + '" stroke-width="2" fill="none" opacity=".5" filter="url(#' + p + 'soft)"/>' +
+        /* pecha shadow on the cloth */
+        '<path d="M78 392H330L356 368V338" stroke="#0E2219" stroke-width="12" fill="none" opacity=".35" filter="url(#' + p + 'soft)"/>' +
+        /* front face: boards + leaves */
+        '<rect x="70" y="330" width="250" height="14" fill="url(#' + p + 'wd)"/>' +
+        '<rect x="70" y="344" width="250" height="32" fill="url(#' + p + 'pg)"/><rect x="70" y="344" width="250" height="32" fill="url(#' + p + 'ln)"/>' +
+        '<rect x="70" y="344" width="5" height="32" fill="#8A2A35" opacity=".7"/>' +
+        '<rect x="70" y="376" width="250" height="12" fill="url(#' + p + 'wd)"/>' +
+        /* top face with carved gold panel */
+        '<path d="M70 330L100 306H350L320 330Z" fill="url(#' + p + 'wt)"/>' +
+        '<path d="M98 326L116 312H326L308 326Z" fill="none" stroke="#D8B66A" stroke-width=".9"/>' +
+        '<g transform="translate(212 319) scale(1 .42) rotate(45) scale(.5)"><path d="' + KNOT + '" fill="none" stroke="#D8B66A" stroke-width="1" vector-effect="non-scaling-stroke"/></g>' +
+        /* end face */
+        '<path d="M320 330L350 306V320L320 344Z" fill="#4A2C15"/>' +
+        '<path d="M320 344L350 320V352L320 376Z" fill="url(#' + p + 'pg)"/>' +
+        '<path d="M320 376L350 352V364L320 388Z" fill="#3A2210"/>' +
+        /* strap around the middle */
+        '<path d="M190 330L220 306H236L206 330Z" fill="' + v.strapHi + '"/><rect x="190" y="330" width="16" height="58" fill="' + v.strap + '"/>' +
+        /* title tag */
+        '<path d="M334 312L350 318L345 348L331 343Z" fill="#8A2A35" stroke="#D8B66A" stroke-width=".7"/>' +
+        '<rect x="70" y="330" width="250" height="3" fill="#FFFFFF" opacity=".16"/>';
+      return { defs: d, body: b, sh: null, fit: [1.12, 205, 370] };
+    };
+  }
+  DRAW['sutra-yellow'] = sutra({ hi: '#EBCB7E', base: '#C99A3E', dark: '#8D6A26', strap: '#A57B2C', strapHi: '#D8B05A' });
+  DRAW['sutra-maroon'] = sutra({ hi: '#A8434F', base: '#7A2632', dark: '#4A141C', strap: '#5E1A24', strapHi: '#8C3240' });
+
+  DRAW.fallback = function () {
+    return { defs: '', body: '<g transform="translate(200 250)" fill="none" stroke="#B08A3E"><circle r="62" opacity=".5"/><circle r="46" stroke-dasharray="3 6"/><circle r="28" opacity=".4"/></g>', sh: null };
+  };
+
+  /* ---------- public API ---------- */
+  function render(key, opts) {
+    opts = opts || {};
+    var label = opts.label !== false;
+    var p = 'ng' + (++seq) + '-';
+    var fn = DRAW[key] || DRAW.fallback;
+    var part = fn(p);
+    var alt = opts.alt || ((ALT[key] || 'Бүтээгдэхүүн') + ' — demo дүрслэл');
+    return '<svg class="art-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + alt.replace(/"/g, '&quot;') + '">' +
+      '<defs>' + studioDefs(p) + part.defs + '</defs>' +
+      studioBack(p) +
+      (part.fit ? '<g transform="translate(' + part.fit[1] + ' ' + part.fit[2] + ') scale(' + part.fit[0] + ') translate(' + (-part.fit[1]) + ' ' + (-part.fit[2]) + ')">' : '<g>') +
+      shadow(p, part.sh) + part.body + '</g>' + studioFront(p) + '</svg>' +
+      (label ? '<span class="art-tag" aria-hidden="true">Demo дүрслэл</span>' : '');
+  }
+
+  function frame(inner, opts) {
+    var variant = (opts && opts.variant) === 'full' ? 'full' : 'door';
+    if (variant === 'door') {
+      return '<div class="tk-frame tk-frame--door"><div class="tk-art">' + inner + '</div><span class="tk-door" aria-hidden="true"></span></div>';
+    }
+    return '<div class="tk-frame tk-frame--full">' +
+      '<span class="tk-dowel tk-dowel--top" aria-hidden="true"></span>' +
+      '<div class="tk-mount"><div class="tk-rainbow"><div class="tk-art">' + inner + '</div></div>' +
+      '<span class="tk-door-panel" aria-hidden="true"></span></div>' +
+      '<span class="tk-dowel tk-dowel--bottom" aria-hidden="true"></span></div>';
+  }
+
+  function ornament(name, opts) {
+    var size = (opts && opts.size) || (name === 'divider' ? 240 : 32);
+    var a = ' aria-hidden="true" focusable="false" class="art-orn art-orn--' + name + '"';
+    if (name === 'halo') {
+      return '<svg' + a + ' width="' + size + '" height="' + size + '" viewBox="0 0 100 100" fill="none" stroke="currentColor">' +
+        '<circle cx="50" cy="50" r="46" stroke-opacity=".45" stroke-width="1.2" vector-effect="non-scaling-stroke"/>' +
+        '<circle cx="50" cy="50" r="34" stroke-width="1.6" stroke-dasharray="2.5 5" vector-effect="non-scaling-stroke"/>' +
+        '<circle cx="50" cy="50" r="21" stroke-opacity=".3" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>';
+    }
+    if (name === 'divider') {
+      var h = Math.round(size / 10);
+      return '<svg' + a + ' width="' + size + '" height="' + h + '" viewBox="0 0 240 24" fill="none" stroke="currentColor">' +
+        '<path d="M0 12H100M140 12H240" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+        '<g transform="translate(120 12) rotate(45) scale(.5)"><path d="' + KNOT + '" stroke-width="1.1" vector-effect="non-scaling-stroke"/></g></svg>';
+    }
+    /* ulzii — endless knot, a single path */
+    return '<svg' + a + ' width="' + size + '" height="' + size + '" viewBox="-26 -26 52 52" fill="none" stroke="currentColor">' +
+      '<g transform="rotate(45)"><path d="' + KNOT + '" stroke-width="1.15" stroke-linecap="round" vector-effect="non-scaling-stroke"/></g></svg>';
+  }
+
+  NG.art = {
+    render: render,
+    frame: frame,
+    ornament: ornament,
+    keys: Object.keys(ALT)
+  };
+})();
+
+</script>
+<script>
+/* ===== Ногоолин Prototype C — click-driven orbital intro + home-state hero (Fork A) =====
+   Scene reused from Prototype A v4 (pedestal, placeholder orb + wire hint, halo, ground, fog, particles, lights).
+   The deity never moves. The camera only moves when the visitor asks (click / Space / Enter / →, ← back),
+   always on a circle around the deity's axis: spherical (az, r, y) interpolated together, lookAt fixed.
+   Framing left/right uses camera.setViewOffset (asymmetric projection), never a lateral camera translate. */
+(function () {
+  'use strict';
+  window.NG = window.NG || {};
+
+  var hero = document.getElementById('hero');
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) { /* ignore */ }
+  var body = document.body;
+  var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var SEEN_KEY = 'ng-intro-seen';
+  var LOOK_Y = 1.4;
+  var MOVE_D = 1.8;      /* seconds — burst start, long deceleration */
+  var MORPH_D = 1.2;     /* seconds — Эхлэх → home, smootherstep */
+  var REVEAL_AT = 480;   /* ms after a click: the sentence lands while the camera decelerates */
+  var KEYS = ['az', 'r', 'y', 'ox', 'oy'];
+
+  var LINES = [
+    null,
+    { text: 'Бурхан шүтээн бүр — нэг ариун түүх.', side: 'left' },
+    { text: 'Хүж, зул, хадаг — өдөр бүрийн буян.', side: 'right' },
+    { text: 'Уламжлалыг дээдэлж, гарал үүслийг тодорхой хүргэнэ.', side: 'left' }
+  ];
+  var FINAL_LIVE = 'Ногоолин. Таны сүсэг бишрэлийн цахим өргөө. Эхлэх товчийг дарна уу.';
+
+  function isHomeHash(h) { return /^#?\/?(\?.*)?$/.test(h || ''); }
+  function isMobile() { return window.innerWidth <= 700; }
+  function seen() { try { return sessionStorage.getItem(SEEN_KEY) === '1'; } catch (e) { return false; } }
+  function markSeen() { try { sessionStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* storage unavailable */ } }
+  function lockBody() { body.classList.add('lock'); body.setAttribute('data-intro', 'on'); }
+  function unlockBody() { body.classList.remove('lock'); body.setAttribute('data-intro', 'off'); }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function copy(o) { var r = {}; KEYS.forEach(function (k) { r[k] = o[k]; }); return r; }
+  function smootherstep(x) { var t = clamp(x, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); }
+  function emit(name) { try { document.dispatchEvent(new CustomEvent(name)); } catch (e) { /* old browser */ } }
+
+  /* ---- camera poses: spherical around the deity axis; ox>0 pushes the deity right, oy>0 raises it ---- */
+  function pose(i) {
+    var m = isMobile();
+    return [
+      { az: 0.85, r: 16, y: 7.5, ox: 0, oy: m ? 0.06 : 0 },          /* P0 upper-right, looking down-left */
+      { az: -0.95, r: 12.5, y: 5.2, ox: m ? 0 : 0.13, oy: m ? 0.10 : 0 }, /* 1 · left  */
+      { az: 0.75, r: 9.6, y: 3.6, ox: m ? 0 : -0.15, oy: m ? 0.10 : 0 },  /* 2 · right */
+      { az: -0.45, r: 7.6, y: 2.7, ox: m ? 0 : 0.17, oy: m ? 0.10 : 0 },  /* 3 · left  */
+      { az: 0, r: 7.4, y: 2.5, ox: 0, oy: m ? 0.15 : 0.10 }              /* 4 · centre, deity lifted above the wordmark */
+    ][i];
+  }
+  /* home: dolly only (r −0.9, y −0.35) + deity pushed right by the view offset */
+  function homePose() { var m = isMobile(); return m ? { az: 0, r: 9.5, y: 2.5, ox: 0, oy: 0.16 } : { az: 0, r: 7.3, y: 2.2, ox: 0.18, oy: -0.04 }; }
+
+  /* ---- state ---- */
+  var phase = 'idle', built = false, webgl = false, skipIntro = false;
+  var step = 0, finalShown = false, revealTimer = 0, nudgeTimer = 0;
+  var running = false, visible = true, raf = 0, last = 0, clock = 0;
+  var cur = copy(pose(0)), prev = copy(cur), vel = { az: 0, r: 0, y: 0, ox: 0, oy: 0 }, roll = 0;
+  var tw = { active: false, t: 0, from: null, to: null, v0: null };
+  var morph = { t: 0, from: null, to: null, h0: 0, h1: 0 };
+  var flare = 0, shockT = -1;
+  var size = { w: 1, h: 1 };
+  var el = {};
+  var focusHome = false; /* focus was inside the hero when Эхлэх was pressed */
+  var kbd = false; /* last interaction was the keyboard → show focus rings / move focus */
+  var renderer, scene, camera, key, rim, halo, ring, pGeo, pMat;
+  var N = 360, pr, pa, ph, pv, py, pk;
+
+  /* If the first load is not "/", the page must not stay locked behind an intro that never mounts. */
+  if (!isHomeHash(location.hash)) { skipIntro = true; unlockBody(); }
+
+  /* ---------------------------------------------------------------- DOM */
+  function haloSVG(cls) {
+    return '<svg class="' + (cls || '') + '" viewBox="0 0 100 100" fill="none" aria-hidden="true" focusable="false">' +
+      '<circle cx="50" cy="50" r="46" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/>' +
+      '<circle cx="50" cy="50" r="34" stroke="currentColor" stroke-opacity=".9" stroke-width="1.6" stroke-dasharray="2.5 5"/>' +
+      '<circle cx="50" cy="50" r="21" stroke="currentColor" stroke-opacity=".3" stroke-width="1"/></svg>';
+  }
+  function lineHTML(i) {
+    var L = LINES[i];
+    var words = L.text.split(' ').map(function (w, n) { return '<span class="w" style="--i:' + n + '">' + w + '</span>'; }).join(' ');
+    return '<p class="intro-line" data-line="' + i + '" data-side="' + L.side + '" aria-hidden="true">' + words + '</p>';
+  }
+  function buildDOM() {
+    hero.innerHTML =
+      '<div class="intro-canvas" aria-hidden="true"></div>' +
+      '<div class="intro-fallback" aria-hidden="true">' + haloSVG() + '</div>' +
+      '<div class="intro-veil" aria-hidden="true"></div>' +
+      '<div class="intro-scrim" aria-hidden="true"></div>' +
+      '<div class="intro-stage" role="button" tabindex="0" aria-label="Үргэлжлүүлэх, 0 / 4"></div>' +
+      '<div class="intro-mark" aria-hidden="true">' + haloSVG() + '<span>НОГООЛИН</span></div>' +
+      '<button class="intro-skip" type="button">Алгасах<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.5M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.3"/></svg></button>' +
+      '<div class="intro-lines">' + lineHTML(1) + lineHTML(2) + lineHTML(3) + '</div>' +
+      '<p class="sr-only intro-live" aria-live="polite" aria-atomic="true"></p>' +
+      '<div class="intro-final">' +
+        '<div class="intro-wordmark" role="heading" aria-level="1">НОГОО<span>ЛИН</span></div>' +
+        '<p class="intro-tagline">Таны сүсэг бишрэлийн цахим өргөө</p>' +
+        '<button class="btn intro-btn-solid intro-start" type="button" tabindex="-1">Эхлэх</button>' +
+      '</div>' +
+      '<div class="intro-foot" aria-hidden="true">' +
+        '<p class="intro-hint">Дарж үргэлжлүүлнэ үү</p>' +
+        '<div class="intro-progress"><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>' +
+        '<span class="intro-count num">0 / 4</span></div>' +
+      '</div>' +
+      '<div class="intro-home">' +
+        '<div class="container">' +
+          '<h1 class="intro-home-title" tabindex="-1">Ариун эд зүйлсийг утга учиртай нь сонгоё</h1>' +
+          '<p class="intro-home-lead">Бурхан шүтээн, хүж, зул, хадаг, эрх — бүтээгдэхүүн бүрийн гарал үүсэл, хэрэглэх зааврыг нэг дороос. Сонгосон зүйлээ хүсэлтээр лавлаарай.</p>' +
+          '<div class="intro-home-actions">' +
+            '<a class="btn intro-btn-solid" href="#/products">Бүтээгдэхүүн үзэх</a>' +
+            '<a class="btn btn-on-dark" href="#/categories">Ангилал</a>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="intro-note">Prototype C · 3D placeholder — Ногоон Дарь Эхийн GLB ирээгүй</p>';
+
+    el.canvas = hero.querySelector('.intro-canvas');
+    el.stage = hero.querySelector('.intro-stage');
+    el.skip = hero.querySelector('.intro-skip');
+    el.lines = [null].concat([1, 2, 3].map(function (i) { return hero.querySelector('.intro-line[data-line="' + i + '"]'); }));
+    el.live = hero.querySelector('.intro-live');
+    el.final = hero.querySelector('.intro-final');
+    el.start = hero.querySelector('.intro-start');
+    el.ticks = hero.querySelectorAll('.intro-progress .tick');
+    el.count = hero.querySelector('.intro-count');
+    el.homeTitle = hero.querySelector('.intro-home-title');
+  }
+
+  /* ---------------------------------------------------------------- scene (Prototype A v4) */
+  function buildScene() {
+    if (typeof THREE === 'undefined') throw new Error('THREE missing');
+    renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x1B4634);
+    el.canvas.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x1B4634, 9, 27);
+    camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+
+    var pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.85, 0.35, 56),
+      new THREE.MeshStandardMaterial({ color: 0x173F30, roughness: 0.92, metalness: 0.1 }));
+    pedestal.position.y = 0.175; scene.add(pedestal);
+
+    /* placeholder orb (→ Green Tara GLB later) + wire hint that says "placeholder" */
+    var orb = new THREE.Mesh(new THREE.IcosahedronGeometry(1.12, 2),
+      new THREE.MeshStandardMaterial({ color: 0xD9AB3F, metalness: 0.5, roughness: 0.62, emissive: 0x2A2008 }));
+    orb.position.y = 1.5; scene.add(orb);
+    var wire = new THREE.Mesh(new THREE.IcosahedronGeometry(1.24, 1),
+      new THREE.MeshBasicMaterial({ color: 0xF2C94C, wireframe: true, transparent: true, opacity: 0.12 }));
+    wire.position.y = 1.5; scene.add(wire);
+
+    halo = new THREE.Mesh(new THREE.TorusGeometry(2.15, 0.014, 16, 140),
+      new THREE.MeshBasicMaterial({ color: 0xF2C94C, transparent: true, opacity: 0.85 }));
+    halo.position.set(0, 1.5, -0.55); scene.add(halo);
+
+    var ground = new THREE.Mesh(new THREE.CircleGeometry(30, 48),
+      new THREE.MeshStandardMaterial({ color: 0x143528, roughness: 1 }));
+    ground.rotation.x = -Math.PI / 2; scene.add(ground);
+
+    /* shock ring: one thin gold ripple across the ground per click */
+    ring = new THREE.Mesh(new THREE.RingGeometry(0.985, 1, 160),
+      new THREE.MeshBasicMaterial({ color: 0xF2C94C, transparent: true, opacity: 0, side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending, depthWrite: false }));
+    ring.rotation.x = -Math.PI / 2; ring.position.y = 0.012; ring.visible = false; ring.renderOrder = 2; scene.add(ring);
+
+    /* particles in cylindrical coordinates so a click can push them outward and let them settle back */
+    pr = new Float32Array(N); pa = new Float32Array(N); ph = new Float32Array(N);
+    pv = new Float32Array(N); py = new Float32Array(N); pk = new Float32Array(N);
+    var pos = new Float32Array(N * 3);
+    for (var i = 0; i < N; i++) {
+      ph[i] = pr[i] = 1.5 + Math.random() * 5.5;
+      pa[i] = Math.random() * Math.PI * 2;
+      py[i] = Math.random() * 6;
+      pk[i] = 0.6 + Math.random() * 0.8;
+    }
+    pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    pMat = new THREE.PointsMaterial({ color: 0xF2C94C, size: 0.05, transparent: true, opacity: 0.6, map: dotTexture(),
+      blending: THREE.AdditiveBlending, depthWrite: false });
+    scene.add(new THREE.Points(pGeo, pMat));
+    writeParticles();
+
+    scene.add(new THREE.AmbientLight(0x2A5643, 0.8));
+    key = new THREE.PointLight(0xFFE9B0, 1.25, 60); key.position.set(6, 7, 5); scene.add(key);
+    rim = new THREE.PointLight(0x3FC98A, 0.9, 50); rim.position.set(-5.5, 3, -4.5); scene.add(rim);
+  }
+
+  function dotTexture() {
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var g = c.getContext('2d'), grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.35, 'rgba(255,255,255,.85)');
+    grd.addColorStop(0.7, 'rgba(255,255,255,.18)'); grd.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
+  }
+  function writeParticles() {
+    var a = pGeo.attributes.position.array;
+    for (var i = 0; i < N; i++) {
+      a[i * 3] = Math.cos(pa[i]) * pr[i];
+      a[i * 3 + 1] = py[i];
+      a[i * 3 + 2] = Math.sin(pa[i]) * pr[i];
+    }
+    pGeo.attributes.position.needsUpdate = true;
+  }
+
+  function burst(strength) {
+    for (var i = 0; i < N; i++) {
+      var prox = 1 - Math.min(1, (pr[i] - 1.5) / 6);
+      pv[i] += strength * (1.4 + 2.6 * prox) * pk[i];
+    }
+    flare = Math.min(1.25, flare + strength);
+    shockT = 0;
+  }
+
+  /* ---------------------------------------------------------------- motion */
+  /* burst start (60 ms soft ease-in so no frame jumps), long exponential deceleration */
+  function profile(t) {
+    var tau = 0.06, D = MOVE_D;
+    var tw_ = t - tau * (1 - Math.exp(-t / tau));
+    var Dw = D - tau * (1 - Math.exp(-D / tau));
+    var u = Math.min(tw_ / Dw, 1);
+    return (1 - Math.pow(2, -8 * u)) / (1 - Math.pow(2, -8));
+  }
+  function retarget(to) {
+    tw.from = copy(cur); tw.to = copy(to);
+    tw.v0 = {}; KEYS.forEach(function (k) { tw.v0[k] = tw.active ? vel[k] : 0; }); /* carry velocity → seamless mid-move retarget */
+    tw.t = 0; tw.active = true;
+    if (REDUCED) { cur = copy(to); tw.active = false; }
+  }
+  function stepTween(dt) {
+    tw.t += dt;
+    var t = tw.t, p = profile(t), u = Math.min(t / MOVE_D, 1);
+    var carry = t * Math.exp(-t / 0.22) * (1 - u) * (1 - u);
+    KEYS.forEach(function (k) { cur[k] = tw.from[k] + (tw.to[k] - tw.from[k]) * p + tw.v0[k] * carry; });
+    if (t >= MOVE_D) { cur = copy(tw.to); tw.active = false; }
+  }
+
+  function applyCamera() {
+    camera.position.set(cur.r * Math.sin(cur.az), cur.y, cur.r * Math.cos(cur.az));
+    camera.up.set(0, 1, 0);
+    camera.lookAt(0, LOOK_Y, 0);
+    if (roll) camera.rotateZ(roll);                         /* a barely-there bank into the orbit */
+    camera.setViewOffset(size.w, size.h, -cur.ox * size.w, cur.oy * size.h, size.w, size.h); /* never clearViewOffset */
+  }
+
+  function resizeRenderer() {
+    if (!webgl) return;
+    var w = hero.clientWidth || window.innerWidth, h = hero.clientHeight || window.innerHeight;
+    if (w < 2 || h < 2) return;
+    size.w = w; size.h = h;
+    renderer.setSize(w, h);
+    var aspect = w / h;
+    camera.aspect = aspect;
+    /* portrait: widen vertical FOV so the halo is not cropped at the sides */
+    camera.fov = aspect < 1 ? clamp(2 * Math.atan(Math.tan(19.5 * Math.PI / 180) / aspect) * 180 / Math.PI, 42, 68) : 42;
+    applyCamera();
+  }
+
+  function update(dt) {
+    clock += dt;
+    if (!REDUCED) {
+      /* atmosphere breathes (WF-MO-02); the click adds a decaying flare */
+      key.intensity = 1.15 + 0.18 * Math.sin(clock * 0.7) + 0.45 * flare;
+      rim.intensity = 0.85 + 0.12 * Math.sin(clock * 0.5 + 1.6);
+      halo.material.opacity = Math.min(1, 0.78 + 0.07 * Math.sin(clock * 0.9) + 0.22 * flare);
+      halo.scale.setScalar(1 + 0.03 * flare);
+      pMat.opacity = Math.min(1, 0.6 + 0.32 * flare);
+      pMat.size = 0.05 + 0.025 * flare;
+      flare *= Math.exp(-dt * 2.6);
+
+      for (var i = 0; i < N; i++) {
+        pv[i] += (-3.2 * (pr[i] - ph[i]) - 2.6 * pv[i]) * dt;   /* elastic return to home radius */
+        pr[i] += pv[i] * dt;
+        py[i] += 0.21 * dt; if (py[i] > 6) py[i] = 0;          /* slow upward drift */
+      }
+      writeParticles();
+
+      if (shockT >= 0) {
+        shockT += dt;
+        var u = shockT / 1.7;
+        if (u >= 1) { shockT = -1; ring.visible = false; }
+        else {
+          var s = 1.9 + 9.5 * (1 - Math.pow(2, -7 * u));
+          ring.visible = true; ring.scale.set(s, s, 1);
+          ring.material.opacity = 0.55 * (1 - u) * (1 - u);
+        }
+      }
+    }
+
+    if (tw.active) stepTween(dt);
+
+    if (phase === 'morph') {
+      morph.t += dt;
+      var e = smootherstep(morph.t / MORPH_D);
+      KEYS.forEach(function (k) { cur[k] = morph.from[k] + (morph.to[k] - morph.from[k]) * e; });
+      hero.style.height = (morph.h0 + (morph.h1 - morph.h0) * e) + 'px';
+      resizeRenderer();
+      if (morph.t >= MORPH_D) endMorph();
+    }
+
+    if (dt > 0) KEYS.forEach(function (k) { vel[k] = (cur[k] - prev[k]) / dt; });
+    prev = copy(cur);
+    var rollT = clamp(vel.az * 0.0045, -0.02, 0.02);
+    roll += (rollT - roll) * (1 - Math.exp(-dt * 5));
+    if (Math.abs(roll) < 1e-5) roll = 0;
+    applyCamera();
+  }
+
+  function frame(now) {
+    raf = 0;
+    if (!running || !webgl) return;
+    var dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+    last = now;
+    update(dt);
+    renderer.render(scene, camera);
+    if (!raf && running && visible && !document.hidden) raf = requestAnimationFrame(frame);
+  }
+  function kick() {
+    if (!webgl) return;
+    if (REDUCED) { renderOnce(); return; }
+    if (!raf && running && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  }
+  function renderOnce() {
+    if (!webgl) return;
+    if (phase === 'morph') { endMorph(); }
+    applyCamera();
+    renderer.render(scene, camera);
+  }
+
+  /* ---------------------------------------------------------------- UI state */
+  function setPhase(p) { phase = p; hero.setAttribute('data-phase', p); }
+  function setStep(s) { step = s; hero.setAttribute('data-step', String(s)); }
+  function updateProgress() {
+    for (var i = 0; i < el.ticks.length; i++) el.ticks[i].classList.toggle('is-on', i < step);
+    el.count.textContent = step + ' / 4';
+    el.stage.setAttribute('aria-label', step === 4 ? 'Эхлэх товчийг дарж сайт руу орно уу' : 'Үргэлжлүүлэх, ' + step + ' / 4');
+  }
+  function hideLines() { for (var i = 1; i <= 3; i++) el.lines[i].classList.remove('is-in'); }
+  function hideFinal() { el.final.classList.remove('is-in'); el.start.setAttribute('tabindex', '-1'); finalShown = false; }
+  function readyVeil() {
+    hero.classList.remove('is-ready');
+    requestAnimationFrame(function () { requestAnimationFrame(function () { hero.classList.add('is-ready'); }); });
+  }
+
+  function reveal(s) {
+    if (s !== step || (phase !== 'intro' && phase !== 'final')) return;
+    if (s >= 1 && s <= 3) {
+      el.lines[s].classList.add('is-in');
+      el.live.textContent = LINES[s].text;
+    } else if (s === 4) {
+      el.final.classList.add('is-in');
+      el.start.removeAttribute('tabindex');
+      finalShown = true;
+      el.live.textContent = FINAL_LIVE;
+      if (kbd && document.activeElement === el.stage) el.start.focus({ preventScroll: true });
+    }
+    if (REDUCED) renderOnce();
+  }
+
+  function go(target) {
+    if (phase !== 'intro' && phase !== 'final') return;
+    target = clamp(target, 0, 4);
+    if (target === step) return;
+    var forward = target > step;
+    hideLines(); hideFinal();
+    if (document.activeElement === el.start) el.stage.focus({ preventScroll: true });
+    setStep(target);
+    setPhase(target === 4 ? 'final' : 'intro');
+    updateProgress();
+    el.live.textContent = '';
+    retarget(pose(target));
+    if (!REDUCED) burst(forward ? 1 : 0.55);
+    clearTimeout(revealTimer);
+    revealTimer = setTimeout(function () { reveal(target); }, REDUCED ? 0 : REVEAL_AT);
+    kick();
+  }
+  function forward() {
+    if (phase === 'final') { if (finalShown) startMorph(); return; }
+    go(step + 1);
+  }
+  function nudgeStart() {
+    if (!finalShown) return;
+    el.start.classList.remove('is-nudge');
+    void el.start.offsetWidth;
+    el.start.classList.add('is-nudge');
+    clearTimeout(nudgeTimer);
+    nudgeTimer = setTimeout(function () { el.start.classList.remove('is-nudge'); }, 800);
+  }
+
+  function measureHomeHeight() {
+    var inline = hero.style.height;
+    hero.style.height = '';
+    hero.classList.add('is-home');
+    var h = hero.getBoundingClientRect().height;
+    hero.classList.remove('is-home');
+    hero.style.height = inline;
+    return h;
+  }
+
+  function startMorph() {
+    if (phase !== 'final' || !finalShown) return;
+    clearTimeout(revealTimer);
+    if (REDUCED || !webgl) { goHome(false); return; }
+    focusHome = hero.contains(document.activeElement);
+    morph.h0 = hero.getBoundingClientRect().height;
+    morph.h1 = measureHomeHeight();
+    morph.from = copy(cur); morph.to = homePose(); morph.t = 0;
+    tw.active = false;
+    hero.style.height = morph.h0 + 'px';
+    hideFinal();
+    setPhase('morph');
+    kick();
+  }
+  function endMorph() {
+    hero.style.height = '';
+    cur = copy(homePose()); prev = copy(cur);
+    goHome(false);
+  }
+
+  /* reach the home state (morph end, skip, instant paths) */
+  function goHome(instant) {
+    clearTimeout(revealTimer);
+    tw.active = false;
+    hideLines(); hideFinal();
+    el.live.textContent = '';
+    hero.style.height = '';
+    hero.classList.add('is-home');
+    hero.classList.toggle('is-instant', !!instant);
+    var hadFocusInHero = hero.contains(document.activeElement);
+    setPhase(webgl ? 'home' : 'fallback');
+    if (webgl) { cur = copy(homePose()); prev = copy(cur); roll = 0; resizeRenderer(); }
+    unlockBody();
+    markSeen();
+    emit('ng:home');
+    if (hadFocusInHero || focusHome) el.homeTitle.focus({ preventScroll: true });
+    focusHome = false;
+    if (REDUCED) renderOnce(); else kick();
+  }
+
+  function startIntro() {
+    hero.classList.remove('is-home', 'is-instant');
+    hero.style.height = '';
+    setPhase('intro'); setStep(0);
+    hideLines(); hideFinal(); updateProgress();
+    el.live.textContent = '';
+    cur = copy(pose(0)); prev = copy(cur); roll = 0; flare = 0; shockT = -1;
+    KEYS.forEach(function (k) { vel[k] = 0; });
+    tw.active = false;
+    lockBody();
+    window.scrollTo(0, 0);
+    resizeRenderer();
+    readyVeil();
+    emit('ng:intro-start');
+    running = true;
+    kick();
+    el.stage.focus({ preventScroll: true });
+  }
+
+  /* ---------------------------------------------------------------- wiring */
+  function build() {
+    if (built || !hero) return;
+    buildDOM();
+    try { buildScene(); webgl = true; } catch (e) { webgl = false; }
+    hero.classList.toggle('is-fallback', !webgl);
+    if (!webgl) { hero.classList.add('is-ready'); }
+
+    el.stage.addEventListener('click', function () { if (phase === 'final') nudgeStart(); else forward(); });
+    el.skip.addEventListener('click', function () { finish(); });
+    el.start.addEventListener('click', function () { startMorph(); });
+
+    document.addEventListener('pointerdown', function () { kbd = false; hero.classList.remove('is-kbd'); }, true);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' || e.key === ' ' || e.key === 'Enter' || e.key.indexOf('Arrow') === 0) { kbd = true; hero.classList.add('is-kbd'); }
+      if (phase !== 'intro' && phase !== 'final') return;
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      var t = e.target;
+      var onControl = t && t !== el.stage && t.closest && t.closest('button, a, input, textarea, select');
+      switch (e.key) {
+        case 'Escape': e.preventDefault(); finish(); break;
+        case 'ArrowRight': case 'PageDown': e.preventDefault(); forward(); break;
+        case 'ArrowLeft': case 'PageUp': e.preventDefault(); go(step - 1); break;
+        case ' ': case 'Enter': if (onControl) return; e.preventDefault(); forward(); break;
+        default: break;
+      }
+    });
+
+    var resizeQueued = false;
+    window.addEventListener('resize', function () {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      requestAnimationFrame(function () {
+        resizeQueued = false;
+        if (!webgl || phase === 'idle') return;
+        if (phase === 'home') { cur = copy(homePose()); prev = copy(cur); }
+        else if (phase === 'intro' || phase === 'final') {
+          var p = pose(step);
+          if (tw.active) { tw.to.ox = p.ox; tw.to.oy = p.oy; } else { cur.ox = p.ox; cur.oy = p.oy; }
+        }
+        resizeRenderer();
+        if (REDUCED || !raf) renderOnce();
+      });
+    });
+
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) kick(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (visible) kick();
+      }).observe(hero);
+    }
+    /* safety net: leaving "/" mid-intro always lands in a usable state, even without the router */
+    window.addEventListener('hashchange', function () {
+      if (!isHomeHash(location.hash) && (phase === 'intro' || phase === 'final' || phase === 'morph')) finish();
+    });
+
+    built = true;
+  }
+
+  function resume() {
+    running = true;
+    if (!webgl) return;
+    resizeRenderer();
+    if (REDUCED) renderOnce(); else kick();
+  }
+  function pause() {
+    running = false;
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }
+
+  function mount() {
+    if (!hero) return;
+    if (!built) build();
+    if (phase === 'idle') {
+      if (!webgl || skipIntro || seen() || REDUCED) {
+        readyVeil();
+        goHome(true);
+        running = true;
+        if (webgl) { resizeRenderer(); renderOnce(); }
+      } else {
+        startIntro();
+      }
+    }
+    resume();
+  }
+
+  function finish() {
+    if (!built) { skipIntro = true; unlockBody(); return; }
+    if (phase === 'home' || phase === 'fallback') { unlockBody(); return; }
+    if (phase === 'idle') { skipIntro = true; unlockBody(); return; }
+    goHome(true);
+    if (webgl) renderOnce();
+  }
+
+  function replay() {
+    if (!hero) return;
+    if (!built) build();
+    try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { window.scrollTo(0, 0); }
+    if (!webgl) { goHome(true); return; }
+    skipIntro = false;
+    startIntro();
+    resume();
+  }
+
+  window.NG.intro = {
+    mount: mount,
+    pause: pause,
+    finish: finish,
+    replay: replay,
+    get phase() { return phase; }
+  };
+
+  /* standalone: if no router is present, mount on "/" by ourselves */
+  setTimeout(function () {
+    if (!window.NG.router && phase === 'idle' && isHomeHash(location.hash)) mount();
+  }, 0);
+})();
+
+</script>
+<script>
+/* ===== Prototype C — site (Fork C): router, nav, views, footer ===== */
+window.NG = window.NG || {};
+(function () {
+  'use strict';
+  var NG = window.NG;
+  var body = document.body;
+  var app = document.getElementById('app');
+  var navEl = document.getElementById('nav');
+  var footEl = document.getElementById('footer');
+  var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var PER_PAGE = 12;
+
+  /* ---------- standalone fallbacks (used only when Fork B's fragments are absent) ---------- */
+  if (!NG.data) {
+    var sCats = [
+      { slug: 'huj', name: 'Хүж', blurb: 'Өдөр тутмын зан үйлд зориулсан хүж.' },
+      { slug: 'erh', name: 'Эрх', blurb: 'Тарни уншихад хэрэглэх эрх.' },
+      { slug: 'tahil', name: 'Тахилын эд', blurb: 'Тахил өргөхөд хэрэглэх эд зүйлс.' }
+    ];
+    var sProds = [
+      { slug: 'stub-huj', name: 'Занданмодны хүж (stub)', short: 'Хүж', category: 'huj', price: 45000, available: true, has3d: false, featured: true, art: 'stub', summary: 'Stub бүтээгдэхүүн.', description: ['Stub тайлбар.'], usage: ['Нэгдүгээр алхам.'], specs: [['Материал', 'Зандан']] },
+      { slug: 'stub-erh', name: 'Зандан модон эрх (stub)', short: 'Эрх', category: 'erh', price: 120000, available: false, has3d: true, featured: true, art: 'stub', summary: 'Stub бүтээгдэхүүн.', description: ['Stub тайлбар.'], usage: ['Нэгдүгээр алхам.'], specs: [['Ширхэг', '108']] },
+      { slug: 'stub-huj-2', name: 'Арцны хүж (stub)', short: 'Хүж', category: 'huj', price: 18000, available: true, has3d: false, featured: true, art: 'stub', summary: 'Stub бүтээгдэхүүн.', description: ['Stub тайлбар.'], usage: ['Нэгдүгээр алхам.'], specs: [['Материал', 'Арц']] }
+    ];
+    NG.data = {
+      __stub: true, categories: sCats, products: sProds,
+      bySlug: function (s) { return sProds.filter(function (p) { return p.slug === s; })[0]; },
+      category: function (s) { return sCats.filter(function (c) { return c.slug === s; })[0]; },
+      list: function (o) {
+        o = o || {}; var q = (o.q || '').toLowerCase();
+        return sProds.filter(function (p) { return (!o.category || p.category === o.category) && (!q || p.name.toLowerCase().indexOf(q) > -1); });
+      },
+      money: function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '₮'; },
+      related: function (s, n) { return sProds.filter(function (p) { return p.slug !== s; }).slice(0, n || 3); }
+    };
+  }
+  if (!NG.art) {
+    NG.art = {
+      __stub: true,
+      render: function (key) { return '<svg viewBox="0 0 400 500" role="img" aria-label="Demo дүрслэл"><rect width="400" height="500" fill="#DCE6DE"/><text x="200" y="255" text-anchor="middle" font-size="22" fill="#3C4A42">' + esc(key) + '</text></svg>'; },
+      frame: function (inner) { return '<div class="tk-frame" style="border:10px solid #1D5442;outline:1px solid #B08A3E;outline-offset:-6px">' + inner + '</div>'; },
+      ornament: function (name, o) { var s = (o && o.size) || 24; return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="30"/></svg>'; }
+    };
+  }
+  var D = NG.data, A = NG.art;
+  if (!document.getElementById('hero') || !NG.intro) body.classList.add('site-no-hero');
+
+  /* ---------- helpers ---------- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function money(n) { try { return D.money(n); } catch (e) { return n + '₮'; } }
+  function catName(slug) { var c = D.category(slug); return c ? c.name : ''; }
+  function countIn(slug) { return D.list({ category: slug }).length; }
+  function orn(name, size, cls) {
+    var svg = '';
+    try { svg = A.ornament(name, { size: size }); } catch (e) { svg = ''; }
+    return cls ? '<span class="' + cls + '" aria-hidden="true">' + svg + '</span>' : svg;
+  }
+  function art(p, variant) {
+    try { return A.frame(A.render(p.art, { label: true }), { variant: variant || 'door' }); }
+    catch (e) { return '<div style="aspect-ratio:4/5;background:var(--jade-100)"></div>'; }
+  }
+  var ICON = {
+    right: '<svg class="site-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/></svg>',
+    left: '<svg class="site-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H5M10.5 6.5 5 12l5.5 5.5"/></svg>',
+    search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>',
+    burger: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line class="b1" x1="4" y1="8.5" x2="20" y2="8.5"/><line class="b2" x1="4" y1="15.5" x2="20" y2="15.5"/></svg>',
+    spin: '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg>',
+    drag: '<svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h20M5 2 1 6l4 4M17 2l4 4-4 4"/></svg>'
+  };
+  function link(href, text) { return '<a class="site-link" href="' + href + '"><span>' + esc(text) + '</span>' + ICON.right + '</a>'; }
+
+  function productItem(p, i, lead) {
+    var c = catName(p.category);
+    return '<article class="pi' + (lead ? ' pi--lead' : '') + '">' +
+      '<a class="pi-link" href="#/products/' + encodeURIComponent(p.slug) + '">' +
+        '<div class="pi-media site-unroll" style="--i:' + Math.min(i, 5) + '">' + art(p, 'door') +
+          (p.has3d ? '<span class="pi-360" aria-label="360° харагдацтай">360°</span>' : '') + '</div>' +
+        '<h3 class="pi-title"><span class="pi-name">' + esc(p.name) + '</span></h3>' +
+        (lead && p.summary ? '<p class="pi-sum">' + esc(p.summary) + '</p>' : '') +
+        '<p class="pi-meta"><span>' + esc(c) + '</span><span class="pi-price num">' + money(p.price) + '</span></p>' +
+        (p.available === false ? '<p class="pi-status">Түр байхгүй</p>' : '') +
+      '</a></article>';
+  }
+
+  /* ---------- nav + footer (rendered once) ---------- */
+  var NAV = [
+    { href: '#/', label: 'Нүүр', match: ['home'] },
+    { href: '#/products', label: 'Бүтээгдэхүүн', match: ['products', 'detail', 'inquiry'] },
+    { href: '#/categories', label: 'Ангилал', match: ['categories'] },
+    { href: '#/about', label: 'Бидний тухай', match: ['about'] }
+  ];
+  function navItems() {
+    return NAV.map(function (n, i) { return '<li><a href="' + n.href + '" data-nav="' + i + '">' + n.label + '</a></li>'; }).join('');
+  }
+  function logo() {
+    return '<a class="nav-logo" href="#/" aria-label="Ногоолин — нүүр хуудас">' + orn('ulzii', 28) + '<span class="wordmark">НОГООЛИН</span></a>';
+  }
+  navEl.innerHTML =
+    '<div class="container nav-in">' + logo() +
+      '<nav aria-label="Үндсэн цэс"><ul class="nav-links">' + navItems() + '</ul></nav>' +
+      '<button class="nav-burger" type="button" aria-expanded="false" aria-controls="nav-panel" aria-label="Цэс нээх">' + ICON.burger + '</button>' +
+    '</div>' +
+    '<div class="nav-panel" id="nav-panel" hidden><nav aria-label="Гар утасны цэс"><ul>' +
+      NAV.map(function (n, i) { return '<li><a href="' + n.href + '" data-nav="' + i + '"><span>' + n.label + '</span>' + ICON.right + '</a></li>'; }).join('') +
+    '</ul></nav></div>';
+
+  footEl.innerHTML =
+    '<div class="container">' +
+      '<div class="ft">' +
+        '<div class="ft-brand">' + logo() + '<p>Сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах. Онлайн төлбөргүй — хүсэлтээр лавлана.</p></div>' +
+        '<div><h2>Каталог</h2><ul><li><a href="#/products">Бүтээгдэхүүн</a></li><li><a href="#/categories">Ангилал</a></li></ul></div>' +
+        '<div><h2>Ногоолин</h2><ul><li><a href="#/about">Бидний тухай</a></li><li><a href="#/about">Холбоо барих</a></li></ul></div>' +
+        '<div><h2>Интро</h2><button class="btn btn-on-dark" type="button" data-action="replay-intro">Интро дахин үзэх</button></div>' +
+      '</div>' +
+      '<div class="ft-bottom"><span>© 2026 Ногоолин</span><span>Prototype C · demo өгөгдөл</span></div>' +
+    '</div>';
+
+  var burger = navEl.querySelector('.nav-burger');
+  var panel = document.getElementById('nav-panel');
+  function setMenu(open, focusBack) {
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Цэс хаах' : 'Цэс нээх');
+    panel.hidden = !open;
+    navEl.classList.toggle('is-open', open);
+    if (!open && focusBack) burger.focus();
+    updateNav();
+  }
+  burger.addEventListener('click', function () { setMenu(burger.getAttribute('aria-expanded') !== 'true'); });
+  panel.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('click', function (e) {
+    if (!panel.hidden && !navEl.contains(e.target)) setMenu(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !panel.hidden) setMenu(false, true);
+  });
+  window.addEventListener('resize', function () { if (window.innerWidth > 880 && !panel.hidden) setMenu(false); });
+
+  function setActiveNav(name) {
+    navEl.querySelectorAll('[data-nav]').forEach(function (a) {
+      var n = NAV[+a.getAttribute('data-nav')];
+      if (n.match.indexOf(name) > -1) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+  }
+  var NAV_H = 72;
+  function updateNav() {
+    var solid = true;
+    if (body.dataset.route === 'home') {
+      var h = document.getElementById('hero');
+      var bottom = h && h.offsetParent !== null ? h.getBoundingClientRect().bottom : 0;
+      solid = bottom <= NAV_H + 1;
+    }
+    navEl.classList.toggle('is-solid', solid);
+  }
+  var navTick = false;
+  window.addEventListener('scroll', function () {
+    if (navTick) return; navTick = true;
+    requestAnimationFrame(function () { navTick = false; updateNav(); });
+  }, { passive: true });
+  window.addEventListener('resize', updateNav);
+
+  footEl.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-action="replay-intro"]')) return;
+    replayIntro();
+  });
+
+  /* ---------- intro bridge (every call guarded) ---------- */
+  function introPhase() { try { return NG.intro ? NG.intro.phase : 'idle'; } catch (e) { return 'idle'; } }
+  function introCall(fn) {
+    if (!NG.intro || typeof NG.intro[fn] !== 'function') return false;
+    try { NG.intro[fn](); return true; } catch (e) { if (window.console) console.error('NG.intro.' + fn, e); return false; }
+  }
+  function introOff() { body.dataset.intro = 'off'; body.classList.remove('lock'); }
+  function enterHome() {
+    if (!introCall('mount')) introOff();
+    updateNav();
+  }
+  function leaveHome() {
+    var ph = introPhase();
+    if (ph === 'intro' || ph === 'final' || ph === 'morph') introCall('finish');
+    introCall('pause');
+    introOff();
+  }
+  var pendingAfterRoute = null;
+  function replayIntro() {
+    if (!NG.intro || typeof NG.intro.replay !== 'function') { go('#/'); window.scrollTo(0, 0); return; }
+    if (current && current.name === 'home') { introCall('replay'); return; }
+    pendingAfterRoute = function () { introCall('replay'); };
+    go('#/');
+  }
+  document.addEventListener('ng:home', function () {
+    updateNav();
+    if (current && current.name === 'home') playEnter();
+  });
+
+  /* ---------- router ---------- */
+  var ROUTES = [
+    [/^\/$/, 'home'],
+    [/^\/categories\/?$/, 'categories'],
+    [/^\/products\/?$/, 'products'],
+    [/^\/products\/([^/]+)\/inquiry\/?$/, 'inquiry'],
+    [/^\/products\/([^/]+)\/?$/, 'detail'],
+    [/^\/about\/?$/, 'about']
+  ];
+  function parse(hash) {
+    var h = (hash || '').replace(/^#/, '');
+    if (!h) h = '/';
+    if (h.charAt(0) !== '/') h = '/' + h;
+    var qi = h.indexOf('?');
+    var path = qi > -1 ? h.slice(0, qi) : h;
+    var qs = qi > -1 ? h.slice(qi + 1) : '';
+    var query = {};
+    new URLSearchParams(qs).forEach(function (v, k) { query[k] = v; });
+    for (var i = 0; i < ROUTES.length; i++) {
+      var m = path.match(ROUTES[i][0]);
+      if (m) {
+        var params = {};
+        if (m[1]) { try { params.slug = decodeURIComponent(m[1]); } catch (e) { params.slug = m[1]; } }
+        return { name: ROUTES[i][1], path: path, params: params, query: query };
+      }
+    }
+    return { name: 'notfound', path: path, params: {}, query: query };
+  }
+  function go(hash) {
+    if (location.hash === hash || (hash === '#/' && (location.hash === '' || location.hash === '#'))) route();
+    else location.hash = hash;
+  }
+
+  var current = null, view = null, first = true, enterTimer = 0;
+  function playEnter() {
+    if (REDUCED) return;
+    app.classList.remove('is-entering');
+    void app.offsetWidth;
+    app.classList.add('is-entering');
+    clearTimeout(enterTimer);
+    enterTimer = setTimeout(function () { app.classList.remove('is-entering'); }, 1700);
+  }
+
+  var TITLES = {
+    home: 'Ногоолин — сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах',
+    categories: 'Ангилал — Ногоолин',
+    products: 'Бүтээгдэхүүн — Ногоолин',
+    about: 'Бидний тухай — Ногоолин',
+    notfound: 'Хуудас олдсонгүй — Ногоолин'
+  };
+
+  function route() {
+    var r = parse(location.hash);
+    if (current && view && view.update && current.name === r.name && current.path === r.path) {
+      current = r; view.update(r.query); return;
+    }
+    if (view && view.destroy) { try { view.destroy(); } catch (e) {} }
+    var v = (VIEWS[r.name] || VIEWS.notfound)(r);
+    if (v.notFound) { r.name = 'notfound'; }
+    if (r.name !== 'home') leaveHome();
+    body.dataset.route = r.name;
+    current = r; view = v;
+    app.innerHTML = v.html;
+    if (v.mount) v.mount(app);
+    document.title = v.title || TITLES[r.name] || TITLES.home;
+    setActiveNav(r.name);
+    if (!panel.hidden) setMenu(false);
+    if (r.name === 'home') {
+      if (!first) window.scrollTo(0, 0);
+      enterHome();
+      if (body.dataset.intro !== 'on') playEnter();
+    } else {
+      window.scrollTo(0, 0);
+      playEnter();
+    }
+    if (!first) { try { app.focus({ preventScroll: true }); } catch (e) { app.focus(); } }
+    first = false;
+    updateNav();
+    if (pendingAfterRoute) { var f = pendingAfterRoute; pendingAfterRoute = null; f(); }
+  }
+
+  /* ---------- views ---------- */
+  var VIEWS = {};
+
+  VIEWS.home = function () {
+    var cats = D.categories.map(function (c) {
+      var n = countIn(c.slug);
+      return '<a class="cat-item" href="#/products?category=' + encodeURIComponent(c.slug) + '">' +
+        '<span class="cat-name">' + esc(c.name) + '</span>' +
+        '<span class="cat-count num">' + (n ? n + ' бүтээгдэхүүн' : 'Тун удахгүй') + '</span></a>';
+    }).join('');
+    var feat = D.products.filter(function (p) { return p.featured; });
+    D.products.forEach(function (p) { if (feat.length < 3 && feat.indexOf(p) < 0) feat.push(p); });
+    feat = feat.slice(0, 3);
+    var html =
+      '<section class="sec home-first" aria-labelledby="h-cats"><div class="container">' +
+        '<div class="sec-head"><h2 id="h-cats">Ангилал</h2>' + link('#/categories', 'Бүгдийг харах') + '</div>' +
+        '<div class="cat-wrap"><div class="cat-row">' + cats + '</div></div>' +
+      '</div></section>' +
+      '<section class="sec" aria-labelledby="h-feat" style="padding-top:0"><div class="container">' +
+        '<div class="sec-head"><h2 id="h-feat">Онцлох бүтээгдэхүүн</h2>' + link('#/products', 'Каталог руу') + '</div>' +
+        '<div class="feat">' + (feat[0] ? productItem(feat[0], 0, true) : '') +
+          '<div class="feat-side">' + feat.slice(1).map(function (p, i) { return productItem(p, i + 1); }).join('') + '</div>' +
+        '</div>' +
+      '</div></section>' +
+      '<section class="tara" aria-labelledby="h-tara"><div class="container tara-in">' +
+        '<div>' + orn('ulzii', 56, 'tara-orn') +
+          '<h2 id="h-tara" class="sr-only">Ногоон Дарь Эх</h2>' +
+          '<blockquote><p>«Ногоон Дарь Эхийг айдас, саад бэрхшээлээс хурдан аврагч, энэрэнгүй үйлсийн бэлгэдэл хэмээн дээдэлдэг.»</p>' +
+          '<cite>Буддын уламжлалаас</cite></blockquote>' +
+        '</div>' +
+        '<div class="tara-side"><p>Бүтээгдэхүүн бүрийн утга, материал, хэрэглэх зааврыг нэг дор тайлбарлана. Сүсэг бишрэлийн эд зүйлс зөв мэдээлэлтэйгээ хамт очих ёстой.</p>' +
+          link('#/about', 'Бидний тухай') + '</div>' +
+      '</div></section>' +
+      '<section class="sec" aria-labelledby="h-how"><div class="container how">' +
+        '<div><h2 id="h-how">Хэрхэн лавлах вэ</h2><p class="how-lead">Ногоолин бол онлайн төлбөр, хүргэлтгүй лавлах каталог. Сонирхсон бүтээгдэхүүнийхээ талаар хүсэлт үлдээхэд хангалттай.</p></div>' +
+        '<ol>' +
+          '<li><span class="how-n num" aria-hidden="true">1</span><h3>Бүтээгдэхүүнээ олно</h3><p>Ангилал, хайлтаар шүүж, тайлбар, хэрэглэх зааврыг нь уншина.</p></li>' +
+          '<li><span class="how-n num" aria-hidden="true">2</span><h3>Хүсэлт илгээнэ</h3><p>Нэр, утасны дугаар, асуултаа үлдээнэ. Бүртгэл шаардлагагүй.</p></li>' +
+          '<li><span class="how-n num" aria-hidden="true">3</span><h3>Ажилтан холбогдоно</h3><p>Ажлын 1 өдрийн дотор утсаар холбогдож, үнэ, хэмжээ, бэлэн байдлыг тодруулна.</p></li>' +
+        '</ol>' +
+      '</div></section>' +
+      '<section class="container" aria-labelledby="h-close"><div class="closing">' +
+        orn('divider', 300, 'closing-orn') +
+        '<h2 id="h-close">Өөрт тохирохыг нь олъё</h2>' +
+        '<div class="btn-row"><a class="btn btn-primary" href="#/products">Каталог үзэх</a><a class="btn btn-line" href="#/categories">Ангиллаар харах</a></div>' +
+      '</div></section>';
+    var ro = null, row = null, wrap = null;
+    function checkOverflow() {
+      if (!row) return;
+      var over = row.scrollWidth - row.clientWidth > 2 && row.scrollLeft + row.clientWidth < row.scrollWidth - 2;
+      wrap.classList.toggle('has-overflow', over);
+    }
+    return {
+      html: html,
+      mount: function (root) {
+        row = root.querySelector('.cat-row'); wrap = root.querySelector('.cat-wrap');
+        row.addEventListener('scroll', checkOverflow, { passive: true });
+        if (window.ResizeObserver) { ro = new ResizeObserver(checkOverflow); ro.observe(row); }
+        checkOverflow();
+      },
+      destroy: function () { if (ro) ro.disconnect(); }
+    };
+  };
+
+  VIEWS.categories = function () {
+    var rows = D.categories.map(function (c) {
+      var n = countIn(c.slug);
+      return '<li><a class="cl-row' + (n ? '' : ' is-empty') + '" href="#/products?category=' + encodeURIComponent(c.slug) + '">' +
+        '<h2 class="cl-name">' + esc(c.name) + '</h2>' +
+        '<p class="cl-blurb">' + esc(c.blurb || '') + '</p>' +
+        '<span class="cl-count num">' + (n ? n + ' бүтээгдэхүүн' : 'Тун удахгүй') + '</span>' + ICON.right + '</a></li>';
+    }).join('');
+    return {
+      html: '<div class="container"><header class="page-head"><h1>Ангилал</h1>' +
+        '<p class="page-lead">Ангиллаа сонгоход тухайн төрлийн бүтээгдэхүүнүүд шүүгдэж харагдана.</p></header>' +
+        '<ul class="cat-list">' + rows + '</ul></div>'
+    };
+  };
+
+  function productsHash(s) {
+    var p = new URLSearchParams();
+    if (s.category) p.set('category', s.category);
+    if (s.q) p.set('q', s.q);
+    if (s.page > 1) p.set('page', String(s.page));
+    var qs = p.toString();
+    return '#/products' + (qs ? '?' + qs : '');
+  }
+
+  VIEWS.products = function (r) {
+    var state = { category: '', q: '', page: 1 };
+    function fromQuery(q) {
+      state.category = q.category || '';
+      state.q = (q.q || '').trim();
+      state.page = Math.max(1, parseInt(q.page, 10) || 1);
+    }
+    fromQuery(r.query);
+    var filters = '<button class="f-btn" type="button" data-cat="" aria-pressed="false">Бүгд</button>' +
+      D.categories.map(function (c) {
+        return '<button class="f-btn" type="button" data-cat="' + esc(c.slug) + '" aria-pressed="false">' + esc(c.name) + '</button>';
+      }).join('');
+    var html = '<div class="container">' +
+      '<header class="page-head"><h1>Бүтээгдэхүүн</h1><p class="count num" id="p-count" aria-live="polite"></p></header>' +
+      '<div class="toolbar">' +
+        '<div class="filters" role="group" aria-label="Ангиллаар шүүх">' + filters + '</div>' +
+        '<div class="search" role="search">' + ICON.search +
+          '<label class="sr-only" for="p-q">Бүтээгдэхүүн хайх</label>' +
+          '<input id="p-q" type="search" placeholder="Нэрээр хайх…" autocomplete="off" enterkeyhint="search"></div>' +
+      '</div>' +
+      '<div id="p-results"></div></div>';
+    var root, input, results, countEl, timer = 0;
+
+    function syncControls() {
+      root.querySelectorAll('.f-btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-cat') === state.category ? 'true' : 'false');
+      });
+      if (document.activeElement !== input) input.value = state.q;
+      var active = root.querySelector('.f-btn[aria-pressed="true"]');
+      if (active && active.scrollIntoView) {
+        var f = active.parentNode, l = active.offsetLeft, w = active.offsetWidth;
+        if (l < f.scrollLeft || l + w > f.scrollLeft + f.clientWidth) f.scrollLeft = l - 16;
+      }
+    }
+    function render() {
+      var list = D.list({ category: state.category || undefined, q: state.q || undefined });
+      var total = list.length;
+      var pages = Math.max(1, Math.ceil(total / PER_PAGE));
+      if (state.page > pages) state.page = pages;
+      countEl.textContent = total + ' бүтээгдэхүүн олдлоо';
+      if (!total) {
+        results.innerHTML = '<div class="empty">' + orn('halo', 90, 'empty-orn') +
+          '<p>Илэрц олдсонгүй. Хайлтаа өөрчлөх эсвэл өөр ангилал сонгоно уу.</p>' +
+          '<button class="btn btn-line" type="button" data-clear>Шүүлтүүр арилгах</button></div>';
+        return;
+      }
+      var start = (state.page - 1) * PER_PAGE;
+      var items = list.slice(start, start + PER_PAGE).map(function (p, i) { return productItem(p, i); }).join('');
+      var pager = '';
+      if (pages > 1) {
+        var parts = [];
+        parts.push(state.page > 1
+          ? '<a href="' + productsHash({ category: state.category, q: state.q, page: state.page - 1 }) + '" aria-label="Өмнөх хуудас">' + ICON.left + '</a>'
+          : '<span aria-disabled="true" aria-label="Өмнөх хуудас">' + ICON.left + '</span>');
+        for (var n = 1; n <= pages; n++) {
+          parts.push('<a class="num" href="' + productsHash({ category: state.category, q: state.q, page: n }) + '"' +
+            (n === state.page ? ' aria-current="page"' : '') + ' aria-label="' + n + '-р хуудас">' + n + '</a>');
+        }
+        parts.push(state.page < pages
+          ? '<a href="' + productsHash({ category: state.category, q: state.q, page: state.page + 1 }) + '" aria-label="Дараагийн хуудас">' + ICON.right + '</a>'
+          : '<span aria-disabled="true" aria-label="Дараагийн хуудас">' + ICON.right + '</span>');
+        pager = '<nav class="pager" aria-label="Хуудаслалт">' + parts.join('') + '</nav>';
+      }
+      results.innerHTML = '<div class="grid">' + items + '</div>' + pager;
+    }
+    function toToolbar() {
+      var tb = root.querySelector('.toolbar');
+      var y = tb.getBoundingClientRect().top + window.pageYOffset - NAV_H - 16;
+      if (window.pageYOffset > y) window.scrollTo(0, y);
+    }
+    return {
+      html: html,
+      title: TITLES.products,
+      mount: function (el) {
+        root = el; input = el.querySelector('#p-q'); results = el.querySelector('#p-results'); countEl = el.querySelector('#p-count');
+        syncControls(); render();
+        el.querySelector('.filters').addEventListener('click', function (e) {
+          var b = e.target.closest('.f-btn'); if (!b) return;
+          go(productsHash({ category: b.getAttribute('data-cat'), q: state.q, page: 1 }));
+        });
+        input.addEventListener('input', function () {
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            state.q = input.value.trim(); state.page = 1;
+            var h = productsHash(state);
+            if (location.hash !== h) {
+              try { history.replaceState(null, '', h); } catch (e) {}
+              current = parse(h);
+            }
+            render();
+          }, 300);
+        });
+        input.addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
+        results.addEventListener('click', function (e) {
+          if (e.target.closest('[data-clear]')) { input.value = ''; go('#/products'); input.focus(); }
+        });
+      },
+      update: function (q) {
+        var prevPage = state.page;
+        fromQuery(q); syncControls(); render();
+        if (state.page !== prevPage) toToolbar();
+      },
+      destroy: function () { clearTimeout(timer); }
+    };
+  };
+
+  /* --- 360° viewer (user-driven only) --- */
+  var webglOK = null;
+  function hasWebGL() {
+    if (webglOK !== null) return webglOK;
+    webglOK = false;
+    if (typeof window.THREE === 'undefined') return false;
+    try {
+      var c = document.createElement('canvas');
+      webglOK = !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    } catch (e) { webglOK = false; }
+    return webglOK;
+  }
+  function createViewer(host, onFirstDrag) {
+    var T = window.THREE;
+    var w = host.clientWidth || 400, h = host.clientHeight || 500;
+    var renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(w, h, false);
+    host.insertBefore(renderer.domElement, host.firstChild);
+    var scene = new T.Scene();
+    var camera = new T.PerspectiveCamera(34, w / h, 0.1, 100);
+    camera.position.set(0, 2.6, 8.4);
+    camera.lookAt(0, 1.2, 0);
+    var geos = [], mats = [];
+    function mesh(g, m) { geos.push(g); mats.push(m); return new T.Mesh(g, m); }
+    var group = new T.Group(); scene.add(group);
+    var ped = mesh(new T.CylinderGeometry(1.45, 1.85, 0.35, 56), new T.MeshStandardMaterial({ color: 0x173F30, roughness: 0.92, metalness: 0.1 }));
+    ped.position.y = 0.175; group.add(ped);
+    var orb = mesh(new T.IcosahedronGeometry(1.12, 2), new T.MeshStandardMaterial({ color: 0xD9AB3F, metalness: 0.5, roughness: 0.62, emissive: 0x2A2008 }));
+    orb.position.y = 1.5; group.add(orb);
+    var wire = mesh(new T.IcosahedronGeometry(1.24, 1), new T.MeshBasicMaterial({ color: 0xF2C94C, wireframe: true, transparent: true, opacity: 0.14 }));
+    wire.position.y = 1.5; group.add(wire);
+    var halo = mesh(new T.TorusGeometry(2.0, 0.012, 12, 120), new T.MeshBasicMaterial({ color: 0xF2C94C, transparent: true, opacity: 0.6 }));
+    halo.position.set(0, 1.5, -0.6); scene.add(halo);
+    scene.add(new T.AmbientLight(0x2A5643, 0.8));
+    var key = new T.PointLight(0xFFE9B0, 1.25, 60); key.position.set(6, 7, 5); scene.add(key);
+    var rim = new T.PointLight(0x3FC98A, 0.9, 50); rim.position.set(-5.5, 3, -4.5); scene.add(rim);
+
+    var raf = 0;
+    function draw() { if (raf) return; raf = requestAnimationFrame(function () { raf = 0; renderer.render(scene, camera); }); }
+    var dragging = false, lx = 0, ly = 0, moved = false;
+    function rotate(dx, dy) {
+      group.rotation.y += dx * 0.009;
+      group.rotation.x = Math.max(-0.12, Math.min(0.55, group.rotation.x + dy * 0.009));
+      if (!moved) { moved = true; onFirstDrag(); }
+      draw();
+    }
+    function down(e) { dragging = true; lx = e.clientX; ly = e.clientY; host.classList.add('is-dragging'); try { host.setPointerCapture(e.pointerId); } catch (x) {} }
+    function move(e) { if (!dragging) return; rotate(e.clientX - lx, e.clientY - ly); lx = e.clientX; ly = e.clientY; }
+    function up(e) { dragging = false; host.classList.remove('is-dragging'); try { host.releasePointerCapture(e.pointerId); } catch (x) {} }
+    function key_(e) {
+      var k = e.key, s = 22;
+      if (k === 'ArrowLeft') rotate(-s, 0); else if (k === 'ArrowRight') rotate(s, 0);
+      else if (k === 'ArrowUp') rotate(0, -s); else if (k === 'ArrowDown') rotate(0, s); else return;
+      e.preventDefault();
+    }
+    host.addEventListener('pointerdown', down);
+    host.addEventListener('pointermove', move);
+    host.addEventListener('pointerup', up);
+    host.addEventListener('pointercancel', up);
+    host.addEventListener('keydown', key_);
+    var ro = window.ResizeObserver ? new ResizeObserver(function () {
+      var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return;
+      camera.aspect = W / H; camera.updateProjectionMatrix(); renderer.setSize(W, H, false); draw();
+    }) : null;
+    if (ro) ro.observe(host);
+    draw();
+    return {
+      destroy: function () {
+        cancelAnimationFrame(raf);
+        if (ro) ro.disconnect();
+        host.removeEventListener('pointerdown', down); host.removeEventListener('pointermove', move);
+        host.removeEventListener('pointerup', up); host.removeEventListener('pointercancel', up);
+        host.removeEventListener('keydown', key_);
+        geos.forEach(function (g) { g.dispose(); }); mats.forEach(function (m) { m.dispose(); });
+        renderer.dispose();
+        if (renderer.forceContextLoss) renderer.forceContextLoss();
+        if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
+      }
+    };
+  }
+
+  function crumbs(items) {
+    return '<nav class="crumbs" aria-label="Байршил"><ol>' + items.map(function (it, i) {
+      return i === items.length - 1 ? '<li aria-current="page">' + esc(it[0]) + '</li>' : '<li><a href="' + it[1] + '">' + esc(it[0]) + '</a></li>';
+    }).join('') + '</ol></nav>';
+  }
+  function notFoundView(msg) {
+    return {
+      notFound: true,
+      title: TITLES.notfound,
+      html: '<div class="container"><div class="nf">' + orn('halo', 90, 'empty-orn') +
+        '<h1>Хуудас олдсонгүй</h1><p>' + esc(msg || 'Таны хайсан хуудас байхгүй эсвэл зөөгдсөн байна.') + '</p>' +
+        '<div class="btn-row"><a class="btn btn-primary" href="#/">Нүүр хуудас</a><a class="btn btn-line" href="#/products">Каталог үзэх</a></div></div></div>'
+    };
+  }
+
+  VIEWS.detail = function (r) {
+    var p = D.bySlug(r.params.slug);
+    if (!p) return notFoundView('Ийм бүтээгдэхүүн олдсонгүй. Каталогоос дахин хайна уу.');
+    var c = D.category(p.category);
+    var show3d = !!p.has3d && hasWebGL();
+    var desc = (p.description || []).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('');
+    var usage = (p.usage || []).length ? '<ol class="steps">' + p.usage.map(function (t) { return '<li><p>' + esc(t) + '</p></li>'; }).join('') + '</ol>' : '<p>Хэрэглэх зааврыг хүсэлтээр лавлана уу.</p>';
+    var specs = (p.specs || []).length ? '<dl class="specs">' + p.specs.map(function (s) { return '<dt>' + esc(s[0]) + '</dt><dd>' + esc(s[1]) + '</dd>'; }).join('') + '</dl>' : '<p>Үзүүлэлтийг хүсэлтээр лавлана уу.</p>';
+    var rel = [];
+    try { rel = D.related(p.slug, 3) || []; } catch (e) { rel = []; }
+    var stage = '<div class="d-stage"><div class="d-photo">' + A.render(p.art, { label: true }) + '</div>' +
+      (show3d ? '<div class="d-viewer" tabindex="0" role="img" aria-label="360° харагдац. Чирж эсвэл сумаар эргүүлнэ." hidden>' +
+        '<span class="v-tag">Demo 3D · бодит загвар биш</span><span class="v-hint">' + ICON.drag + 'Чирж эргүүлнэ үү</span></div>' : '') + '</div>';
+    var media;
+    try { media = A.frame(stage, { variant: 'full' }); } catch (e) { media = stage; }
+    var tabs = [['Дэлгэрэнгүй тайлбар', desc || '<p>' + esc(p.summary || '') + '</p>'], ['Хэрэглэх заавар', usage], ['Үзүүлэлт', specs]];
+    var html = '<div class="container">' +
+      crumbs([['Нүүр', '#/'], ['Бүтээгдэхүүн', '#/products'], [p.name]]) +
+      '<div class="detail">' +
+        '<div class="d-media"><div class="site-unroll">' + media + '</div>' +
+          (show3d ? '<div class="seg" role="group" aria-label="Харагдац"><button type="button" data-mode="photo" aria-pressed="true">Зураг</button><button type="button" data-mode="3d" aria-pressed="false">360°</button></div>' : '') +
+        '</div>' +
+        '<div class="d-info">' +
+          '<h1 class="d-title">' + esc(p.name) + '</h1>' +
+          '<div class="d-buy"><span class="d-price num">' + money(p.price) + '</span>' +
+            (p.available === false ? '<span class="d-avail is-out">Түр байхгүй</span>' : '<span class="d-avail">Бэлэн байгаа</span>') + '</div>' +
+          (p.summary ? '<p class="d-summary">' + esc(p.summary) + '</p>' : '') +
+          '<div class="d-cta"><a class="btn btn-primary" href="#/products/' + encodeURIComponent(p.slug) + '/inquiry">Хүсэлт илгээх</a>' +
+            '<a class="btn btn-line" href="#/products">Каталог руу</a></div>' +
+          '<p class="d-note">Үнэ, бэлэн байдлыг хүсэлтээр баталгаажуулна. Онлайн төлбөр, хүргэлт одоогоор байхгүй.</p>' +
+          '<dl class="d-meta"><dt>Ангилал</dt><dd>' + (c ? '<a href="#/products?category=' + encodeURIComponent(c.slug) + '">' + esc(c.name) + '</a>' : '—') + '</dd>' +
+            (p.has3d ? '<dt>Харагдац</dt><dd>360° (demo загвар)</dd>' : '') + '</dl>' +
+        '</div>' +
+      '</div>' +
+      '<section class="tabs" aria-label="Дэлгэрэнгүй мэдээлэл"><div class="tablist" role="tablist">' +
+        tabs.map(function (t, i) {
+          return '<button class="tab" type="button" role="tab" id="tab-' + i + '" aria-controls="panel-' + i + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + t[0] + '</button>';
+        }).join('') + '</div>' +
+        tabs.map(function (t, i) {
+          return '<div class="tabpanel" role="tabpanel" id="panel-' + i + '" aria-labelledby="tab-' + i + '" tabindex="0"' + (i ? ' hidden' : '') + '>' + t[1] + '</div>';
+        }).join('') +
+      '</section>' +
+      (rel.length ? '<section class="related" aria-labelledby="h-rel"><div class="sec-head"><h2 id="h-rel">Төстэй бүтээгдэхүүн</h2>' + link('#/products', 'Бүгдийг харах') + '</div>' +
+        '<div class="grid">' + rel.map(function (x, i) { return productItem(x, i); }).join('') + '</div></section>' : '') +
+    '</div>';
+    var viewer = null;
+    return {
+      html: html,
+      title: p.name + ' — Ногоолин',
+      mount: function (el) {
+        var tabsEls = [].slice.call(el.querySelectorAll('[role="tab"]'));
+        function select(i, focus) {
+          tabsEls.forEach(function (t, j) {
+            var on = i === j;
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+            t.tabIndex = on ? 0 : -1;
+            el.querySelector('#' + t.getAttribute('aria-controls')).hidden = !on;
+          });
+          if (focus) tabsEls[i].focus();
+        }
+        tabsEls.forEach(function (t, i) {
+          t.addEventListener('click', function () { select(i); });
+          t.addEventListener('keydown', function (e) {
+            var n = null, L = tabsEls.length;
+            if (e.key === 'ArrowRight') n = (i + 1) % L; else if (e.key === 'ArrowLeft') n = (i - 1 + L) % L;
+            else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = L - 1;
+            if (n !== null) { e.preventDefault(); select(n, true); }
+          });
+        });
+        var seg = el.querySelector('.seg');
+        if (seg) {
+          var photo = el.querySelector('.d-photo'), host = el.querySelector('.d-viewer'), hint = el.querySelector('.v-hint');
+          seg.addEventListener('click', function (e) {
+            var b = e.target.closest('button'); if (!b) return;
+            var is3d = b.getAttribute('data-mode') === '3d';
+            seg.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+            host.hidden = !is3d;
+            photo.style.visibility = is3d ? 'hidden' : '';
+            if (is3d && !viewer) {
+              try { viewer = createViewer(host, function () { hint.classList.add('is-gone'); }); }
+              catch (err) { host.hidden = true; photo.style.visibility = ''; seg.hidden = true; }
+            }
+          });
+        }
+      },
+      destroy: function () { if (viewer) { viewer.destroy(); viewer = null; } }
+    };
+  };
+
+  VIEWS.inquiry = function (r) {
+    var p = D.bySlug(r.params.slug);
+    if (!p) return notFoundView('Ийм бүтээгдэхүүн олдсонгүй. Каталогоос дахин хайна уу.');
+    var href = '#/products/' + encodeURIComponent(p.slug);
+    var thumb;
+    try { thumb = A.frame(A.render(p.art, { label: false }), { variant: 'door' }); } catch (e) { thumb = ''; }
+    function field(id, label, input, full) {
+      return '<div class="field' + (full ? ' field--full' : '') + '"><label for="' + id + '">' + label + '</label>' + input +
+        '<p class="err" id="' + id + '-err" aria-live="polite"></p></div>';
+    }
+    var html = '<div class="container">' +
+      '<a class="back" href="' + href + '">' + ICON.left + '<span>Бүтээгдэхүүн рүү буцах</span></a>' +
+      '<header class="page-head" style="padding-top:var(--s5)"><h1>Хүсэлт илгээх</h1>' +
+        '<p class="page-lead">Сонгосон бүтээгдэхүүний талаар асуух зүйлээ үлдээгээрэй. Манай ажилтан утсаар эргэн холбогдоно.</p></header>' +
+      '<div class="inq" id="inq">' +
+        '<div class="inq-main">' +
+          '<p class="demo-note">Энэ бол demo: мэдээлэл серверт илгээгдэхгүй, хадгалагдахгүй.</p>' +
+          '<form id="inq-form" novalidate><div class="form-grid">' +
+            field('f-name', 'Таны нэр', '<input class="input" id="f-name" name="name" type="text" autocomplete="name" aria-required="true" aria-describedby="f-name-err">') +
+            field('f-phone', 'Утасны дугаар', '<input class="input num" id="f-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="8 оронтой дугаар" aria-required="true" aria-describedby="f-phone-err">') +
+            field('f-email', 'И-мэйл <span class="opt">(заавал биш)</span>', '<input class="input" id="f-email" name="email" type="email" autocomplete="email" aria-describedby="f-email-err">', true) +
+            field('f-msg', 'Хүсэлтийн агуулга', '<textarea class="input" id="f-msg" name="message" rows="6" placeholder="Жишээ: хэмжээ, материал, бэлэн байгаа эсэхийг лавлах" aria-required="true" aria-describedby="f-msg-err"></textarea>', true) +
+            '<div class="form-foot"><button class="btn btn-primary" type="submit" id="f-submit">Хүсэлт илгээх</button>' +
+              '<p class="note">Бүртгэл шаардлагагүй. Таны мэдээллийг зөвхөн энэ хүсэлтэд хариу өгөх зорилгоор ашиглана.</p></div>' +
+          '</div></form>' +
+        '</div>' +
+        '<aside class="inq-aside" aria-labelledby="h-sum"><h2 id="h-sum">Сонгосон бүтээгдэхүүн</h2>' +
+          '<a class="sum" href="' + href + '"><div>' + thumb + '</div><div>' +
+            '<p class="sum-name">' + esc(p.name) + '</p><p class="sum-cat">' + esc(catName(p.category)) + '</p>' +
+            '<p class="sum-price num">' + money(p.price) + '</p></div></a>' +
+        '</aside>' +
+      '</div></div>';
+    var timer = 0;
+    var RULES = {
+      'f-name': function (v) { return v.trim() ? '' : 'Нэрээ оруулна уу'; },
+      'f-phone': function (v) { return /^\d{8}$/.test(v.replace(/\s+/g, '')) ? '' : 'Утасны дугаар 8 оронтой байх ёстой'; },
+      'f-email': function (v) { v = v.trim(); return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'И-мэйл хаяг буруу байна'; },
+      'f-msg': function (v) { return v.trim() ? '' : 'Хүсэлтийн агуулгаа бичнэ үү'; }
+    };
+    return {
+      html: html,
+      title: 'Хүсэлт — ' + p.name + ' — Ногоолин',
+      mount: function (el) {
+        var form = el.querySelector('#inq-form'), btn = el.querySelector('#f-submit'), tried = false;
+        function check(id) {
+          var inp = el.querySelector('#' + id), msg = RULES[id](inp.value);
+          el.querySelector('#' + id + '-err').textContent = msg;
+          if (msg) inp.setAttribute('aria-invalid', 'true'); else inp.removeAttribute('aria-invalid');
+          return msg;
+        }
+        Object.keys(RULES).forEach(function (id) {
+          el.querySelector('#' + id).addEventListener('input', function () { if (tried) check(id); });
+        });
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (btn.disabled) return;
+          tried = true;
+          var bad = Object.keys(RULES).filter(function (id) { return check(id); });
+          if (bad.length) { el.querySelector('#' + bad[0]).focus(); return; }
+          var phone = el.querySelector('#f-phone').value.replace(/\s+/g, '');
+          btn.disabled = true; btn.setAttribute('aria-busy', 'true');
+          btn.innerHTML = ICON.spin + '<span>Илгээж байна…</span>';
+          timer = setTimeout(function () {
+            var no = 'INQ-' + new Date().getFullYear() + '-' + String(Math.floor(1000 + Math.random() * 9000));
+            el.querySelector('#inq').outerHTML =
+              '<div class="success">' + orn('ulzii', 72, 'success-orn') +
+                '<h1 tabindex="-1" id="inq-done">Хүсэлт илгээгдлээ</h1>' +
+                '<p class="inq-no num">' + no + '</p>' +
+                '<p>Таны хүсэлтийг хүлээн авлаа. Манай ажилтан ' + esc(phone) + ' дугаараар ажлын 1 өдрийн дотор эргэн холбогдоно.</p>' +
+                '<p class="note">Demo: энэ дугаар жишээ бөгөөд хүсэлт хаана ч илгээгдээгүй, хадгалагдаагүй.</p>' +
+                '<a class="btn btn-primary" href="#/products">Каталог руу буцах</a></div>';
+            var hd = el.querySelector('.page-head'); if (hd) hd.remove();
+            var bk = el.querySelector('.back'); if (bk) bk.remove();
+            var t = el.querySelector('#inq-done'); if (t) t.focus();
+            window.scrollTo(0, 0);
+            document.title = 'Хүсэлт илгээгдлээ — Ногоолин';
+          }, 900);
+        });
+      },
+      destroy: function () { clearTimeout(timer); }
+    };
+  };
+
+  VIEWS.about = function () {
+    return {
+      html:
+        '<header class="about-banner"><div>' + orn('halo', 64, 'about-orn') + '<h1>Бидний тухай</h1>' +
+          '<p>Сүсэг бишрэлийн бүтээгдэхүүний цахим лавлах</p></div></header>' +
+        '<div class="container story">' +
+          '<p class="story-lead">Сүсэг бишрэлийн эд зүйлс утга учир, зөв хэрэглээтэйгээ хамт очих ёстой гэж бид үздэг.</p>' +
+          '<div class="story-body"><span class="ph-tag">Түр текст · эцсийн агуулгыг эзэмшигч оруулна</span>' +
+            '<p>Энэ хэсэгт Ногоолин хэрхэн эхэлсэн, хэн хариуцдаг тухай товч түүх орно.</p>' +
+            '<p>Бүтээгдэхүүнээ хаанаас, ямар зарчмаар сонгодог тухай тайлбар энд байрлана.</p>' +
+            '<p>Хамтран ажилладаг урчууд, хийдийн тухай мэдээлэл байгаа бол энд нэмэгдэнэ.</p></div>' +
+        '</div>' +
+        '<section class="values-band" aria-label="Бидний үнэт зүйлс"><div class="container values">' +
+          '<div><h2>Уламжлалыг дээдэлнэ</h2><p>Эд зүйл бүрийг уламжлалт утга, зориулалттай нь танилцуулна.</p></div>' +
+          '<div><h2>Гарал үүсэл нь тодорхой</h2><p>Материал, хийсэн газар, хэмжээг бүтээгдэхүүн бүр дээр нээлттэй бичнэ.</p></div>' +
+          '<div><h2>Зөв хэрэглээг заана</h2><p>Хэрэглэх заавар, анхаарах зүйлийг алхам алхмаар тайлбарлана.</p></div>' +
+        '</div></section>' +
+        '<section class="container contact" aria-labelledby="h-contact">' +
+          '<div><h2 id="h-contact">Холбоо барих</h2><p class="page-lead">Доорх утгууд demo. Бодит холбоо барих мэдээллийг эзэмшигч оруулна.</p></div>' +
+          '<div><dl class="contact-dl"><dt>И-мэйл</dt><dd>hello@example.com</dd><dt>Утас</dt><dd class="num">0000 0000</dd><dt>Хаяг</dt><dd>Улаанбаатар</dd></dl>' +
+            '<a class="btn btn-primary" href="#/products">Бүтээгдэхүүн үзэх</a></div>' +
+        '</section>'
+    };
+  };
+
+  VIEWS.notfound = function () { return notFoundView(); };
+
+  /* ---------- boot ---------- */
+  NG.router = {
+    go: go,
+    get current() { return current ? { name: current.name, params: current.params, query: current.query } : null; }
+  };
+  window.addEventListener('hashchange', route);
+  route();
+})();
+
+</script>
+</body>
+</html>
