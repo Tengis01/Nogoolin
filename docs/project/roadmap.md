@@ -78,7 +78,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
 
 - **Үйлчлэх G:** G1.
 - **Хийгдсэн:** monorepo, CI, Supabase local, auth (email, Google), RBAC, ангиллын CRUD, бүтээгдэхүүний жагсаалт/үүсгэх, зураг, жагсаалт/дэлгэрэнгүй хуудас, SEO (sitemap, robots), олон бичигтэй хайлт. [PROGRESS](../../agent-context/PROGRESS.md)-аас.
-- **Үлдэгдэл:** admin бүтээгдэхүүн засах хуудас; JSON-LD escape засвар (тусдаа task). Cloud тохиргоо PH7-д.
+- **Үлдэгдэл:** admin бүтээгдэхүүн засах хуудас; JSON-LD escape засвар (тусдаа task); хэмжээ, жин, материалын талбар (FR-PROD-190, D-09) — migration, Zod, admin form. PH5-ийн контент оруулахаас өмнө дуусна. Cloud тохиргоо PH7-д.
 - **Гарах шалгуур:** FR-ADM болон FR-PROD-ийн Must шаардлагууд «implemented», тесттэй.
 - **Хуучин:** Phase 1, Phase 2.
 
@@ -102,10 +102,10 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
   1. **Token refactor:** одоогийн v4 token-уудыг (`apps/web/src/app/globals.css`) шатлал руу шилжүүлнэ. Шалгуур нь screenshot-ын ялгаа 0px.
   2. **C brand mapping** хуудас хуудсаар: интро → нүүр → жагсаалт → дэлгэрэнгүй → inquiry → auth/profile → admin. Хуудас бүрт screenshot, a11y, perf шалгалт.
   3. Click-intro (4 алхам) нь production R3F дээр. D-04-ийг бодит GLB дээр тааруулна.
-  4. Бодит фото, контент оруулах.
+  4. Бодит фото, контент оруулах. Зураг авалт нь [D-09 стандарт](../../agent-context/ASSET_SPECS.md#3-product-photography-standard-d-09)-аар: Tier A (нарийн хийцтэй) 4–5 зураг, Tier B (энгийн) 2 зураг. Хэмжээ, жинг талбарт оруулна. Дэлгэрэнгүй хуудсанд FR-PUB-250 (хэмжээний мөр), боломжтой бол FR-PUB-260 (хэмжээний шугамын overlay).
 - **Гаралт:** C дизайнтай production web, GLB, контент.
 - **Гарах шалгуур:** G3-ийн хэмжүүр staging дээр хэмжигдсэн. FR-INTRO-ийн accessibility шаардлагууд тест давсан.
-- **Хуучин:** Phase 3 (360° viewer нь PH8 руу; mobile Rive нь G6 руу).
+- **Хуучин:** Phase 3 (360° viewer нь PH8 руу, D-09-өөр photo spin болсон; mobile Rive нь G6 руу).
 
 ## PH6 — Quality assurance
 
@@ -138,7 +138,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
 - **Агуулга:**
   - Mobile release (G6);
   - захиалга/хүргэлт: `delivery_enabled` toggle идэвхжүүлэх, order flow, төлбөр. Settings-ийн backend хэсэг бий;
-  - бүтээгдэхүүн бүрийн 360° viewer (D-07);
+  - сонгосон (Tier A) бүтээгдэхүүний 360° photo spin (D-07, D-09; 3D GLB биш);
   - зургаар хайх (pgvector);
   - MN/EN хэл (D-05);
   - G2-ийн launch-ийн дараах хэмжилт.

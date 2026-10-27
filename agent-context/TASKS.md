@@ -655,3 +655,19 @@ Confirmed `docs/nogoolin-prototype-a-v4.html` exists and is linked from the docu
 - **Not verified:** no `node_modules` (type-check/lint not run), Docker off
   (integration tests not run), no browser check.
 - **Next:** P0 in the report §5 (C1 migration + test, params/DB error mapping, CI Supabase).
+
+## 2026-10-27 — D-09: product media and specification standard
+
+- **Result:** Owner approved D-09 and it is recorded. Tiered shot list
+  (Tier A 4–5, Tier B 2) resolves D-03. The per-product 360° becomes a photo
+  spin for selected products (amends D-07, stays PH8). Size, weight and
+  material are stored as structured fields, not on images.
+  - Updated DECISIONS.md and ASSET_SPECS.md §3.
+  - SRS v2: new FR-PROD-190, FR-PUB-250, FR-PUB-260; FR-PUB-240 and
+    FR-MOB-130 amended; §7.2/§7.3 counts updated.
+  - Updated traceability-v2.md, roadmap PH3/PH5/PH8, project-goals G1-A.
+- **Not done:** no code change. FR-PROD-190 (migration + Zod + admin form) is
+  in the PH3 remainder, after the audit's P0 security fixes.
+- **Note:** the sample images in ~/Pictures/Nogoolin_product look
+  AI-generated (two elephant shots differ in trunk, ears and lid). Owner to
+  confirm before real content entry.

@@ -584,6 +584,14 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Test — «multi-script search: Cyrillic, English, Latin-transliterated»
 - **Acceptance:** `name_en="Green Tara"` бүтээгдэхүүн «green tara» хайлтаар олдоно.
 
+#### FR-PROD-190 — Хэмжээ, жин, материал
+**Statement:** Систем бүтээгдэхүүн бүрт сонголтот `height_cm`, `width_cm`, `depth_cm` (эерэг тоо, 0.1 см нарийвчлал), `weight_g` (эерэг бүхэл тоо) болон `material` (≤200 тэмдэгт) талбарыг хадгалж, admin API-аар үүсгэх, засах боломжтой байна **shall**. Хэмжээ, жинг зурган дээр бичихгүй **shall**.
+- **Rationale:** D-09. Зураг дээр бичсэн хэмжээг засах, шүүх, хайх боломжгүй, SEO болон screen reader уншихгүй. Талбар нь G1-ийн «шийдвэр гаргахад хэрэгтэй мэдээлэл»-ийг хангана.
+- **Source:** Owner шийдвэр D-09 (2026-10-27). Шинэ шаардлага, хуучин ID-гүй.
+- **Priority · Phase · Status:** Should · PH3 (PH5-ийн контент оруулахаас өмнө) · planned (DB, Zod, admin form-д талбар байхгүй)
+- **Verification:** Test — талбартай POST/PATCH → `201`/`200`; сөрөг тоо эсвэл 0 → `400`; талбаргүй хүсэлт хүчинтэй хэвээр.
+- **Acceptance:** 1) Шинэ migration-д 5 nullable багана. 2) `productInputSchema`, admin form-д талбарууд. 3) Хуучин бүтээгдэхүүн өөрчлөлтгүй ажиллана.
+
 #### FR-PROD-200 — Бүтээгдэхүүний амьдралын мөчлөг (API)
 **Statement:** Admin API-аар бүтээгдэхүүнийг үүсгэх, засах, нийтлэх, онцлох, архивлах, бүрмөсөн устгах боломжтой байна **shall**.
 - **Source:** Phase0 FR-PROD-001, 002, 004, 006, 011; `backend/api/src/controllers/admin/product.controller.ts`
@@ -869,13 +877,29 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Test — draft slug → статус `404`, холбоос `/products`
 - **Acceptance:** Статус код `404` (soft-404 биш). Каталог руу буцах холбоос ажиллана.
 
-#### FR-PUB-240 — Бүтээгдэхүүн бүрийн 360° viewer
-**Statement:** Бүтээгдэхүүнд `model_3d_url` байвал дэлгэрэнгүй хуудас эргүүлэх, томруулах боломжтой 3D viewer-ийг харуулна **may**. Байхгүй бол зургийн gallery-г харуулна.
-- **Rationale:** D-07: post-MVP. Энэ release-д дэлгэрэнгүй хуудас үргэлж зургийн gallery-г харуулна.
-- **Source:** Phase0 FR-PUB-004 (viewer хэсэг), FR-PUB-011; D-07
+#### FR-PUB-240 — Сонгосон бүтээгдэхүүний 360° photo spin
+**Statement:** Admin тухайн бүтээгдэхүүнд photo spin идэвхжүүлсэн үед дэлгэрэнгүй хуудас 24–36 фото кадраас бүтсэн, чирж эргүүлэх боломжтой 360° харагдацыг харуулна **may**. Spin-ийн кадрууд зөвхөн зочин түүнийг нээх үед ачаалагдана. Spin-гүй бүтээгдэхүүнд зургийн gallery-г харуулна.
+- **Rationale:** D-07: post-MVP. D-09: 3D GLB биш photo spin, зөвхөн нарийн хийцтэй (Tier A) сонгосон бүтээгдэхүүнд. Алтадмал, гялгар гадаргуу 3D-д муу гардаг, photo spin нь бодит барааг харуулж, хямд. Энэ release-д дэлгэрэнгүй хуудас үргэлж зургийн gallery-г харуулна.
+- **Source:** Phase0 FR-PUB-004 (viewer хэсэг), FR-PUB-011; D-07; D-09 (2026-10-27-нд GLB viewer-ээс photo spin болгож өөрчилсөн)
 - **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
 - **Verification:** Demonstration — PH8-д
 - **Acceptance:** Энэ release: `model_3d_url`-аас үл хамааран gallery харагдана, «360°» тэмдэг харагдахгүй.
+
+#### FR-PUB-250 — Хэмжээ, жин, материалыг харуулах
+**Statement:** Бүтээгдэхүүнд FR-PROD-190-ийн талбар байвал дэлгэрэнгүй хуудас тэдгээрийг текстээр (жишээ нь «Өндөр 32 см · Өргөн 24 см · Гүн 18 см · Жин 2.4 кг», «Материал: …») харуулж, schema.org Product-ийн `height`, `width`, `depth`, `weight`, `material`-д оруулна **shall**. Утгагүй талбарын мөр харагдахгүй **shall**.
+- **Rationale:** D-09; G1 outcome — дэлгүүрт очилгүйгээр барааны хэмжээг мэдэх.
+- **Source:** Owner шийдвэр D-09 (2026-10-27).
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — бүх талбартай болон талбаргүй fixture-ээр DOM болон JSON-LD-г шалгах.
+- **Acceptance:** 1) Талбартай бүтээгдэхүүнд текст мөр болон JSON-LD утгууд байна. 2) Талбаргүйд хоосон гарчиг, «— см» үлдэхгүй. 3) 1000 г ба түүнээс дээш жин кг-аар харагдана.
+
+#### FR-PUB-260 — Хэмжээний шугамын overlay
+**Statement:** Бүтээгдэхүүнд өндөр эсвэл өргөн байвал gallery нь үндсэн зурган дээр UI-аар зурсан нимгэн хэмжээний шугам, утгыг (FR-PROD-190-аас) харуулах харагдацыг санал болгож болно **may**. Зурган файлд шугам, текст шингээхгүй.
+- **Rationale:** D-09. Хэмжээг нүдээр ойлгуулна; тоо нь талбараас ирдэг тул зураг дахин авах шаардлагагүй, үргэлж зөв.
+- **Source:** Owner шийдвэр D-09 (2026-10-27).
+- **Priority · Phase · Status:** Could · PH5 · planned
+- **Verification:** Demonstration — 4:5 болон 1:1 зураг дээр 375 ба 1440 px өргөнд.
+- **Acceptance:** Шугам зургийн биетийн ирмэгтэй ойролцоо, текст уншигдана (NFR-USE-130). Талбаргүй үед overlay харагдахгүй.
 
 #### FR-PUB-300 — Нүүр хуудасны каталогийн хэсэг
 **Statement:** Нүүр хуудас интроны дараа онцлох бүтээгдэхүүн болон ангиллыг харуулна **shall**.
@@ -1521,11 +1545,11 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **States:** loading / error / not-found («Бүтээгдэхүүн олдсонгүй» + жагсаалт руу буцах).
 
 #### FR-MOB-130 — Mobile 360° viewer
-**Statement:** Бүтээгдэхүүнд `model_3d_url` байвал дэлгэрэнгүй дэлгэц интерактив 360° viewer-ийг (`expo-gl` эсвэл WebView `model-viewer`), байхгүй бол зургийн gallery-г харуулна **shall**.
-- **Source:** Phase0 FR-MOB-003 (360° хэсэг), FR-MOB-010; D-07
+**Statement:** Бүтээгдэхүүнд photo spin идэвхжсэн бол (FR-PUB-240) дэлгэрэнгүй дэлгэц чирж эргүүлэх 360° photo spin-ийг, байхгүй бол зургийн gallery-г харуулна **shall**.
+- **Source:** Phase0 FR-MOB-003 (360° хэсэг), FR-MOB-010; D-07; D-09 (GLB viewer-ээс photo spin болгож өөрчилсөн)
 - **Priority · Phase · Status:** Won't (this release) · PH8 · deferred (D-07)
 - **Verification:** Demonstration
-- **Acceptance:** GLB-тэй бүтээгдэхүүнд viewer эргэнэ; GLB-гүйд gallery.
+- **Acceptance:** Photo spin-тэй бүтээгдэхүүнд spin эргэнэ; spin-гүйд gallery.
 
 #### FR-MOB-300 — Mobile нээлтийн интро
 **Statement:** App эхлэхэд систем Concept C-тэй нийцсэн нээлтийн анимацийг харуулж, анимаци дуусах эсвэл хэрэглэгч товших үед нүүр дэлгэц рүү шилжинэ **shall**.
@@ -2669,16 +2693,16 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 
 | Шалгалт | Үр дүн |
 |---|---|
-| Шаардлагын тоо | 308 блок, үүнээс 247 leaf шаардлага |
+| Шаардлагын тоо | 311 блок, үүнээс 250 leaf шаардлага (2026-10-27: D-09-ийн FR-PROD-190, FR-PUB-250, FR-PUB-260 нэмэгдсэн) |
 | ID давхардал | 0 |
 | Хуучин ID-ийн mapping | 202 / 202. Phase 0: 177, v1.0: 20, M2: 5. Тоолоогүй ID 0. ([mapping](id-mapping.md)) |
 | Mapping-ийн тодорхойлогдоогүй шинэ ID | 0 |
 | Traceability-ийн мөр | Leaf бүрт 1 ([traceability](traceability-v2.md)) |
 | Олон утгатай үгийн script | Илэрсэн 2 statement-ийг зассан. Үлдсэн 0. |
 
-**Leaf шаардлагын priority:** Must 170 · Should 39 · Could 9 · Won't (this release) 29.
+**Leaf шаардлагын priority:** Must 170 · Should 41 · Could 10 · Won't (this release) 29.
 
-**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 136 · partial 34 · planned 43 · deferred 11 · unknown 23.
+**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 136 · partial 34 · planned 46 · deferred 11 · unknown 23.
 
 ### 7.3 Area-аар
 
@@ -2687,9 +2711,9 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | FR | AUTH | 16 | 13 | 11 |
 | FR | USER | 9 | 7 | 2 |
 | FR | CAT | 11 | 9 | 5 |
-| FR | PROD | 21 | 18 | 15 |
+| FR | PROD | 22 | 19 | 15 |
 | FR | MEDIA | 12 | 10 | 7 |
-| FR | PUB | 20 | 16 | 11 |
+| FR | PUB | 22 | 18 | 11 |
 | FR | INQ | 16 | 13 | 10 |
 | FR | WISH | 6 | 5 | 5 |
 | FR | ADM | 15 | 12 | 9 |

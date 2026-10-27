@@ -99,6 +99,7 @@
 | FR-PROD-160 | Must | FR-PROD-009 | — | `product.repository.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-170 | Must | FR-PROD-010 | — | `apps/web/src/components/public/product-tabs.tsx` | planned | planned |
 | FR-PROD-180 | Must | FR-PUB-013 | — | `supabase/migrations/20260719103322_product_search_vector.sql` | `api.integration.test.ts` | test exists |
+| FR-PROD-190 | Should | D-09 | D-09 | — | planned | planned |
 | FR-PROD-210 | Must | FR-PROD-001 | ADR-007 | `product.service.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-220 | Must | FR-PROD-002 | — | `backend/api/src/controllers/admin/product.controller.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-230 | Must | FR-PROD-004 | — | `product.service.ts` | `api.integration.test.ts` | test exists |
@@ -129,7 +130,9 @@
 | FR-PUB-210 | Must | FR-PUB-003/007 | ADR-006 | `apps/web/src/app/products/[slug]/page.tsx` | planned | planned |
 | FR-PUB-220 | Must | FR-PUB-004 | — | `product-gallery.tsx`, `product-tabs.tsx` | planned | planned |
 | FR-PUB-230 | Must | UC-G-004 | — | `apps/web/src/app/products/[slug]/not-found.tsx` | planned | planned |
-| FR-PUB-240 | Won't | FR-PUB-004/011 | D-07 | — | — | deferred |
+| FR-PUB-240 | Won't | FR-PUB-004/011 | D-07, D-09 | — | — | deferred |
+| FR-PUB-250 | Should | D-09 | D-09 | — | planned | planned |
+| FR-PUB-260 | Could | D-09 | D-09 | — | planned | planned |
 | FR-PUB-310 | Must | FR-PUB-006 | D-08 | `apps/web/src/app/page.tsx` (placeholder) | planned | planned |
 | FR-PUB-320 | Should | WF-HOME-01 | D-01, D-08 | — | planned | planned |
 | FR-PUB-410 | Must | FR-PUB-009 | ADR-002 | `backend/api/src/controllers/settings.controller.ts` | planned | planned |
