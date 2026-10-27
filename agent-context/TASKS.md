@@ -642,3 +642,16 @@ Confirmed `docs/nogoolin-prototype-a-v4.html` exists and is linked from the docu
      - NFR-SEC-350: check at runtime whether a customer can change their own `users.role` through the `users_update_own` RLS policy.
      - FR-SET-220: `orders_insert_own` does not check `delivery_enabled`.
   3. Start PH2 (perf baseline, DESIGN.md token hierarchy).
+
+## 2026-10-27 — Code audit vs SRS v2 (quality + architecture)
+
+- **Result:** [docs/quality/code-audit-2026-10-27.md](../docs/quality/code-audit-2026-10-27.md).
+  Code provenance: written 2026-07-14…26 on `chore/phase3-closeout` (30/32 commits
+  co-authored by Claude Fable 5), squashed into main as `4528492 "ICSI405 merge"`.
+- **Key findings:** C1 customer→admin escalation via `users_update_own` + empty
+  grants migration (static read, runtime unconfirmed); non-UUID path params → 500;
+  DB constraint errors → 500; non-atomic mutation+audit/storage; CI integration
+  tests all skip; web bypasses API for `public.users`.
+- **Not verified:** no `node_modules` (type-check/lint not run), Docker off
+  (integration tests not run), no browser check.
+- **Next:** P0 in the report §5 (C1 migration + test, params/DB error mapping, CI Supabase).
