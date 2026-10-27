@@ -6,6 +6,16 @@
 > implemented (no feature branch exists as of 2026-07-20), so the .riv can
 > be built against this spec in parallel with (or before) that code.
 
+## Changelog
+
+Earlier contract text is not deleted; superseded items are marked, not removed.
+
+| Date | Change |
+|---|---|
+| 2026-10-27 | Added §3 Product photography standard (D-09); title now includes product photography. §1 and §2 unchanged |
+| 2026-10-21 | §1: added "Sourcing the model" options and status (Meshy, Hunyuan3D-2, photogrammetry) |
+| 2026-07-20 | §1 GLB contract locked; §2 Rive contract proposed |
+
 ## 1. Green Tara GLB (web 3D intro — deity model)
 
 ### File

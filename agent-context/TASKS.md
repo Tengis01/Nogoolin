@@ -671,3 +671,16 @@ Confirmed `docs/nogoolin-prototype-a-v4.html` exists and is linked from the docu
 - **Note:** the sample images in ~/Pictures/Nogoolin_product look
   AI-generated (two elephant shots differ in trunk, ears and lid). Owner to
   confirm before real content entry.
+
+## 2026-10-27 — Version bumps and the keep-history rule
+
+- **Result:** Owner rule recorded: improvements must leave a trace, earlier
+  versions are never erased. Added to AGENTS.md → "Maintain knowledge once".
+  - Applied to the D-09 edits. SRS v2.0→v2.1 and traceability v2.0→v2.1 (new
+    change-history tables; FR-PUB-240 and FR-MOB-130 keep their v2.0 wording
+    in "Өмнөх (v2.0)" lines).
+  - Roadmap v0.1→v0.2 and project-goals v0.1→v0.2, both with history.
+  - DECISIONS D-03 keeps its previous status text. ASSET_SPECS gained a
+    changelog.
+  - Register docs/README.md v1.0→v1.1, with versions synced and the audit
+    added as QA-05 v1.0.

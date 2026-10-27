@@ -1,6 +1,6 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.0 draft · **Огноо:** 2026-10-18 · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.1 draft · **Огноо:** 2026-10-27 (v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
 
@@ -29,8 +29,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| PRJ-01 | Төслийн зорилго (SMART) | Process | Owner, багш | v0.1 | draft | Төслийн менежмент | [project/project-goals.md](project/project-goals.md) |
-| PRJ-02 | Roadmap v2 (PH0–PH8) | Process | Owner, багш | v0.1 | draft | Төслийн менежмент | [project/roadmap.md](project/roadmap.md) |
+| PRJ-01 | Төслийн зорилго (SMART) | Process | Owner, багш | v0.2 | draft | Төслийн менежмент | [project/project-goals.md](project/project-goals.md) |
+| PRJ-02 | Roadmap v2 (PH0–PH8) | Process | Owner, багш | v0.2 | draft | Төслийн менежмент | [project/roadmap.md](project/roadmap.md) |
 | PRJ-03 | Vision | Process | Бүгд | 1.4.0 | legacy (эх) | — | [phase-0/01-vision.md](phase-0/01-vision.md) |
 | PRJ-04 | Master plan | Process | AI agent, хөгжүүлэгч | — | legacy | — | [premium_religious_product_platform_master_plan.md](premium_religious_product_platform_master_plan.md) |
 | PRJ-05 | Шийдвэрийн бүртгэл (ADR, D-xx) | Developer | Хөгжүүлэгч | append-only | approved | Sem4 | [../agent-context/DECISIONS.md](../agent-context/DECISIONS.md) |
@@ -41,8 +41,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.0 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
-| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.0 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
+| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.1 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
+| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.1 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
 | REQ-03 | Хуучин → шинэ ID mapping | Developer | Хөгжүүлэгч | v2.0 | draft | — | [requirements/id-mapping.md](requirements/id-mapping.md) |
 | REQ-04 | Scope Charter | Process | Owner, багш | v0.2 | legacy (SRS v2 §1.3 орлосон) | Sem2 | [requirements/scope-charter.md](requirements/scope-charter.md) |
 | REQ-05 | SRS v1.0 (15 FR + 5 NFR) | Developer | — | v1.0 | legacy | Sem3 | [requirements/srs-v1.0.md](requirements/srs-v1.0.md) |
@@ -99,6 +99,7 @@
 | QA-02 | Usability protocol | Process | Тестер | — | planned | — | `quality/usability-protocol.md` |
 | QA-03 | Perf baseline (raw sample) | Developer | Хөгжүүлэгч | — | planned (PH2) | — | `quality/perf-baseline.md` |
 | QA-04 | Docs CI (mkdocs, Vale, lychee) | Developer | Хөгжүүлэгч | — | planned | W10 | `mkdocs.yml`, CI |
+| QA-05 | Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур | Developer | Хөгжүүлэгч, reviewer | v1.0 | draft | — | [quality/code-audit-2026-10-27.md](quality/code-audit-2026-10-27.md) |
 
 ### Operations — `operations/`
 

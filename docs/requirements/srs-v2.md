@@ -1,6 +1,6 @@
 # Nogoolin Software Requirements Specification v2
 
-**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.0 draft · **Огноо:** 2026-10-18 · **Owner:** Тэнгис
+**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.1 draft · **Огноо:** 2026-10-27 (v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 ## Баримтын төлөв
 
@@ -13,6 +13,15 @@
 | Хэрэгжилтийн төлөв | 2026-10-18-нд одоогийн кодыг уншиж тогтоосон. Тест ажиллуулаагүй тул «implemented» нь «код байгаа» гэсэн утгатай, «тест давсан» гэсэн үг биш. |
 | Review, interview | Хийгдээгүй. Зохиогоогүй. |
 | Зорилгын эх | [Төслийн зорилго](../project/project-goals.md) G1–G6, [Roadmap v2](../project/roadmap.md) PH0–PH8 |
+
+## Өөрчлөлтийн түүх
+
+Өмнөх хувилбарын текстийг устгахгүй. Өөрчлөгдсөн шаардлага бүрт «Өмнөх (vX)» мөрөөр хуучин утгыг хадгална.
+
+| Хувилбар | Огноо | Төрөл | Өөрчлөлт |
+|---|---|---|---|
+| v2.1 | 2026-10-27 | MINOR | D-09: FR-PROD-190 (хэмжээ, жин, материал), FR-PUB-250 (тэдгээрийг харуулах), FR-PUB-260 (хэмжээний шугамын overlay) нэмсэн. FR-PUB-240, FR-MOB-130-ийг 3D GLB viewer-ээс сонгосон бүтээгдэхүүний photo spin болгосон (өмнөх текст тухайн шаардлагад). §7.2, §7.3-ийн тоог шинэчилсэн. |
+| v2.0 | 2026-10-18 | MAJOR | Анхны v2: Phase 0, v1.0, M2-ийн шаардлагыг ISO 29148 бүтцээр нэгтгэж, шинэ ID-тай болгосон ([mapping](id-mapping.md)). |
 
 ## Агуулга
 
@@ -881,6 +890,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** Admin тухайн бүтээгдэхүүнд photo spin идэвхжүүлсэн үед дэлгэрэнгүй хуудас 24–36 фото кадраас бүтсэн, чирж эргүүлэх боломжтой 360° харагдацыг харуулна **may**. Spin-ийн кадрууд зөвхөн зочин түүнийг нээх үед ачаалагдана. Spin-гүй бүтээгдэхүүнд зургийн gallery-г харуулна.
 - **Rationale:** D-07: post-MVP. D-09: 3D GLB биш photo spin, зөвхөн нарийн хийцтэй (Tier A) сонгосон бүтээгдэхүүнд. Алтадмал, гялгар гадаргуу 3D-д муу гардаг, photo spin нь бодит барааг харуулж, хямд. Энэ release-д дэлгэрэнгүй хуудас үргэлж зургийн gallery-г харуулна.
 - **Source:** Phase0 FR-PUB-004 (viewer хэсэг), FR-PUB-011; D-07; D-09 (2026-10-27-нд GLB viewer-ээс photo spin болгож өөрчилсөн)
+- **Өмнөх (v2.0):** «FR-PUB-240 — Бүтээгдэхүүн бүрийн 360° viewer. Бүтээгдэхүүнд `model_3d_url` байвал дэлгэрэнгүй хуудас эргүүлэх, томруулах боломжтой 3D viewer-ийг харуулна **may**. Байхгүй бол зургийн gallery-г харуулна.» D-09-өөр 3D GLB-ийн оронд photo spin болсон.
 - **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
 - **Verification:** Demonstration — PH8-д
 - **Acceptance:** Энэ release: `model_3d_url`-аас үл хамааран gallery харагдана, «360°» тэмдэг харагдахгүй.
@@ -1547,6 +1557,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-MOB-130 — Mobile 360° viewer
 **Statement:** Бүтээгдэхүүнд photo spin идэвхжсэн бол (FR-PUB-240) дэлгэрэнгүй дэлгэц чирж эргүүлэх 360° photo spin-ийг, байхгүй бол зургийн gallery-г харуулна **shall**.
 - **Source:** Phase0 FR-MOB-003 (360° хэсэг), FR-MOB-010; D-07; D-09 (GLB viewer-ээс photo spin болгож өөрчилсөн)
+- **Өмнөх (v2.0):** «Бүтээгдэхүүнд `model_3d_url` байвал дэлгэрэнгүй дэлгэц интерактив 360° viewer-ийг (`expo-gl` эсвэл WebView `model-viewer`), байхгүй бол зургийн gallery-г харуулна **shall**.» Acceptance: «GLB-тэй бүтээгдэхүүнд viewer эргэнэ; GLB-гүйд gallery.»
 - **Priority · Phase · Status:** Won't (this release) · PH8 · deferred (D-07)
 - **Verification:** Demonstration
 - **Acceptance:** Photo spin-тэй бүтээгдэхүүнд spin эргэнэ; spin-гүйд gallery.

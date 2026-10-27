@@ -108,6 +108,19 @@ Report unavailable checks explicitly.
 
 ## Maintain knowledge once
 
+- **Version and keep history; never erase the previous version.** The owner
+  wants every improvement to leave a visible trace, never a rewrite that
+  pretends the earlier version did not exist (git history alone is not
+  enough). When a versioned doc (Doc ID + `Хувилбар`) changes in substance:
+  - bump its version: MINOR for added or amended content, MAJOR for a
+    restructure, none for typo-level fixes;
+  - add a row to its change-history table (`Өөрчлөлтийн түүх` / Changelog),
+    creating the table if missing;
+  - for a changed requirement, decision or contract, keep the old wording in
+    an `Өмнөх (vX)` / "Previous" line next to the new one;
+  - mark superseded items `legacy` or "Resolved/Amended by …" instead of
+    deleting them, and update the version in [docs/README.md](docs/README.md).
+
 - Append a concise dated result and next step to TASKS.md after each task;
   record actual errors with cause/fix in ERRORS.md. These are historical logs.
 - Update PROGRESS.md only when product progress actually changes. Course
