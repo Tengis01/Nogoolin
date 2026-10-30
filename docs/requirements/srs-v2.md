@@ -1,6 +1,6 @@
 # Nogoolin Software Requirements Specification v2
 
-**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.2 draft · **Огноо:** 2026-10-30 (v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.3 draft · **Огноо:** 2026-10-30 (v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 ## Баримтын төлөв
 
@@ -20,6 +20,7 @@
 
 | Хувилбар | Огноо | Төрөл | Өөрчлөлт |
 |---|---|---|---|
+| v2.3 | 2026-10-30 | MINOR | D-11: энэ release-ийн mobile туршлага нь PWA. Шинэ §4.15 FR-PWA (12 блок, 9 leaf), NFR-PERF-350, NFR-SEC-260, NFR-COMP-600. Native mobile хойшлогдсон: FR-MOB-*, NFR-COMP-300…320, NFR-MAINT-600…620, NFR-REL-230, NFR-PORT-150-ийн Phase «PH8» → «Future (D-11)» (priority, status өөрчлөгдөөгүй). §1.2-ийн хүснэгт: «Mobile app (Expo) — G6, дараагийн release» → «Native mobile — D-11 gate», PWA мөр нэмэгдсэн. §4.12-ийн тайлбарын өмнөх текст «Өмнөх (v2.2)» мөрөнд. §7.2, §7.3, §8 шинэчлэгдсэн. |
 | v2.2 | 2026-10-30 | MINOR | D-10: FR-INQ-140-ийн API утасны дүрэм `^[0-9+\s-]{8,15}$` → `^\d{8}$`, mobile мөн дагана. API код (`common.ts`) болон integration тестийн 3 тохиолдол шинэчлэгдсэн; status implemented хэвээр. §7.4-ийн FR-INQ-140 мөр болон §8-ийн асуултыг шийдэгдсэн гэж тэмдэглэсэн (устгаагүй). §7.2-ийн тоо шинэчлэгдсэн. |
 | v2.1 | 2026-10-27 | MINOR | D-09: FR-PROD-190 (хэмжээ, жин, материал), FR-PUB-250 (тэдгээрийг харуулах), FR-PUB-260 (хэмжээний шугамын overlay) нэмсэн. FR-PUB-240, FR-MOB-130-ийг 3D GLB viewer-ээс сонгосон бүтээгдэхүүний photo spin болгосон (өмнөх текст тухайн шаардлагад). §7.2, §7.3-ийн тоог шинэчилсэн. |
 | v2.0 | 2026-10-18 | MAJOR | Анхны v2: Phase 0, v1.0, M2-ийн шаардлагыг ISO 29148 бүтцээр нэгтгэж, шинэ ID-тай болгосон ([mapping](id-mapping.md)). |
@@ -54,7 +55,8 @@
 | Admin panel (`/admin`) | ✅ | |
 | Fastify REST API, Supabase | ✅ | |
 | Inquiry, wishlist, profile (web) | ✅ | |
-| Mobile app (Expo) | | G6, дараагийн release |
+| PWA: суулгах, offline, үзсэн каталог (D-11) | ✅ G7 | Push мэдэгдэл |
+| Native mobile app (Expo) | | D-11 gate: G7 PWA амжилттай болсны дараа (G6) |
 | Захиалга, хүргэлт, төлбөр | | `delivery_enabled=false` |
 | Бүтээгдэхүүн бүрийн 360° viewer | | D-07 |
 | Зургаар хайх, EN хэл | | PH8, D-05 |
@@ -1532,18 +1534,20 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 
 ### 4.12 Mobile app (FR-MOB)
 
-> Mobile нь G6 буюу дараагийн release. Энэ release-д бүх FR-MOB нь **Won't (this release) · PH8** priority-тэй. Хэрэгжсэн хэсгийн төлөвийг бодит кодоос бүртгэв. Платформын хувилбарын шаардлага нь NFR-COMP-300 руу шилжсэн.
+> **D-11 (2026-10-30):** native mobile бүхэлдээ хойшлогдсон. Энэ release-ийн mobile туршлага нь PWA (§4.15, G7). FR-MOB нь **Won't (this release) · Future (D-11)** бөгөөд G7-ийн хэмжүүр биелсний дараа л эхэлнэ. `apps/mobile` код frozen (устгаагүй); хэрэгжсэн хэсгийн төлөвийг хадгалав. Платформын хувилбарын шаардлага нь NFR-COMP-300-д.
+>
+> **Өмнөх (v2.2):** «Mobile нь G6 буюу дараагийн release. Энэ release-д бүх FR-MOB нь **Won't (this release) · PH8** priority-тэй. Хэрэгжсэн хэсгийн төлөвийг бодит кодоос бүртгэв. Платформын хувилбарын шаардлага нь NFR-COMP-300 руу шилжсэн.»
 
 #### FR-MOB-100 — Mobile каталог
 **Statement:** Expo app нь web-тэй ижил нийтлэгдсэн каталогийг ангиллаар шүүж, бүтээгдэхүүний дэлгэрэнгүйг харуулна **shall**.
 - **Source:** Phase0 FR-MOB-002, FR-MOB-003
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · partial
 - **Verification:** children
 
 #### FR-MOB-110 — Ангиллын шүүлттэй жагсаалт
 **Statement:** Жагсаалтын дэлгэц нь нийтлэгдсэн бүтээгдэхүүнийг харуулж, нэг мөр хэвтээ гүйдэг ангиллын chip-ээр шүүнэ **shall**.
 - **Source:** Phase0 FR-MOB-002
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented (`apps/mobile/app/products/index.tsx`)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented (`apps/mobile/app/products/index.tsx`)
 - **Verification:** Demonstration — Android dev build.
 - **Acceptance:** Chip сонгоход зөвхөн тухайн ангиллын бүтээгдэхүүн; «Бүгд» сонголт бүгдийг буцаана.
 - **States:** loading / empty («Энэ ангилалд бүтээгдэхүүн алга») / error (FR-MOB-520).
@@ -1551,7 +1555,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-MOB-120 — Бүтээгдэхүүний дэлгэрэнгүй
 **Statement:** Дэлгэрэнгүй дэлгэц нь зураг, үнэ, тайлбар, хэрэглэх заавар, ангиллыг харуулна **shall**.
 - **Source:** Phase0 FR-MOB-003 (360° хэсгийг FR-MOB-130 руу салгав)
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented (`apps/mobile/app/products/[slug].tsx`)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented (`apps/mobile/app/products/[slug].tsx`)
 - **Verification:** Demonstration
 - **Acceptance:** Seed бүтээгдэхүүний 5 талбар бүгд харагдана; зураггүй бол placeholder.
 - **States:** loading / error / not-found («Бүтээгдэхүүн олдсонгүй» + жагсаалт руу буцах).
@@ -1560,34 +1564,34 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** Бүтээгдэхүүнд photo spin идэвхжсэн бол (FR-PUB-240) дэлгэрэнгүй дэлгэц чирж эргүүлэх 360° photo spin-ийг, байхгүй бол зургийн gallery-г харуулна **shall**.
 - **Source:** Phase0 FR-MOB-003 (360° хэсэг), FR-MOB-010; D-07; D-09 (GLB viewer-ээс photo spin болгож өөрчилсөн)
 - **Өмнөх (v2.0):** «Бүтээгдэхүүнд `model_3d_url` байвал дэлгэрэнгүй дэлгэц интерактив 360° viewer-ийг (`expo-gl` эсвэл WebView `model-viewer`), байхгүй бол зургийн gallery-г харуулна **shall**.» Acceptance: «GLB-тэй бүтээгдэхүүнд viewer эргэнэ; GLB-гүйд gallery.»
-- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred (D-07)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · deferred (D-07)
 - **Verification:** Demonstration
 - **Acceptance:** Photo spin-тэй бүтээгдэхүүнд spin эргэнэ; spin-гүйд gallery.
 
 #### FR-MOB-300 — Mobile нээлтийн интро
 **Statement:** App эхлэхэд систем Concept C-тэй нийцсэн нээлтийн анимацийг харуулж, анимаци дуусах эсвэл хэрэглэгч товших үед нүүр дэлгэц рүү шилжинэ **shall**.
 - **Source:** Phase0 FR-3D-010, FR-3D-011; D-08 (WF-MO-03 орлогдсон)
-- **Priority · Phase · Status:** Won't (this release) · PH8 · planned (`app.config.ts:23` Rive plugin оруулаагүй)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · planned (`app.config.ts:23` Rive plugin оруулаагүй)
 - **Verification:** children
 
 #### FR-MOB-310 — Анимацийн технологи
 **Statement:** Mobile интро нь `@rive-app/react-native` (ADR-004) эсвэл G6-д сонгох өөр runtime ашиглан, web-ийн C интроны алхмын дарааллыг дагасан анимацийг тоглуулна **shall**.
 - **Source:** Phase0 FR-3D-010; ADR-004
-- **Priority · Phase · Status:** Won't (this release) · PH8 · planned
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · planned
 - **Verification:** Demonstration — Android, iOS internal build.
 - **Acceptance:** Хоёр платформ дээр анимаци алдаагүй тоглоно.
 
 #### FR-MOB-320 — Нүүр дэлгэц рүү шилжих
 **Statement:** Анимаци дууссан эсвэл хэрэглэгч дэлгэц товшсон үед ≤ 500 ms-д нүүр дэлгэц рүү шилжинэ; reduce motion тохиргоотой үед анимацийг алгасна **shall**.
 - **Source:** Phase0 FR-3D-011
-- **Priority · Phase · Status:** Won't (this release) · PH8 · planned
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · planned
 - **Verification:** Test
 - **Acceptance:** Товшилтоос шилжилт ≤ 500 ms; OS reduce motion → анимаци 0.
 
 #### FR-MOB-400 — Mobile inquiry
 **Statement:** Зочин app-аас бүтээгдэхүүний inquiry-г web-ийн FR-INQ-тай ижил талбар, баталгаажуулалт, хариутайгаар илгээнэ **shall**.
 - **Source:** Phase0 FR-MOB-004; G6
-- **Priority · Phase · Status:** Won't (this release) · PH8 · planned (`apps/mobile` дотор inquiry байхгүй)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · planned (`apps/mobile` дотор inquiry байхгүй)
 - **Verification:** Test — FR-INQ-ийн acceptance-ийг mobile дээр давтах.
 - **Acceptance:** FR-INQ-ийн leaf шаардлага бүрийн acceptance mobile дээр давна.
 - **States:** loading / error / success — FR-INQ-тай ижил текст.
@@ -1595,20 +1599,20 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-MOB-500 — Өгөгдөл ба сүлжээ
 **Statement:** App нь web-тэй ижил REST API-г ашиглаж, сүлжээний алдааг хэрэглэгчид ойлгомжтой харуулна **shall**.
 - **Source:** Phase0 FR-MOB-005…007
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · partial
 - **Verification:** children
 
 #### FR-MOB-510 — Нэг REST API
 **Statement:** App нь бүх каталогийн өгөгдлийг `/api/v1/` REST API-аас авна; тусдаа backend эсвэл шууд DB query ашиглахгүй (auth-аас бусад) **shall**.
 - **Source:** Phase0 FR-MOB-005; ADR-007
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented (`apps/mobile/lib/api.ts`)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented (`apps/mobile/lib/api.ts`)
 - **Verification:** Inspection
 - **Acceptance:** `apps/mobile`-д `supabase.from(` дуудлага 0 (auth-аас бусад).
 
 #### FR-MOB-520 — Сүлжээний алдааны төлөв
 **Statement:** API хүрэх боломжгүй эсвэл ≥ 500 хариу ирэхэд дэлгэц бүр Монгол хэлээр алдааны мессеж ба «Дахин оролдох» товч харуулна; техникийн алдааны код харуулахгүй **shall**.
 - **Source:** Phase0 FR-MOB-006; NFR-REL-005 (чанарын тал нь NFR-REL-230)
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial (жагсаалтад «Сервертэй холбогдож чадсангүй», retry товч шалгаагүй)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · partial (жагсаалтад «Сервертэй холбогдож чадсангүй», retry товч шалгаагүй)
 - **Verification:** Test — airplane mode.
 - **Acceptance:** Жагсаалт, дэлгэрэнгүй хоёулаа мессеж + retry; retry амжилттай бол өгөгдөл гарна.
 - **States:** error — «Сервертэй холбогдож чадсангүй. Дахин оролдох».
@@ -1616,7 +1620,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-MOB-530 — Offline cache
 **Statement:** App нь өмнө ачаалсан жагсаалтыг төхөөрөмжид хадгалж, сүлжээгүй үед «offline» тэмдэгтэйгээр харуулж болно **may**.
 - **Source:** Phase0 FR-MOB-007
-- **Priority · Phase · Status:** Won't (this release) · PH8 · planned
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · planned
 - **Verification:** Demonstration
 - **Acceptance:** Нэг удаа ачаалсны дараа airplane mode → жагсаалт + «offline» тэмдэг.
 
@@ -1744,6 +1748,100 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Test — A/B customer, PH8
 - **Acceptance:** A-ийн хариунд B-ийн захиалга байхгүй.
 
+### 4.15 PWA (FR-PWA)
+
+> **D-11 (2026-10-30):** энэ release-ийн mobile туршлага нь Next.js web app дээрх PWA (G7). Native mobile (§4.12) нь G7 амжилттай болсны дараа. PWA нь HTTPS шаардана (NFR-SEC-110). Lighthouse 12-оос PWA ангилал хасагдсан тул суулгах чадварыг DevTools болон бодит төхөөрөмжөөр шалгана.
+
+#### FR-PWA-100 — Суулгах боломж
+**Statement:** Зочин web app-ийг төхөөрөмжийнхөө нүүр дэлгэц рүү апп шиг суулгаж чадна **shall**.
+- **Source:** Owner шийдвэр D-11; G7
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** children
+
+#### FR-PWA-110 — Web app manifest
+**Statement:** Web app нь `app/manifest.ts`-ээр manifest гаргана **shall**: `name` «Ногоолин», `short_name`, `lang: mn`, `start_url: /`, `scope: /`, `display: standalone`, C дизайны token-оос авсан `theme_color` болон `background_color`, 192×192 болон 512×512 PNG icon, `purpose: maskable` icon.
+- **Rationale:** Browser суулгах нөхцөл; brand нь D-08 C.
+- **Source:** D-11; Next.js App Router metadata (`manifest.ts`)
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Inspection + Demonstration — DevTools → Application → Manifest.
+- **Acceptance:** Manifest-ийн алдаа, анхааруулга 0. Maskable icon safe zone-д таарна.
+
+#### FR-PWA-120 — iOS-ийн тохиргоо
+**Statement:** Хуудас бүр `apple-touch-icon` (180×180) болон `apple-mobile-web-app-capable`, `apple-mobile-web-app-title`, `apple-mobile-web-app-status-bar-style` meta-г агуулна **should**.
+- **Rationale:** iOS Safari нь manifest-ийн icon-ийг бүрэн дэмждэггүй.
+- **Source:** D-11
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Demonstration — iPhone дээр «Add to Home Screen».
+- **Acceptance:** Нүүр дэлгэц дээр Ногоолин-ийн icon болон нэр харагдана; нээхэд Safari-ийн UI-гүй.
+
+#### FR-PWA-130 — «Апп суулгах» товч
+**Statement:** Суулгаагүй үед сайт «Апп болгон суулгах» товчийг санал болгоно **may**: `beforeinstallprompt`-ийг дэмждэг browser дээр системийн суулгах цонхыг нээнэ, iOS Safari дээр «Share → Add to Home Screen» гэсэн Монгол зааврыг харуулна. Аль хэдийн суулгасан (`display-mode: standalone`) эсвэл хэрэглэгч хаасан үед товч нуугдана.
+- **Rationale:** Owner-ийн сонгосон хүрээ (2026-10-30).
+- **Source:** D-11
+- **Priority · Phase · Status:** Could · PH5 · planned
+- **Verification:** Demonstration — Android Chrome болон iOS Safari.
+- **Acceptance:** Хоёр платформ дээр зөв урсгал гарна. Суулгасны дараа товч харагдахгүй. Хаасан шийдвэр session дотор хадгалагдана.
+
+#### FR-PWA-200 — Service worker ба offline
+**Statement:** Web app нь service worker-ээр offline үед ойлгомжтой ажиллана **shall**.
+- **Source:** Owner шийдвэр D-11; G7
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** children
+
+#### FR-PWA-210 — Service worker-ийн бүртгэл
+**Statement:** Service worker нь зөвхөн production build-д, `/` scope-оор бүртгэгдэнэ **shall**. Development-д бүртгэгдэхгүй **shall**. Cache-ийн хил нь NFR-SEC-260.
+- **Rationale:** Dev-д cache нь шинэчлэлтийг нууж, алдаа үүсгэдэг.
+- **Source:** D-11
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — production build-д `navigator.serviceWorker.controller` бий; `next dev`-д бүртгэл 0.
+- **Acceptance:** Хоёр орчинд хүлээгдсэн үр дүн.
+
+#### FR-PWA-220 — Offline хуудас
+**Statement:** Сүлжээгүй үед cache-д байхгүй хуудас руу ороход систем Монгол хэлтэй `/offline` хуудсыг («Интернэт холболтгүй байна», «Дахин оролдох» товч, өмнө үзсэн каталог руу холбоос) харуулна **shall**.
+- **Rationale:** Browser-ийн «No internet» дэлгэцийн оронд brand-тай, үйлдэлтэй хуудас (NFR-USE-220).
+- **Source:** D-11
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — Playwright offline горимд cache-гүй URL руу орох.
+- **Acceptance:** `/offline` харагдана. Сүлжээ сэргээд «Дахин оролдох» дарахад хүссэн хуудас нээгдэнэ.
+
+#### FR-PWA-230 — Үзсэн каталогийг offline-д харуулах
+**Statement:** Зочны өмнө нээсэн нийтийн `/`, `/products`, `/products/[slug]` хуудас, ангиллын өгөгдөл болон бүтээгдэхүүний зураг stale-while-revalidate стратегиар хадгалагдаж, offline үед харагдана **should**. Cache нь дээд хязгаартай (хуудас ≤ 50, зураг ≤ 200, хуучныг нь эхэлж устгана).
+- **Rationale:** Owner-ийн сонгосон хүрээ; сул сүлжээтэй орон нутагт каталог харах.
+- **Source:** D-11
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — онлайнаар 3 бүтээгдэхүүн нээгээд offline болж дахин нээх.
+- **Acceptance:** Гурвуулаа зурагтайгаа нээгдэнэ. Offline үед үнэ, нөөцийн мэдээлэл хуучирсан байж болохыг заасан жижиг тэмдэглэл харагдана. Хязгаар хэтэрвэл хамгийн хуучин бичлэг устна.
+
+#### FR-PWA-240 — Service worker-ийн шинэчлэлт
+**Statement:** Шинэ хувилбар deploy хийгдэхэд шинэ service worker идэвхжиж, хуучин хувилбарын cache-ийг устгана **should**.
+- **Rationale:** Хуучин JS/HTML-тэй гацахаас сэргийлнэ.
+- **Source:** D-11
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — хоёр build-ийг дараалан serve хийж Cache Storage-ийг шалгах.
+- **Acceptance:** Дараагийн ачаалалтаас эхлэн зөвхөн шинэ хувилбарын cache үлдэнэ.
+
+#### FR-PWA-250 — Offline үед inquiry
+**Statement:** Offline үед inquiry илгээхэд form нь «Интернэт холболтгүй байна. Холболт сэргэсний дараа дахин илгээнэ үү.» мессежийг харуулж, оруулсан утгыг хадгална **shall**. Хүсэлтийг далд дараалалд (background sync) хийхгүй **shall**.
+- **Rationale:** Илгээгдсэн эсэх нь хэрэглэгчид тодорхой байх ёстой (G2, FR-INQ-170).
+- **Source:** D-11; FR-INQ-170
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — Playwright offline горимд form илгээх.
+- **Acceptance:** Мессеж харагдана, талбарууд хоосрохгүй, сүлжээний хүсэлт дараалалд үлдэхгүй, DB-д мөр үүсэхгүй.
+
+#### FR-PWA-300 — Push мэдэгдэл
+**Statement:** PWA push мэдэгдлийн боломж.
+- **Source:** Owner шийдвэр 2026-10-30 (энэ хувилбарт оруулахгүй)
+- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
+- **Verification:** children
+
+#### FR-PWA-310 — Шинэ inquiry-ийн admin мэдэгдэл
+**Statement:** Шинэ inquiry ирэхэд PWA суулгасан admin-ий төхөөрөмж рүү push мэдэгдэл илгээнэ **may**.
+- **Rationale:** G2-ийн «1 ажлын өдөрт хариулах» (§8-ийн мэдэгдлийн асуулттай холбоотой). VAPID key, серверийн илгээгч, iOS 16.4+ шаардана.
+- **Source:** Owner шийдвэр 2026-10-30
+- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
+- **Verification:** Demonstration — PH8-д
+- **Acceptance:** Энэ release: push-ийн зөвшөөрөл асуухгүй, push-ийн код байхгүй.
+
 ## 5. Функциональ бус шаардлага
 
 ### 5.1 Гүйцэтгэл (NFR-PERF)
@@ -1849,6 +1947,14 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Priority · Phase · Status:** Could · PH6 · unknown (хэмжээгүй)
 - **Verification:** Test — Performance trace, нэг шилжилт.
 - **Acceptance:** Median frame ≤ 20 ms; long task (> 50 ms) шилжилт бүрт ≤ 1.
+
+#### NFR-PERF-350 — Service worker ба гүйцэтгэл
+**Statement:** PWA-ийн service worker (FR-PWA-210) нь нүүр, жагсаалт, дэлгэрэнгүй хуудасны LCP-ийг SW-гүй үеийнхээс 100 ms-ээс илүү удаашруулахгүй **should**. 3D интроны bundle болон GLB-ийг install үед precache хийхгүй **shall**.
+- **Rationale:** D-11; G3. Precache нь анхны ачаалалтын траффикийг өсгөж, 3D asset нь хамгийн том файл.
+- **Source:** Owner шийдвэр D-11 (2026-10-30).
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — NFR-PERF-110-ийн протоколоор SW-тэй/SW-гүй median LCP-г харьцуулна; DevTools Cache Storage-д `.glb` болон three.js chunk install-ийн дараа байхгүйг шалгана.
+- **Acceptance:** LCP-ийн ялгаа ≤ 100 ms. Install-ийн дараах precache-д GLB болон 3D chunk байхгүй.
 
 #### NFR-PERF-400 — Зураг
 **Statement:** Бүтээгдэхүүний зураг нь LCP болон CLS-д сөрөг нөлөөгүй, хэрэгтэй хэмжээгээр ачаалагдана **shall**.
@@ -2029,6 +2135,14 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Inspection (Supabase Auth rate limit тохиргоо) ба Test — 6 буруу нэвтрэлт хийнэ.
 - **Acceptance:** 6 дахь оролдлого татгалзагдана.
 
+#### NFR-SEC-260 — Service worker-ийн cache-ийн хил
+**Statement:** Service worker нь дараах хүсэлтийн хариуг хэзээ ч cache-д хадгалахгүй **shall**: `/admin*`, `/profile`, `/wishlist`, `/login`, `/signup`, `/auth/*`, `/reset-password`, `/update-password` хуудас; `Authorization` header-тэй хүсэлт; GET биш хүсэлт; API-ийн `/cart`, `/inquiries/mine`, `/admin/*`. Хувийн өгөгдөл зөвхөн network-оос ирнэ **shall**.
+- **Rationale:** D-11. Хуваалцсан төхөөрөмж дээр гарсны (sign out) дараа өөр хүн хувийн мэдээлэл, admin өгөгдлийг offline-оор харахаас сэргийлнэ (NFR-SEC-320).
+- **Source:** Owner шийдвэр D-11 (2026-10-30).
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — Playwright: admin болон customer-ээр нэвтэрч хамгаалагдсан хуудсуудаар орсны дараа Cache Storage-ийн бүх URL-ийг жагсааж, дээрх замуудын аль нь ч байхгүйг шалгана.
+- **Acceptance:** Хамгаалагдсан зам, хувийн API-ийн аль ч хариу Cache Storage-д 0. Offline үед эдгээр хуудас FR-PWA-220-ийн offline хуудсыг харуулна.
+
 #### NFR-SEC-300 — Нэвтрэлт ба эрхийн хяналт
 **Statement:** Систем хамгаалагдсан өгөгдөлд хандах бүрд баталгаажуулалт, эрх, эзэмшлийг шалгана **shall**.
 - **Rationale:** IDOR болон эрх нэмэгдүүлэх халдлагаас хамгаална.
@@ -2172,7 +2286,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** Mobile app нь API-д хүрч чадахгүй үед дэлгэц бүрт «Сүлжээнд холбогдож чадсангүй» төлөв болон «Дахин оролдох» товчийг харуулна **shall**.
 - **Rationale:** Mobile сүлжээ тогтворгүй.
 - **Source:** Phase0 NFR-REL-005
-- **Priority · Phase · Status:** Won't (this release) · PH8 (G6) · unknown (not checked)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · unknown (not checked)
 - **Verification:** Test — airplane mode-д шалгана.
 - **Acceptance:** Хоосон эсвэл crash дэлгэц 0.
 
@@ -2438,20 +2552,20 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### NFR-MAINT-600 — Mobile stack-ийн хязгаарлалт
 **Statement:** Mobile app нь web-тэй ижил хэрэгслийн сонголтыг дагана **shall**.
 - **Source:** Phase0 FR-MOB-008, FR-MOB-009
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented
 - **Verification:** children
 
 #### NFR-MAINT-610 — Төлөвийн удирдлага
 **Statement:** Mobile app-ийн хуваалцсан төлөв Zustand-аар удирдагдана **shall**.
 - **Source:** Phase0 FR-MOB-008 (FR биш, дизайны хязгаарлалт)
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented (`apps/mobile/lib/auth-store.ts`, `zustand ^5`)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented (`apps/mobile/lib/auth-store.ts`, `zustand ^5`)
 - **Verification:** Inspection
 - **Acceptance:** Redux/MobX dependency 0.
 
 #### NFR-MAINT-620 — HTTP клиент
 **Statement:** Mobile app-ийн HTTP хүсэлт `fetch`, Supabase хүсэлт `supabase-js`-ээр хийгдэнэ; тусдаа HTTP library ашиглахгүй **shall**.
 - **Source:** Phase0 FR-MOB-009
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented (`apps/mobile/lib/api.ts`)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented (`apps/mobile/lib/api.ts`)
 - **Verification:** Inspection
 - **Acceptance:** `axios` зэрэг dependency 0.
 
@@ -2474,20 +2588,20 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### NFR-COMP-300 — Mobile OS
 **Statement:** Expo app нь дэмжигдсэн mobile OS-ийн хувилбаруудад ажиллана **shall**.
 - **Source:** Phase0 NFR-COM-003, NFR-COM-004, FR-MOB-001
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · partial
 - **Verification:** children
 
 #### NFR-COMP-310 — Android
 **Statement:** App нь Android API level 24 (Android 7.0) ба түүнээс дээш дээр суугдаж, ажиллана **shall**.
 - **Source:** Phase0 NFR-COM-003, FR-MOB-001
-- **Priority · Phase · Status:** Won't (this release) · PH8 · unknown (not checked; Expo SDK 52)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · unknown (not checked; Expo SDK 52)
 - **Verification:** Demonstration — API 24 emulator.
 - **Acceptance:** Суулгалт ба жагсаалт нээгдэнэ.
 
 #### NFR-COMP-320 — iOS
 **Statement:** App нь iOS 15.1 ба түүнээс дээш дээр суугдаж, ажиллана **shall**.
 - **Source:** Phase0 NFR-COM-004, FR-MOB-001
-- **Priority · Phase · Status:** Won't (this release) · PH8 · unknown (not checked)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · unknown (not checked)
 - **Verification:** Demonstration — iOS 15.1 simulator эсвэл TestFlight.
 - **Acceptance:** Суулгалт ба жагсаалт нээгдэнэ.
 
@@ -2517,6 +2631,14 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Priority · Phase · Status:** Must · PH5 · implemented (`hero-intro.tsx` `webglAvailable`)
 - **Verification:** Test — `--disable-webgl`.
 - **Acceptance:** Гол 3 урсгал WebGL-гүй дуусна.
+
+#### NFR-COMP-600 — PWA платформ
+**Statement:** PWA нь Android 10+ дээрх Chrome болон iOS/iPadOS 16.4+ дээрх Safari-д нүүр дэлгэц рүү суулгагдаж, `standalone` горимд нээгдэнэ **shall**. Desktop Chrome/Edge дээр суулгах боломжтой байна **should**.
+- **Rationale:** D-11; G7. iOS 16.4 нь standalone web app-ийн орчин үеийн дэмжлэгийн суурь.
+- **Source:** Owner шийдвэр D-11 (2026-10-30).
+- **Priority · Phase · Status:** Must · PH6 · planned
+- **Verification:** Demonstration — бодит Android болон iPhone төхөөрөмж дээр суулгаж, browser-ийн UI-гүй нээгдэхийг шалгана; desktop дээр DevTools → Application → Manifest-ийн installability.
+- **Acceptance:** Хоёр mobile платформ дээр суулгагдаж standalone нээгдэнэ. DevTools installability алдаа 0.
 
 ### 5.7 Байршуулалт (NFR-PORT)
 
@@ -2557,7 +2679,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### NFR-PORT-150 — Mobile build
 **Statement:** Mobile build нь EAS-ээр `workflow_dispatch` гараар ажиллах workflow-аар үүснэ **shall**.
 - **Source:** ADR-010
-- **Priority · Phase · Status:** Won't (this release) · PH8 · implemented (`.github/workflows/mobile-build.yml`)
+- **Priority · Phase · Status:** Won't (this release) · Future (D-11) · implemented (`.github/workflows/mobile-build.yml`)
 - **Verification:** Inspection
 - **Acceptance:** Workflow trigger нь зөвхөн `workflow_dispatch` (+ PR lint).
 
@@ -2706,16 +2828,16 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 
 | Шалгалт | Үр дүн |
 |---|---|
-| Шаардлагын тоо | 311 блок, үүнээс 250 leaf шаардлага (2026-10-27: D-09-ийн FR-PROD-190, FR-PUB-250, FR-PUB-260 нэмэгдсэн) |
+| Шаардлагын тоо | 326 блок, үүнээс 262 leaf шаардлага (2026-10-27: D-09-ийн 3 leaf; 2026-10-30: D-11-ийн FR-PWA 12 блок/9 leaf, NFR 3 нэмэгдсэн) |
 | ID давхардал | 0 |
 | Хуучин ID-ийн mapping | 202 / 202. Phase 0: 177, v1.0: 20, M2: 5. Тоолоогүй ID 0. ([mapping](id-mapping.md)) |
 | Mapping-ийн тодорхойлогдоогүй шинэ ID | 0 |
 | Traceability-ийн мөр | Leaf бүрт 1 ([traceability](traceability-v2.md)) |
 | Олон утгатай үгийн script | Илэрсэн 2 statement-ийг зассан. Үлдсэн 0. |
 
-**Leaf шаардлагын priority:** Must 170 · Should 41 · Could 10 · Won't (this release) 29.
+**Leaf шаардлагын priority:** Must 176 · Should 45 · Could 11 · Won't (this release) 30.
 
-**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 136 · partial 34 · planned 46 · deferred 11 · unknown 23.
+**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 136 · partial 34 · planned 57 · deferred 12 · unknown 23.
 
 ### 7.3 Area-аар
 
@@ -2735,12 +2857,13 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | FR | MOB | 12 | 9 | 0 |
 | FR | AUD | 7 | 6 | 4 |
 | FR | ORD | 9 | 7 | 0 |
-| NFR | PERF | 25 | 19 | 14 |
-| NFR | SEC | 23 | 18 | 16 |
+| FR | PWA | 12 | 9 | 4 |
+| NFR | PERF | 26 | 20 | 14 |
+| NFR | SEC | 24 | 19 | 17 |
 | NFR | REL | 9 | 7 | 2 |
 | NFR | USE | 16 | 13 | 9 |
 | NFR | MAINT | 23 | 18 | 11 |
-| NFR | COMP | 9 | 7 | 5 |
+| NFR | COMP | 10 | 8 | 6 |
 | NFR | PORT | 6 | 5 | 3 |
 | NFR | SEO | 14 | 11 | 10 |
 
@@ -2840,7 +2963,8 @@ Owner батлах ёстой. ID нь холбогдох шаардлагыг �
 - NFR-PERF-220 / v1.0 NFR-04: LCP ≤ 2.5 s (G3) хангалттай юу? Эсвэл хуучин «2.0 s, 9/10 run» зорилтыг stretch болгож хадгалах уу?
 - NFR-PERF-210/220/230/510/520: босгыг PH2-ийн baseline-ий дараа батлах (NFR-PERF-130). Cache-Control-ийн max-age утга?
 - NFR-PERF-610: rate-limit store-ийг олон instance-д хуваалцах уу (Redis), эсвэл MVP-д нэг instance гэж тооцох уу?
-- FR-MOB-310: mobile интроны runtime — Rive (ADR-004) хэвээр үү, эсвэл C-ийн 3D-ийг expo-gl-ээр давтах уу? (G6)
+- FR-MOB-310: mobile интроны runtime — Rive (ADR-004) хэвээр үү, эсвэл C-ийн 3D-ийг expo-gl-ээр давтах уу? (G6) **Хойшлогдсон (D-11):** native mobile эхлэх үед шийднэ.
+- FR-PWA-230: offline cache-ийн хязгаар (хуудас 50, зураг 200) owner-т тохирох эсэх; offline үед үнэ хуучирсан байж болох тэмдэглэлийн текст.
 - FR-INTRO-140: алхам бүрийн 4 гол өгүүлбэр ба эцсийн уриаг owner батлах (prototype C-гийн текстүүд түр).
 - NFR-COMP-200: дэмжих доод өргөн 375 эсвэл 320 px?
 - NFR-COMP-100: Safari-г бодит iOS төхөөрөмж дээр шалгах уу, эсвэл Playwright WebKit хангалттай юу?

@@ -1,6 +1,6 @@
 # Roadmap v2
 
-**Doc ID:** PRJ-02 · **Төрөл:** Process · **Уншигч:** owner/хөгжүүлэгч, хичээлийн багш · **Хувилбар:** v0.2 draft · **Огноо:** 2026-10-27 (v0.1: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** PRJ-02 · **Төрөл:** Process · **Уншигч:** owner/хөгжүүлэгч, хичээлийн багш · **Хувилбар:** v0.3 draft · **Огноо:** 2026-10-30 (v0.2: 2026-10-27, v0.1: 2026-10-18) · **Owner:** Тэнгис
 
 > Энэ баримт [10-roadmap](../phase-0/10-roadmap.md)-ийг (Phase 0–6, 2026-07) орлоно. Хуучин нь legacy эх болж үлдэнэ.
 > Phase бүр [төслийн зорилго](project-goals.md)-ын G1–G6-д үйлчилнэ. Огноонууд нь санал бөгөөд owner баталсны дараа SMART-ийн «T» эцэслэгдэнэ.
@@ -9,6 +9,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v0.3 | 2026-10-30 | D-11: PWA энэ release-д (G7). PH5-д «5. PWA» алхам, PH6-д PWA-ийн тест, PH7-д HTTPS нь PWA-ийн нөхцөл гэж нэмсэн. Ерөнхий хүснэгтэд PH5/PH6/PH7-ийн G-д G7 нэмсэн. PH8: «Mobile release (G6)» → «Native mobile (G6) — D-11 gate: G7 амжилттай болсны дараа»; хүснэгтийн PH8 «G6 + ирээдүй» → «G6 (gate) + ирээдүй». |
 | v0.2 | 2026-10-27 | D-09-ийг phase-уудад тусгасан. PH3 үлдэгдэлд хэмжээ, жин, материалын талбар (FR-PROD-190) нэмсэн. PH5-ийн 4-р алхамд D-09-ийн зураг авалтын стандарт, FR-PUB-250/260 нэмсэн. PH8: «бүтээгдэхүүн бүрийн 360° viewer (D-07)» → «сонгосон (Tier A) бүтээгдэхүүний 360° photo spin (D-07, D-09; 3D GLB биш)». |
 | v0.1 | 2026-10-18 | Анхны хувилбар: Phase 0–6-г PH0–PH8 болгон орлуулсан. |
 
@@ -29,10 +30,10 @@
 | PH2 | Architecture & design baseline | G3, G4, G5 | дараа | 11-02 → 11-15 |
 | PH3 | Core platform | G1 | ✅ код, дутуу: admin засах хуудас | үлдэгдэл PH5-тай зэрэг |
 | PH4 | Engagement | G2 | 🟡 web хийгдсэн | үлдэгдэл PH5-тай зэрэг |
-| PH5 | Experience & content | G1, G3 | 🟡 интро placeholder-тэй | 11-16 → 2027-01-15 |
-| PH6 | Quality assurance | G4 | дараа | 2027-01-04 → 01-22 |
-| PH7 | Launch | G1, G2 | дараа | 01-18 → **01-29** |
-| PH8 | Post-launch | G6 + ирээдүй | ирээдүй | тогтоогоогүй |
+| PH5 | Experience & content | G1, G3, G7 | 🟡 интро placeholder-тэй | 11-16 → 2027-01-15 |
+| PH6 | Quality assurance | G4, G7 | дараа | 2027-01-04 → 01-22 |
+| PH7 | Launch | G1, G2, G7 | дараа | 01-18 → **01-29** |
+| PH8 | Post-launch | G6 (gate) + ирээдүй | ирээдүй | тогтоогоогүй |
 
 ```
 PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 → PH8
@@ -99,7 +100,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
 
 ## PH5 — Experience & content
 
-- **Үйлчлэх G:** G1, G3.
+- **Үйлчлэх G:** G1, G3, G7.
 - **SMART:** 2027-01-15 гэхэд дараахыг хангана:
   - C дизайн production web-ийн бүх нийтийн хуудсанд нэвтэрсэн;
   - бодит Green Tara GLB (≤ 5 MB) интрод ажилладаг;
@@ -110,6 +111,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
   2. **C brand mapping** хуудас хуудсаар: интро → нүүр → жагсаалт → дэлгэрэнгүй → inquiry → auth/profile → admin. Хуудас бүрт screenshot, a11y, perf шалгалт.
   3. Click-intro (4 алхам) нь production R3F дээр. D-04-ийг бодит GLB дээр тааруулна.
   4. Бодит фото, контент оруулах. Зураг авалт нь [D-09 стандарт](../../agent-context/ASSET_SPECS.md#3-product-photography-standard-d-09)-аар: Tier A (нарийн хийцтэй) 4–5 зураг, Tier B (энгийн) 2 зураг. Хэмжээ, жинг талбарт оруулна. Дэлгэрэнгүй хуудсанд FR-PUB-250 (хэмжээний мөр), боломжтой бол FR-PUB-260 (хэмжээний шугамын overlay).
+  5. **PWA (D-11, G7):** `app/manifest.ts` ба C brand-ийн icon (FR-PWA-110/120), production-only service worker (FR-PWA-210, NFR-SEC-260), `/offline` (FR-PWA-220), үзсэн каталогийн cache (FR-PWA-230/240), offline inquiry мессеж (FR-PWA-250), «Апп суулгах» товч (FR-PWA-130). C хуудсууд, бодит icon бэлэн болсны дараа; cache-ийн хил тестгүйгээр merge хийхгүй.
 - **Гаралт:** C дизайнтай production web, GLB, контент.
 - **Гарах шалгуур:** G3-ийн хэмжүүр staging дээр хэмжигдсэн. FR-INTRO-ийн accessibility шаардлагууд тест давсан.
 - **Хуучин:** Phase 3 (360° viewer нь PH8 руу, D-09-өөр photo spin болсон; mobile Rive нь G6 руу).
@@ -120,6 +122,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
 - **SMART:** 2027-01-22 гэхэд дараахыг хангана:
   - Must шаардлагын 100% нь traceability-д тест эсвэл inspection-тэй;
   - CI gate skip-гүй;
+  - PWA: Android Chrome болон iOS Safari дээр суулгаж шалгасан, offline болон cache-ийн хилийн Playwright тест давсан (G7, NFR-COMP-600, NFR-SEC-260);
   - нээлттэй S1 алдаа 0;
   - usability protocol-ийн 5 task хэмжигдсэн, эсвэл «хэмжигдээгүй» гэж үндэслэлтэйгээр тэмдэглэгдсэн.
 - **Гаралт:**
@@ -132,7 +135,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
 
 - **Үйлчлэх G:** G1, G2.
 - **SMART:** 2027-01-29 гэхэд дараахыг хангана:
-  - web public domain дээр HTTPS-ээр нээгдсэн;
+  - web public domain дээр HTTPS-ээр нээгдсэн (PWA-ийн service worker HTTPS шаарддаг — G7);
   - API production-д ажилладаг;
   - cloud Supabase-д migration болон RLS орсон;
   - launch checklist 100% биелсэн.
@@ -143,7 +146,7 @@ PH0 ✅ → PH1 → PH2 → [PH3/PH4 үлдэгдэл + PH5] → PH6 → PH7 →
 
 - **Үйлчлэх G:** G6 болон ирээдүйн хүрээ.
 - **Агуулга:**
-  - Mobile release (G6);
+  - Native mobile (G6) — D-11 gate: G7-ийн хэмжүүр launch-ийн дараа биелсэн үед л эхэлнэ; `apps/mobile` тэр хүртэл frozen;
   - захиалга/хүргэлт: `delivery_enabled` toggle идэвхжүүлэх, order flow, төлбөр. Settings-ийн backend хэсэг бий;
   - сонгосон (Tier A) бүтээгдэхүүний 360° photo spin (D-07, D-09; 3D GLB биш);
   - зургаар хайх (pgvector);

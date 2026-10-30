@@ -63,10 +63,14 @@ below are about course work that is not yet reflected here.
 
 ## Backlog (Phase 3 order — ⚠ highest-risk phase, read design.md first)
 
-- [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition —
-      NOT STARTED; build against ASSET_SPECS.md §2 (proposed contract:
-      artboard `Intro`, state machine `IntroMachine`, inputs `skip`
-      (trigger) / `reducedMotion` (bool), event `finished`)
+- [ ] **PWA (D-11, PH5, after the C pages and real icons):** manifest + icons
+      (FR-PWA-110/120); production-only service worker with cache boundary
+      tests first (FR-PWA-210, NFR-SEC-260); `/offline` (FR-PWA-220);
+      visited-catalog cache + update flow (FR-PWA-230/240); offline inquiry
+      message (FR-PWA-250); «Апп суулгах» button (FR-PWA-130)
+- [ ] PH2: add the PWA/service worker to the C4 container diagram (Sem10
+      files in the ICSI438 repo, re-run `render.sh`); the Mobile container
+      becomes «frozen, D-11»
 - [ ] Home white catalog section (WF-HOME-01…04: category row, featured
       grid, info strip) below the persistent hero — intro/hero container
       itself is done, this is the content underneath
@@ -118,7 +122,30 @@ below are about course work that is not yet reflected here.
 
 ---
 
+## Deferred (D-11 — native mobile frozen until the G7 PWA gate)
+
+Kept verbatim from the backlog (moved 2026-10-30):
+
+- [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition —
+      NOT STARTED; build against ASSET_SPECS.md §2 (proposed contract:
+      artboard `Intro`, state machine `IntroMachine`, inputs `skip`
+      (trigger) / `reducedMotion` (bool), event `finished`)
+
 ## Log (append after every task, newest first)
+
+### 2026-10-30 — D-11: native mobile deferred, PWA this release
+- **Done:** D-11 recorded; ADR-004 amended, ADR-010 dormant.
+  - SRS v2.3: §4.15 FR-PWA (12 blocks/9 leaf), NFR-PERF-350, NFR-SEC-260,
+    NFR-COMP-600. Mobile reqs moved PH8 → Future (D-11); §1.2 and §4.12 keep
+    their old text.
+  - Traceability v2.3; goals v0.3 (new G7 PWA, G6 gated, old G6 quoted);
+    roadmap v0.3 (PH5 step 5, PH6/PH7 PWA, PH8 gate); register v1.3.
+  - AGENTS.md, README and ASSET_SPECS §2 note D-11. Added
+    `apps/mobile/README.md` (frozen). The Rive backlog item moved to Deferred.
+  - Root scripts exclude `@nogoolin/mobile`.
+- **Verified:** `pnpm run type-check` is now green (validation-schemas, web,
+  api); relative links in the edited files resolve.
+- **Next:** C1 fix (needs Docker group access), then the PWA in PH5.
 
 ### 2026-10-30 — Docs sync + D-10 phone rule
 - **Done:** Register v1.2 (ARC-07 Sem10 diagrams canonical; ARC-05 and the

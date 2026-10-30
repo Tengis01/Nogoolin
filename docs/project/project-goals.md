@@ -1,8 +1,8 @@
 # Төслийн зорилго (SMART)
 
-**Doc ID:** PRJ-01 · **Төрөл:** Process · **Уншигч:** owner/хөгжүүлэгч, хичээлийн багш · **Хувилбар:** v0.2 draft · **Огноо:** 2026-10-27 (v0.1: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** PRJ-01 · **Төрөл:** Process · **Уншигч:** owner/хөгжүүлэгч, хичээлийн багш · **Хувилбар:** v0.3 draft · **Огноо:** 2026-10-30 (v0.2: 2026-10-27, v0.1: 2026-10-18) · **Owner:** Тэнгис
 
-**Өөрчлөлтийн түүх:** v0.2 (2026-10-27) — G1-ийн «A» мөрөнд D-09-ийн зураг авалтын стандартыг дурдсан. Өмнө нь «Бодит фото нь owner-оос хамаарна (D-03).» гэж байсан. v0.1 (2026-10-18) — анхны хувилбар.
+**Өөрчлөлтийн түүх:** v0.3 (2026-10-30) — D-11: шинэ G7 (PWA, энэ release); G6-г «Native mobile — future, G7 gate» болгосон (өмнөх G6-ийн текст тухайн хэсэгт «Өмнөх (v0.2)»); §4, §5, §6-д PWA тусгав. v0.2 (2026-10-27) — G1-ийн «A» мөрөнд D-09-ийн зураг авалтын стандартыг дурдсан. Өмнө нь «Бодит фото нь owner-оос хамаарна (D-03).» гэж байсан. v0.1 (2026-10-18) — анхны хувилбар.
 
 > Энэ бол төслийн бусад төлөвлөгөөний эх. [Roadmap v2](roadmap.md)-ийн phase, [SRS v2](../requirements/srs-v2.md)-ийн priority, тестийн хүрээ бүгд энд заасан зорилгоос гарна. Тоо болон огноо нь **санал**. Owner баталсны дараа «approved» болно.
 
@@ -91,23 +91,41 @@
 | **R** | Portfolio зорилго. Хичээлийн W10 (docs CI) болон W14–W15 (final pitch). |
 | **T** | Семестрийн W15 (≈ 2026-12-14 долоо хоног; хуанли баталгаажаагүй). |
 
-### G6 — Mobile (дараагийн release)
+### G6 — Native mobile (future, D-11 gate)
 
-- **Outcome:** Mobile app хэрэглэгч каталог үзэж, асуулга илгээнэ.
+- **Outcome:** Native mobile app хэрэглэгч каталог үзэж, асуулга илгээнэ.
+- **Gate (D-11):** G7-ийн хэмжүүр launch-ийн дараа биелж, owner native mobile-ийг эхлүүлэхээр шийдсэн байна. Тэр хүртэл `apps/mobile` frozen.
+- **T:** Тогтоогоогүй (gate-ээс хамаарна).
+
+**Өмнөх (v0.2) — «G6 — Mobile (дараагийн release)»:**
+
+> - **Outcome:** Mobile app хэрэглэгч каталог үзэж, асуулга илгээнэ.
+>
+> | | |
+> |---|---|
+> | **S** | Expo app-д inquiry болон C дизайныг нэмж, internal testing-д гаргана. |
+> | **M** | Android болон iOS internal testing build ажиллана. Mobile дээрх inquiry урсгал web-тэй ижил шаардлагыг (FR-INQ) хангана. |
+> | **A** | Web launch-ийн дараа. Apple developer эрх ($99/жил) шаардлагатай. |
+> | **R** | Хэрэглэгчид гол төлөв mobile-аар орно ([01-vision §9](../phase-0/01-vision.md#9-constraints-and-assumptions)). Гэхдээ responsive web эхний хэрэгцээг хангана. |
+> | **T** | **Тогтоогоогүй.** Launch-аас хойш owner тогтооно. |
+
+### G7 — PWA (энэ release)
+
+- **Outcome:** Mobile зочин сайтыг утасныхаа нүүр дэлгэц рүү апп шиг суулгаж, сул эсвэл тасархай сүлжээтэй үед ч өмнө үзсэн каталогоо харна.
 
 | | |
 |---|---|
-| **S** | Expo app-д inquiry болон C дизайныг нэмж, internal testing-д гаргана. |
-| **M** | Android болон iOS internal testing build ажиллана. Mobile дээрх inquiry урсгал web-тэй ижил шаардлагыг (FR-INQ) хангана. |
-| **A** | Web launch-ийн дараа. Apple developer эрх ($99/жил) шаардлагатай. |
-| **R** | Хэрэглэгчид гол төлөв mobile-аар орно ([01-vision §9](../phase-0/01-vision.md#9-constraints-and-assumptions)). Гэхдээ responsive web эхний хэрэгцээг хангана. |
-| **T** | **Тогтоогоогүй.** Launch-аас хойш owner тогтооно. |
+| **S** | Next.js web app-ийг manifest, service worker, offline хуудас, үзсэн каталогийн offline cache, «Апп суулгах» товчтой болгоно (FR-PWA-1xx/2xx). |
+| **M** | Launch шалгуур: Android Chrome болон iOS Safari 16.4+ дээр суулгагдаж standalone нээгдэнэ; DevTools-ийн installability алдаа 0; offline үед `/offline` болон өмнө нээсэн 3 бүтээгдэхүүн нээгдэнэ; хамгаалагдсан хуудасны cache 0 (NFR-SEC-260). Lighthouse 12-оос PWA ангилал хасагдсан тул DevTools, Playwright, бодит төхөөрөмжөөр хэмжинэ. |
+| **A** | Нэг web codebase, нэмэлт store данс шаардлагагүй. Next.js App Router-ийн `manifest.ts`. |
+| **R** | Хэрэглэгчид гол төлөв mobile-аар орно ([01-vision §9](../phase-0/01-vision.md#9-constraints-and-assumptions)). Native app-ын зардалгүйгээр апп мэдрэмж өгнө. |
+| **T** | PH5-д хэрэгжүүлж (2027-01-15), PH6-д шалгаж, launch (2027-01-29)-д HTTPS-тэй хамт. |
 
 ## 4. Сегмент × зорилго × нотлох UI
 
 | Сегмент | Гол зорилго | Хамаарах G | Нотлох UI / урсгал |
 |---|---|---|---|
-| Каталогийн зочин | Бараа олох, мэдээлэл авах | G1, G3 | Интро → нүүр → жагсаалт/хайлт → дэлгэрэнгүй (зураг, үнэ, заавар) |
+| Каталогийн зочин | Бараа олох, мэдээлэл авах; утсан дээр апп шиг ашиглах | G1, G3, G7 | Интро → нүүр → жагсаалт/хайлт → дэлгэрэнгүй (зураг, үнэ, заавар) |
 | Inquiry хэрэглэгч (guest эсвэл нэвтэрсэн) | Бүртгүүлэлгүй асуух, баталгаа авах | G2 | Дэлгэрэнгүй хуудасны inquiry form → баталгаа; нэвтэрсэн бол түүх, wishlist |
 | Admin (дэлгүүрийн эзэн) | Бараа удирдах, асуулгад хариулах | G1, G2 | `/admin` бүтээгдэхүүн CRUD, зураг; inquiry inbox, төлөв |
 | Хөгжүүлэгч / reviewer | Систем, баримтыг ойлгох, шалгах | G4, G5 | Document Register, SRS v2, traceability, CI |
@@ -122,13 +140,14 @@
 | G3 | PH2, PH5 | INTRO, NFR-PERF, NFR-USE |
 | G4 | PH1, PH6 (бүх phase-ийн DoD) | NFR-MAINT, бүх Must шаардлага |
 | G5 | PH1, PH2 (бүх phase-ийн DoD) | — (баримт; шаардлага биш) |
-| G6 | Дараагийн release | MOB |
+| G6 | Future (D-11 gate) | MOB |
+| G7 | PH5, PH6, PH7 | PWA, NFR-SEC-260, NFR-PERF-350, NFR-COMP-600 |
 
 ## 6. Хамрах хүрээнээс гадуур (энэ release)
 
 | Non-goal | Шалтгаан |
 |---|---|
-| Mobile store release | G6 нь дараагийн release. Энэ release-д зөвхөн web. |
+| Native mobile, store release | D-11: G6 нь G7 PWA амжилттай болсны дараа. Энэ release-д web + PWA. (Өмнөх (v0.2): «G6 нь дараагийн release. Энэ release-д зөвхөн web.») |
 | Сагс, захиалга, хүргэлт, төлбөр | `delivery_enabled=false` ([ADR-002](../../agent-context/DECISIONS.md)), PH8 |
 | Бүтээгдэхүүн бүрийн 360° viewer | [D-07](../../agent-context/DECISIONS.md), post-MVP |
 | Зургаар хайх (pgvector) | Каталог эхлээд дүүрэх ёстой, PH8 |

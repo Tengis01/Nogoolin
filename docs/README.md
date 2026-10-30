@@ -1,6 +1,6 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.2 draft · **Огноо:** 2026-10-30 (v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.3 draft · **Огноо:** 2026-10-30 (v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
 
@@ -8,6 +8,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v1.3 | 2026-10-30 | D-11: REQ-01/REQ-02 v2.2 → v2.3, PRJ-01/PRJ-02 v0.2 → v0.3. |
 | v1.2 | 2026-10-30 | ARC-07 (Sem10 M8 diagram suite, canonical диаграм) нэмсэн. «frozen» төлөв нэмж ARC-05 болон ARC-01-ийн Sem4 C4-ийг frozen болгосон (өмнө нь ARC-05 «legacy (эх)»). «Хичээлийн ажил» хүснэгтийн W10 мөрийг зассан: өмнө нь «W10 mkdocs/Vale/lychee → QA-04» гэж буруу бичигдсэн, бодит W10 нь diagram suite. QA-04-ийн эх семинар «W10» → «—». Sem7, Sem9 мөр нэмсэн. REQ-01/REQ-02 хувилбар v2.1 → v2.2 (D-10). |
 | v1.1 | 2026-10-27 | Хувилбаруудыг тааруулж, QA-05 (кодын аудит) нэмсэн. |
 | v1.0 | 2026-10-18 | Анхны бүртгэл. |
@@ -38,8 +39,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| PRJ-01 | Төслийн зорилго (SMART) | Process | Owner, багш | v0.2 | draft | Төслийн менежмент | [project/project-goals.md](project/project-goals.md) |
-| PRJ-02 | Roadmap v2 (PH0–PH8) | Process | Owner, багш | v0.2 | draft | Төслийн менежмент | [project/roadmap.md](project/roadmap.md) |
+| PRJ-01 | Төслийн зорилго (SMART) | Process | Owner, багш | v0.3 | draft | Төслийн менежмент | [project/project-goals.md](project/project-goals.md) |
+| PRJ-02 | Roadmap v2 (PH0–PH8) | Process | Owner, багш | v0.3 | draft | Төслийн менежмент | [project/roadmap.md](project/roadmap.md) |
 | PRJ-03 | Vision | Process | Бүгд | 1.4.0 | legacy (эх) | — | [phase-0/01-vision.md](phase-0/01-vision.md) |
 | PRJ-04 | Master plan | Process | AI agent, хөгжүүлэгч | — | legacy | — | [premium_religious_product_platform_master_plan.md](premium_religious_product_platform_master_plan.md) |
 | PRJ-05 | Шийдвэрийн бүртгэл (ADR, D-xx) | Developer | Хөгжүүлэгч | append-only | approved | Sem4 | [../agent-context/DECISIONS.md](../agent-context/DECISIONS.md) |
@@ -50,8 +51,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.2 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
-| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.2 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
+| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.3 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
+| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.3 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
 | REQ-03 | Хуучин → шинэ ID mapping | Developer | Хөгжүүлэгч | v2.0 | draft | — | [requirements/id-mapping.md](requirements/id-mapping.md) |
 | REQ-04 | Scope Charter | Process | Owner, багш | v0.2 | legacy (SRS v2 §1.3 орлосон) | Sem2 | [requirements/scope-charter.md](requirements/scope-charter.md) |
 | REQ-05 | SRS v1.0 (15 FR + 5 NFR) | Developer | — | v1.0 | legacy | Sem3 | [requirements/srs-v1.0.md](requirements/srs-v1.0.md) |

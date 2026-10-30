@@ -12,6 +12,7 @@ Earlier contract text is not deleted; superseded items are marked, not removed.
 
 | Date | Change |
 |---|---|
+| 2026-10-30 | §2 marked deferred by D-11 (native mobile deferred, PWA first). Contract text unchanged |
 | 2026-10-27 | Added §3 Product photography standard (D-09); title now includes product photography. §1 and §2 unchanged |
 | 2026-10-21 | §1: added "Sourcing the model" options and status (Meshy, Hunyuan3D-2, photogrammetry) |
 | 2026-07-20 | §1 GLB contract locked; §2 Rive contract proposed |
@@ -96,6 +97,10 @@ Earlier contract text is not deleted; superseded items are marked, not removed.
   - Nothing has been downloaded or installed. D-04 stays open.
 
 ## 2. Mobile Rive intro (.riv) — PROPOSED CONTRACT
+
+> **Deferred by D-11 (2026-10-30):** native mobile is frozen until the PWA
+> (G7) succeeds. Do not build the .riv now; the contract below stays valid
+> for when mobile resumes.
 
 > Status: engineering for this is NOT built yet. This contract is what the
 > code will implement; building the .riv to it means zero rework. Keep it

@@ -1,6 +1,6 @@
 # Traceability v2
 
-**Doc ID:** REQ-02 · **Хувилбар:** v2.2 draft · **Огноо:** 2026-10-30 (v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-02 · **Хувилбар:** v2.3 draft · **Огноо:** 2026-10-30 (v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ хүснэгт [SRS v2](srs-v2.md)-ийн leaf шаардлага бүрийг эх, архитектур/ADR, код, тесттэй холбоно. Энэ нь G4-ийн суурь ([зорилго](../project/project-goals.md#g4--чанар-ба-traceability)).
 
@@ -15,6 +15,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v2.3 | 2026-10-30 | D-11: FR-PWA-110…130, 210…250, 310 болон NFR-PERF-350, NFR-SEC-260, NFR-COMP-600 мөр нэмсэн. Native mobile-ийн мөрүүд өөрчлөгдөөгүй (Priority «Won't» хэвээр; phase-ийг SRS-ээс үзнэ). |
 | v2.2 | 2026-10-30 | FR-INQ-140-ийн Arch/ADR багана «—» → «D-10, ADR-012». |
 | v2.1 | 2026-10-27 | SRS v2.1-ийн дагуу FR-PROD-190, FR-PUB-250, FR-PUB-260 мөр нэмсэн. FR-PUB-240-ийн Arch/ADR баганад D-09 нэмсэн (өмнө нь зөвхөн D-07). |
 | v2.0 | 2026-10-18 | Анхны v2: SRS v2-ийн leaf шаардлага бүрт нэг мөр. |
@@ -75,6 +76,7 @@
 | NFR-SEC-240 | Must | plan F-05 | — | apps/web/src/app/products/[slug]/page.tsx | planned | not run |
 | NFR-SEC-251 | Must | P0 NFR-SEC-002 | 08-security §4.3 | backend/api/src/plugins/rate-limit.ts | planned | not run |
 | NFR-SEC-252 | Must | P0 NFR-SEC-002 | ADR-005 | supabase/config.toml | planned | not run |
+| NFR-SEC-260 | Must | D-11 | D-11 | — | planned | planned |
 | NFR-SEC-310 | Must | P0 NFR-SEC-009 | 08-security §5.5 | backend/api/src/app.ts | backend/api/tests/api.integration.test.ts | written, skipped without DB |
 | NFR-SEC-320 | Must | P0 NFR-SEC-010; v1.0 NFR-01; M2 NFR-01 | 08-security §9 | backend/api/src/repositories/supabase/cart.repository.ts | backend/api/tests/inquiry-cart.integration.test.ts (A/B matrix planned) | partial |
 | NFR-SEC-330 | Must | P0 NFR-SEC-013 | ADR-005 | supabase/config.toml | planned (inspection) | not run |
@@ -171,6 +173,15 @@
 | FR-ORD-210 | Won't | FR-ORD-005 | ADR-002 | `rls_policies.sql` | — | deferred |
 | FR-ORD-220 | Won't | FR-ORD-006 | ADR-002 | `init_schema.sql` | — | deferred |
 | FR-ORD-300 | Won't | FR-ORD-007 | ADR-002 | `rls_policies.sql` | — | deferred |
+| FR-PWA-110 | Must | D-11 | D-11 | — | planned (inspection) | planned |
+| FR-PWA-120 | Should | D-11 | D-11 | — | planned | planned |
+| FR-PWA-130 | Could | D-11 | D-11 | — | planned | planned |
+| FR-PWA-210 | Must | D-11 | D-11 | — | planned | planned |
+| FR-PWA-220 | Must | D-11 | D-11 | — | planned | planned |
+| FR-PWA-230 | Should | D-11 | D-11 | — | planned | planned |
+| FR-PWA-240 | Should | D-11 | D-11 | — | planned | planned |
+| FR-PWA-250 | Must | D-11, FR-INQ-170 | D-11 | — | planned | planned |
+| FR-PWA-310 | Won't | owner 2026-10-30 | — | — | — | deferred |
 | NFR-SEO-110 | Must | NFR-SEO-001 | ADR-006 | `apps/web/src/app/products/[slug]/page.tsx` | planned | planned |
 | NFR-SEO-120 | Must | NFR-SEO-002 | ADR-006 | `[slug]/page.tsx` | planned | planned |
 | NFR-SEO-130 | Must | NFR-SEO-003 | ADR-006 | `[slug]/page.tsx` | planned | planned |
@@ -220,6 +231,7 @@
 | NFR-PERF-320 | Must | F-09 | — | `hero-intro.tsx:21` | planned | not executed |
 | NFR-PERF-330 | Must | F-09 | D-08 | `apps/web/src/app/layout.tsx` | planned | not implemented |
 | NFR-PERF-340 | Could | guide §4 | — | — | planned | not measured |
+| NFR-PERF-350 | Should | D-11 | D-11 | — | planned | not measured |
 | NFR-PERF-410 | Must | NFR-PERF-007, F-07 | — | `products/(list)/page.tsx:89`, `product-gallery.tsx:29` | planned | not executed |
 | NFR-PERF-420 | Must | NFR-PERF-007 | — | `product-card.tsx` | planned | not executed |
 | NFR-PERF-430 | Must | F-09 | — | `components/public/*` | planned | not executed |
@@ -266,6 +278,7 @@
 | NFR-COMP-410 | Must | NFR-COM-005 | ADR-003 | `backend/api/src` | planned | not checked |
 | NFR-COMP-420 | Must | NFR-COM-006 | — | `backend/api/src` | planned | not checked |
 | NFR-COMP-500 | Must | FR-3D-006 | — | `hero-intro.tsx:26` | planned | not executed |
+| NFR-COMP-600 | Must | D-11 | D-11 | — | planned (demonstration) | planned |
 | NFR-PORT-110 | Must | NFR-MAIN-006 | ADR-009 | `backend/api/Dockerfile` | CI `docker-build` | not executed this review |
 | NFR-PORT-120 | Should | ADR-011 | ADR-011 | — | planned | not checked |
 | NFR-PORT-130 | Must | NFR-MAIN-008 | — | `next.config.ts` | planned (inspection) | not checked |

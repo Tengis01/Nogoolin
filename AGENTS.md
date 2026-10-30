@@ -52,6 +52,11 @@ Follow the user's current instructions and applicable nested AGENTS.md.
   shared types (`packages/shared-types`); pnpm workspaces. Read package and
   lock files for versions; do not assume “latest stable”. Flutter/Express
   references in older material are superseded.
+- **D-11 (2026-10-30): this release's mobile experience is a PWA** on
+  `apps/web` (SRS §4.15 FR-PWA). `apps/mobile` is **frozen**: keep it, do
+  not develop it, and keep it out of root scripts until the G7 gate opens.
+  The service worker must never cache private or admin responses
+  (NFR-SEC-260).
 - Layered monolith: Controller → Service → Repository. Validate requests
   with Zod; business logic belongs in services, DB queries in repositories.
   No raw SQL interpolation or unsolicited microservices.

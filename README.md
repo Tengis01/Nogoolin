@@ -14,7 +14,8 @@ public web catalog, admin panel, mobile app, and REST API.
 | Layer | Technology |
 |---|---|
 | Web | Next.js + TypeScript + Tailwind CSS (Vercel) |
-| Mobile | React Native + Expo (prebuild/CNG + dev client, EAS Build) |
+| PWA (this release, D-11) | Same Next.js app: manifest, service worker, offline (planned, PH5) |
+| Mobile | React Native + Expo (prebuild/CNG + dev client, EAS Build) — **frozen, D-11**: deferred until the PWA succeeds |
 | API | Fastify + TypeScript, port 3001 (Railway, Docker) |
 | Data | Supabase PostgreSQL + Auth + Storage |
 | Validation | Zod (shared via `packages/validation-schemas`) |
