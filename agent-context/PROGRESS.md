@@ -11,7 +11,7 @@
   with placeholder assets, real GLB/mobile Rive/home content still pending;
   Phase 4 inquiry/wishlist API and web UI recorded complete, mobile pending.
 - Current product task queue: [TASKS.md](TASKS.md). Course-only work is tracked
-  in [ICSI438 progress](../docs/ICSI438/WEEKLY-PROGRESS.md), not as product phases.
+  in [ICSI438 progress](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/WEEKLY-PROGRESS.md), not as product phases.
 - The 2026-10-06 Sem6 evidence covers six service modules and local repository
   doubles. It does not revalidate the whole app, live Supabase or deployment.
 - Phase 1's original Docker/runtime blocker was recorded resolved in the
@@ -78,7 +78,7 @@ and later amendments follow [AGENTS.md](../AGENTS.md).
   browser-auth smoke test rather than repeating the old Docker blocker
 - Real eslint configs (lint currently aliases `tsc --noEmit`)
 - Mobile session storage: AsyncStorage now; docs/phase-0/08 §5.2 wants encrypted
-  storage — current local issue draft: [session storage](../docs/ICSI438/sem6/issues/mobile-session-storage.md)
+  storage — current local issue draft: [session storage](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem6/issues/mobile-session-storage.md)
 
 ## Phase 2 — Product System ✅ COMPLETE (2026-07-19)
 

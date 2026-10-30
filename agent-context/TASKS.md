@@ -10,6 +10,57 @@
 
 *(empty)*
 
+## Next — docs sync + PH1 exit (added 2026-10-30, docs-only, no code)
+
+Audit 2026-10-30: code unchanged since `885e591` (2026-10-14); core docs
+(SRS v2, traceability v2, register, code audit) are from 2026-10-27. The gaps
+below are about course work that is not yet reflected here.
+
+- [x] **Register (`docs/README.md`):** add ARC-07 «M8 diagram suite» = the
+      **canonical** diagrams (C4 context/container, sequence-inquiry, data-model,
+      bpmn-process) →
+      <https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem10/docs/diagrams>,
+      Pages <https://icsi438-nogoolin-442a5f.gitlab.io/sem10/>. Mark ARC-05
+      (phase-0 ER/sequence) and Sem4 C4 as **frozen**: keep them, never update.
+      In the «Хичээлийн ажил → албан ёсны баримт» table, fix the W10 row
+      (it was the diagram suite, not mkdocs/Vale/lychee) and add Sem7
+      (Diátaxis site, `/sem7/`) and Sem9 (ADR-012) rows.
+- [x] **`docs/diagrams/README.md`:** replace the stale «W8-д … шинэ диаграм
+      үүсгээгүй» text with a pointer to the Sem10 diagrams; list
+      `agent-context/diagrams/` and phase-0 as frozen.
+- [x] **Root `README.md`:** the «Start with phase-0/01-vision + 10-roadmap»
+      line should point to `docs/README.md` + `docs/project/roadmap.md`.
+      Change the layout comment «docs/ Authoritative Phase 0 specifications»,
+      and point the «SRS» link at `requirements/srs-v2.md` (it currently
+      points at the template).
+- [x] **Broken links (3):** `agent-context/MEMORY.md` → `../docs/ICSI438/COURSE-HOME.md`;
+      `agent-context/PROGRESS.md` → `../docs/ICSI438/WEEKLY-PROGRESS.md` and
+      `…/sem6/issues/mobile-session-storage.md`. That folder moved to the GitLab
+      repo; use `https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/…`.
+- [x] **Owner decision: FR-INQ-140 / ADR-012 phone rule.** Web requires exactly
+      8 digits, while the API accepts `^[0-9+\s-]{8,15}$`. The draft is in
+      ICSI438 `sem9/adr-012-inquiry-phone-validation.md` (Proposed, option A/B).
+      After the owner decides, record a D-xx in `DECISIONS.md`, and update SRS v2 §FR-INQ-140
+      and its OPEN list. Change code only after the decision.
+      → Done 2026-10-30: owner chose **A**, recorded as **D-10**; SRS v2.2.
+- [x] **Code (D-10):** change `phoneSchema` in
+      `packages/validation-schemas/src/common.ts` to `^\d{8}$`, and update the
+      API integration test cases. Mark ICSI438 `sem9/adr-012` as Accepted (A)
+      in the course repo. After that, FR-INQ-140 becomes implemented.
+      → Done 2026-10-30 in this repo (`common.ts` `^\d{8}$`, 3 new API test
+      cases). **Open:** mark ADR-012 Accepted in the ICSI438 repo. The
+      integration suites still SKIP, because the user is not in the `docker`
+      group and `supabase start` cannot run.
+- [ ] **PH1 exit (due 2026-11-01, roadmap):** owner approves G1–G6 and dates;
+      SRS v2 → «approved» once the «Consistent» open items reach 0
+      (FR-INQ-140 is one of them).
+      → 2026-10-30: owner has **not** approved yet (will review project-goals
+      and roadmap first). FR-INQ-140 is now resolved; other Consistent items
+      in SRS §7.4/§8 are still OPEN.
+- Rule (owner, 2026-10-30): just enough documentation. Do **not** write the
+  ~12 «planned» register docs proactively; write one only when a phase needs it.
+  Diagram changes go only into the Sem10 files (re-run `render.sh` there).
+
 ## Backlog (Phase 3 order — ⚠ highest-risk phase, read design.md first)
 
 - [ ] Mobile Rive intro (@rive-app/react-native Nitro) + transition —
@@ -68,6 +119,31 @@
 ---
 
 ## Log (append after every task, newest first)
+
+### 2026-10-30 — Docs sync + D-10 phone rule
+- **Done:** Register v1.2 (ARC-07 Sem10 diagrams canonical; ARC-05 and the
+  Sem4 C4 frozen; W10 row corrected, Sem7/Sem9 rows added, QA-04 source
+  fixed; old wording kept in the changelog). `docs/diagrams/README.md` now
+  points to Sem10, with the previous text kept. Root README now points to
+  the register, roadmap v2 and SRS v2. Three broken ICSI438 links point to
+  GitLab (targets checked: HTTP 200). D-10 = ADR-012 option A; SRS and
+  traceability v2.2.
+- **Verified:** relative links in the edited files all resolve; GitLab
+  paths for Sem7/9/10 and the Pages URLs return 200.
+- **Code (D-10):** `phoneSchema` changed to `^\d{8}$`, with 3 rejection
+  cases added to `inquiry-cart.integration.test.ts`.
+  - Ran `pnpm install --frozen-lockfile` and type-check: validation-schemas,
+    api and web OK. Mobile has 1 TS2786 error (`Stack` JSX) that also fails
+    on unchanged HEAD, so it is not caused by this change.
+  - A direct schema check passed all 9 cases (2 valid, 7 invalid).
+  - API test run: 0 fail, **2 suites skipped**, because Docker is not
+    accessible (user not in the `docker` group).
+- **Next:** ADR-012 → Accepted in the ICSI438 repo; run the integration
+  suites once Docker access exists; owner review for PH1 exit.
+
+### 2026-10-30 — Docs freshness audit after ICSI438 Sem10
+- **Done:** Read-only audit of `docs/`, `agent-context/` and the root README against the code and the Sem7/9/10 course work. Code is unchanged since 2026-10-14, and the core docs are current as of 2026-10-27. Gaps and the owner's decisions (canonical Sem10 diagrams, old diagrams frozen, no proactive planned docs) were queued under «Next — docs sync + PH1 exit».
+- **Next:** Work through that list top-down. The phone-rule item needs the owner's decision first.
 
 ### 2026-09-30 — OpenSpec and Context7 CLI foundation
 - **Done:** Initialized official OpenSpec only in Nogoolin for Codex and Hermes. Added the unapproved, unimplemented `demo-catalog-filter-summary` proposal/spec/design/tasks to demonstrate the workflow; strict validation passed. Added concise OpenSpec and targeted Context7 guidance to AGENTS.md and the shared vault rules. Context7 CLI's narrow Next.js documentation lookup worked anonymously.

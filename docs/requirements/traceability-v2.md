@@ -1,6 +1,6 @@
 # Traceability v2
 
-**Doc ID:** REQ-02 · **Хувилбар:** v2.1 draft · **Огноо:** 2026-10-27 (v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-02 · **Хувилбар:** v2.2 draft · **Огноо:** 2026-10-30 (v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ хүснэгт [SRS v2](srs-v2.md)-ийн leaf шаардлага бүрийг эх, архитектур/ADR, код, тесттэй холбоно. Энэ нь G4-ийн суурь ([зорилго](../project/project-goals.md#g4--чанар-ба-traceability)).
 
@@ -15,6 +15,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v2.2 | 2026-10-30 | FR-INQ-140-ийн Arch/ADR багана «—» → «D-10, ADR-012». |
 | v2.1 | 2026-10-27 | SRS v2.1-ийн дагуу FR-PROD-190, FR-PUB-250, FR-PUB-260 мөр нэмсэн. FR-PUB-240-ийн Arch/ADR баганад D-09 нэмсэн (өмнө нь зөвхөн D-07). |
 | v2.0 | 2026-10-18 | Анхны v2: SRS v2-ийн leaf шаардлага бүрт нэг мөр. |
 
@@ -43,7 +44,7 @@
 | FR-INQ-110 | Must | P0 FR-INQ-001/003; v1.0 FR-01; M2 FR-01 | ADR-007 | backend/api/src/controllers/inquiry.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
 | FR-INQ-120 | Must | P0 FR-INQ-002 | — | packages/validation-schemas/src/inquiry.schema.ts | planned (inspection) | not run |
 | FR-INQ-130 | Must | v1.0 FR-02 | — | backend/api/src/hooks/auth.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
-| FR-INQ-140 | Must | v1.0 FR-03 | — | apps/web/src/lib/inquiry-form-schema.ts | backend/api/tests/inquiry-cart.integration.test.ts (API); web planned | partial |
+| FR-INQ-140 | Must | v1.0 FR-03 | D-10, ADR-012 | apps/web/src/lib/inquiry-form-schema.ts | backend/api/tests/inquiry-cart.integration.test.ts (API); web planned | partial |
 | FR-INQ-150 | Must | v1.0 FR-04 | — | apps/web/src/components/public/inquiry-form.tsx | planned | not run |
 | FR-INQ-160 | Must | P0 FR-INQ-007; v1.0 FR-05 | 08-security §4.3 | backend/api/src/controllers/inquiry.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
 | FR-INQ-170 | Must | code | — | apps/web/src/components/public/inquiry-form.tsx | planned | not run |

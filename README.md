@@ -3,10 +3,11 @@
 Premium religious product catalog platform for the Mongolian market —
 public web catalog, admin panel, mobile app, and REST API.
 
-> 📚 **Documentation-first project.** All specifications live in [`docs/`](./docs/)
-> and are authoritative. Start with [`docs/phase-0/01-vision.md`](docs/phase-0/01-vision.md)
-> and [`docs/phase-0/10-roadmap.md`](docs/phase-0/10-roadmap.md). AI-agent guidance is in
-> [`AGENTS.md`](./AGENTS.md).
+> 📚 **Documentation-first project.** All specifications live in [`docs/`](./docs/).
+> Start with the document register [`docs/README.md`](docs/README.md) and the
+> current roadmap [`docs/project/roadmap.md`](docs/project/roadmap.md). The original
+> Phase 0 vision and roadmap stay in [`docs/phase-0/`](docs/phase-0/README.md) as
+> legacy sources. AI-agent guidance is in [`AGENTS.md`](./AGENTS.md).
 
 ## Stack
 
@@ -27,7 +28,7 @@ backend/api/                 Fastify REST API (Controller → Service → Reposi
 packages/shared-types/       Shared TypeScript types
 packages/validation-schemas/ Shared Zod schemas
 supabase/migrations/         Versioned SQL migrations
-docs/                        Authoritative Phase 0 specifications
+docs/                        Specifications: register, SRS v2, roadmap (+ legacy phase-0/)
 ```
 
 ## Getting Started
@@ -132,6 +133,6 @@ Course progress is tracked separately in [ICSI438](https://gitlab.com/Tengis01/i
 
 ## Documentation / ICSI438
 
-[Баримтын индекс](docs/README.md) · [M2 багц](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/README.md) · [SRS](docs/requirements/srs-template.md) · [SDD](docs/architecture/sdd-template.md).
+[Баримтын индекс](docs/README.md) · [M2 багц](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/README.md) · [SRS v2](docs/requirements/srs-v2.md) · [SRS загвар](docs/requirements/srs-template.md) · [SDD загвар](docs/architecture/sdd-template.md).
 
 Өмнөх 01–10 цувралын эхүүд [docs/phase-0](docs/phase-0/README.md)-д, хичээлийн эхүүд [ICSI438 GitLab repo](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/README.md)-д байна.

@@ -1,8 +1,16 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.1 draft · **Огноо:** 2026-10-27 (v1.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.2 draft · **Огноо:** 2026-10-30 (v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
+
+## Өөрчлөлтийн түүх
+
+| Хувилбар | Огноо | Өөрчлөлт |
+|---|---|---|
+| v1.2 | 2026-10-30 | ARC-07 (Sem10 M8 diagram suite, canonical диаграм) нэмсэн. «frozen» төлөв нэмж ARC-05 болон ARC-01-ийн Sem4 C4-ийг frozen болгосон (өмнө нь ARC-05 «legacy (эх)»). «Хичээлийн ажил» хүснэгтийн W10 мөрийг зассан: өмнө нь «W10 mkdocs/Vale/lychee → QA-04» гэж буруу бичигдсэн, бодит W10 нь diagram suite. QA-04-ийн эх семинар «W10» → «—». Sem7, Sem9 мөр нэмсэн. REQ-01/REQ-02 хувилбар v2.1 → v2.2 (D-10). |
+| v1.1 | 2026-10-27 | Хувилбаруудыг тааруулж, QA-05 (кодын аудит) нэмсэн. |
+| v1.0 | 2026-10-18 | Анхны бүртгэл. |
 
 ## Ойлголтын ялгаа
 
@@ -23,6 +31,7 @@
 | review | Review хийгдэж байгаа |
 | approved | Owner баталсан |
 | legacy | Эх материал болж үлдсэн, орлогдсон |
+| frozen | Хадгална, гэхдээ шинэчлэхгүй. Шинэ өөрчлөлт нь canonical хувилбарт орно |
 | planned | Байхгүй, бичигдэхээр төлөвлөсөн |
 
 ### Project — `project/`
@@ -41,8 +50,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.1 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
-| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.1 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
+| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.2 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
+| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.2 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
 | REQ-03 | Хуучин → шинэ ID mapping | Developer | Хөгжүүлэгч | v2.0 | draft | — | [requirements/id-mapping.md](requirements/id-mapping.md) |
 | REQ-04 | Scope Charter | Process | Owner, багш | v0.2 | legacy (SRS v2 §1.3 орлосон) | Sem2 | [requirements/scope-charter.md](requirements/scope-charter.md) |
 | REQ-05 | SRS v1.0 (15 FR + 5 NFR) | Developer | — | v1.0 | legacy | Sem3 | [requirements/srs-v1.0.md](requirements/srs-v1.0.md) |
@@ -56,11 +65,12 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| ARC-01 | arc42 + C4 | Developer | Хөгжүүлэгч, reviewer | v0.1 | draft (PH2-т D-08/SRS v2-тай нийцүүлнэ) | Sem4 | [architecture/arc42-nogoolin.md](architecture/arc42-nogoolin.md) |
+| ARC-01 | arc42 + C4 | Developer | Хөгжүүлэгч, reviewer | v0.1 | draft (PH2-т D-08/SRS v2-тай нийцүүлнэ). Доторх Sem4 C4 диаграм **frozen**: canonical нь ARC-07 | Sem4 | [architecture/arc42-nogoolin.md](architecture/arc42-nogoolin.md) |
 | ARC-02 | MADR (ADR-003, 005, 007, IF-01) | Developer | Хөгжүүлэгч | — | draft | Sem4 | [architecture/README.md](architecture/README.md) |
 | ARC-03 | Architecture traceability | Developer | Хөгжүүлэгч | — | draft | Sem4 | [architecture/architecture-traceability.md](architecture/architecture-traceability.md) |
 | ARC-04 | SDD загвар | Process | Баримт бичигч | v0.2 | approved | Sem2 | [architecture/sdd-template.md](architecture/sdd-template.md) |
-| ARC-05 | ER, sequence диаграм | Developer | Хөгжүүлэгч | — | legacy (эх) | — | [diagrams/README.md](diagrams/README.md), [phase-0/04](phase-0/04-er-diagram.md), [phase-0/05](phase-0/05-sequence-diagrams.md) |
+| ARC-05 | ER, sequence диаграм (phase-0, `agent-context/diagrams/`) | Developer | Хөгжүүлэгч | — | **frozen** (өмнө нь legacy (эх)); canonical нь ARC-07 | — | [diagrams/README.md](diagrams/README.md), [phase-0/04](phase-0/04-er-diagram.md), [phase-0/05](phase-0/05-sequence-diagrams.md) |
+| ARC-07 | **M8 diagram suite (canonical):** C4 context/container, sequence-inquiry, data-model, bpmn-process | Developer | Хөгжүүлэгч, reviewer, багш | v1.0 (код `885e591`) | draft | Sem10 (W10) | [https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem10/docs/diagrams](https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem10/docs/diagrams), [Pages](https://icsi438-nogoolin-442a5f.gitlab.io/sem10/) |
 | ARC-06 | Security design | Developer | Хөгжүүлэгч | — | legacy (эх) | — | [phase-0/08-security.md](phase-0/08-security.md) |
 
 ### Design — `design/`
@@ -98,7 +108,7 @@
 | QA-01 | Тестийн стратеги, төлөвлөгөө, S1–S4 | Process | Хөгжүүлэгч, тестер | — | planned (PH6; QA хичээлийн агуулга ирэхэд) | QA хичээл | `quality/test-plan.md` |
 | QA-02 | Usability protocol | Process | Тестер | — | planned | — | `quality/usability-protocol.md` |
 | QA-03 | Perf baseline (raw sample) | Developer | Хөгжүүлэгч | — | planned (PH2) | — | `quality/perf-baseline.md` |
-| QA-04 | Docs CI (mkdocs, Vale, lychee) | Developer | Хөгжүүлэгч | — | planned | W10 | `mkdocs.yml`, CI |
+| QA-04 | Docs CI (mkdocs, Vale, lychee) | Developer | Хөгжүүлэгч | — | planned | — | `mkdocs.yml`, CI |
 | QA-05 | Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур | Developer | Хөгжүүлэгч, reviewer | v1.0 | draft | — | [quality/code-audit-2026-10-27.md](quality/code-audit-2026-10-27.md) |
 
 ### Operations — `operations/`
@@ -125,8 +135,10 @@
 | Sem5: OpenAPI 3.0 | API-02 (planned) |
 | Sem6: GitLab, TypeDoc/JSDoc | DEV-02 (planned) |
 | W07 microcopy | DES-06 (planned) |
+| Sem7: Diátaxis баримтын сайт ([Pages `/sem7/`](https://icsi438-nogoolin-442a5f.gitlab.io/sem7/)), microcopy | Хичээлийн сайт. Microcopy нь DES-06 (planned); бусад нь албан ёсны баримтад шууд орохгүй. |
 | W09 DoD update | Roadmap v2-ийн phase DoD |
-| W10 mkdocs/Vale/lychee | QA-04. Хавтасны бүтэц нь mkdocs nav-д шууд тохирно. |
+| Sem9: ADR-012 inquiry-ийн утасны дүрэм ([draft](https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem9/adr-012-inquiry-phone-validation.md), Proposed) | ARC-02 (MADR). Owner шийдсэний дараа DECISIONS.md-д D-xx, SRS FR-INQ-140. |
+| Sem10 (W10): M8 diagram suite | ARC-07 (canonical диаграм). Өмнөх v1.1-д «W10 mkdocs/Vale/lychee → QA-04» гэж буруу бичигдсэн байсан; QA-04 нь хичээлийн W10-тай холбоогүй, planned хэвээр. |
 | W11 maintenance | DEV-03, OPS-02 |
 | W12–W13 metric memo, sprint review | PRJ-07 |
 
@@ -150,6 +162,7 @@ docs/
   project/         зорилго, roadmap, stakeholder
   requirements/    SRS v2, traceability, mapping (+ legacy v1.0, M2)
   architecture/    arc42, ADR, C4
+  diagrams/        диаграмын заагч: canonical нь ARC-07 (Sem10), бусад нь frozen
   design/          DESIGN.md, components, microcopy, wireframe v2   (planned)
   api/             OpenAPI
   developer/       code reference, setup                             (planned)

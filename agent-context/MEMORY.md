@@ -16,7 +16,7 @@ not maintain another copy of rules, phase status or test counts.
 | Database work | [DB_SCHEMA.md](DB_SCHEMA.md), then actual [migrations](../supabase/migrations/) |
 | Web/3D design | [design.md](design.md), [asset contracts](ASSET_SPECS.md) |
 | An encountered failure | Relevant entry in [ERRORS.md](ERRORS.md) |
-| ICSI438 coursework | [Course home](../docs/ICSI438/COURSE-HOME.md), then course AGENTS.md and current seminar |
+| ICSI438 coursework | [Course home](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/COURSE-HOME.md), then course AGENTS.md and current seminar |
 | Original product vision | [Phase 0 vision](../docs/phase-0/01-vision.md) |
 
 Historical pass counts and “running” statements apply to their recorded run,
