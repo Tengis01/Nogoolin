@@ -16,10 +16,10 @@
     "dev:web": "pnpm --filter @nogoolin/web dev",
     "dev:api": "pnpm --filter @nogoolin/api dev",
     "dev:mobile": "pnpm --filter @nogoolin/mobile start",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
-    "type-check": "pnpm -r type-check",
-    "test": "pnpm -r test"
+    "build": "pnpm -r --filter '!@nogoolin/mobile' build",
+    "lint": "pnpm -r --filter '!@nogoolin/mobile' lint",
+    "type-check": "pnpm -r --filter '!@nogoolin/mobile' type-check",
+    "test": "pnpm -r --filter '!@nogoolin/mobile' test"
   },
   "devDependencies": {
     "supabase": "^2.109.1"
