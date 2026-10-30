@@ -32,9 +32,12 @@ jobs:
       - run: pnpm --filter @nogoolin/web type-check
       - run: pnpm --filter @nogoolin/web build
 
+  # Deferred to PH7 (2026-10-30): no cloud project or token exists yet
+  # (ADR-011), so every main push failed here. Set the repo variable
+  # DEPLOY_ENABLED=true when the PH7 cloud setup is done.
   deploy:
     needs: lint-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
