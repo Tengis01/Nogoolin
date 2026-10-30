@@ -28,5 +28,6 @@ export const slugSchema = z
   .max(120)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase, URL-safe, hyphen-separated');
 
-// Inquiry phone rule per docs/phase-0/08 §7.2
-export const phoneSchema = z.string().regex(/^[0-9+\s-]{8,15}$/);
+// Phone rule D-10 (ADR-012 option A): exactly 8 digits, same as web and
+// mobile. Replaces the docs/phase-0/08 §7.2 rule ^[0-9+\s-]{8,15}$.
+export const phoneSchema = z.string().regex(/^\d{8}$/);

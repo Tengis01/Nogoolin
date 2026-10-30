@@ -119,6 +119,17 @@ if (!reachable) {
     assert.equal(invalid.statusCode, 400);
     assert.equal(invalid.json().code, 'VALIDATION_ERROR');
 
+    // D-10: exactly 8 digits — prefix/separators and 7 digits are rejected
+    for (const phone of ['+976 99112233', '9911-2233', '9911223']) {
+      const badPhone = await ctx.app.inject({
+        method: 'POST',
+        url: '/api/v1/inquiries',
+        payload: { customer_name: 'Тест Хэрэглэгч', phone },
+      });
+      assert.equal(badPhone.statusCode, 400, phone);
+      assert.equal(badPhone.json().code, 'VALIDATION_ERROR', phone);
+    }
+
     const badProduct = await ctx.app.inject({
       method: 'POST',
       url: '/api/v1/inquiries',
