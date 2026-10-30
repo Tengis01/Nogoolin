@@ -29,6 +29,14 @@
 
 ---
 
+### 2026-10-30 — Customer→admin escalation (C1) and grants tied to platform defaults (fixed)
+- **Where:** `public.users` RLS `users_update_own`; empty `20260719104500_table_grants.sql`; `apps/web/src/components/public/profile-form.tsx` (direct supabase-js update).
+- **Symptom:** On a stack whose default privileges grant ALL (July CLI, older cloud projects), a customer could run `from('users').update({role:'admin'})` on their own row (`error: null`) and then pass the API's `requireAdmin`. On CLI v2.109 a fresh `db reset` instead gave `permission denied for table users`, even for `service_role`, and 37 of 39 API tests failed.
+- **Root cause:** No explicit table grants. Access depended on Supabase default privileges, which changed between CLI versions. The policy restricts rows, not columns.
+- **Fix:** `supabase/migrations/20261030120000_explicit_table_grants.sql`: revoke all, then least-privilege grants per role, with `users` limited to `update (full_name)` for `authenticated`. Added `backend/api/tests/rls.integration.test.ts`. 38/38 pass on a fresh reset and on a simulated legacy full-grant state.
+- **Prevention:** Every new table migration states its grants explicitly (AGENTS.md). Never rely on default privileges; add an RLS/grant test for any client-writable table.
+
+
 ### 2026-09-28 — Course screenshot instruction conflicted with approved QA policy (fixed)
 - **Where:** `docs/ICSI438/AGENTS.md`; related Obsidian course index.
 - **Symptom:** The old course instructions required screenshots for every changed PDF, despite the owner's newer request to avoid routine screenshot work; the vault index still treated the ICSI405/ICSI438 label as unresolved.

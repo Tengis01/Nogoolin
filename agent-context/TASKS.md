@@ -133,6 +133,31 @@ Kept verbatim from the backlog (moved 2026-10-30):
 
 ## Log (append after every task, newest first)
 
+### 2026-10-30 — C1 fixed: explicit least-privilege table grants
+- **Done:** Wrote `rls.integration.test.ts` first (4 tests). On a simulated
+  legacy full-grant DB it **failed** 2/4, confirming C1 at runtime: a customer
+  changed their own role and email.
+  - Found a deeper root cause: CLI v2.109 default privileges give the API
+    roles no DML, so a fresh reset broke 37/39 tests. Grants had silently
+    depended on platform defaults (empty `table_grants.sql`).
+  - Fix: migration 0008 `20261030120000_explicit_table_grants.sql`. It
+    revokes all, then grants least privilege per role. `users` is limited to
+    `update (full_name)` for `authenticated`, audit_logs is append-only for
+    `service_role` too, and order tables have no grants (closes FR-SET-220).
+- **Verified:**
+  - `pnpm --filter @nogoolin/api test` gives **38/38 pass, 0 skip**, both
+    after a fresh `db reset` and on the simulated legacy state with 0008
+    applied.
+  - `information_schema.column_privileges` shows `authenticated` UPDATE on
+    `full_name` only.
+  - Docker access via `sg docker` (the owner added the group).
+- **Docs:** SRS v2.4 (NFR-SEC-350, FR-SET-220 → implemented, previous
+  status kept), traceability v2.4, audit QA-05 v1.1, ERRORS.md, DB_SCHEMA.md,
+  an AGENTS.md grants rule, register v1.4.
+- **Not done:** browser check of the profile form (the identical supabase-js
+  call is covered by the test). CI still has no Supabase service (audit H4).
+- **Next:** audit P0 H1/H2 (path-param and DB-error → 500); CI Supabase (H4).
+
 ### 2026-10-30 — D-11: native mobile deferred, PWA this release
 - **Done:** D-11 recorded; ADR-004 amended, ADR-010 dormant.
   - SRS v2.3: §4.15 FR-PWA (12 blocks/9 leaf), NFR-PERF-350, NFR-SEC-260,

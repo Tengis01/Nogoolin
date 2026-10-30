@@ -5,6 +5,12 @@ DDL and grants read [migrations](../supabase/migrations/); verify the running
 database before claiming policies, grants or migrations are applied. Intended
 order tables do not establish implemented checkout/order API behavior.
 
+**Grants (migration 0008, 2026-10-30):** table access is explicit and does not depend on
+platform defaults. Clients (`authenticated`) only `select` users and `update (full_name)`.
+The public catalog is `select` for anon/authenticated. Writes go through `service_role`
+(API). `audit_logs` is `select, insert` only. Order tables have no grants until the
+order feature ships. Any new table must grant explicitly in its own migration.
+
 > Condensed from `docs/phase-0/04-er-diagram.md` (v1.0.0) + `docs/phase-0/08-security.md` §6.
 > 11 entities originally; **+1 `cart_items` (migration 0007, Phase 4)** = 12.
 > All `uuid` PKs (IDOR mitigation), RLS enabled on ALL tables from the first

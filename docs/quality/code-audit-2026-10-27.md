@@ -1,13 +1,22 @@
 # Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур
 
-**Doc ID:** QA-05 · **Хувилбар:** v1.0 draft · **Огноо:** 2026-10-27 · **Төлөв:** draft, owner review хийгдээгүй · **Хамрах хүрээ:** `main` (`17bf71b`) дээрх `backend/api`, `apps/web`, `apps/mobile`, `packages/*`, `supabase/`, `.github/workflows`
+**Doc ID:** QA-05 · **Хувилбар:** v1.1 draft · **Огноо:** 2026-10-30 (v1.0: 2026-10-27) · **Төлөв:** draft, owner review хийгдээгүй · **Хамрах хүрээ:** `main` (`17bf71b`) дээрх `backend/api`, `apps/web`, `apps/mobile`, `packages/*`, `supabase/`, `.github/workflows`
+
+## Өөрчлөлтийн түүх
+
+Олдворыг устгахгүй. Засагдсан олдворт «Төлөв» мөр нэмнэ.
+
+| Хувилбар | Огноо | Өөрчлөлт |
+|---|---|---|
+| v1.1 | 2026-10-30 | **C1 засагдсан** (migration 0008, `rls.integration.test.ts`). Runtime шалгалтаар шинэ үндсэн шалтгаан илэрсэн: grant-ууд платформын default-аас хамаардаг байсан (L3). Хуучин default (бүгдийг олгодог) орчинд C1 батлагдсан; шинэ CLI v2.109 дээр DML grant огт байхгүй тул цэвэр reset дээр апп ажиллахгүй байсан. Мөн FR-SET-220 хаагдаж, audit_logs нь service_role-д ч append-only болсон. Анхны олдворын текст өөрчлөгдөөгүй. |
+| v1.0 | 2026-10-27 | Анхны аудит (статик уншлага). |
 
 ## 0. Хураангуй
 
 - **Кодын хэмжээ.** Энэ код 2026-07-14…07-26-нд AI агентуудтай бичигдсэн бөгөөд TS/TSX/SQL нийт ~11.5k мөр. Ажил `chore/phase3-closeout` branch дээр хийгдсэн. Тэр branch-д 32 commit бий, 30 нь `Co-Authored-By: Claude Fable 5`. 2026-09-15-нд `4528492 "ICSI405 merge"` нэртэй нэг squash commit болж main руу орсон.
 - **Архитектур.** Сонгосон загвар (layered monolith, Controller → Service → Repository, хуваалцсан Zod) нь энэ төслийн хэмжээнд зөв. Backend-ийн бүтэц цэвэр байна. Гол сул тал нь **web зарим өгөгдлийг API-г тойрч Supabase-аас шууд уншиж, бичдэг**. Ингэснээр хоёр өөр эрхийн загвар үүсэж, доорх C1 эмзэг байдлын үндсэн шалтгаан болсон.
 - **SRS v2-той харьцуулалт.** 219 Must шаардлагын 140 нь (64%) «implemented». Гэхдээ энэ нь зөвхөн «код байгаа» гэсэн утгатай, тест ажиллаагүй. Доорх §4.3-т SRS-ийн 6 төлөвийг кодоос харж засах санал өгсөн.
-- **Хамгийн яаралтай.** C1: customer өөрийгөө admin болгож чадна (§3).
+- **Хамгийн яаралтай.** C1: customer өөрийгөө admin болгож чадна (§3). **2026-10-30: засагдсан (v1.1).**
 - **Тест.** CI ногоон гардаг ч integration тест бүгд skip болдог. Web, mobile, schemas дээр тест огт алга.
 
 ## 1. Аргачлал ба хязгаарлалт
@@ -77,6 +86,7 @@ packages/shared-types ── хоосон (.gitkeep)
 ### Critical
 
 **C1. Customer өөрийгөө admin болгож чадна** (NFR-SEC-350, FR-AUTH-310)
+- **Төлөв (2026-10-30): ЗАСАГДСАН.** `supabase/migrations/20261030120000_explicit_table_grants.sql` нь бүх хүснэгтийн эрхийг тодорхой, хамгийн бага хэмжээгээр олгоно (`users`: `authenticated`-д зөвхөн `select` болон `update (full_name)`). Хуучин default-тай орчинд засварын өмнө `rls.integration.test.ts` 2 тест унаж эмзэг байдал батлагдсан (`role update must be rejected`, `actual: null`). Засварын дараа цэвэр reset болон хуучин default орчин хоёуланд API suite 38/38 давсан, 0 skip. Санал болгосон trigger шаардлагагүй болсон; column grant хангалттай.
 - **Хаана:** `supabase/migrations/20260716154420_rls_policies.sql:66-70` (`users_update_own`). Баганыг хязгаарладаггүй, `20260719104500_table_grants.sql` нь 0 байт.
 - **Сценари:** Нэвтэрсэн хэрэглэгч browser console-оос нийтийн anon key-тэй client-ээр `supabase.from('users').update({ role: 'admin' }).eq('id', myId)` ажиллуулна. Policy-ийн `using`/`with check` нь зөвхөн `id = auth.uid()`-г шалгадаг тул update амжилттай болно. Үүний дараа API-ийн `requireAdmin` (`hooks/auth.ts:48`) role-ийг энэ хүснэгтээс уншдаг тул бүх admin endpoint нээгдэнэ. Хэрэглэгч `email` баганаа ч өөрчилж чадна.
 - **Засвар:** Шинэ migration нэмнэ: `revoke update on public.users from authenticated; grant update (full_name) on public.users to authenticated;`. Эсвэл `BEFORE UPDATE` trigger тавьж, `is_admin()` биш үед `role`/`email` өөрчлөхийг хориглоно. Засварын хамт SRS-ийн Verification-д заасан тестийг нэмнэ.
@@ -122,7 +132,7 @@ packages/shared-types ── хоосон (.gitkeep)
 
 - **L1.** UI-д хоцорсон текст үлдсэн: admin dashboard дээр «Phase 1 scaffold … Phase 2-т нэмэгдэнэ», nav дээр «Тохиргоо (Phase 5)».
 - **L2.** DB-д `CHECK` constraint байхгүй (`price >= 0`, `order_items.quantity > 0`). Зөвхөн Zod-оор хамгаалагдсан.
-- **L3.** `20260719104500_table_grants.sql` 0 байт. Нэр нь хамгаалалт байгаа мэт төөрөгдүүлдэг (C1-тэй холбоотой).
+- **L3.** `20260719104500_table_grants.sql` 0 байт. Нэр нь хамгаалалт байгаа мэт төөрөгдүүлдэг (C1-тэй холбоотой). **2026-10-30:** энэ нь жижиг асуудал биш, C1-ийн жинхэнэ үндсэн шалтгаан болох нь батлагдсан. Grant-ууд Supabase-ийн default privileges-ээс хамаардаг байсан. Migration 0008-оор засагдсан; хоосон файл append-only дүрмээр хэвээр үлдэнэ.
 - **L4.** Inquiry-ийн төлөвийн шилжилтийг хянадаггүй (`closed → new` болж болно). SRS FR-INQ-330 үүнийг шаарддаг эсэхийг тодруулах.
 - **L5.** `AGENTS.md:1` мөрөнд санамсаргүй «claud» гэсэн текст орсон.
 - **L6.** Comment-уудад Phase 0-ийн ID-ууд байна. SRS v2-ийн ID руу шилжүүлэх эсвэл `id-mapping.md`-ээр дамжуулж уншихаар тохиролцох.
@@ -168,7 +178,7 @@ Release-ээс гадуурх (Won't/deferred) шаардлага ~37 байга
 ## 5. Зөвлөмж: дараалсан ажлын төлөвлөгөө
 
 **P0. Шинэ feature нэмэхээс өмнө (1–2 өдөр)**
-1. C1: шинэ migration (column grant эсвэл trigger) болон тест. Эхлээд local stack дээр эмзэг байдлыг баталгаажуулна.
+1. C1: шинэ migration (column grant эсвэл trigger) болон тест. Эхлээд local stack дээр эмзэг байдлыг баталгаажуулна. ✅ 2026-10-30 (migration 0008).
 2. H1 болон H2: params validation, DB алдааг ApiError руу хөрвүүлэх.
 3. H4: CI-д Supabase асааж, skip-ийг алдаа гэж тооцох.
 

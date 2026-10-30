@@ -1,6 +1,6 @@
 # Nogoolin Software Requirements Specification v2
 
-**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.3 draft · **Огноо:** 2026-10-30 (v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.4 draft · **Огноо:** 2026-10-30 (v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 ## Баримтын төлөв
 
@@ -20,6 +20,7 @@
 
 | Хувилбар | Огноо | Төрөл | Өөрчлөлт |
 |---|---|---|---|
+| v2.4 | 2026-10-30 | MINOR | C1 засвар (migration 0008 explicit table grants): NFR-SEC-350, FR-SET-220 unknown → implemented; FR-AUD-130-ийн service_role тайлбар; FR-USER-220-д тэмдэглэл. Өмнөх status бүр «Өмнөх (v2.3)» мөрөнд. §7.2-ийн тоо, §7.4, §8-ийн холбогдох мөрүүдийг шийдэгдсэн гэж тэмдэглэсэн (устгаагүй). |
 | v2.3 | 2026-10-30 | MINOR | D-11: энэ release-ийн mobile туршлага нь PWA. Шинэ §4.15 FR-PWA (12 блок, 9 leaf), NFR-PERF-350, NFR-SEC-260, NFR-COMP-600. Native mobile хойшлогдсон: FR-MOB-*, NFR-COMP-300…320, NFR-MAINT-600…620, NFR-REL-230, NFR-PORT-150-ийн Phase «PH8» → «Future (D-11)» (priority, status өөрчлөгдөөгүй). §1.2-ийн хүснэгт: «Mobile app (Expo) — G6, дараагийн release» → «Native mobile — D-11 gate», PWA мөр нэмэгдсэн. §4.12-ийн тайлбарын өмнөх текст «Өмнөх (v2.2)» мөрөнд. §7.2, §7.3, §8 шинэчлэгдсэн. |
 | v2.2 | 2026-10-30 | MINOR | D-10: FR-INQ-140-ийн API утасны дүрэм `^[0-9+\s-]{8,15}$` → `^\d{8}$`, mobile мөн дагана. API код (`common.ts`) болон integration тестийн 3 тохиолдол шинэчлэгдсэн; status implemented хэвээр. §7.4-ийн FR-INQ-140 мөр болон §8-ийн асуултыг шийдэгдсэн гэж тэмдэглэсэн (устгаагүй). §7.2-ийн тоо шинэчлэгдсэн. |
 | v2.1 | 2026-10-27 | MINOR | D-09: FR-PROD-190 (хэмжээ, жин, материал), FR-PUB-250 (тэдгээрийг харуулах), FR-PUB-260 (хэмжээний шугамын overlay) нэмсэн. FR-PUB-240, FR-MOB-130-ийг 3D GLB viewer-ээс сонгосон бүтээгдэхүүний photo spin болгосон (өмнөх текст тухайн шаардлагад). §7.2, §7.3-ийн тоог шинэчилсэн. |
@@ -417,7 +418,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** Admin хэрэглэгчийн эрхийг `customer` ↔ `admin` болгон өөрчлөхөд систем шинэ эрхийг хадгалж audit log-д бүртгэнэ **may**. Admin өөрийнхөө эрхийг бууруулахыг хориглоно **shall**.
 - **Rationale:** Сүүлчийн admin-ийг алдахаас сэргийлнэ.
 - **Source:** Phase0 FR-USER-004 (S); code `supabase/migrations/20260716154420_rls_policies.sql:72` (RLS policy бий, API/UI байхгүй)
-- **Priority · Phase · Status:** Could · PH8 · planned
+- **Priority · Phase · Status:** Could · PH8 · planned. Тэмдэглэл (2026-10-30): migration 0008-ийн дараа `authenticated` role (admin орно) `users.role`-ийг шууд өөрчилж чадахгүй; хэрэгжүүлэхдээ API (`service_role`, requireAdmin)-аар хийнэ.
+- **Өмнөх (v2.3):** Status «Could · PH8 · planned».
 - **Verification:** Test — admin→customer өөрчлөх, өөрийгөө бууруулах гэсэн хоёр нөхцөл.
 - **Acceptance:**
   1. Өөр хэрэглэгчийн эрх өөрчлөгдөж audit мөр нэмэгдэнэ.
@@ -1364,7 +1366,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** `delivery_enabled=false` үед нэвтэрсэн customer Supabase client-ээр `orders` эсвэл `order_items`-д шууд insert хийх оролдлого амжилтгүй болно **shall**.
 - **Rationale:** RLS `orders_insert_own` нь toggle-ийг шалгадаггүй тул API-г тойрох зам нээлттэй байж болзошгүй (table grants-аас хамаарна). Consistency (FR-SET-210) болон defense in depth.
 - **Source:** `20260716154420_rls_policies.sql` (`orders_insert_own`), `20260719104500_table_grants.sql`
-- **Priority · Phase · Status:** Must · PH3 · unknown (not checked: grants-ийн бодит үр дүнг runtime дээр шалгаагүй)
+- **Priority · Phase · Status:** Must · PH3 · implemented (`supabase/migrations/20261030120000_explicit_table_grants.sql`: `orders`, `order_items`, `delivery_assignments`-д API role-уудад grant байхгүй; test `backend/api/tests/rls.integration.test.ts` — `42501`). Захиалгын функц хэрэгжих үед тусдаа migration-оор grant нэмж, энэ хаалтыг `delivery_enabled`-ийн service-ийн хаалтаар орлуулна.
+- **Өмнөх (v2.3):** Status «Must · PH3 · unknown (not checked: grants-ийн бодит үр дүнг runtime дээр шалгаагүй)».
 - **Verification:** Test — customer JWT-ээр `supabase.from('orders').insert(...)`
 - **Acceptance:** Insert амжилтгүй (RLS эсвэл permission алдаа), мөр нэмэгдэхгүй.
 
@@ -1653,7 +1656,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** `anon` болон `authenticated` (admin орно) role-ууд audit мөрийг засах эсвэл устгах боломжгүй байна **shall**. API-д audit засах/устгах endpoint байхгүй **shall**.
 - **Rationale:** Бүртгэлийн итгэлцэл.
 - **Source:** Phase0 FR-AUD-003; code `supabase/migrations/20260716154420_rls_policies.sql:254-266` (UPDATE/DELETE policy байхгүй)
-- **Priority · Phase · Status:** Must · PH3 · implemented (`supabase/migrations/20260716154420_rls_policies.sql`). `service_role` нь RLS-ийг тойрдог тул append-only нь API кодын дүрмээр хамгаалагдана. REVIEW-г үз.
+- **Priority · Phase · Status:** Must · PH3 · implemented (`supabase/migrations/20260716154420_rls_policies.sql`; `supabase/migrations/20261030120000_explicit_table_grants.sql`: `service_role` ч зөвхөн `select, insert`). Append-only нь одоо DB grant-аар бүх role-д хатуужсан.
+- **Өмнөх (v2.3):** Status «Must · PH3 · implemented (`supabase/migrations/20260716154420_rls_policies.sql`). `service_role` нь RLS-ийг тойрдог тул append-only нь API кодын дүрмээр хамгаалагдана. REVIEW-г үз.».
 - **Verification:** Test — admin session-ээр `update`/`delete` оролдоно. Inspection — repository-д update/delete функц байхгүй эсэхийг шалгана.
 - **Acceptance:** Оролдлого бүр 0 мөрөнд нөлөөлнө эсвэл алдаа буцаана. `audit-log.repository.ts`-д зөвхөн `log` байна.
 
@@ -2190,7 +2194,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** `authenticated` role-той хэрэглэгч Supabase client-ээр шууд хандаж өөрийн `public.users.role`, `email`, `id` баганыг өөрчлөх боломжгүй байна **shall**. Зөвхөн `full_name`-ийг өөрчилж болно **shall**.
 - **Rationale:** `users_update_own` RLS policy нь баганыг хязгаарладаггүй. Policy-ийн тайлбарт «column restriction is enforced by Zod at the API layer» гэж бичсэн ч web профайл нь API-аар биш, Supabase-аар шууд update хийдэг (`profile-form.tsx:53`). Grant-ийн migration хоосон (`20260719104500_table_grants.sql`). Тиймээс customer өөрийгөө `admin` болгох эрсдэлтэй. Энэ нь runtime-д шалгагдаагүй.
 - **Source:** code `supabase/migrations/20260716154420_rls_policies.sql:62-70`, `apps/web/src/components/public/profile-form.tsx:53`, `supabase/migrations/20260719104500_table_grants.sql`. Шинэ шаардлага, review-д илэрсэн.
-- **Priority · Phase · Status:** Must · PH3 · unknown (not checked — runtime grant-ийг шалгаагүй; эрсдэлтэй гэж үзнэ)
+- **Priority · Phase · Status:** Must · PH3 · implemented (`supabase/migrations/20261030120000_explicit_table_grants.sql`; test `backend/api/tests/rls.integration.test.ts`, local stack 2026-10-30-нд давсан). Засварын өмнө бүх эрх олгосон default-тай орчинд customer `role`/`email`-ээ өөрчилж чадсан нь runtime-д батлагдсан (C1).
+- **Өмнөх (v2.3):** Status «Must · PH3 · unknown (not checked — runtime grant-ийг шалгаагүй; эрсдэлтэй гэж үзнэ)».
 - **Verification:** Test — customer session-ээр `supabase.from('users').update({role:'admin'}).eq('id', uid)` ажиллуулна.
 - **Acceptance:** Update татгалзагдах эсвэл 0 мөрөнд нөлөөлнө. Дараах `select role` нь `customer` хэвээр. `full_name` update амжилттай хэвээр.
 
@@ -2837,7 +2842,7 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 
 **Leaf шаардлагын priority:** Must 176 · Should 45 · Could 11 · Won't (this release) 30.
 
-**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 136 · partial 34 · planned 57 · deferred 12 · unknown 23.
+**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 138 · partial 34 · planned 57 · deferred 12 · unknown 21.
 
 ### 7.3 Area-аар
 
@@ -2880,7 +2885,7 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | FR-AUTH-230 | Complete | Гарсны дараа хуучин JWT ≤ 15 минут хүчинтэй хэвээр | Acceptance-д хязгаарыг ил бичиж, NFR-SEC-330-тай холбов. |
 | FR-AUD-130 | Correct | Append-only нь RLS-ээр хамгаалагддаг ч API нь service_role (RLS-ийг тойрдог) ашигладаг | Шаардлагыг anon/authenticated role-оор хязгаарлаж, API repository-д update/delete байхгүйг inspection-д нэмэв. DB trigger-ээр хатуужуулах эсэх нь OPEN. |
 | FR-AUD-110 | Complete | Үндсэн бичилт ба audit бичилт атомик биш, audit алдагдаж болно | Хүлээн зөвшөөрсөн хязгаар гэж Status-д бичив. Атомик болгох эсэх нь OPEN. |
-| NFR-SEC-350 | Correct | `users_update_own` нь бүх баганыг зөвшөөрдөг. Web шууд Supabase update хийдэг. Grant migration хоосон. Эрх нэмэгдүүлэх эрсдэл. | Шинэ Must шаардлага нэмэв. Status: unknown. Runtime-д шалгаж, баганын grant эсвэл trigger-ээр засах ажил. **OPEN** (security) |
+| NFR-SEC-350 | Correct | `users_update_own` нь бүх баганыг зөвшөөрдөг. Web шууд Supabase update хийдэг. Grant migration хоосон. Эрх нэмэгдүүлэх эрсдэл. | Шинэ Must шаардлага нэмэв. Status: unknown. Runtime-д шалгаж, баганын grant эсвэл trigger-ээр засах ажил. **OPEN** (security) **Шийдэгдсэн 2026-10-30:** migration 0008 + rls тест. |
 | NFR-SEC-240 | Verifiable | JSON-LD escape хийгдээгүй (F-05) | Шаардлага + XSS payload тест нэмэв. Засварыг тусдаа task-аар хийнэ. |
 | NFR-SEC-252 | Correct | Phase0-ийн «auth 5/15min»-ыг Fastify-д тавина гэж заасан ч нэвтрэлт Supabase Auth-аар явдаг | Хязгаарыг Supabase Auth-ийн тохиргооны шаардлага болгов. Status unknown. |
 | NFR-SEC-010 → NFR-SEC-320 | Complete | Phase0-д order route-ын ownership орсон | Consistency pass: захиалгын ownership-ийг FR-ORD-300 бичсэн (PH8). Шийдэгдсэн. |
@@ -2898,7 +2903,7 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | FR-MEDIA-010 | Correct | Бичиг баримтын заавар нь системийн шаардлага биш | Хасаж, admin guide (баримт) болгон шилжүүлсэн |
 | FR-PROD-320 | Correct | PROD-012-ийн нийтийн `status` шүүлтүүр нь FR-PROD-310-тэй зөрчилдөнө | `status`-ийг зөвхөн admin-д хамааруулсан |
 | FR-SET-210 | Consistent | Phase 0 `403` гэрээ ↔ одоо route байхгүй (`404`) | Хоёр төлвийг acceptance-д бичсэн; PH8-д 403 |
-| FR-SET-220 | Consistent | RLS `orders_insert_own` нь toggle-ийг шалгадаггүй тул API-г тойрох зам нээлттэй байж магадгүй (grants-аас хамаарна) | Шаардлага нэмсэн, status unknown. NFR-SEC-350-тай хамт тусдаа security task-аар runtime-д шалгана. **OPEN** |
+| FR-SET-220 | Consistent | RLS `orders_insert_own` нь toggle-ийг шалгадаггүй тул API-г тойрох зам нээлттэй байж магадгүй (grants-аас хамаарна) | Шаардлага нэмсэн, status unknown. NFR-SEC-350-тай хамт тусдаа security task-аар runtime-д шалгана. **OPEN** **Шийдэгдсэн 2026-10-30:** migration 0008 + rls тест. |
 | FR-ADM-720 | Complete | ConfirmDialog нь `div` бөгөөд role, Escape, focus буцаалт байхгүй | Тусдаа шаардлага, planned |
 | FR-ADM-710 | Complete | Зураг устгах UI болон баталгаажуулалт байхгүй; impact (зургийн тоо) дутуу | partial, acceptance-д 5 үйлдэл |
 | FR-PUB-150 | Complete | `error.tsx` байхгүй; API унтарвал Next-ийн default алдаа гарна | Error төлвийг шаардлагад нэмсэн, planned |
@@ -2935,8 +2940,8 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | NFR-COMP-200 | Unambiguous | Доод өргөн 375 px; C prototype 390 px-д шалгагдсан; 320 px төхөөрөмж | OPEN — 320 px хүртэл бууруулах эсэх |
 
 **Аюулгүй байдлын хоёр сэжигтэй асуудал** кодыг уншиж илрүүлсэн, runtime-д батлагдаагүй. F-05-ийн нэгэн адил тус бүрийг тусдаа task болгоно:
-- **NFR-SEC-350:** `users_update_own` RLS бодлогоор customer өөрийн `role`-ийг өөрчилж болзошгүй.
-- **FR-SET-220:** `orders_insert_own` бодлого нь `delivery_enabled`-ийг шалгадаггүй.
+- **NFR-SEC-350:** `users_update_own` RLS бодлогоор customer өөрийн `role`-ийг өөрчилж болзошгүй. **Батлагдаж, засагдсан 2026-10-30** (migration 0008).
+- **FR-SET-220:** `orders_insert_own` бодлого нь `delivery_enabled`-ийг шалгадаггүй. **Хаагдсан 2026-10-30:** захиалгын хүснэгтүүдэд grant байхгүй (migration 0008).
 
 ## 8. Нээлттэй асуултууд
 
@@ -2944,7 +2949,7 @@ Owner батлах ёстой. ID нь холбогдох шаардлагыг �
 
 - **Хичээл:** «шаардлага шалгах 5 арга»-ын яг нэрс (§7.1). QA хичээлийн агуулга ирэхэд NFR болон PH6-ийг тааруулна.
 - **Огноо:** [project-goals](../project/project-goals.md) G1–G6 болон [roadmap](../project/roadmap.md)-ийн огноонууд.
-- **NFR-SEC-350 (security, яаралтай).** Customer Supabase-аар шууд `users.role`-оо өөрчилж чадах эсэхийг runtime-д шалгах шаардлагатай. Чадах бол баганын grant эсвэл `before update` trigger-ээр хаана. Энэ нь F-05-тай адил тусдаа task.
+- ~~**NFR-SEC-350 (security, яаралтай).** Customer Supabase-аар шууд `users.role`-оо өөрчилж чадах эсэхийг runtime-д шалгах шаардлагатай. Чадах бол баганын grant эсвэл `before update` trigger-ээр хаана. Энэ нь F-05-тай адил тусдаа task.~~ **Шийдэгдсэн 2026-10-30:** runtime-д батлагдаж, migration 0008-оор засагдсан.
 - ~~**FR-INQ-140:** Mobile (G6) болон API нь web-ийн «яг 8 цифр»-ийг дагах уу, эсвэл API-ийн 8–15 тэмдэгт (+, зай, зураас) хэвээр үлдэх үү?~~ **Шийдэгдсэн 2026-10-30 (D-10):** бүгд яг 8 цифр.
 - **FR-INQ-330:** API нь шилжилтийн дарааллыг хатуу хориглох ёстой юу (жишээ нь `closed → new`-ийг хориглох)?
 - **FR-INQ (шинэ санаа):** G2-ийн «1 ажлын өдөрт хариулах»-ыг хангахын тулд шинэ асуулга ирэхэд admin-д мэдэгдэл (email/SMS/Telegram) хэрэгтэй юу? Одоо ямар ч мэдэгдэл байхгүй. FR-INQ-340 нь зөвхөн inbox доторх тэмдэглэгээ.
@@ -2955,7 +2960,7 @@ Owner батлах ёстой. ID нь холбогдох шаардлагыг �
 - **NFR-SEC-500:** Inquiry-ийн хувийн мэдээллийг хэр удаан хадгалах вэ (retention), устгах хүсэлтийг яаж шийдэх вэ?
 - FR-CAT-131: Идэвхгүй ангиллын published бүтээгдэхүүнийг нийтээс нуух уу, эсвэл «ангилалгүй» харагдах уу?
 - FR-PUB-120 / NFR-SEO-140: ангиллын URL `/products?category=` хэвээр байх уу, `/categories/[slug]` руу шилжих үү? Canonical болон SEO-д нөлөөлнө.
-- FR-SET-220: `orders` руу customer-ийн шууд insert local stack дээр бодитоор боломжтой эсэхийг шалгах. Боломжтой бол RLS-д `delivery_enabled` шалгалт нэмэх. Энэ нь кодын өөрчлөлт.
+- ~~FR-SET-220: `orders` руу customer-ийн шууд insert local stack дээр бодитоор боломжтой эсэхийг шалгах. Боломжтой бол RLS-д `delivery_enabled` шалгалт нэмэх. Энэ нь кодын өөрчлөлт.~~ **Шийдэгдсэн 2026-10-30:** grant байхгүй тул insert `42501` (migration 0008).
 - FR-PUB-310: нүүрэнд хэдэн featured бүтээгдэхүүн харуулах вэ (санал 4–8)? D-08 C дизайны layout-аас хамаарна.
 - FR-ADM-200: хянах самбарт өөр ямар тоо хэрэгтэй вэ (жишээ нь зураггүй/заавааргүй бүтээгдэхүүний тоо — G1 контентын бэлэн байдал)?
 - NFR-SEO-330: бодит контентын alt текстийн ≥ 90% зорилт owner-т боломжийн эсэх.

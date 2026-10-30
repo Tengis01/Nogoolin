@@ -1,6 +1,6 @@
 # Traceability v2
 
-**Doc ID:** REQ-02 · **Хувилбар:** v2.3 draft · **Огноо:** 2026-10-30 (v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-02 · **Хувилбар:** v2.4 draft · **Огноо:** 2026-10-30 (v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ хүснэгт [SRS v2](srs-v2.md)-ийн leaf шаардлага бүрийг эх, архитектур/ADR, код, тесттэй холбоно. Энэ нь G4-ийн суурь ([зорилго](../project/project-goals.md#g4--чанар-ба-traceability)).
 
@@ -15,6 +15,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v2.4 | 2026-10-30 | NFR-SEC-350, FR-SET-220, FR-AUD-130: Code-д migration 0008, Test-д `rls.integration.test.ts`, Verif. status «passed (local, 2026-10-30)». Өмнөх утгууд: NFR-SEC-350 «planned / not run», FR-SET-220 «planned / unknown», FR-AUD-130 «planned / not run». |
 | v2.3 | 2026-10-30 | D-11: FR-PWA-110…130, 210…250, 310 болон NFR-PERF-350, NFR-SEC-260, NFR-COMP-600 мөр нэмсэн. Native mobile-ийн мөрүүд өөрчлөгдөөгүй (Priority «Won't» хэвээр; phase-ийг SRS-ээс үзнэ). |
 | v2.2 | 2026-10-30 | FR-INQ-140-ийн Arch/ADR багана «—» → «D-10, ADR-012». |
 | v2.1 | 2026-10-27 | SRS v2.1-ийн дагуу FR-PROD-190, FR-PUB-250, FR-PUB-260 мөр нэмсэн. FR-PUB-240-ийн Arch/ADR баганад D-09 нэмсэн (өмнө нь зөвхөн D-07). |
@@ -62,7 +63,7 @@
 | FR-WISH-150 | Must | v1.0 FR-14 | — | backend/api/src/controllers/cart.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts (A/B planned) | partial |
 | FR-AUD-110 | Must | P0 FR-AUD-001 | — | backend/api/src/services/product.service.ts | planned | not run |
 | FR-AUD-120 | Must | P0 FR-AUD-002 | 04-er §3.11 | supabase/migrations/20260716154417_init_schema.sql | planned (inspection) | not run |
-| FR-AUD-130 | Must | P0 FR-AUD-003 | 08-security §6.12 | supabase/migrations/20260716154420_rls_policies.sql | planned | not run |
+| FR-AUD-130 | Must | P0 FR-AUD-003 | 08-security §6.12 | supabase/migrations/20260716154420_rls_policies.sql, 20261030120000_explicit_table_grants.sql | planned (grant inspection done) | not run |
 | FR-AUD-140 | Should | P0 FR-AUD-004 | — | — | planned | not run |
 | FR-AUD-150 | Must | P0 FR-AUD-005 | ADR-002 | — | planned | not run |
 | FR-AUD-160 | Should | code (UC-ADM-011) | — | backend/api/src/hooks/auth.ts | planned | not run |
@@ -81,7 +82,7 @@
 | NFR-SEC-320 | Must | P0 NFR-SEC-010; v1.0 NFR-01; M2 NFR-01 | 08-security §9 | backend/api/src/repositories/supabase/cart.repository.ts | backend/api/tests/inquiry-cart.integration.test.ts (A/B matrix planned) | partial |
 | NFR-SEC-330 | Must | P0 NFR-SEC-013 | ADR-005 | supabase/config.toml | planned (inspection) | not run |
 | NFR-SEC-340 | Must | P0 NFR-SEC-008 | 08-security §6 | supabase/migrations/20260716154420_rls_policies.sql | planned | not run |
-| NFR-SEC-350 | Must | review (new) | 08-security §6.4 | supabase/migrations/20260716154420_rls_policies.sql | planned | not run |
+| NFR-SEC-350 | Must | review (new) | 08-security §6.4 | supabase/migrations/20260716154420_rls_policies.sql, 20261030120000_explicit_table_grants.sql | backend/api/tests/rls.integration.test.ts | passed (local, 2026-10-30) |
 | NFR-SEC-410 | Must | P0 NFR-SEC-005 | 08-security §11 | backend/api/src/config/env.ts | planned (secret scan) | not run |
 | NFR-SEC-420 | Must | v1.0 §6 | ADR-005 | backend/api/src/lib/supabase.ts | planned (inspection) | not run |
 | NFR-SEC-500 | Should | v1.0 §6 | — | backend/api/src/app.ts | planned (inspection) | not run |
@@ -165,7 +166,7 @@
 | FR-SET-130 | Must | FR-SET-003 | ADR-005 | `supabase/migrations/20260716154420_rls_policies.sql` | planned | planned |
 | FR-SET-140 | Won't | FR-SET-006 | — | — | — | deferred |
 | FR-SET-210 | Must | FR-SET-004, FR-ORD-008 | ADR-002 | (no order route) | planned | partial |
-| FR-SET-220 | Must | RLS review | ADR-002, ADR-005 | `rls_policies.sql`, `20260719104500_table_grants.sql` | planned | unknown |
+| FR-SET-220 | Must | RLS review | ADR-002, ADR-005 | `rls_policies.sql`, `20261030120000_explicit_table_grants.sql` | backend/api/tests/rls.integration.test.ts | passed (local, 2026-10-30) |
 | FR-ORD-110 | Won't | FR-ORD-001 | ADR-002 | — | — | deferred |
 | FR-ORD-120 | Won't | FR-ORD-002 | ADR-002 | `init_schema.sql` | — | deferred |
 | FR-ORD-130 | Won't | FR-ORD-003 | ADR-002 | `init_schema.sql` | — | deferred |

@@ -66,6 +66,10 @@ Follow the user's current instructions and applicable nested AGENTS.md.
 - Migrations are in `supabase/migrations/`; never edit an applied migration.
   Use a new migration for schema changes. Preserve RLS and append-only
   audit logging; verify the actual schema/policies for the task.
+- Every new table migration grants table/column privileges explicitly
+  (least privilege per role, as in `20261030120000_explicit_table_grants.sql`).
+  Never rely on Supabase default privileges: they changed between CLI
+  versions and caused C1 (ERRORS.md 2026-10-30).
 - Keep `delivery_enabled=false` until the owner authorizes activation.
   Designed order/delivery tables do not prove checkout/API implementation;
   the current cart service is a saved list, not checkout. Gate delivery
