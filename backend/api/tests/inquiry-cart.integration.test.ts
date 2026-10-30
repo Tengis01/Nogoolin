@@ -333,6 +333,25 @@ if (!reachable) {
     assert.equal(delAgain.statusCode, 204);
   });
 
+  test('non-UUID path params → 400 VALIDATION_ERROR (H1)', async () => {
+    const cart = await ctx.app.inject({
+      method: 'DELETE',
+      url: '/api/v1/cart/abc',
+      headers: customer(),
+    });
+    assert.equal(cart.statusCode, 400);
+    assert.equal(cart.json().code, 'VALIDATION_ERROR');
+
+    const status = await ctx.app.inject({
+      method: 'PATCH',
+      url: '/api/v1/admin/inquiries/abc/status',
+      headers: admin(),
+      payload: { status: 'contacted' },
+    });
+    assert.equal(status.statusCode, 400);
+    assert.equal(status.json().code, 'VALIDATION_ERROR');
+  });
+
   test('POST /cart unknown product → 404', async () => {
     const res = await ctx.app.inject({
       method: 'POST',

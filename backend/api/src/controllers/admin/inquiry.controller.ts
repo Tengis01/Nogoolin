@@ -1,11 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 import {
+  idParamsSchema,
   adminInquiryListQuerySchema,
   inquiryStatusPatchSchema,
   type InquiryStatusPatch,
 } from '@nogoolin/validation-schemas';
 import type { InquiryService } from '../../services/inquiry.service.js';
-import { validateBody } from '../../hooks/validate.js';
+import { validateBody, validateParams } from '../../hooks/validate.js';
 import { badRequest } from '../../lib/errors.js';
 
 // Admin inquiry inbox (06-api-spec /admin/inquiries*) — the parent scope
@@ -27,7 +28,7 @@ export function registerAdminInquiryRoutes(
   // PATCH /admin/inquiries/{id}/status → 200 | 404 INQUIRY_NOT_FOUND
   fastify.patch<{ Params: { id: string }; Body: InquiryStatusPatch }>(
     '/inquiries/:id/status',
-    { preHandler: validateBody(inquiryStatusPatchSchema) },
+    { preHandler: [validateParams(idParamsSchema), validateBody(inquiryStatusPatchSchema)] },
     async (request) => {
       const inquiry = await service.updateStatus(
         request.params.id,

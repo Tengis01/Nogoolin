@@ -133,6 +133,27 @@ Kept verbatim from the backlog (moved 2026-10-30):
 
 ## Log (append after every task, newest first)
 
+### 2026-10-30 — Audit H1/H2 fixed; deploy jobs deferred to PH7
+- **Done:**
+  - H1: `validateParams` + shared UUID param schemas on the 9 routes with
+    `:id`, `:imageId` or `:productId`.
+  - H2: `lib/db-errors.ts` `dbError` replaces the 35 repository
+    `throw new Error` calls (23505 → 409, 23503 → 400, 22P02/23514 → 400).
+  - Tests were written first and failed with 500 (3 tests), then passed.
+  - The `deploy` jobs in api-/web-deploy.yml now run only when the
+    `DEPLOY_ENABLED` repo variable is `true` (PH7).
+- **Owner decision:** no Supabase in CI (H4 won't do). Integration tests run
+  locally; `tests/db-errors.test.ts` (6 unit tests) runs in CI.
+- **Verified:**
+  - `pnpm --filter @nogoolin/api test`: 47/47, 0 skip (local stack).
+  - Without the stack: 6 unit tests pass, 3 suites skip.
+  - `pnpm run type-check` green; both workflows parse as YAML.
+- **Docs:** SRS v2.5 (NFR-SEC-210 statement now includes path params;
+  NFR-MAINT-320 question in §8), traceability v2.5, audit QA-05 v1.2,
+  register v1.5.
+- **Next (PH7):** set `DEPLOY_ENABLED=true` once the cloud exists, and
+  resolve the NFR-MAINT-320 question first. Remaining audit items: M1–M10, A1–A6.
+
 ### 2026-10-30 — C1 fixed: explicit least-privilege table grants
 - **Done:** Wrote `rls.integration.test.ts` first (4 tests). On a simulated
   legacy full-grant DB it **failed** 2/4, confirming C1 at runtime: a customer

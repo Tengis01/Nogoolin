@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Category } from '@nogoolin/validation-schemas';
 import type { CategoryRepository } from '../types.js';
+import { dbError } from '../../lib/db-errors.js';
 
 // Supabase implementation. `readClient` = anon (RLS: active-only for the
 // public paths); `writeClient` = service_role, used ONLY after the
@@ -17,7 +18,7 @@ export function createSupabaseCategoryRepository(
         .select('*')
         .eq('is_active', true)
         .order('sort_order', { ascending: true });
-      if (error) throw new Error(`categories list failed: ${error.message}`);
+      if (error) throw dbError('categories list', error);
       return data as Category[];
     },
 
@@ -26,7 +27,7 @@ export function createSupabaseCategoryRepository(
         .from('categories')
         .select('*, products(count)')
         .order('sort_order', { ascending: true });
-      if (error) throw new Error(`admin categories list failed: ${error.message}`);
+      if (error) throw dbError('admin categories list', error);
       return (data as Array<Category & { products: Array<{ count: number }> }>).map(
         ({ products, ...category }) => ({
           ...category,
@@ -42,7 +43,7 @@ export function createSupabaseCategoryRepository(
         .eq('slug', slug)
         .eq('is_active', true)
         .maybeSingle();
-      if (error) throw new Error(`category lookup failed: ${error.message}`);
+      if (error) throw dbError('category lookup', error);
       return (data as Category) ?? null;
     },
 
@@ -52,7 +53,7 @@ export function createSupabaseCategoryRepository(
         .select('*')
         .eq('id', id)
         .maybeSingle();
-      if (error) throw new Error(`category lookup failed: ${error.message}`);
+      if (error) throw dbError('category lookup', error);
       return (data as Category) ?? null;
     },
 
@@ -61,7 +62,7 @@ export function createSupabaseCategoryRepository(
         .from('categories')
         .select('id', { count: 'exact', head: true })
         .eq('slug', slug);
-      if (error) throw new Error(`slug check failed: ${error.message}`);
+      if (error) throw dbError('slug check', error);
       return (count ?? 0) > 0;
     },
 
@@ -71,7 +72,7 @@ export function createSupabaseCategoryRepository(
         .insert(data)
         .select('*')
         .single();
-      if (error) throw new Error(`category create failed: ${error.message}`);
+      if (error) throw dbError('category create', error);
       return row as Category;
     },
 
@@ -82,13 +83,13 @@ export function createSupabaseCategoryRepository(
         .eq('id', id)
         .select('*')
         .maybeSingle();
-      if (error) throw new Error(`category update failed: ${error.message}`);
+      if (error) throw dbError('category update', error);
       return (row as Category) ?? null;
     },
 
     async delete(id) {
       const { error } = await writeClient.from('categories').delete().eq('id', id);
-      if (error) throw new Error(`category delete failed: ${error.message}`);
+      if (error) throw dbError('category delete', error);
     },
 
     async countProducts(categoryId) {
@@ -96,7 +97,7 @@ export function createSupabaseCategoryRepository(
         .from('products')
         .select('id', { count: 'exact', head: true })
         .eq('category_id', categoryId);
-      if (error) throw new Error(`product count failed: ${error.message}`);
+      if (error) throw dbError('product count', error);
       return count ?? 0;
     },
   };

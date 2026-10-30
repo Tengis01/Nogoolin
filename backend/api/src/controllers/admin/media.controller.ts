@@ -1,10 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 import {
+  idParamsSchema,
+  productImageParamsSchema,
   productImagePatchSchema,
   type ProductImagePatch,
 } from '@nogoolin/validation-schemas';
 import type { MediaService, UploadFile } from '../../services/media.service.js';
-import { validateBody } from '../../hooks/validate.js';
+import { validateBody, validateParams } from '../../hooks/validate.js';
 import { badRequest } from '../../lib/errors.js';
 
 const STREAM_LIMIT = 5 * 1024 * 1024; // hard stream cap = spec max (FR-MEDIA-002)
@@ -19,6 +21,7 @@ export function registerAdminMediaRoutes(
   // POST /admin/products/{id}/images → 201 { data, rejected } | 400 | 404 | 502
   fastify.post<{ Params: { id: string } }>(
     '/products/:id/images',
+    { preHandler: validateParams(idParamsSchema) },
     async (request, reply) => {
       if (!request.isMultipart()) {
         throw badRequest('multipart/form-data required', 'VALIDATION_ERROR');
@@ -68,7 +71,7 @@ export function registerAdminMediaRoutes(
     Body: ProductImagePatch;
   }>(
     '/products/:id/images/:imageId',
-    { preHandler: validateBody(productImagePatchSchema) },
+    { preHandler: [validateParams(productImageParamsSchema), validateBody(productImagePatchSchema)] },
     async (request) => {
       const image = await service.updateImage(
         request.params.id,
@@ -83,6 +86,7 @@ export function registerAdminMediaRoutes(
   // DELETE /admin/products/{id}/images/{imageId} → 204 | 404
   fastify.delete<{ Params: { id: string; imageId: string } }>(
     '/products/:id/images/:imageId',
+    { preHandler: validateParams(productImageParamsSchema) },
     async (request, reply) => {
       await service.deleteImage(
         request.params.id,

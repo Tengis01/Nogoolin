@@ -1,6 +1,6 @@
 # Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур
 
-**Doc ID:** QA-05 · **Хувилбар:** v1.1 draft · **Огноо:** 2026-10-30 (v1.0: 2026-10-27) · **Төлөв:** draft, owner review хийгдээгүй · **Хамрах хүрээ:** `main` (`17bf71b`) дээрх `backend/api`, `apps/web`, `apps/mobile`, `packages/*`, `supabase/`, `.github/workflows`
+**Doc ID:** QA-05 · **Хувилбар:** v1.2 draft · **Огноо:** 2026-10-30 (v1.1: 2026-10-30, v1.0: 2026-10-27) · **Төлөв:** draft, owner review хийгдээгүй · **Хамрах хүрээ:** `main` (`17bf71b`) дээрх `backend/api`, `apps/web`, `apps/mobile`, `packages/*`, `supabase/`, `.github/workflows`
 
 ## Өөрчлөлтийн түүх
 
@@ -8,6 +8,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v1.2 | 2026-10-30 | **H1, H2 засагдсан** (`validateParams`, `lib/db-errors.ts`; засварын өмнө шинэ тестүүд 500-аар унаж батлагдсан, дараа нь 47/47). **H4:** owner CI-д Supabase нэмэхгүй гэж шийдсэн; DB-гүй unit тест CI-д нэмэгдсэн. **Шинэ олдвор:** `deploy` job-ууд main-ийн push бүрт унаж байсан, `DEPLOY_ENABLED`-ээр PH7 хүртэл хаагдсан. |
 | v1.1 | 2026-10-30 | **C1 засагдсан** (migration 0008, `rls.integration.test.ts`). Runtime шалгалтаар шинэ үндсэн шалтгаан илэрсэн: grant-ууд платформын default-аас хамаардаг байсан (L3). Хуучин default (бүгдийг олгодог) орчинд C1 батлагдсан; шинэ CLI v2.109 дээр DML grant огт байхгүй тул цэвэр reset дээр апп ажиллахгүй байсан. Мөн FR-SET-220 хаагдаж, audit_logs нь service_role-д ч append-only болсон. Анхны олдворын текст өөрчлөгдөөгүй. |
 | v1.0 | 2026-10-27 | Анхны аудит (статик уншлага). |
 
@@ -95,10 +96,12 @@ packages/shared-types ── хоосон (.gitkeep)
 ### High
 
 **H1. UUID биш path param 500 буцаана** (NFR-REL-210, NFR-SEC-210)
+- **Төлөв (2026-10-30): ЗАСАГДСАН.** `hooks/validate.ts`-д `validateParams` нэмж, shared `idParamsSchema`, `productImageParamsSchema`, `cartItemParamsSchema`-ийг UUID param бүхий 9 route-д ашигласан. Засварын өмнө 8 тохиолдол 500 буцааж байсан; одоо 400 `VALIDATION_ERROR`.
 - `:id`, `:imageId`, `:productId` гэсэн бүх route param шалгалтгүйгээр `.eq('id', …)` руу шууд дамждаг. `DELETE /api/v1/cart/abc` илгээхэд Postgres `22P02` алдаа өгч, repository `throw new Error`-оор дамжуулж, эцэст нь `500 INTERNAL` болно. Энэ хариу 400 эсвэл 404 байх ёстой.
 - **Засвар:** Нэг `validateParams(z.object({ id: z.string().uuid() }))` hook нэмэх. Илүү сайн шийдэл нь `fastify-type-provider-zod`-оор body, query, params гуравыг нэг загвараар шалгах (A4). Ингэснээр OpenAPI-г кодоос үүсгэх боломж нээгдэнэ (roadmap-ийн API-02).
 
 **H2. Repository-ийн алдаа бүгд 500 болж хувирдаг**
+- **Төлөв (2026-10-30): ЗАСАГДСАН.** `lib/db-errors.ts`-ийн `dbError` нь 35 газарт хэрэглэгдэнэ: 23505 → 409 `DUPLICATE`, 23503 → 400 `INVALID_REFERENCE`, 22P02/23514 → 400; бусад нь 500 хэвээр log-д бүртгэгдэнэ. Slug race-д дахин оролдох логик нэмээгүй (409 хангалттай гэж үзсэн).
 - `uniqueSlug` нь шалгаад дараа нь insert хийдэг (`lib/slug.ts:18`). Хоёр зэрэг хүсэлт ирэхэд UNIQUE `23505` алдаа гарч 500 буцна. Байхгүй `category_id`-тай бүтээгдэхүүн үүсгэхэд FK `23503` алдаа гарч мөн 500 буцна, 400/404 байх ёстой.
 - **Засвар:** Repository-д нэг `mapDbError(error)` helper нэмж `23505→409`, `23503→400`, `22P02→400` гэж хөрвүүлэх. Slug-ийн хувьд insert дээр `23505` гарвал дараагийн дугаараар дахин оролдох.
 
@@ -110,6 +113,7 @@ packages/shared-types ── хоосон (.gitkeep)
 - **Засвар:** Mutation болон audit-ийг Postgres function (RPC) дотор нэг transaction-д хийх, эсвэл audit-ийг DB trigger-ээр бичих. Storage-ийн хувьд compensating delete хийх, мөн hard delete-ийн өмнө файлуудыг устгах.
 
 **H4. CI худал ногоон гардаг** (NFR-MAINT-320, NFR-MAINT-330)
+- **Төлөв (2026-10-30): owner шийдвэр — CI-д Supabase нэмэхгүй.** Integration тест local-д ажиллана. CI-д DB шаардахгүй `tests/db-errors.test.ts` (6 тест) бодитоор ажиллана. Deploy job-ууд PH7 хүртэл хаалттай тул энэ одоогоор deploy-ийг блоклохгүй; PH7-ийн өмнө SRS §8-д эргэж шийднэ.
 - `api-deploy.yml:36` `pnpm --filter @nogoolin/api test` ажиллуулдаг ч CI-д Supabase байхгүй. `tests/helpers.ts` reachability шалгаад 36 тестийг бүгдийг нь skip хийдэг. Web, mobile, validation-schemas-ийн `test` script нь `echo "no tests yet"`. Энэ repo-д unit тест огт алга.
 - **Засвар:** CI-д `supabase/setup-cli` болон `supabase start` нэмэх, `CI=true` үед skip-ийг алдаа гэж тооцох. Service-үүдэд repository double ашигласан unit тест нэмэх (DI бэлэн байгаа).
 
@@ -179,8 +183,8 @@ Release-ээс гадуурх (Won't/deferred) шаардлага ~37 байга
 
 **P0. Шинэ feature нэмэхээс өмнө (1–2 өдөр)**
 1. C1: шинэ migration (column grant эсвэл trigger) болон тест. Эхлээд local stack дээр эмзэг байдлыг баталгаажуулна. ✅ 2026-10-30 (migration 0008).
-2. H1 болон H2: params validation, DB алдааг ApiError руу хөрвүүлэх.
-3. H4: CI-д Supabase асааж, skip-ийг алдаа гэж тооцох.
+2. H1 болон H2: params validation, DB алдааг ApiError руу хөрвүүлэх. ✅ 2026-10-30.
+3. H4: CI-д Supabase асааж, skip-ийг алдаа гэж тооцох. ⏸ Owner шийдвэр (2026-10-30): хийхгүй; deploy job-ууд PH7 хүртэл хаалттай.
 
 **P1. PH2-ийн архитектурын baseline-д оруулах**
 4. A1: `GET/PATCH /me` endpoint нэмж, web-ийн `from('users')` 4 дуудлагыг API руу шилжүүлэх. Supabase-ийг web-д зөвхөн auth-д ашиглана.

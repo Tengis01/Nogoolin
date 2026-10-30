@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { CartItem, StockStatus } from '@nogoolin/validation-schemas';
 import type { CartRepository } from '../types.js';
+import { dbError } from '../../lib/db-errors.js';
 
 // Cart item + a compact product summary (with its primary image) for
 // rendering the save-for-later list.
@@ -48,7 +49,7 @@ export function createSupabaseCartRepository(client: SupabaseClient): CartReposi
         .select(SELECT_WITH_PRODUCT)
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
-      if (error) throw new Error(`cart list failed: ${error.message}`);
+      if (error) throw dbError('cart list', error);
       return (data as Record<string, unknown>[]).map(mapRow);
     },
 
@@ -61,7 +62,7 @@ export function createSupabaseCartRepository(client: SupabaseClient): CartReposi
         .eq('user_id', userId)
         .eq('product_id', productId)
         .maybeSingle();
-      if (existing.error) throw new Error(`cart lookup failed: ${existing.error.message}`);
+      if (existing.error) throw dbError('cart lookup', existing.error);
       if (existing.data) return mapRow(existing.data as Record<string, unknown>);
 
       const { data, error } = await client
@@ -78,10 +79,10 @@ export function createSupabaseCartRepository(client: SupabaseClient): CartReposi
             .eq('user_id', userId)
             .eq('product_id', productId)
             .single();
-          if (retry.error) throw new Error(`cart add failed: ${retry.error.message}`);
+          if (retry.error) throw dbError('cart add', retry.error);
           return mapRow(retry.data as Record<string, unknown>);
         }
-        throw new Error(`cart add failed: ${error.message}`);
+        throw dbError('cart add', error);
       }
       return mapRow(data as Record<string, unknown>);
     },
@@ -93,7 +94,7 @@ export function createSupabaseCartRepository(client: SupabaseClient): CartReposi
         .eq('user_id', userId)
         .eq('product_id', productId)
         .select('id');
-      if (error) throw new Error(`cart remove failed: ${error.message}`);
+      if (error) throw dbError('cart remove', error);
       return (data?.length ?? 0) > 0;
     },
   };

@@ -1,12 +1,13 @@
 import type { FastifyInstance } from 'fastify';
 import {
+  idParamsSchema,
   categoryInputSchema,
   categoryPatchSchema,
   type CategoryInput,
   type CategoryPatch,
 } from '@nogoolin/validation-schemas';
 import type { CategoryService } from '../../services/category.service.js';
-import { validateBody } from '../../hooks/validate.js';
+import { validateBody, validateParams } from '../../hooks/validate.js';
 
 // Admin category routes (06-api-spec /admin/categories*) — the parent scope
 // already enforces requireAuth + requireAdmin (docs/phase-0/08 §5.5).
@@ -35,7 +36,7 @@ export function registerAdminCategoryRoutes(
   // PATCH /admin/categories/{id} → 200 | 404
   fastify.patch<{ Params: { id: string }; Body: CategoryPatch }>(
     '/categories/:id',
-    { preHandler: validateBody(categoryPatchSchema) },
+    { preHandler: [validateParams(idParamsSchema), validateBody(categoryPatchSchema)] },
     async (request) => {
       const category = await service.update(
         request.params.id,
@@ -49,6 +50,7 @@ export function registerAdminCategoryRoutes(
   // DELETE /admin/categories/{id} → 204 | 404 | 409 CATEGORY_NOT_EMPTY
   fastify.delete<{ Params: { id: string } }>(
     '/categories/:id',
+    { preHandler: validateParams(idParamsSchema) },
     async (request, reply) => {
       await service.remove(request.params.id, request.user!.id);
       return reply.code(204).send();

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Product } from '@nogoolin/validation-schemas';
 import type { ProductRepository, SearchTerms } from '../types.js';
+import { dbError } from '../../lib/db-errors.js';
 
 // Join expansion per 06-api-spec Product schema (images + category).
 const SELECT_WITH_JOINS = '*, images:product_images(*), category:categories(*)';
@@ -70,7 +71,7 @@ export function createSupabaseProductRepository(
 
       const from = (query.page - 1) * query.limit;
       const { data, count, error } = await q.range(from, from + query.limit - 1);
-      if (error) throw new Error(`product list failed: ${error.message}`);
+      if (error) throw dbError('product list', error);
       return {
         data: (data as Record<string, unknown>[]).map(stripVector),
         total: count ?? 0,
@@ -97,7 +98,7 @@ export function createSupabaseProductRepository(
 
       const from = (query.page - 1) * query.limit;
       const { data, count, error } = await q.range(from, from + query.limit - 1);
-      if (error) throw new Error(`admin product list failed: ${error.message}`);
+      if (error) throw dbError('admin product list', error);
       return {
         data: (data as Record<string, unknown>[]).map(stripVector),
         total: count ?? 0,
@@ -112,7 +113,7 @@ export function createSupabaseProductRepository(
         .eq('status', 'published')
         .order('sort_order', { referencedTable: 'product_images', ascending: true })
         .maybeSingle();
-      if (error) throw new Error(`product lookup failed: ${error.message}`);
+      if (error) throw dbError('product lookup', error);
       return data ? stripVector(data as Record<string, unknown>) : null;
     },
 
@@ -122,7 +123,7 @@ export function createSupabaseProductRepository(
         .select(SELECT_WITH_JOINS)
         .eq('id', id)
         .maybeSingle();
-      if (error) throw new Error(`product lookup failed: ${error.message}`);
+      if (error) throw dbError('product lookup', error);
       return data ? stripVector(data as Record<string, unknown>) : null;
     },
 
@@ -131,7 +132,7 @@ export function createSupabaseProductRepository(
         .from('products')
         .select('id', { count: 'exact', head: true })
         .eq('slug', slug);
-      if (error) throw new Error(`slug check failed: ${error.message}`);
+      if (error) throw dbError('slug check', error);
       return (count ?? 0) > 0;
     },
 
@@ -141,7 +142,7 @@ export function createSupabaseProductRepository(
         .insert(data)
         .select(SELECT_WITH_JOINS)
         .single();
-      if (error) throw new Error(`product create failed: ${error.message}`);
+      if (error) throw dbError('product create', error);
       return stripVector(row as Record<string, unknown>);
     },
 
@@ -152,14 +153,14 @@ export function createSupabaseProductRepository(
         .eq('id', id)
         .select(SELECT_WITH_JOINS)
         .maybeSingle();
-      if (error) throw new Error(`product update failed: ${error.message}`);
+      if (error) throw dbError('product update', error);
       return row ? stripVector(row as Record<string, unknown>) : null;
     },
 
     async hardDelete(id) {
       // product_images rows cascade (FK ON DELETE CASCADE)
       const { error } = await writeClient.from('products').delete().eq('id', id);
-      if (error) throw new Error(`product delete failed: ${error.message}`);
+      if (error) throw dbError('product delete', error);
     },
   };
 }

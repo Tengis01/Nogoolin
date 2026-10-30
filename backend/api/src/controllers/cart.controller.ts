@@ -1,7 +1,11 @@
 import type { FastifyInstance } from 'fastify';
-import { cartItemInputSchema, type CartItemInput } from '@nogoolin/validation-schemas';
+import {
+  cartItemInputSchema,
+  cartItemParamsSchema,
+  type CartItemInput,
+} from '@nogoolin/validation-schemas';
 import type { CartService } from '../services/cart.service.js';
-import { validateBody } from '../hooks/validate.js';
+import { validateBody, validateParams } from '../hooks/validate.js';
 
 // Per-user "save for later" list (Phase 4 wishlist / cart draft).
 // Registered inside the requireAuth scope — every route is the caller's
@@ -28,6 +32,7 @@ export function registerCartRoutes(
   // DELETE /cart/{productId} — remove one item (idempotent) → 204
   fastify.delete<{ Params: { productId: string } }>(
     '/cart/:productId',
+    { preHandler: validateParams(cartItemParamsSchema) },
     async (request, reply) => {
       await service.remove(request.user!.id, request.params.productId);
       return reply.code(204).send();

@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import {
+  idParamsSchema,
   adminProductListQuerySchema,
   productInputSchema,
   productPatchSchema,
@@ -7,7 +8,7 @@ import {
   type ProductPatch,
 } from '@nogoolin/validation-schemas';
 import type { ProductService } from '../../services/product.service.js';
-import { validateBody } from '../../hooks/validate.js';
+import { validateBody, validateParams } from '../../hooks/validate.js';
 import { badRequest } from '../../lib/errors.js';
 
 // Admin product routes (06-api-spec /admin/products*) — parent scope
@@ -39,7 +40,7 @@ export function registerAdminProductRoutes(
   // search_tags, model_3d_url)
   fastify.patch<{ Params: { id: string }; Body: ProductPatch }>(
     '/products/:id',
-    { preHandler: validateBody(productPatchSchema) },
+    { preHandler: [validateParams(idParamsSchema), validateBody(productPatchSchema)] },
     async (request) => {
       const product = await service.update(
         request.params.id,
@@ -53,6 +54,7 @@ export function registerAdminProductRoutes(
   // DELETE /admin/products/{id}?hard= → 204 (soft archive by default)
   fastify.delete<{ Params: { id: string }; Querystring: { hard?: string } }>(
     '/products/:id',
+    { preHandler: validateParams(idParamsSchema) },
     async (request, reply) => {
       const hard = request.query.hard === 'true';
       await service.remove(request.params.id, hard, request.user!.id);

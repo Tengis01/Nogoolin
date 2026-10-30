@@ -371,6 +371,39 @@ if (!reachable) {
 
   // ── Deletion flows ────────────────────────────────────────────
 
+  // H1: non-UUID path params are client errors, never a Postgres 500
+  test('non-UUID path params → 400 VALIDATION_ERROR (H1)', async () => {
+    const cases: Array<{ method: 'PATCH' | 'DELETE'; url: string; payload?: object }> = [
+      { method: 'PATCH', url: '/api/v1/admin/products/not-a-uuid', payload: { name: 'x' } },
+      { method: 'DELETE', url: '/api/v1/admin/products/not-a-uuid' },
+      { method: 'PATCH', url: '/api/v1/admin/categories/abc', payload: { name: 'x' } },
+      { method: 'DELETE', url: '/api/v1/admin/categories/abc' },
+      { method: 'PATCH', url: `/api/v1/admin/products/${productId}/images/xyz`, payload: { sort_order: 1 } },
+      { method: 'DELETE', url: `/api/v1/admin/products/${productId}/images/xyz` },
+    ];
+    for (const c of cases) {
+      const res = await ctx.app.inject({ ...c, headers: admin() });
+      assert.equal(res.statusCode, 400, `${c.method} ${c.url}`);
+      assert.equal(res.json().code, 'VALIDATION_ERROR', `${c.method} ${c.url}`);
+    }
+  });
+
+  // H2: FK violation (well-formed but unknown category) is a client error
+  test('POST /admin/products with unknown category_id → 400 INVALID_REFERENCE (H2)', async () => {
+    const res = await ctx.app.inject({
+      method: 'POST',
+      url: '/api/v1/admin/products',
+      headers: admin(),
+      payload: {
+        name: 'Ангилалгүй бараа',
+        category_id: '00000000-0000-4000-8000-000000000000',
+        price: 1000,
+      },
+    });
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.json().code, 'INVALID_REFERENCE');
+  });
+
   test('DELETE category with products → 409 CATEGORY_NOT_EMPTY', async () => {
     const res = await ctx.app.inject({
       method: 'DELETE',

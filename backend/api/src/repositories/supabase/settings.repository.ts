@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { SettingsRepository } from '../types.js';
 import type { PublicSettings } from '@nogoolin/validation-schemas';
+import { dbError } from '../../lib/db-errors.js';
 
 // Supabase implementation of SettingsRepository.
 // Only repositories touch the database (NFR-MAIN-001); queries go through
@@ -15,7 +16,7 @@ export function createSupabaseSettingsRepository(
         .select('value')
         .eq('key', 'delivery_enabled')
         .single();
-      if (error) throw new Error(`settings lookup failed: ${error.message}`);
+      if (error) throw dbError('settings lookup', error);
       return { delivery_enabled: data.value === true };
     },
 
@@ -24,7 +25,7 @@ export function createSupabaseSettingsRepository(
         .from('system_settings')
         .update({ value: enabled })
         .eq('key', 'delivery_enabled');
-      if (error) throw new Error(`settings update failed: ${error.message}`);
+      if (error) throw dbError('settings update', error);
     },
   };
 }

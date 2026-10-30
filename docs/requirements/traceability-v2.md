@@ -1,6 +1,6 @@
 # Traceability v2
 
-**Doc ID:** REQ-02 · **Хувилбар:** v2.4 draft · **Огноо:** 2026-10-30 (v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-02 · **Хувилбар:** v2.5 draft · **Огноо:** 2026-10-30 (v2.4: 2026-10-30, v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ хүснэгт [SRS v2](srs-v2.md)-ийн leaf шаардлага бүрийг эх, архитектур/ADR, код, тесттэй холбоно. Энэ нь G4-ийн суурь ([зорилго](../project/project-goals.md#g4--чанар-ба-traceability)).
 
@@ -15,6 +15,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v2.5 | 2026-10-30 | NFR-SEC-210, NFR-REL-210: Code, Test багана H1/H2-оор, Verif. status «passed (local, 2026-10-30)» (өмнө нь «written, skipped without DB»). NFR-MAINT-320: Test-д `db-errors.test.ts` (CI-д ажилладаг), status «gap» хэвээр. |
 | v2.4 | 2026-10-30 | NFR-SEC-350, FR-SET-220, FR-AUD-130: Code-д migration 0008, Test-д `rls.integration.test.ts`, Verif. status «passed (local, 2026-10-30)». Өмнөх утгууд: NFR-SEC-350 «planned / not run», FR-SET-220 «planned / unknown», FR-AUD-130 «planned / not run». |
 | v2.3 | 2026-10-30 | D-11: FR-PWA-110…130, 210…250, 310 болон NFR-PERF-350, NFR-SEC-260, NFR-COMP-600 мөр нэмсэн. Native mobile-ийн мөрүүд өөрчлөгдөөгүй (Priority «Won't» хэвээр; phase-ийг SRS-ээс үзнэ). |
 | v2.2 | 2026-10-30 | FR-INQ-140-ийн Arch/ADR багана «—» → «D-10, ADR-012». |
@@ -71,7 +72,7 @@
 | NFR-SEC-120 | Should | P0 NFR-SEC-012 | 08-security §3 | — | planned | not run |
 | NFR-SEC-130 | Must | P0 NFR-SEC-006 | 08-security §4.2 | backend/api/src/plugins/cors.ts | planned | not run |
 | NFR-SEC-140 | Must | P0 NFR-SEC-007 | 08-security §4.1 | backend/api/src/plugins/helmet.ts | planned | not run |
-| NFR-SEC-210 | Must | P0 NFR-SEC-003 | 08-security §7 | backend/api/src/hooks/validate.ts | backend/api/tests/api.integration.test.ts | written, skipped without DB |
+| NFR-SEC-210 | Must | P0 NFR-SEC-003 | 08-security §7 | backend/api/src/hooks/validate.ts | backend/api/tests/api.integration.test.ts, inquiry-cart.integration.test.ts | passed (local, 2026-10-30) |
 | NFR-SEC-220 | Must | P0 NFR-SEC-004 | ADR-007 | backend/api/src/repositories/supabase/ | planned (inspection) | not run |
 | NFR-SEC-230 | Must | P0 NFR-SEC-011 | — | backend/api/src/services/media.service.ts | backend/api/tests/api.integration.test.ts | written, skipped without DB |
 | NFR-SEC-240 | Must | plan F-05 | — | apps/web/src/app/products/[slug]/page.tsx | planned | not run |
@@ -89,7 +90,7 @@
 | NFR-REL-110 | Should | P0 NFR-REL-001 | 09-deployment | — | planned | not run |
 | NFR-REL-120 | Should | P0 NFR-REL-002 | 09-deployment | backend/api/src/controllers/health.controller.ts | planned | not run |
 | NFR-REL-130 | Should | P0 NFR-REL-006 | 09-deployment | — | planned | not run |
-| NFR-REL-210 | Must | P0 NFR-REL-003 | 06-api-spec Error | backend/api/src/app.ts | backend/api/tests/api.integration.test.ts | written, skipped without DB |
+| NFR-REL-210 | Must | P0 NFR-REL-003 | 06-api-spec Error | backend/api/src/app.ts, src/lib/db-errors.ts | backend/api/tests/api.integration.test.ts, db-errors.test.ts | passed (local, 2026-10-30) |
 | NFR-REL-220 | Must | P0 NFR-REL-004 | — | apps/web/src/app/products/[slug]/not-found.tsx | planned | not run |
 | NFR-REL-230 | Won't | P0 NFR-REL-005 | — | — | planned | not run |
 | NFR-REL-240 | Should | v1.0 NFR-05 | — | — | planned | not run |
@@ -263,7 +264,7 @@
 | NFR-MAINT-220 | Must | NFR-MAIN-007 | ADR-011 | `supabase/migrations/` | planned | not executed |
 | NFR-MAINT-230 | Must | NFR-MAIN-008 | — | `.env.example` | planned | not checked |
 | NFR-MAINT-310 | Must | NFR-MAIN-005 | ADR-010 | `.github/workflows/*.yml` | planned (inspection) | not executed |
-| NFR-MAINT-320 | Must | v1.0 NFR-03, M2 NFR-03 | ADR-011 | `.github/workflows/api-deploy.yml` | `backend/api/tests/*.integration.test.ts` (self-skip) | gap |
+| NFR-MAINT-320 | Must | v1.0 NFR-03, M2 NFR-03 | ADR-011 | `.github/workflows/api-deploy.yml` | `backend/api/tests/*.integration.test.ts` (self-skip in CI), `db-errors.test.ts` (runs in CI) | gap (owner: no Supabase in CI) |
 | NFR-MAINT-330 | Must | v1.0 NFR-03 | — | `.github/workflows/web-deploy.yml` | planned | not implemented |
 | NFR-MAINT-410 | Should | D-08, F-10 | D-08 | `apps/web/src/app/globals.css` | planned | not implemented |
 | NFR-MAINT-420 | Should | F-10 | — | `globals.css` | planned | not implemented |

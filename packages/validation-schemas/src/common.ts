@@ -31,3 +31,14 @@ export const slugSchema = z
 // Phone rule D-10 (ADR-012 option A): exactly 8 digits, same as web and
 // mobile. Replaces the docs/phase-0/08 §7.2 rule ^[0-9+\s-]{8,15}$.
 export const phoneSchema = z.string().regex(/^\d{8}$/);
+
+// UUID path params (audit H1): malformed ids are a 400, never a Postgres
+// 22P02 that surfaces as a 500.
+export const uuidSchema = z.string().uuid();
+export const idParamsSchema = z.object({ id: uuidSchema });
+export const productImageParamsSchema = z.object({ id: uuidSchema, imageId: uuidSchema });
+export const cartItemParamsSchema = z.object({ productId: uuidSchema });
+
+export type IdParams = z.infer<typeof idParamsSchema>;
+export type ProductImageParams = z.infer<typeof productImageParamsSchema>;
+export type CartItemParams = z.infer<typeof cartItemParamsSchema>;

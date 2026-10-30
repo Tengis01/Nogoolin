@@ -1,6 +1,6 @@
 # Nogoolin Software Requirements Specification v2
 
-**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.4 draft · **Огноо:** 2026-10-30 (v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.5 draft · **Огноо:** 2026-10-30 (v2.4: 2026-10-30, v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 ## Баримтын төлөв
 
@@ -20,6 +20,7 @@
 
 | Хувилбар | Огноо | Төрөл | Өөрчлөлт |
 |---|---|---|---|
+| v2.5 | 2026-10-30 | MINOR | Аудит H1/H2 засвар: NFR-SEC-210-ийн statement-д path param нэмсэн, NFR-REL-210/NFR-SEC-210-д нотолгоо. NFR-MAINT-320: owner CI-д Supabase нэмэхгүй гэж шийдсэн, partial хэвээр, §8-д асуулт. NFR-PORT-140: deploy job PH7 хүртэл хаалттай. Өмнөх утгууд «Өмнөх (v2.4)» мөрүүдэд. |
 | v2.4 | 2026-10-30 | MINOR | C1 засвар (migration 0008 explicit table grants): NFR-SEC-350, FR-SET-220 unknown → implemented; FR-AUD-130-ийн service_role тайлбар; FR-USER-220-д тэмдэглэл. Өмнөх status бүр «Өмнөх (v2.3)» мөрөнд. §7.2-ийн тоо, §7.4, §8-ийн холбогдох мөрүүдийг шийдэгдсэн гэж тэмдэглэсэн (устгаагүй). |
 | v2.3 | 2026-10-30 | MINOR | D-11: энэ release-ийн mobile туршлага нь PWA. Шинэ §4.15 FR-PWA (12 блок, 9 leaf), NFR-PERF-350, NFR-SEC-260, NFR-COMP-600. Native mobile хойшлогдсон: FR-MOB-*, NFR-COMP-300…320, NFR-MAINT-600…620, NFR-REL-230, NFR-PORT-150-ийн Phase «PH8» → «Future (D-11)» (priority, status өөрчлөгдөөгүй). §1.2-ийн хүснэгт: «Mobile app (Expo) — G6, дараагийн release» → «Native mobile — D-11 gate», PWA мөр нэмэгдсэн. §4.12-ийн тайлбарын өмнөх текст «Өмнөх (v2.2)» мөрөнд. §7.2, §7.3, §8 шинэчлэгдсэн. |
 | v2.2 | 2026-10-30 | MINOR | D-10: FR-INQ-140-ийн API утасны дүрэм `^[0-9+\s-]{8,15}$` → `^\d{8}$`, mobile мөн дагана. API код (`common.ts`) болон integration тестийн 3 тохиолдол шинэчлэгдсэн; status implemented хэвээр. §7.4-ийн FR-INQ-140 мөр болон §8-ийн асуултыг шийдэгдсэн гэж тэмдэглэсэн (устгаагүй). §7.2-ийн тоо шинэчлэгдсэн. |
@@ -2085,10 +2086,12 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** children
 
 #### NFR-SEC-210 — Request schema баталгаажуулалт
-**Statement:** API нь body эсвэл query хүлээж авдаг route бүрд shared Zod schema-аар handler-ээс өмнө шалгаж, зөрчилтэй үед `400` буцаана **shall**. Тодорхойлогдоогүй талбарыг хадгалахгүй **shall**.
+**Statement:** API нь body, query эсвэл path param (UUID) хүлээж авдаг route бүрд shared Zod schema-аар handler-ээс өмнө шалгаж, зөрчилтэй үед `400` буцаана **shall**.
+- **Өмнөх statement (v2.4):** «API нь body эсвэл query хүлээж авдаг route бүрд …» (path param ороогүй байсан). Тодорхойлогдоогүй талбарыг хадгалахгүй **shall**.
 - **Rationale:** Буруу эсвэл хортой өгөгдөл DB-д орохгүй.
 - **Source:** Phase0 NFR-SEC-003; code `backend/api/src/hooks/validate.ts`, `packages/validation-schemas/src/`
-- **Priority · Phase · Status:** Must · PH3 · implemented (`backend/api/src/hooks/validate.ts`)
+- **Priority · Phase · Status:** Must · PH3 · implemented (`backend/api/src/hooks/validate.ts`: `validateBody`, `validateParams` (2026-10-30); UUID param-тай route бүр). Аудит QA-05 §4.3-ийн «partial» үнэлгээний param хэсэг засагдсан; inquiry-ийн талбарын дээд урт (аудит M1) нээлттэй хэвээр.
+- **Өмнөх (v2.4):** Status «Must · PH3 · implemented (`backend/api/src/hooks/validate.ts`)».
 - **Verification:** Inspection — body/query-тай route бүрт `validateBody` эсвэл `safeParse` байгааг шалгана. Test — `api.integration.test.ts` («invalid body → 400»).
 - **Acceptance:** Бүх mutating route schema-тай. Шалгалтгүй route 0.
 
@@ -2274,7 +2277,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** API-ийн бүх 4xx/5xx хариу `Content-Type: application/json`-тэй, `{ "error": <хүнд уншигдах текст>, "code": <тогтмол код> }` хэлбэртэй байна **shall**. 5xx хариунд stack trace болон дотоод мессеж агуулахгүй **shall**.
 - **Rationale:** Client тогтмол кодоор салбарлана. Дотоод мэдээллийг ил гаргахгүй.
 - **Source:** Phase0 NFR-REL-003; code `backend/api/src/app.ts:49-75`
-- **Priority · Phase · Status:** Must · PH3 · implemented (`backend/api/src/app.ts`)
+- **Priority · Phase · Status:** Must · PH3 · implemented (`backend/api/src/app.ts`; `src/lib/db-errors.ts` нь DB-ийн 23505 → 409, 23503 → 400, 22P02/23514 → 400 болгоно; test `tests/db-errors.test.ts`, `api.integration.test.ts` H1/H2, 2026-10-30 local-д давсан). Аудит QA-05 §4.3 нь үүнийг «partial» гэж үнэлсэн байсан (буруу UUID, DB constraint → 500).
+- **Өмнөх (v2.4):** Status «Must · PH3 · implemented (`backend/api/src/app.ts`)».
 - **Verification:** Test — 400, 401, 403, 404, 409, 429, 500 тохиолдол бүрийг үүсгэж шалгана.
 - **Acceptance:** Бүх хариу envelope хэлбэртэй. 500 нь `{error:"Internal server error", code:"INTERNAL"}` байна.
 
@@ -2502,7 +2506,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** API deploy job нь тухайн commit-д шаардлагатай integration тест бодитоор ажилласан (≥ 1 executed, 0 failed, шаардлагатай тестийн 0 skipped) ба production Docker build амжилттай болсон үед л ажиллана. Тест fail, бүх тест skip эсвэл build fail бүр deploy-г хаана **shall**.
 - **Rationale:** v1.0 NFR-03-ийн gap: тестүүд DB-гүй үед өөрсдөө skip хийж, CI ногоон болдог.
 - **Source:** v1.0 NFR-03; M2 NFR-03; Phase0 NFR-MAIN-005/006; G4
-- **Priority · Phase · Status:** Must · PH4 · partial (`api-deploy.yml`-д `lint-and-test → docker-build → deploy` бий; `backend/api/tests/*.integration.test.ts` reachability-ээр `t.skip()`, CI local Supabase асаадаггүй)
+- **Priority · Phase · Status:** Must · PH4 · partial. Owner шийдвэр (2026-10-30): CI-д Supabase асаахгүй. Integration тест зөвхөн local-д ажиллана (2026-10-30: 47/47, 0 skip); CI-д DB-гүй unit тест (`tests/db-errors.test.ts`) ажиллана. Deploy job нь `vars.DEPLOY_ENABLED`-ээр PH7 хүртэл хаалттай, тиймээс энэ хаалт одоогоор deploy-ийг блоклох шаардлагагүй. PH7-д deploy асаахаас өмнө эргэж шийднэ (§8).
+- **Өмнөх (v2.4):** Status «Must · PH4 · partial (`api-deploy.yml`-д `lint-and-test → docker-build → deploy` бий; `backend/api/tests/*.integration.test.ts` reachability-ээр `t.skip()`, CI local Supabase асаадаггүй)».
 - **Verification:** Inspection — CI тохиргоо + 3 сөрөг тохиолдлын log.
 - **Acceptance:** 1) Тест fail → deploy skipped. 2) DB байхгүй (бүгд skip) → job fail, deploy skipped. 3) Docker build fail → deploy skipped. 4) Амжилттай үед deploy eligible.
 
@@ -2677,7 +2682,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### NFR-PORT-140 — Web deploy
 **Statement:** Web нь `web-deploy.yml`-ээр Vercel-д deploy хийгдэж, custom domain дээр HTTPS-ээр нээгдэнэ **shall**.
 - **Source:** 01-vision §8; G1; roadmap PH7
-- **Priority · Phase · Status:** Must · PH7 · partial (workflow бий; production deploy хийгдээгүй)
+- **Priority · Phase · Status:** Must · PH7 · partial (workflow бий; deploy job нь `vars.DEPLOY_ENABLED == 'true'` үед л ажиллана, PH7 хүртэл хаалттай (2026-10-30); production deploy хийгдээгүй)
+- **Өмнөх (v2.4):** Status «Must · PH7 · partial (workflow бий; production deploy хийгдээгүй)».
 - **Verification:** Demonstration
 - **Acceptance:** Domain дээр `/` 200, HTTPS сертификат хүчинтэй.
 
@@ -2947,6 +2953,7 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 
 Owner батлах ёстой. ID нь холбогдох шаардлагыг заана.
 
+- **NFR-MAINT-320 (2026-10-30):** owner CI-д Supabase асаахгүй гэж шийдсэн. PH7-д `DEPLOY_ENABLED` асаахаас өмнө deploy-ийн хаалтыг (integration тест skip-гүй) яаж хангах вэ? (local-д ажиллуулсан тестийн нотолгоо, CI-д Supabase, эсвэл шаардлагыг өөрчлөх)
 - **Хичээл:** «шаардлага шалгах 5 арга»-ын яг нэрс (§7.1). QA хичээлийн агуулга ирэхэд NFR болон PH6-ийг тааруулна.
 - **Огноо:** [project-goals](../project/project-goals.md) G1–G6 болон [roadmap](../project/roadmap.md)-ийн огноонууд.
 - ~~**NFR-SEC-350 (security, яаралтай).** Customer Supabase-аар шууд `users.role`-оо өөрчилж чадах эсэхийг runtime-д шалгах шаардлагатай. Чадах бол баганын grant эсвэл `before update` trigger-ээр хаана. Энэ нь F-05-тай адил тусдаа task.~~ **Шийдэгдсэн 2026-10-30:** runtime-д батлагдаж, migration 0008-оор засагдсан.

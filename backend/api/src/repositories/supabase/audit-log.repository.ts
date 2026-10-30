@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { AuditLogRepository } from '../types.js';
+import { dbError } from '../../lib/db-errors.js';
 
 // MUST use the service_role client — audit_logs has no INSERT policy for
 // any user role; service_role writes are the designed RLS bypass
@@ -16,7 +17,7 @@ export function createSupabaseAuditLogRepository(
         entity_id: entry.entity_id ?? null,
         metadata: entry.metadata ?? null,
       });
-      if (error) throw new Error(`audit log write failed: ${error.message}`);
+      if (error) throw dbError('audit log write', error);
     },
   };
 }

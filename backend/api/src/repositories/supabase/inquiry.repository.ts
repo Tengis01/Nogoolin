@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Inquiry } from '@nogoolin/validation-schemas';
 import type { InquiryRepository } from '../types.js';
+import { dbError } from '../../lib/db-errors.js';
 
 // Compact product join per 06-api-spec Inquiry.product (id/name/name_en/slug).
 const SELECT_WITH_PRODUCT = '*, product:products(id, name, name_en, slug)';
@@ -22,7 +23,7 @@ export function createSupabaseInquiryRepository(
         })
         .select(SELECT_WITH_PRODUCT)
         .single();
-      if (error) throw new Error(`inquiry create failed: ${error.message}`);
+      if (error) throw dbError('inquiry create', error);
       return row as unknown as Inquiry;
     },
 
@@ -40,7 +41,7 @@ export function createSupabaseInquiryRepository(
 
       const from = (query.page - 1) * query.limit;
       const { data, count, error } = await q.range(from, from + query.limit - 1);
-      if (error) throw new Error(`inquiry list failed: ${error.message}`);
+      if (error) throw dbError('inquiry list', error);
       return { data: (data ?? []) as unknown as Inquiry[], total: count ?? 0 };
     },
 
@@ -50,7 +51,7 @@ export function createSupabaseInquiryRepository(
         .select(SELECT_WITH_PRODUCT)
         .eq('customer_id', customerId)
         .order('created_at', { ascending: false });
-      if (error) throw new Error(`customer inquiry list failed: ${error.message}`);
+      if (error) throw dbError('customer inquiry list', error);
       return (data ?? []) as unknown as Inquiry[];
     },
 
@@ -61,7 +62,7 @@ export function createSupabaseInquiryRepository(
         .eq('id', id)
         .select(SELECT_WITH_PRODUCT)
         .maybeSingle();
-      if (error) throw new Error(`inquiry status update failed: ${error.message}`);
+      if (error) throw dbError('inquiry status update', error);
       return row ? (row as unknown as Inquiry) : null;
     },
   };

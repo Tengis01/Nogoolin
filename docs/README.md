@@ -1,6 +1,6 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.4 draft · **Огноо:** 2026-10-30 (v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.5 draft · **Огноо:** 2026-10-30 (v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
 
@@ -8,6 +8,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v1.5 | 2026-10-30 | H1/H2: REQ-01/REQ-02 v2.4 → v2.5, QA-05 v1.1 → v1.2. |
 | v1.4 | 2026-10-30 | C1 засвар: REQ-01/REQ-02 v2.3 → v2.4, QA-05 v1.0 → v1.1. |
 | v1.3 | 2026-10-30 | D-11: REQ-01/REQ-02 v2.2 → v2.3, PRJ-01/PRJ-02 v0.2 → v0.3. |
 | v1.2 | 2026-10-30 | ARC-07 (Sem10 M8 diagram suite, canonical диаграм) нэмсэн. «frozen» төлөв нэмж ARC-05 болон ARC-01-ийн Sem4 C4-ийг frozen болгосон (өмнө нь ARC-05 «legacy (эх)»). «Хичээлийн ажил» хүснэгтийн W10 мөрийг зассан: өмнө нь «W10 mkdocs/Vale/lychee → QA-04» гэж буруу бичигдсэн, бодит W10 нь diagram suite. QA-04-ийн эх семинар «W10» → «—». Sem7, Sem9 мөр нэмсэн. REQ-01/REQ-02 хувилбар v2.1 → v2.2 (D-10). |
@@ -52,8 +53,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.4 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
-| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.4 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
+| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.5 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
+| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.5 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
 | REQ-03 | Хуучин → шинэ ID mapping | Developer | Хөгжүүлэгч | v2.0 | draft | — | [requirements/id-mapping.md](requirements/id-mapping.md) |
 | REQ-04 | Scope Charter | Process | Owner, багш | v0.2 | legacy (SRS v2 §1.3 орлосон) | Sem2 | [requirements/scope-charter.md](requirements/scope-charter.md) |
 | REQ-05 | SRS v1.0 (15 FR + 5 NFR) | Developer | — | v1.0 | legacy | Sem3 | [requirements/srs-v1.0.md](requirements/srs-v1.0.md) |
@@ -111,7 +112,7 @@
 | QA-02 | Usability protocol | Process | Тестер | — | planned | — | `quality/usability-protocol.md` |
 | QA-03 | Perf baseline (raw sample) | Developer | Хөгжүүлэгч | — | planned (PH2) | — | `quality/perf-baseline.md` |
 | QA-04 | Docs CI (mkdocs, Vale, lychee) | Developer | Хөгжүүлэгч | — | planned | — | `mkdocs.yml`, CI |
-| QA-05 | Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур | Developer | Хөгжүүлэгч, reviewer | v1.1 | draft | — | [quality/code-audit-2026-10-27.md](quality/code-audit-2026-10-27.md) |
+| QA-05 | Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур | Developer | Хөгжүүлэгч, reviewer | v1.2 | draft | — | [quality/code-audit-2026-10-27.md](quality/code-audit-2026-10-27.md) |
 
 ### Operations — `operations/`
 
