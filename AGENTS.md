@@ -71,15 +71,26 @@ Follow the user's current instructions and applicable nested AGENTS.md.
   Never rely on Supabase default privileges: they changed between CLI
   versions and caused C1 (ERRORS.md 2026-10-30).
 - Keep `delivery_enabled=false` until the owner authorizes activation.
-  Designed order/delivery tables do not prove checkout/API implementation;
-  the current cart service is a saved list, not checkout. Gate delivery
-  behavior at the service layer when implementing it.
+  Delivery means shipping to an address. Under D-12/D-13 (owner, 2026-11-08), guest
+  orders with **store pickup** are allowed in this release (phone + SMS
+  code, no account). They are gated by the admin setting `ordering_enabled`, which
+  is enforced in the service layer, not only hidden in the UI. Designed
+  order/delivery tables do not prove checkout/API implementation. Check the
+  current source before assuming the order API exists.
+  *Previous (until 2026-11-08):* "Designed order/delivery tables do not prove
+  checkout/API implementation; the current cart service is a saved list, not
+  checkout. Gate delivery behavior at the service layer when implementing it."
 - Before web/Three.js changes read [design.md](agent-context/design.md) and
   relevant [asset contracts](agent-context/ASSET_SPECS.md). Deity stays fixed;
   no lateral camera translation: use camera.setViewOffset with the approved
-  config. Preserve v4 tokens, skip within 1 s, static fallback,
-  prefers-reduced-motion and the single-row category list. Do not interpret
-  reaching Phase 3 as approval to add red; D-02 remains deferred.
+  config. Preserve v4 tokens, with one owner amendment (D-12/D-13): the primary
+  button / accent is dark jade `#1B4634` with text `#F5F2E6`, replacing `#0BB555`.
+  There is one fixed palette and no palette switcher. Keep skip within 1 s,
+  the static fallback, prefers-reduced-motion and the single-row category
+  list. Do not interpret reaching Phase 3 as approval to add red; D-02
+  remains deferred.
+  *Previous (until 2026-11-08):* "Preserve v4 tokens, …" (no exception for the
+  button colour).
 - Do not resolve deferred D-01…D-07 by assumption. Consult the decision log
   and report missing assets, unanswered choices or implementation gaps.
 

@@ -1,6 +1,6 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.5 draft · **Огноо:** 2026-10-30 (v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.8 draft · **Огноо:** 2026-11-10 (v1.7: 2026-11-08, v1.6: 2026-11-08, v1.5: 2026-10-30, v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
 
@@ -8,6 +8,9 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v1.8 | 2026-11-10 | Design хүснэгтэд өмнө нь бүртгэгдээгүй байсан prototype D, E (DES-08), F (DES-09), G v1.1 (DES-10) нэмсэн. D-15 (барааны зураг хуудасны дэвсгэр дээр шууд сууна) бүртгэгдсэн: DES-01-ийн тайлбарт тэмдэглэсэн. |
+| v1.7 | 2026-11-08 | D-14 (owner-ийн SRS v2.6 §8-ийн хариулт: OTP, цуцлалт, wishlist legacy, R-01): REQ-01/REQ-02 v2.6 → v2.7. |
+| v1.6 | 2026-11-08 | D-12/D-13 (зочны захиалга, «Онлайн захиалга» тохиргоо): REQ-01/REQ-02 v2.5 → v2.6. |
 | v1.5 | 2026-10-30 | H1/H2: REQ-01/REQ-02 v2.4 → v2.5, QA-05 v1.1 → v1.2. |
 | v1.4 | 2026-10-30 | C1 засвар: REQ-01/REQ-02 v2.3 → v2.4, QA-05 v1.0 → v1.1. |
 | v1.3 | 2026-10-30 | D-11: REQ-01/REQ-02 v2.2 → v2.3, PRJ-01/PRJ-02 v0.2 → v0.3. |
@@ -53,8 +56,8 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.5 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
-| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.5 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
+| REQ-01 | **SRS v2** (ISO/IEC/IEEE 29148) | Developer | Хөгжүүлэгч, тестер, багш | v2.7 | draft | Sem3 | [requirements/srs-v2.md](requirements/srs-v2.md) |
+| REQ-02 | Traceability v2 | Developer | Хөгжүүлэгч, тестер | v2.7 | draft | Sem2–3 | [requirements/traceability-v2.md](requirements/traceability-v2.md) |
 | REQ-03 | Хуучин → шинэ ID mapping | Developer | Хөгжүүлэгч | v2.0 | draft | — | [requirements/id-mapping.md](requirements/id-mapping.md) |
 | REQ-04 | Scope Charter | Process | Owner, багш | v0.2 | legacy (SRS v2 §1.3 орлосон) | Sem2 | [requirements/scope-charter.md](requirements/scope-charter.md) |
 | REQ-05 | SRS v1.0 (15 FR + 5 NFR) | Developer | — | v1.0 | legacy | Sem3 | [requirements/srs-v1.0.md](requirements/srs-v1.0.md) |
@@ -80,13 +83,16 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| DES-01 | Design reference v4 | Developer | Хөгжүүлэгч | v4 | legacy (D-08-аар орлогдсон, production-д хүчинтэй) | — | [../agent-context/design.md](../agent-context/design.md) |
+| DES-01 | Design reference v4 | Developer | Хөгжүүлэгч | v4 | legacy (D-08-аар орлогдсон, production-д хүчинтэй). D-12/D-13 (товчийн өнгө), D-15 (зургийн дэвсгэр) нэмэлт өөрчлөлттэй | — | [../agent-context/design.md](../agent-context/design.md) |
 | DES-02 | Prototype C (үндсэн чиглэл) | User/Developer | Owner, хөгжүүлэгч | — | approved (D-08) | — | [nogoolin-prototype-c.html](nogoolin-prototype-c.html) |
 | DES-03 | Wireframe v1 (WF-*) | Developer | Хөгжүүлэгч | 1.0.0 | legacy (v2 нь PH2-т) | — | [phase-0/07-uiux-wireframes.md](phase-0/07-uiux-wireframes.md) |
 | DES-04 | DESIGN.md (C token шатлал) | Developer | Хөгжүүлэгч | — | planned (PH2) | — | `design/DESIGN.md` |
 | DES-05 | Component contract | Developer | Хөгжүүлэгч | — | planned (PH2) | — | `design/components.md` |
 | DES-06 | Microcopy guide | User/Developer | Хөгжүүлэгч | — | planned | W07 | `design/microcopy.md` |
 | DES-07 | Prototype A, B | — | — | — | legacy | — | [A](nogoolin-prototype-a-v4.html), [B](nogoolin-prototype-b-codex.html) |
+| DES-08 | Prototype D, E (+ admin prototype) | User/Developer | Owner, хөгжүүлэгч | E v1.1 | design artifact (D-12, D-13). D нь E-ийн суурь | — | [D](nogoolin-prototype-d.html), [E](nogoolin-prototype-e.html) |
+| DES-09 | Prototype F («Үзмэрийн танхим», бараан) | User/Developer | Owner | v1.0 | design artifact; owner сонгоогүй (бараан суурь хүйтэн гэж үзсэн). G-ийн суурь болж үлдсэн | — | [nogoolin-prototype-f.html](nogoolin-prototype-f.html) |
+| DES-10 | Prototype G (дулаан цайвар + хаш ногоон) | User/Developer | Owner, хөгжүүлэгч | v1.1 | design artifact; **owner review хүлээж байгаа**. D-15 энд анх хэрэгжсэн | — | [nogoolin-prototype-g.html](nogoolin-prototype-g.html) |
 
 ### API — `api/`
 

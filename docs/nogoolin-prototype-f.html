@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1210">
+<title>Ногоолин — Prototype F</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Prototype F · «Үзмэрийн танхим». Sample data only (жишээ өгөгдөл).
+   Two surfaces: the dark hall is for looking, warm paper is for reading and ordering. */
+:root{
+  --hall:#0B1210; --hall-2:#101A16; --hall-3:#17251F;
+  --bone:#EFE8DA; --bone-2:#A9A598; --line:rgba(239,232,218,.14);
+  --paper:#F2ECDF; --paper-2:#E7DFCE; --ink:#141C18; --ink-2:#4D5750; --line-p:rgba(20,28,24,.16);
+  --gold:#CDA863; --gold-ink:#75561B; --ok:#86C7A0; --ok-ink:#2C6A48; --err:#A93F2B;
+  --serif:'Cormorant','Times New Roman',serif; --sans:'Onest',system-ui,sans-serif;
+  --g:20px; --tab:64px; --safe:env(safe-area-inset-bottom,0px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--hall);color:var(--bone);font:400 16px/1.55 var(--sans);
+  padding-bottom:calc(var(--tab) + var(--safe));overflow-x:clip;-webkit-font-smoothing:antialiased}
+body.no-tabs{padding-bottom:calc(76px + var(--safe))}
+body.focus{padding-bottom:0}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+h1,h2,h3,p,dl,dd,ol,ul{margin:0;padding:0}
+ol,ul{list-style:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.serif{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;line-height:1.04}
+.eb{font:500 11.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.paper .eb{color:var(--gold-ink)}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.muted{color:var(--bone-2)} .paper .muted{color:var(--ink-2)}
+.paper{background:var(--paper);color:var(--ink)}
+.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border-radius:4px;
+  font-weight:500;font-size:16px;background:var(--bone);color:var(--ink);transition:transform .15s var(--ease),background .2s}
+.btn:active{transform:scale(.98)}
+.paper .btn,.btn.dark{background:var(--ink);color:var(--bone)}
+.btn.ghost{background:none;color:inherit;box-shadow:inset 0 0 0 1px currentColor}
+.btn.wide{width:100%}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.tlink{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:1px;min-height:0;line-height:1.9}
+
+/* brand */
+.brand{display:inline-flex;align-items:center;gap:10px;font:500 13px/1 var(--sans);letter-spacing:.34em;color:var(--bone)}
+.brand i{width:14px;height:14px;border:1px solid var(--gold);border-radius:50%;display:block;position:relative}
+.brand i::after{content:"";position:absolute;inset:4px;background:var(--gold);border-radius:50%}
+.brandbar{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 var(--g)}
+
+/* tab bar (mobile) / top nav (desktop) */
+.tabbar{position:fixed;z-index:30;left:0;right:0;bottom:0;height:calc(var(--tab) + var(--safe));padding-bottom:var(--safe);
+  display:flex;background:rgba(11,18,16,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  transition:transform .3s var(--ease)}
+.no-tabs .tabbar,.focus .tabbar{transform:translateY(110%)}
+.tb-brand{display:none}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11.5px;color:var(--bone-2);position:relative}
+.tab[aria-current]{color:var(--bone)}
+.tab[aria-current]::before{content:"";position:absolute;top:-1px;width:28px;height:1px;background:var(--gold)}
+.tab .cnt{position:absolute;top:9px;left:calc(50% + 6px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--gold);color:var(--hall);
+  font:600 10.5px/17px var(--sans);text-align:center}
+
+/* page transitions + reveal */
+#app.enter{animation:pg .34s var(--ease)}
+@keyframes pg{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.js .rv{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.js .rv.in{opacity:1;transform:none}
+
+/* ---------- HOME ---------- */
+.hero{position:relative;min-height:calc(100svh - var(--tab) - var(--safe));display:flex;flex-direction:column;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(64% 40% at 50% 31%,rgba(62,112,86,.5),rgba(24,48,37,.28) 52%,transparent 76%)}
+.hero-in{position:relative;flex:1;display:flex;flex-direction:column}
+.hero-stage{position:relative;flex:1;min-height:270px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:22px}
+.halo{position:absolute;left:50%;bottom:calc(22px + min(20svh,200px));width:min(90vw,45svh,450px);aspect-ratio:1;transform:translate(-50%,50%);overflow:visible}
+.halo circle{fill:none;stroke:var(--gold);stroke-width:.3;stroke-dasharray:1;stroke-dashoffset:0;opacity:.6}
+.halo circle+circle{opacity:.18}
+.hero-fig{position:relative;height:min(40svh,400px);width:auto;filter:drop-shadow(0 26px 30px rgba(0,0,0,.6))}
+.hero-floor{position:absolute;left:50%;bottom:8px;width:min(64vw,300px);height:26px;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(205,168,99,.3),transparent);filter:blur(3px)}
+.hero-cap{position:relative;display:flex;justify-content:center;gap:8px;align-items:center;font-size:13px;color:var(--bone-2);min-height:44px;padding:0 var(--g)}
+.hero-cap .ic{width:16px;height:16px}
+.hero-copy{position:relative;padding:6px var(--g) 30px}
+.hero-copy h1{font-size:clamp(40px,11.6vw,58px);margin:14px 0 14px}
+.hero-copy h1 em{font-style:italic;font-weight:400;color:var(--gold)}
+.hero-copy p{color:var(--bone-2);max-width:34ch;margin-bottom:22px}
+.first .halo circle{animation:draw 1.5s .1s var(--ease) both}
+.first .halo circle+circle{animation-delay:.35s}
+.first .hero-fig{animation:lit 1.4s .25s var(--ease) both}
+.first .hero-floor{animation:fade 1.2s .9s both}
+.first .hero-cap,.first .hero-copy>*{animation:rise .8s var(--ease) both}
+.first .hero-cap{animation-delay:1s}.first .hero-copy>:nth-child(1){animation-delay:1.1s}
+.first .hero-copy>:nth-child(2){animation-delay:1.2s}.first .hero-copy>:nth-child(3){animation-delay:1.32s}.first .hero-copy>:nth-child(4){animation-delay:1.44s}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes lit{from{opacity:0;filter:brightness(.2) drop-shadow(0 26px 30px rgba(0,0,0,.6));transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.sec{padding:76px var(--g)}
+.sec-h h2{font-size:clamp(32px,9vw,46px);margin:14px 0 12px}
+.sec-h p{max-width:38ch}
+
+/* altar */
+.altar{position:relative;border-top:1px solid var(--line)}
+.tiers{margin-top:26px}
+.tier{display:block;padding-top:26px}
+.tier .objs,.tier .shelf{margin-inline:var(--in)}
+.tier .objs{display:flex;justify-content:center;align-items:flex-end;gap:var(--gap,14px);height:var(--h)}
+.tier .objs img{width:auto;filter:drop-shadow(0 10px 12px rgba(0,0,0,.55));transition:transform .5s var(--ease)}
+.tier:active .objs img{transform:translateY(-4px)}
+.tier .shelf{height:14px;border-top:1px solid var(--gold);background:linear-gradient(180deg,rgba(205,168,99,.16),transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.tier .lab{display:flex;align-items:baseline;gap:12px;margin-top:2px}
+.tier .lab b{font:italic 400 20px/1 var(--serif);color:var(--gold);width:18px}
+.tier .lab strong{font:500 26px/1.1 var(--serif)}
+.tier .lab span{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--bone-2)}
+.tier .lab .ic{width:18px;height:18px}
+.tier small{display:block;margin:4px 0 0 30px;font-size:13.5px;color:var(--bone-2);min-height:44px}
+
+/* featured rail */
+.feat{padding:76px 0;border-top:1px solid var(--line)}
+.feat .sec-h{padding:0 var(--g)}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px var(--g) 4px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.fcard{flex:0 0 78%;max-width:340px;scroll-snap-align:center}
+.fcard .tile{aspect-ratio:4/5;background:linear-gradient(180deg,var(--hall-3),var(--hall-2) 70%)}
+.fcard i{font:italic 400 15px/1 var(--serif);color:var(--gold);display:block;margin-top:16px}
+.fcard h3{font:500 28px/1.08 var(--serif);margin:6px 0 6px}
+
+/* shared product tile */
+.tile{position:relative;overflow:hidden;border-radius:3px}
+.tile::before{content:"";position:absolute;inset:0;background:radial-gradient(58% 46% at 50% 38%,rgba(70,118,92,.26),transparent 72%)}
+.tile::after{content:"";position:absolute;left:14%;right:14%;bottom:4.5%;height:16px;background:radial-gradient(closest-side,rgba(205,168,99,.28),transparent);filter:blur(2px)}
+.tile img{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);height:calc(var(--s,.8)*82%);width:auto;max-width:86%;
+  object-fit:contain;object-position:center bottom;filter:drop-shadow(0 12px 14px rgba(0,0,0,.55));z-index:1;transition:transform .6s var(--ease)}
+a:active .tile img{transform:translateX(-50%) scale(1.03)}
+.c-meta{font-size:13px;color:var(--bone-2)} .paper .c-meta{color:var(--ink-2)}
+.card .c-meta,.fcard .c-meta,.pair .c-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-price{font-size:15px;font-weight:500;margin-top:6px}
+
+/* paper lists */
+.rows{margin-top:22px}
+.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 16px;padding:20px 0;border-top:1px solid var(--line-p);min-height:64px}
+.rows .row:last-child{border-bottom:1px solid var(--line-p)}
+.row strong{font:500 27px/1.1 var(--serif)}
+.row span{grid-column:1;font-size:14px;color:var(--ink-2)}
+.row .ic{grid-column:2;grid-row:1/span 2}
+.grow{display:grid;grid-template-columns:34px 1fr auto;align-items:baseline;gap:0 8px;padding:18px 0;border-top:1px solid var(--line-p)}
+.grow b{font:italic 400 19px/1 var(--serif);color:var(--gold-ink)}
+.grow strong{font-weight:500;font-size:16.5px}
+.grow span{font-size:13px;color:var(--ink-2)}
+.store dl{margin-top:26px;border-top:1px solid var(--line)}
+.store dl div{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.store dt{font-size:13.5px;color:var(--bone-2)}
+.foot{padding:28px var(--g) 36px;border-top:1px solid var(--line);font-size:13px;color:var(--bone-2)}
+.foot details{margin-top:14px}
+.foot summary{min-height:44px;display:flex;align-items:center;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.foot .pp{display:grid;gap:10px;padding:6px 0 4px}
+.foot .pp button,.foot .pp a{min-height:44px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:4px;padding:0 14px;color:var(--bone)}
+
+/* ---------- SHOP ---------- */
+.ph{padding:26px var(--g) 6px}
+.ph h1{font-size:clamp(40px,11.5vw,60px)}
+.ph p{margin-top:8px;color:var(--bone-2);max-width:40ch}
+.segs{display:flex;gap:24px;overflow-x:auto;padding:0 var(--g);border-bottom:1px solid var(--line);scrollbar-width:none;position:sticky;top:0;z-index:5;background:rgba(11,18,16,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.segs::-webkit-scrollbar{display:none}
+.seg{padding:15px 0 14px;font-size:15px;color:var(--bone-2);border-bottom:1px solid transparent;margin-bottom:-1px;white-space:nowrap;min-height:48px}
+.seg[aria-current]{color:var(--bone);border-color:var(--gold)}
+.util{display:flex;align-items:center;gap:8px;padding:10px var(--g) 4px;font-size:14px;color:var(--bone-2)}
+.util .sp{flex:1}
+.ubtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;color:var(--bone);font-size:14.5px}
+.ubtn .ic{width:18px;height:18px}
+.util select{appearance:none;-webkit-appearance:none;background:none;border:0;min-height:44px;font-size:16px;color:var(--bone);padding:0 18px 0 8px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23EFE8DA' stroke-width='1.4'/%3E%3C/svg%3E") right center/12px no-repeat}
+.util select option{color:#111}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px var(--g) 0}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:4px;font-size:13.5px}
+.chip .ic{width:14px;height:14px}
+.card,.fcard,.pair{min-width:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:38px 14px;padding:18px var(--g) 56px}
+.card .tile{aspect-ratio:4/5}
+.card h3{font-size:15.5px;font-weight:500;line-height:1.3;margin:12px 0 3px}
+.card.big{grid-column:1/-1}
+.card.big .tile{aspect-ratio:1/1;background:linear-gradient(180deg,var(--hall-3),var(--hall-2) 75%)}
+.card.big h3{font:500 32px/1.06 var(--serif);margin-top:16px}
+.card.big .c-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.empty{padding:56px var(--g) 80px;text-align:left}
+.empty h2{font:500 30px/1.1 var(--serif);margin-bottom:10px}
+.empty p{color:var(--bone-2);margin-bottom:22px;max-width:34ch}
+.paper .empty p{color:var(--ink-2)}
+
+/* ---------- PRODUCT ---------- */
+.pd-stage{position:sticky;top:0;height:60svh;min-height:340px;overflow:hidden;background:var(--hall)}
+.pd-stage::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 52% at 50% 40%,rgba(62,112,86,.46),rgba(24,48,37,.2) 55%,transparent 78%)}
+.gal{position:relative;display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.sl{flex:0 0 100%;scroll-snap-align:center;container-type:size;display:grid;place-items:center;margin:66px 26px 70px}
+.sl+.sl{margin-left:26px}
+.gal .sl{flex-basis:calc(100% - 52px)}
+.fig{position:relative;aspect-ratio:var(--ar);height:calc(min(100cqh,100cqw / var(--ar)) * var(--k,1))}
+.fig img{width:100%;height:100%;filter:drop-shadow(0 22px 26px rgba(0,0,0,.6))}
+.fig::after{content:"";position:absolute;left:8%;right:8%;bottom:-12px;height:22px;background:radial-gradient(closest-side,rgba(205,168,99,.32),transparent);filter:blur(3px);z-index:-1}
+.st-top{position:absolute;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;z-index:3}
+.ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(11,18,16,.5);border:1px solid var(--line);color:var(--bone);position:relative}
+.ib .cnt{position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--gold);color:var(--hall);font:600 10.5px/17px var(--sans)}
+.st-bot{position:absolute;left:var(--g);right:var(--g);bottom:34px;display:flex;justify-content:space-between;align-items:center;z-index:3}
+.dots{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--bone-2)}
+.dots i{width:18px;height:1px;background:var(--line);display:block;transition:background .3s}
+.dots i.on{background:var(--gold)}
+.hot-t{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:22px;font-size:13.5px;background:rgba(11,18,16,.5)}
+.hot-t i{width:10px;height:10px;border:1px solid var(--gold);border-radius:50%;position:relative;display:block}
+.hot-on .hot-t{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.hd{position:absolute;width:30px;height:30px;margin:-15px;border-radius:50%;border:1px solid var(--gold);background:rgba(11,18,16,.78);
+  font:500 12.5px/1 var(--sans);color:var(--bone);display:none;place-items:center;z-index:2}
+.hd::before{content:"";position:absolute;inset:-9px}
+.hd::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--gold);animation:ping 2.4s infinite var(--ease)}
+.hd.on{background:var(--gold);color:var(--hall)}
+.hot-on .hd{display:grid}
+@keyframes ping{from{transform:scale(1);opacity:.8}to{transform:scale(1.9);opacity:0}}
+.hcap{position:absolute;left:14px;right:14px;bottom:30px;z-index:4;display:none;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 14px 14px 16px;
+  background:rgba(11,18,16,.9);border:1px solid var(--line);border-radius:6px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hot-on .hcap{display:grid}.hot-on .st-bot .dots{display:none}.hot-on .st-bot{bottom:auto;top:10px;left:64px;right:64px;justify-content:center}
+.hot-on .gal{overflow:hidden}.hot-on .sl{margin-bottom:186px}
+.hcap strong{font:500 21px/1.15 var(--serif)}
+.hcap p{grid-column:1/-1;font-size:14.5px;color:var(--bone-2)}
+.hcap .nav{display:flex;gap:6px}.hcap .nav button{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}
+.hcap .nav .ic{width:16px;height:16px}
+
+.pd-sheet{position:relative;z-index:6;margin-top:-22px;border-radius:20px 20px 0 0;padding:10px var(--g) 34px}
+.grab{width:36px;height:3px;border-radius:2px;background:var(--line-p);margin:0 auto 20px}
+.pd-sheet h1{font-size:clamp(34px,9.6vw,48px);margin:12px 0 6px}
+.pd-kind{font-size:14.5px;color:var(--ink-2)}
+.pd-sum{margin-top:16px;max-width:60ch}
+.pd-price{display:flex;align-items:baseline;gap:14px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line-p)}
+.pd-price b{font-size:24px;font-weight:500}
+.stock{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ok-ink)}
+.stock::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.stock.pre{color:var(--gold-ink)}
+.vars{display:grid;gap:8px;margin-top:18px}
+.var{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;text-align:left;min-height:56px;padding:9px 14px;border:1px solid var(--line-p);border-radius:4px}
+.var[aria-pressed=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.var small{grid-column:1;font-size:13px;color:var(--ink-2)}
+.var b{grid-row:1/span 2;grid-column:2;font-weight:500;font-size:14.5px}
+.blk{margin-top:40px}
+.blk h2{font:500 28px/1.1 var(--serif);margin-bottom:14px}
+.blk p+p{margin-top:12px}
+.spec div{display:grid;grid-template-columns:104px 1fr;gap:12px;padding:13px 0;border-top:1px solid var(--line-p);font-size:15px}
+.spec div:last-child{border-bottom:1px solid var(--line-p)}
+.spec dt{color:var(--ink-2);font-size:13.5px;padding-top:1px}
+.scale{display:flex;align-items:flex-end;gap:26px;margin-top:22px;padding:22px 20px 16px;background:var(--paper-2);border-radius:4px}
+.scale figure{margin:0;display:grid;justify-items:center;gap:10px;font-size:12.5px;color:var(--ink-2)}
+.scale .ref{border:1.5px solid var(--ink-2);border-radius:6px;opacity:.75}
+.scale .per{width:auto;fill:none;stroke:var(--ink-2);stroke-width:1.5;opacity:.75}
+.scale img{width:auto}
+.steps li{display:grid;grid-template-columns:34px 1fr;padding:13px 0;border-top:1px solid var(--line-p)}
+.steps li b{font:italic 400 19px/1.3 var(--serif);color:var(--gold-ink)}
+.pairs{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin:0 calc(var(--g)*-1);padding:0 var(--g)}
+.pairs::-webkit-scrollbar{display:none}
+.pair{flex:0 0 46%;max-width:210px}
+.pair .tile{aspect-ratio:1/1;background:var(--hall)}
+.pair h3{font-size:14.5px;font-weight:500;line-height:1.3;margin:10px 0 2px}
+.ask{margin-top:40px;padding:22px 20px;background:var(--paper-2);border-radius:4px}
+.ask h2{font:500 25px/1.1 var(--serif);margin-bottom:8px}
+.ask p{font-size:14.5px;color:var(--ink-2);margin-bottom:16px}
+.sample{margin-top:28px;font-size:12.5px;color:var(--ink-2)}
+.buybar{position:fixed;z-index:25;left:0;right:0;bottom:0;display:flex;align-items:center;gap:16px;padding:12px var(--g) calc(12px + var(--safe));
+  background:var(--paper);color:var(--ink);border-top:1px solid var(--line-p)}
+.buybar div{display:none;line-height:1.25}.buybar.sp div{display:grid}
+.buybar small{font-size:12px;color:var(--ink-2)}
+.buybar b{font-size:17px;font-weight:500;white-space:nowrap}
+.buybar .btn{flex:1;background:var(--ink);color:var(--bone)}
+
+/* ---------- SEARCH ---------- */
+.sbox{position:relative;margin:22px var(--g) 0}
+.sbox .ic{position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--bone-2)}
+.sbox input{width:100%;height:60px;padding:0 44px 0 34px;background:none;border:0;border-bottom:1px solid var(--bone-2);border-radius:0;
+  font:500 26px/1 var(--serif);color:var(--bone)}
+.sbox input::placeholder{color:var(--bone-2);opacity:.75}
+.sbox input:focus{outline:0;border-color:var(--gold)}
+.sbox input::-webkit-search-cancel-button{display:none}
+.sbox input:placeholder-shown~button{display:none}
+.sbox button{position:absolute;right:-10px;top:8px;width:44px;height:44px;display:grid;place-items:center;color:var(--bone-2)}
+.sgroup{padding:30px var(--g) 0}
+.sgroup .eb{margin-bottom:8px}
+.sterm{display:flex;align-items:center;justify-content:space-between;min-height:52px;border-bottom:1px solid var(--line);font-size:16.5px;width:100%;text-align:left}
+.sterm .ic{width:17px;height:17px;color:var(--bone-2)}
+.sres{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.sres .tile{aspect-ratio:1/1;background:var(--hall-2)}
+.sres strong{font-weight:500;display:block;line-height:1.3}
+.sres mark{background:none;color:var(--gold)}
+
+/* ---------- CART / CHECKOUT / GUIDE (paper pages) ---------- */
+.pp-page{min-height:calc(100svh - var(--tab))}
+.focus .pp-page{min-height:100svh}
+.pp-head{padding:26px var(--g) 8px}
+.pp-head h1{font-size:clamp(40px,11.5vw,56px)}
+.back{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:14.5px;margin-bottom:6px}
+.back .ic{width:18px;height:18px}
+.citem{display:grid;grid-template-columns:84px 1fr auto;gap:14px;padding:18px 0;border-top:1px solid var(--line-p)}
+.citem .tile{aspect-ratio:1/1;background:var(--hall)}
+.citem strong{font-weight:500;line-height:1.3;display:block}
+.qty{display:inline-flex;align-items:center;margin-top:10px;border:1px solid var(--line-p);border-radius:4px}
+.qty button{width:44px;height:44px;font-size:18px}
+.qty span{min-width:26px;text-align:center}
+.citem .rm{width:44px;height:44px;display:grid;place-items:center;margin:-10px -12px 0 0;color:var(--ink-2)}
+.citem .rm .ic{width:18px;height:18px}
+.sum{border-top:1px solid var(--ink);margin-top:6px;padding:18px 0}
+.sum div{display:flex;justify-content:space-between;align-items:baseline}
+.sum b{font-size:22px;font-weight:500}
+.note{font-size:14px;color:var(--ink-2);margin:10px 0 22px}
+.stepper{font-size:13.5px;color:var(--ink-2);margin-bottom:4px}
+.bar{height:2px;background:var(--line-p);margin:10px 0 26px}.bar i{display:block;height:100%;background:var(--ink);transition:width .5s var(--ease)}
+.fld{display:grid;gap:6px;margin-bottom:18px}
+.fld label{font-size:14px;font-weight:500}
+.fld input,.fld textarea{width:100%;min-height:54px;padding:14px;border:1px solid var(--line-p);border-radius:4px;background:rgba(255,255,255,.45);font-size:16px;color:var(--ink)}
+.fld textarea{min-height:120px;resize:vertical}
+.fld input:focus,.fld textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-color:transparent}
+.fld .hint{font-size:13px;color:var(--ink-2)}
+.fld.bad input,.fld.bad textarea{border-color:var(--err)}
+.fld .err{display:none;font-size:13.5px;color:var(--err)}.fld.bad .err{display:block}.fld.bad .hint{display:none}
+.otp{letter-spacing:.5em;text-align:center;font-size:24px!important;font-variant-numeric:tabular-nums}
+.chk{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;min-height:44px;font-size:14px;color:var(--ink-2);margin-bottom:22px}
+.chk input{width:22px;height:22px;accent-color:var(--ink);margin:1px 0 0}
+.done-mark{width:56px;height:56px;border:1px solid var(--gold-ink);border-radius:50%;display:grid;place-items:center;color:var(--gold-ink);margin-bottom:22px}
+.art{padding:8px var(--g) 64px;max-width:680px}
+.art h1{font-size:clamp(36px,10vw,52px);margin:12px 0 18px}
+.art h2{font:500 26px/1.15 var(--serif);margin:32px 0 10px}
+.art p{margin-top:12px;font-size:16.5px;line-height:1.65}
+.art .lead{font:400 22px/1.4 var(--serif)}
+.art aside{margin-top:30px;padding:16px 18px;background:var(--paper-2);border-radius:4px;font-size:14.5px;color:var(--ink-2)}
+
+/* sheets + toast */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(4,8,6,.6);opacity:0;pointer-events:none;transition:opacity .3s}
+.sheet{position:fixed;z-index:41;left:0;right:0;bottom:0;max-height:88svh;overflow:auto;border-radius:20px 20px 0 0;padding:10px var(--g) calc(24px + var(--safe));
+  transform:translateY(105%);transition:transform .42s var(--ease);visibility:hidden}
+.open .scrim{opacity:1;pointer-events:auto}.open .sheet{transform:none;visibility:visible}
+.sheet h2{font:500 30px/1.1 var(--serif);margin-bottom:6px}
+.sheet .x{position:absolute;right:8px;top:10px;width:44px;height:44px;display:grid;place-items:center;color:var(--ink-2)}
+.fgroup{padding:16px 0;border-top:1px solid var(--line-p)}
+.fgroup h3{font-size:14px;font-weight:500;margin-bottom:6px}
+.opt{display:flex;align-items:center;gap:12px;min-height:44px;font-size:15.5px}
+.opt input{width:22px;height:22px;accent-color:var(--ink);margin:0}
+.toast{position:fixed;z-index:50;left:var(--g);right:var(--g);bottom:calc(88px + var(--safe));display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:14px 16px;background:var(--bone);color:var(--ink);border-radius:6px;font-size:14.5px;box-shadow:0 12px 30px rgba(0,0,0,.4);
+  transform:translateY(20px);opacity:0;pointer-events:none;transition:.35s var(--ease)}
+.toast.on{transform:none;opacity:1;pointer-events:auto}
+.toast a{font-weight:500;text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
+
+/* ---------- DESKTOP (a minority of visitors; same system, wider) ---------- */
+@media (min-width:960px){
+  :root{--g:56px;--tab:0px}
+  body,body.no-tabs,body.focus{padding:68px 0 0}
+  .tabbar,.no-tabs .tabbar,.focus .tabbar{top:0;bottom:auto;height:68px;padding:0 var(--g);gap:38px;justify-content:flex-end;border-top:0;border-bottom:1px solid var(--line);transform:none}
+  .tb-brand{display:inline-flex;margin-right:auto;align-self:center}
+  .tab{flex:none;flex-direction:row;gap:8px;font-size:15px}.tab .ic{display:none}
+  .tab[aria-current]::before{top:auto;bottom:0;width:100%}
+  .tab .cnt{position:static}
+  .brandbar{display:none}
+  .wrap,.hero-in,.grid,.ph,.util,.chips,.empty,.sgroup,.pp-head,.pp-body{max-width:1240px;margin-inline:auto;width:100%}
+  .hero{min-height:calc(100vh - 68px)}
+  .hero-in{flex-direction:row-reverse;align-items:center;padding:0 var(--g)}
+  .hero-stage{flex:1.1;height:calc(100vh - 68px)}
+  .halo{width:min(66vh,700px);bottom:calc(9vh + 22px + min(29vh,310px))}.hero-fig{height:min(58vh,620px);margin-bottom:9vh}.hero-floor{bottom:calc(9vh + 2px);width:360px}
+  .hero-cap{position:absolute;right:var(--g);bottom:26px;width:55%}
+  .hero-copy{flex:.9;padding:0}.hero-copy h1{font-size:84px}.hero-copy p{font-size:18px}
+  .sec{padding:110px var(--g)}.sec>*{max-width:1128px;margin-inline:auto}
+  .sec-h h2{font-size:58px}
+  .tiers{max-width:760px!important}
+  .tier .objs{transform:scale(1.25);transform-origin:bottom center;margin-top:30px}
+  .feat{padding:110px 0}.feat .sec-h,.rail{max-width:1240px;margin-inline:auto;padding-inline:var(--g)}
+  .rail{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;overflow:visible}.fcard{max-width:none}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:80px}
+  .segs{padding-inline:max(var(--g),calc((100vw - 1128px)/2));top:68px}
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:56px 22px;padding-bottom:110px}
+  .card.big{grid-column:span 2;grid-row:span 2}.card.big .tile{aspect-ratio:auto;height:calc(100% - 96px)}
+  .card:hover .tile img,.fcard:hover .tile img,.pair:hover .tile img{transform:translateX(-50%) scale(1.04)}
+  .pd{display:grid;grid-template-columns:55% 45%}
+  .pd-stage{top:68px;height:calc(100vh - 68px)}
+  .pd-sheet{margin-top:0;border-radius:0;padding:44px 48px 120px}.grab{display:none}
+  .st-top .ib[data-cart]{display:none}
+  .pairs{margin:0;padding:0}
+  .buybar{left:55%;padding:14px 48px}
+  .sbox,.sgroup{max-width:760px}.sbox{margin-inline:auto}
+  .pp-page{min-height:calc(100vh - 68px)}
+  .pp-head,.pp-body{max-width:720px}.art{margin-inline:auto}
+  .sheet{left:50%;right:auto;width:520px;transform:translate(-50%,105%);bottom:6vh;border-radius:12px;padding:20px 28px 28px}
+  .open .sheet{transform:translate(-50%,0)}
+  .toast{left:auto;right:var(--g);bottom:28px;width:380px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .js .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div id="app" aria-live="polite"></div>
+<nav class="tabbar" id="tabs" aria-label="Үндсэн цэс"></nav>
+<div id="layer"><div class="scrim" data-act="close"></div><div class="sheet paper" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<noscript><p style="padding:24px">Энэ prototype JavaScript шаардана.</p></noscript>
+
+<script>
+(function () {
+'use strict';
+document.documentElement.classList.add('js');
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+var money = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '₮'; };
+var store = {
+  get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+};
+var ICON = {
+  home: '<path d="M4 11.5 12 5l8 6.5V20h-5v-5H9v5H4z"/>',
+  shop: '<path d="M5 5h6v6H5zM13 5h6v6h-6zM5 13h6v6H5zM13 13h6v6h-6z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  bag: '<path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/>',
+  ask: '<path d="M5 6h14v10H10l-4 3.5V16H5z"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  filter: '<path d="M4 7h16M7 12h10M10 17h4"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>'
+};
+var ic = function (n) { return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">' + ICON[n] + '</svg>'; };
+
+/* ---------- sample data (жишээ өгөгдөл) ---------- */
+var DIM = {
+  'brass-censer-pierced-lid-01-front': [1000, 737], 'brass-censer-pierced-lid-02-top-open': [1000, 761],
+  'elephant-censer-enamel-01-front': [1000, 994], 'elephant-censer-enamel-02-side': [1000, 877],
+  'green-tara-gilded-01-front': [676, 1000], 'green-tara-gilded-02-side': [468, 1000], 'green-tara-gilded-03-back': [586, 1000],
+  'hex-censer-elephant-finial-01-front': [912, 1000], 'hex-censer-elephant-finial-02-top-open': [1000, 630],
+  'incense-set-lus-savdag-01-front': [1000, 599], 'incense-set-ochirvaani-01-front': [1000, 634], 'incense-set-shambala-01-front': [1000, 604],
+  'offering-bowl-elephant-stand-01-top': [596, 1000], 'rosewood-censer-01-front': [864, 1000], 'rosewood-censer-02-top-open': [1000, 762],
+  'shakyamuni-thangka-01-front': [656, 1000]
+};
+var src = function (f, small) { return 'prototype-f-assets/' + f + (small ? '-s' : '') + '.webp'; };
+var img = function (f, small, alt, extra) {
+  var d = DIM[f]; return '<img src="' + src(f, small) + '" width="' + d[0] + '" height="' + d[1] + '" alt="' + esc(alt || '') + '" loading="lazy" decoding="async"' + (extra || '') + '>';
+};
+var TIERS = {
+  shuteen: { n: 'I', name: 'Шүтээн', desc: 'Бурхан, зурмал бурхан. Хамгийн дээд тавцанд залж тавина.' },
+  tahil: { n: 'II', name: 'Тахил', desc: 'Цөгц, зул. Шүтээнийхээ өмнө өргөнө.' },
+  huj: { n: 'III', name: 'Хүж', desc: 'Хүж, бойпор. Хамгийн урд талд тавина.' }
+};
+var FOR = {
+  home: { name: 'Гэрийн шүтээнд', desc: 'Бурхан, зурмал бурхан, тахилын эдлэл' },
+  first: { name: 'Анх удаа тахилын ширээ засахад', desc: 'Эхлэхэд хэрэгтэй гол эдлэл' },
+  daily: { name: 'Өдөр тутмын хүж', desc: 'Хүж, бойпор' },
+  gift: { name: 'Бэлэгт', desc: 'Бэлгэдэлтэй, бэлэглэхэд тохиромжтой эдлэл' }
+};
+var MAT = { gilded: 'Алтан шармал', brass: 'Гууль', wood: 'Мод', textile: 'Даавуу, торго' };
+var STOCK = { in_stock: 'Бэлэн байгаа', pre_order: 'Захиалгаар ирнэ' };
+var VIEW = { front: 'Урд тал', side: 'Хажуу тал', back: 'Ар тал', top: 'Дээрээс, таглаагүй' };
+var P = [
+  { slug: 'nogoon-dari-ekh', tier: 'shuteen', name: 'Ногоон Дарь эх', kind: 'Цутгамал бурхан', mats: ['gilded'], price: 3850000, stock: 'in_stock', s: 1, k: 1,
+    material: 'Зэсийн хайлш, алтан шармал; оюу, шүрэн шигтгээтэй', h: 33, w: 24, d: 17, weight: '2.6 кг', ravnai: true, feat: 1, verb: 'Залж авах',
+    sum: 'Давхар бадамлянхуан суудалд баруун хөлөө жийж заларсан Ногоон Дарь эх. Титэм, удвал цэцэг, суудлын хээг оюу, шүрээр шигтгэсэн.',
+    aboutT: 'Утга бэлгэдэл',
+    about: ['Ногоон Дарь эх бол аюул, айдсаас аварч, үйлс бүтээхэд тусалдаг гэж шүтдэг эх бурхан. Баруун хөлөө жийсэн нь тусламж хүссэн хэнд ч даруй босоход бэлэн байгааг илтгэнэ.',
+      'Баруун мутраа алгаа гадагш харуулан доош сунгасан нь өглөгийн мутар, зүүн мутартаа удвал цэцгийн иш барьсан байдаг.'],
+    careT: 'Залах, арчлах',
+    care: ['Нүдний түвшнээс дээш, цэвэр, нарны шууд гэрэл тусдаггүй газар залж тавина.', 'Тоосыг зөөлөн бийр эсвэл хуурай торгон алчуураар арчина. Ус, химийн бодис хэрэглэхгүй.', 'Зөөхдөө суурийг нь барина. Титэм, цэцгийн ишнээс өргөхгүй.'],
+    tags: 'ногоон дарь эх дара тара green tara бурхан шүтээн алтан шармал алтадмал зэс оюу шүр', for: ['home', 'gift'],
+    imgs: [['green-tara-gilded-01-front', 'front'], ['green-tara-gilded-02-side', 'side'], ['green-tara-gilded-03-back', 'back']],
+    pairs: ['tahiliin-tsogts', 'guulin-boipor', 'huj'],
+    hot: [[50, 9, 'Титэм', 'Таван үзүүртэй титэм. Оюу, шүрээр шигтгэсэн.'],
+      [18, 61, 'Баруун мутар', 'Алгаа гадагш харуулан доош сунгасан өглөгийн мутар. Хүссэнийг хайрлахын бэлгэдэл.'],
+      [63, 40, 'Зүүн мутар', 'Удвал цэцгийн ишийг барьсан. Цэцэг нь мөрний хоёр талд дэлгэрнэ.'],
+      [42, 72, 'Жийсэн хөл', 'Тусламж хүссэнд даруй босоход бэлэн байгаагийн бэлгэдэл.'],
+      [50, 86, 'Бадамлянхуан суудал', 'Шавраас ургадаг ч шаварт буртаггүй бадамлянхуа нь ариун чанарыг бэлгэддэг.']] },
+  { slug: 'shagjamuni-zurmal', tier: 'shuteen', name: 'Шагжамүни бурхан', kind: 'Зурмал бурхан (танка)', mats: ['textile'], price: 1450000, stock: 'in_stock', s: 1, k: 1,
+    material: 'Даавуун дэвсгэр, эрдэс будаг; торгон эмжээртэй', h: 118, w: 74, d: 2, weight: '700 г', ravnai: true, feat: 1, verb: 'Залж авах',
+    sum: 'Голд нь Бурхан багш Шагжамүнийг, эргэн тойронд нь бодьсадва нарыг дүрсэлсэн зурмал бурхан. Торгон эмжээр, хөшигтэй.',
+    aboutT: 'Утга бэлгэдэл',
+    about: ['Зурмал бурхныг даавуун дэвсгэр дээр эрдэс будгаар зурж, торгоор эмжиж хүрээлдэг. Хуйлж авч явах боломжтой шүтээн.', 'Дээд талын торгон хөшиг нь зургийг тоос, гэрлээс хамгаална.'],
+    careT: 'Залах, арчлах',
+    care: ['Нарны шууд гэрэл, чийгээс хол, хананд эгц өлгөнө.', 'Будагтай гадаргууд гараар хүрэхгүй. Тоосыг зөөлөн бийрээр арилгана.', 'Хадгалахдаа доод голоос нь эхлэн сул хуйлж, хуурай газар хэвтээ тавина.'],
+    tags: 'шагжамүни шагжамуни бурхан багш зурмал бурхан танка тангка тангад thangka зураг торго', for: ['home'],
+    imgs: [['shakyamuni-thangka-01-front', 'front']], pairs: ['tahiliin-tsogts', 'huj'] },
+  { slug: 'tahiliin-tsogts', tier: 'tahil', name: 'Тахилын цөгц', kind: 'Заан тулгууртай', mats: ['brass', 'gilded'], price: 240000, stock: 'in_stock', s: .66, k: .82,
+    material: 'Гууль, алтан өнгийн бүрээстэй', h: 12, w: 15, d: 18, weight: '680 г',
+    sum: 'Зааны толгойгоор тулгуурласан гүехэн цөгц. Ус, будаа, цэцэг зэрэг өргөл өргөхөд зориулсан.',
+    aboutT: 'Танилцуулга',
+    about: ['Тахилын ширээнд шүтээнийхээ өмнө тавьж, өргөлөө өргөдөг сав. Заан нь тэвчээр, бат тогтуун сэтгэлийн бэлгэдэл.'],
+    careT: 'Хэрэглэх, арчлах',
+    care: ['Шүтээнийхээ өмнө тавина.', 'Өглөө цэвэр ус өргөж, орой нь суллаж арчина.', 'Хуурай зөөлөн даавуугаар арчина. Зүлгүүр хэрэглэхгүй.'],
+    tags: 'тахил цөгц тахилын аяга өргөл заан гууль', for: ['home', 'first'],
+    imgs: [['offering-bowl-elephant-stand-01-top', 'top']], pairs: ['nogoon-dari-ekh', 'huj'] },
+  { slug: 'zurgaan-talt-boipor', tier: 'huj', name: 'Зургаан талт бойпор', kind: 'Заан оройтой', mats: ['brass'], price: 420000, stock: 'in_stock', s: .86, k: .95,
+    material: 'Гууль, хуучруулсан өнгөлгөөтэй', h: 24, w: 19, d: 19, weight: '1.75 кг', feat: 1,
+    sum: 'Зургаан талт их биетэй, таглааны оройд заан суусан гуулин бойпор. Хуучруулсан өнгөлгөө нь сийлбэрийн гүнийг тодруулна.',
+    aboutT: 'Танилцуулга',
+    about: ['Бойпор бол хүж уугиулах сав. Таглааны сүлжээн хээгээр утаа жигд гарна.', 'Заан нь хүч чадал, тэвчээрийн бэлгэдэл.'],
+    careT: 'Хэрэглэх, арчлах',
+    care: ['Ёроолд нь 2–3 см үнс эсвэл цэвэр элс хийнэ.', 'Асаасан хүжээ үнсэн дээр тавьж, таглаагаа тавина.', 'Өнгөлгөөг хадгалахын тулд зүлгүүр, хүчиллэг цэвэрлэгч хэрэглэхгүй.'],
+    tags: 'бойпор хүжийн сав хүж гууль заан зургаан талт censer', for: ['home', 'gift'],
+    imgs: [['hex-censer-elephant-finial-01-front', 'front'], ['hex-censer-elephant-finial-02-top-open', 'top']], pairs: ['huj', 'tahiliin-tsogts'] },
+  { slug: 'erdeniin-zaan', tier: 'huj', name: 'Эрдэнийн заан', kind: 'Паалантай бойпор', mats: ['brass', 'gilded'], price: 690000, stock: 'in_stock', s: .78, k: .9,
+    material: 'Гууль, алтан шармал; хөх паалантай', h: 17, w: 22, d: 11, weight: '1.45 кг', feat: 1,
+    sum: 'Зааны нуруун дээр бөмбөгөр таглаатай бойпор. Нөмрөг, таглааг хөх паалан, алтан хээгээр чимсэн.',
+    aboutT: 'Утга бэлгэдэл',
+    about: ['Эрдэнийн заан бол хааны долоон эрдэнийн нэг. Тэвчээр, бат тогтуун сэтгэлийг бэлгэддэг тул бэлэгт түгээмэл сонгодог.'],
+    careT: 'Хэрэглэх, арчлах',
+    care: ['Таглааг авч, ёроолд нь үнс эсвэл элс хийнэ.', 'Богино хүж эсвэл нунтаг хүж уугиулж, таглаагаа тавина.', 'Паалантай хэсгийг зүлгүүр, химийн бодисоор цэвэрлэхгүй.'],
+    tags: 'эрдэнийн заан долоон эрдэнэ бойпор хүжийн сав паалан бэлэг', for: ['gift'],
+    imgs: [['elephant-censer-enamel-01-front', 'front'], ['elephant-censer-enamel-02-side', 'side']], pairs: ['huj'] },
+  { slug: 'guulin-boipor', tier: 'huj', name: 'Гуулин бойпор', kind: 'Сийлбэр таглаатай', mats: ['brass'], price: 285000, stock: 'in_stock', s: .64, k: .86,
+    material: 'Гууль', h: 14, w: 17, d: 17, weight: '1.15 кг',
+    sum: 'Дугуй их биетэй, хоёр бариултай, сийлбэр таглаатай гуулин бойпор. Өдөр тутам хэрэглэхэд тохиромжтой.',
+    aboutT: 'Танилцуулга',
+    about: ['Нунтаг хүж болон богино хүж уугиулахад тохирно. Таглааны хээгээр утаа жигд гарна.'],
+    careT: 'Хэрэглэх, арчлах',
+    care: ['Ёроолд нь 2–3 см үнс эсвэл цэвэр элс хийнэ.', 'Хүжээ асааж, дөлийг нь сэвж унтраагаад үнсэн дээр тавина.', 'Хөрсний дараа үнсийг асгаж, зөөлөн даавуугаар арчина.'],
+    tags: 'бойпор хүжийн сав хүж гууль censer', for: ['first', 'daily', 'home'],
+    imgs: [['brass-censer-pierced-lid-01-front', 'front'], ['brass-censer-pierced-lid-02-top-open', 'top']], pairs: ['huj', 'tahiliin-tsogts'] },
+  { slug: 'ulaan-modon-boipor', tier: 'huj', name: 'Улаан модон бойпор', kind: 'Сийлбэр таглаатай', mats: ['wood'], price: 165000, stock: 'pre_order', s: .6, k: .84,
+    material: 'Улаан мод; дотроо төмөр тавиуртай', h: 11, w: 14, d: 14, weight: '420 г',
+    sum: 'Улаан модоор урласан, сийлбэр таглаатай бойпор. Модны дулаан өнгө нь гэрийн тахилын ширээнд зохимжтой.',
+    aboutT: 'Танилцуулга',
+    about: ['Дотор талын тавиур дээр хүжээ тавьж уугиулна. Мод тул халуун үнс, нүүрсийг шууд хийхгүй.'],
+    careT: 'Хэрэглэх, арчлах',
+    care: ['Хүжийг зөвхөн дотор талын тавиур дээр тавина.', 'Нүүрс, халуун үнсийг модонд шууд хүргэхгүй.', 'Хуурай даавуугаар арчина.'],
+    tags: 'бойпор хүжийн сав хүж мод улаан мод censer', for: ['gift', 'daily'],
+    imgs: [['rosewood-censer-01-front', 'front'], ['rosewood-censer-02-top-open', 'top']], pairs: ['huj'] },
+  { slug: 'huj', tier: 'huj', name: 'Хүж, гуулин аягатай', kind: 'Нэг багцад хоёр хайрцаг', mats: ['brass'], price: 34000, stock: 'in_stock', s: .6, k: .8,
+    material: 'Аяга: гууль · Хүж: ургамлын гаралтай', h: 9, w: 7.5, d: 7.5, weight: '320 г', from: true,
+    sum: 'Хүжээ босгож уугиулах гуулин аяга, сонгосон хүжийн хамт. Нэг багцад хоёр хайрцаг хүж орно.',
+    aboutT: 'Танилцуулга',
+    about: ['Гуулин аяга нь хүжийг босоо барьж, унасан үнсийг тогтооно.'],
+    careT: 'Хэрхэн уугиулах вэ',
+    care: ['Аяганд 3–4 см элс эсвэл будаа хийж, хүжээ босгож суулгана.', 'Үзүүрийг нь асааж, дөлийг амаараа үлээлгүй гараараа сэвж унтраана.', 'Уугиж дууссаны дараа үнсийг цэвэрлэнэ.'],
+    tags: 'хүж лус савдаг очирваань шамбал аяга арц', for: ['first', 'daily', 'gift'],
+    variants: [
+      { id: 'shambal', label: 'Шамбалын хүж', note: 'Улаан өнгийн бүдүүн хүж', price: 34000, imgs: [['incense-set-shambala-01-front', 'front']] },
+      { id: 'lus', label: 'Лус савдгийн хүж', note: 'Бор өнгийн бүдүүн хүж', price: 36000, imgs: [['incense-set-lus-savdag-01-front', 'front']] },
+      { id: 'ochir', label: 'Очирваанийн хүж', note: 'Бор өнгийн бүдүүн хүж', price: 38000, imgs: [['incense-set-ochirvaani-01-front', 'front']] }
+    ],
+    imgs: [['incense-set-shambala-01-front', 'front']], pairs: ['guulin-boipor', 'tahiliin-tsogts'] }
+];
+var BY = {}; P.forEach(function (p) { BY[p.slug] = p; });
+var GUIDES = {
+  shiree: { n: '01', t: 'Тахилын ширээгээ хэрхэн засах вэ', m: '3 мин',
+    body: '<p class="lead">Тахилын ширээ бол гэртээ шүтээнээ залж, өргөлөө өргөдөг орон зай. Том жижиг нь чухал биш. Цэвэр, тогтуун, хүндэтгэлтэй байх нь чухал.</p>' +
+      '<h2>Байрлал</h2><p>Нүдний түвшнээс дээш, хөл хөдөлгөөн багатай газрыг сонгоно. Унтлагын өрөөнд бол хөл жийх зүгт тавихаас зайлсхийдэг.</p>' +
+      '<h2>Дараалал</h2><p><b>I.</b> Хамгийн дээд тавцанд бурхан шүтээн, зурмал бурхнаа залъя.</p><p><b>II.</b> Шүтээнийхээ өмнө тахилын цөгц, зулаа өргөнө.</p><p><b>III.</b> Хамгийн урд талд хүж, бойпороо тавина.</p>' +
+      '<h2>Өдөр тутам</h2><p>Өглөө цөгцөнд цэвэр ус өргөж, орой нь суллаж арчдаг. Хүжээ уугиулж дууссаны дараа үнсийг цэвэрлэнэ.</p>' },
+  ravnai: { n: '02', t: 'Равнай гэж юу вэ', m: '2 мин',
+    body: '<p class="lead">Равнай гэдэг нь шинээр бүтээсэн бурхныг лам хуврагууд ном уншиж адислан, шүтээн болгодог зан үйл.</p>' +
+      '<p>Равнайлаагүй бурхан бол урлагийн бүтээл, равнайлсан бурхан бол шүтээн гэж үздэг.</p>' +
+      '<p>Бурхан бүрийн хуудсанд равнайлсан эсэхийг бид тэмдэглэнэ. Равнайлуулах бол өөрийн шүтдэг хийд, лам багшдаа хандана.</p>' },
+  huj: { n: '03', t: 'Хүж уугиулах ёс', m: '2 мин',
+    body: '<p class="lead">Хүж уугиулна гэдэг нь орон гэрээ ариусгаж, шүтээндээ анхилуун үнэр өргөж буй хэрэг.</p>' +
+      '<p>Хүжийн үзүүрийг асааж, дөлийг нь амаараа үлээлгүй гараараа сэвж унтраана.</p><p>Бойпорын үнсэн дээр хэвтүүлж эсвэл хүжийн аяганд босгож тавина.</p>' +
+      '<p>Гэрээс гарах, унтахын өмнө бүрэн унтарсан эсэхийг шалгана.</p>' }
+};
+
+/* ---------- state ---------- */
+var app = $('#app'), tabs = $('#tabs'), layer = $('#layer'), sheet = $('#sheet'), toastEl = $('#toast');
+var ordering = store.get('ngf-ordering', true);
+var cart = store.get('ngf-cart', []);
+var sel = {};                                    // chosen variant per product
+var F = { mats: {}, price: '', stock: false, sort: 'rec' };
+var co = { step: 1, name: '', phone: '' };
+var hot = { on: false, i: 0 };
+var firstHome = true, stack = [], scrolls = {};
+var cartCount = function () { return cart.reduce(function (n, c) { return n + c.qty; }, 0); };
+var saveCart = function () { store.set('ngf-cart', cart); drawTabs(); };
+var priceOf = function (c) { var p = BY[c.slug]; var v = p.variants && p.variants.filter(function (x) { return x.id === c.variant; })[0]; return v ? v.price : p.price; };
+var lineName = function (c) { var p = BY[c.slug]; var v = p.variants && p.variants.filter(function (x) { return x.id === c.variant; })[0]; return v ? v.label : p.name; };
+var lineImg = function (c) { var p = BY[c.slug]; var v = p.variants && p.variants.filter(function (x) { return x.id === c.variant; })[0]; return (v ? v.imgs : p.imgs)[0][0]; };
+
+/* ---------- pieces ---------- */
+function tile(p, small) { return '<div class="tile" style="--s:' + p.s + '">' + img(p.imgs[0][0], small !== false, '') + '</div>'; }
+function priceText(p) { return (p.from ? '' : '') + money(p.price) + (p.from ? '-өөс' : ''); }
+function card(p, big) {
+  var meta = p.h + ' см · ' + p.kind;
+  return '<a class="card' + (big ? ' big' : '') + '" href="#/p/' + p.slug + '">' + tile(p, !big) +
+    (big ? '<div class="c-row"><h3>' + esc(p.name) + '</h3><div class="c-price num">' + priceText(p) + '</div></div><div class="c-meta">' + esc(meta) + '</div>'
+      : '<h3>' + esc(p.name) + '</h3><div class="c-meta">' + esc(meta) + '</div><div class="c-price num">' + priceText(p) + '</div>') + '</a>';
+}
+function drawTabs() {
+  var r = route().parts[0] || 'home', n = cartCount();
+  var t = [['home', '#/', 'Нүүр', 'home'], ['shop', '#/shop', 'Дэлгүүр', 'shop'], ['search', '#/search', 'Хайх', 'search']];
+  if (ordering) t.push(['cart', '#/cart', 'Сагс', 'bag']);
+  var cur = r === 'p' ? 'shop' : r === 'checkout' ? 'cart' : r === 'guide' ? 'home' : r;
+  tabs.innerHTML = '<a class="brand tb-brand" href="#/"><i></i>НОГООЛИН</a>' + t.map(function (x) {
+    return '<a class="tab" href="' + x[1] + '"' + (cur === x[0] ? ' aria-current="page"' : '') + '>' + ic(x[3]) + '<span>' + x[2] + '</span>' +
+      (x[0] === 'cart' && n ? '<span class="cnt num">' + n + '</span>' : '') + '</a>';
+  }).join('');
+}
+function toast(html) { toastEl.innerHTML = html; toastEl.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(function () { toastEl.classList.remove('on'); }, 3600); }
+
+/* ---------- views ---------- */
+function vHome() {
+  var tara = BY['nogoon-dari-ekh'];
+  var count = function (t) { return P.filter(function (p) { return p.tier === t; }).length; };
+  var tierRow = function (key, inset, h, gap, objs) {
+    var t = TIERS[key];
+    return '<a class="tier rv" href="#/shop?tier=' + key + '" style="--in:' + inset + ';--h:' + h + 'px;--gap:' + gap + 'px">' +
+      '<div class="objs">' + objs.map(function (o) { return img(o[0], true, '', ' style="height:' + o[1] + 'px"'); }).join('') + '</div>' +
+      '<div class="shelf"></div><div class="lab"><b>' + t.n + '</b><strong>' + t.name + '</strong><span class="num">' + count(key) + ' ' + ic('arrow') + '</span></div>' +
+      '<small>' + t.desc + '</small></a>';
+  };
+  var feat = P.filter(function (p) { return p.feat; });
+  return '<section class="hero' + (firstHome ? ' first' : '') + '"><div class="brandbar"><span class="brand"><i></i>НОГООЛИН</span></div>' +
+    '<div class="hero-in"><div class="hero-stage">' +
+      '<svg class="halo" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="99" pathLength="1"/><circle cx="100" cy="100" r="110" pathLength="1"/></svg>' +
+      '<div class="hero-floor"></div>' + img(tara.imgs[0][0], false, 'Ногоон Дарь эх, алтан шармал цутгамал бурхан', ' class="hero-fig" loading="eager"') + '</div>' +
+    '<div><a class="hero-cap" href="#/p/nogoon-dari-ekh">Ногоон Дарь эх · алтан шармал · өндөр 33 см ' + ic('arrow') + '</a>' +
+    '<div class="hero-copy"><div class="eb">Шашны эдлэлийн дэлгүүр</div><h1 class="serif">Шүтээн бүр<br><em>өөрийн</em> утгатай</h1>' +
+      '<p>Бурхан шүтээн, тахилын эдлэл, хүжийг утга бэлгэдэл, хэмжээ, материалтай нь танилцаж сонгоорой.</p>' +
+      '<a class="btn" href="#/shop">Дэлгүүр үзэх ' + ic('arrow') + '</a></div></div></div></section>' +
+
+  '<section class="sec altar"><div class="sec-h rv"><div class="eb">Тахилын ширээ</div><h2 class="serif">Юуг хаана залах вэ</h2>' +
+    '<p class="muted">Гэрийн тахилын ширээг ихэвчлэн дээрээс доош ийм дарааллаар засдаг. Тавцангаа сонгоод тохирох эдлэлээ үзээрэй.</p></div>' +
+    '<div class="tiers">' +
+      tierRow('shuteen', '17%', 168, 14, [['green-tara-gilded-01-front', 168]]) +
+      tierRow('tahil', '8.5%', 70, 30, [['offering-bowl-elephant-stand-01-top', 70], ['offering-bowl-elephant-stand-01-top', 70], ['offering-bowl-elephant-stand-01-top', 70]]) +
+      tierRow('huj', '0px', 106, 16, [['brass-censer-pierced-lid-01-front', 60], ['hex-censer-elephant-finial-01-front', 106], ['incense-set-shambala-01-front', 54]]) +
+    '</div></section>' +
+
+  '<section class="feat"><div class="sec-h rv"><div class="eb">Онцлох</div><h2 class="serif">Онцлох эдлэл</h2></div><div class="rail">' +
+    feat.map(function (p, i) {
+      return '<a class="fcard" href="#/p/' + p.slug + '">' + tile(p, false) + '<i class="num">0' + (i + 1) + ' / 0' + feat.length + '</i><h3>' + esc(p.name) + '</h3>' +
+        '<div class="c-meta">' + p.h + ' см · ' + esc(p.kind) + '</div><div class="c-price num">' + priceText(p) + '</div></a>';
+    }).join('') + '</div></section>' +
+
+  '<section class="sec paper"><div class="two"><div><div class="sec-h rv"><div class="eb">Зорилгоор сонгох</div><h2 class="serif">Юунд зориулж хайж байна вэ?</h2></div><div class="rows rv">' +
+    Object.keys(FOR).map(function (k) { return '<a class="row" href="#/shop?for=' + k + '"><strong>' + FOR[k].name + '</strong><span>' + FOR[k].desc + '</span>' + ic('arrow') + '</a>'; }).join('') +
+    '</div></div><div style="margin-top:64px" class="gcol"><div class="sec-h rv"><div class="eb">Мэдлэг</div><h2 class="serif">Залахаасаа өмнө</h2></div><div class="rows rv">' +
+    Object.keys(GUIDES).map(function (k) { var g = GUIDES[k]; return '<a class="grow" href="#/guide/' + k + '"><b>' + g.n + '</b><strong>' + g.t + '</strong><span>' + g.m + '</span></a>'; }).join('') +
+    '</div></div></div></section>' +
+
+  '<section class="sec store"><div class="sec-h rv"><div class="eb">Дэлгүүр</div><h2 class="serif">Захиалгаа дэлгүүрээс авна</h2>' +
+    '<p class="muted">Утсаараа захиалаад, бэлэн болсон тухай мессеж авмагцаа дэлгүүрт ирж төлбөрөө төлөөд авна. Хүргэлт одоогоор байхгүй.</p></div>' +
+    '<dl class="rv"><div><dt>Хаяг</dt><dd>Улаанбаатар хот <span class="muted">(жишээ хаяг)</span></dd></div><div><dt>Цагийн хуваарь</dt><dd class="num">Өдөр бүр 10:00–19:00</dd></div>' +
+    '<div><dt>Утас</dt><dd class="num">7700-0000</dd></div></dl></section>' +
+
+  '<footer class="foot"><span class="brand"><i></i>НОГООЛИН</span><p style="margin-top:14px">Prototype F · Нэр, үнэ, хэмжээ, хаяг, тайлбар бүгд жишээ өгөгдөл.</p>' +
+    '<details><summary>Prototype тохиргоо</summary><div class="pp">' +
+    '<button data-act="ordering"><span>Онлайн захиалга</span><b>' + (ordering ? 'Нээлттэй' : 'Хаалттай') + '</b></button>' +
+    '<a href="nogoolin-prototype-e.html"><span>3D интро үзэх (Prototype E)</span>' + ic('arrow') + '</a></div></details></footer>';
+}
+
+function listFor(q) {
+  var l = P.filter(function (p) {
+    if (q.tier && p.tier !== q.tier) return false;
+    if (q['for'] && p['for'].indexOf(q['for']) < 0) return false;
+    var m = Object.keys(F.mats).filter(function (k) { return F.mats[k]; });
+    if (m.length && !m.some(function (k) { return p.mats.indexOf(k) >= 0; })) return false;
+    if (F.price === 'a' && p.price > 100000) return false;
+    if (F.price === 'b' && (p.price <= 100000 || p.price > 500000)) return false;
+    if (F.price === 'c' && p.price <= 500000) return false;
+    if (F.stock && p.stock !== 'in_stock') return false;
+    return true;
+  });
+  if (F.sort === 'up') l.sort(function (a, b) { return a.price - b.price; });
+  if (F.sort === 'down') l.sort(function (a, b) { return b.price - a.price; });
+  return l;
+}
+var PRICE = { a: '100,000₮ хүртэл', b: '100,000–500,000₮', c: '500,000₮-өөс дээш' };
+function vShop(q) {
+  var l = listFor(q), fr = q['for'] && FOR[q['for']];
+  var seg = function (k, name) { return '<a class="seg" href="#/shop' + (k ? '?tier=' + k : '') + '"' + ((q.tier || '') === k && !fr ? ' aria-current="page"' : '') + '>' + name + '</a>'; };
+  var chips = [];
+  if (fr) chips.push(['for', fr.name]);
+  Object.keys(F.mats).forEach(function (k) { if (F.mats[k]) chips.push(['mat:' + k, MAT[k]]); });
+  if (F.price) chips.push(['price', PRICE[F.price]]);
+  if (F.stock) chips.push(['stock', 'Бэлэн байгаа']);
+  var big = !chips.length && F.sort === 'rec' && l.length > 2;
+  return '<header class="ph"><div class="eb">' + (fr ? 'Зорилгоор сонгох' : q.tier ? 'Тахилын ширээ · ' + TIERS[q.tier].n : 'Бүх эдлэл') + '</div>' +
+    '<h1 class="serif" style="margin-top:12px">' + (fr ? fr.name : q.tier ? TIERS[q.tier].name : 'Дэлгүүр') + '</h1>' +
+    (q.tier ? '<p>' + TIERS[q.tier].desc + '</p>' : fr ? '<p>' + fr.desc + '</p>' : '') + '</header>' +
+    '<nav class="segs" aria-label="Тавцан" style="margin-top:14px">' + seg('', 'Бүгд') + seg('shuteen', 'Шүтээн') + seg('tahil', 'Тахил') + seg('huj', 'Хүж, бойпор') + '</nav>' +
+    '<div class="util"><span class="num">' + l.length + ' эдлэл</span><span class="sp"></span>' +
+      '<button class="ubtn" data-act="filter">' + ic('filter') + 'Шүүх</button>' +
+      '<select data-act="sort" aria-label="Эрэмбэлэх"><option value="rec"' + (F.sort === 'rec' ? ' selected' : '') + '>Санал болгосноор</option><option value="up"' + (F.sort === 'up' ? ' selected' : '') +
+      '>Үнэ өсөхөөр</option><option value="down"' + (F.sort === 'down' ? ' selected' : '') + '>Үнэ буурахаар</option></select></div>' +
+    (chips.length ? '<div class="chips">' + chips.map(function (c) { return '<button class="chip" data-act="unchip" data-k="' + c[0] + '">' + esc(c[1]) + ic('x') + '</button>'; }).join('') + '</div>' : '') +
+    (l.length ? '<div class="grid">' + l.map(function (p, i) { return card(p, big && i === 0); }).join('') + '</div>'
+      : '<div class="empty"><h2>Тохирох эдлэл алга</h2><p>Шүүлтүүрээ багасгаж үзээрэй. Хайсан эдлэл тань байхгүй бол бидэнд хэлээрэй, олж өгөхийг хичээнэ.</p>' +
+        '<button class="btn" data-act="clearf">Шүүлтүүр арилгах</button></div>');
+}
+
+function vProduct(slug) {
+  var p = BY[slug]; if (!p) return '<div class="empty"><h2>Эдлэл олдсонгүй</h2><a class="btn" href="#/shop">Дэлгүүр үзэх</a></div>';
+  var v = p.variants ? (p.variants.filter(function (x) { return x.id === sel[slug]; })[0] || p.variants[0]) : null;
+  var imgs = v ? v.imgs : p.imgs, price = v ? v.price : p.price, n = cartCount();
+  var big = p.h > 60, refCm = big ? 170 : 15, mx = Math.max(refCm, p.h), u = 132 / mx;
+  var spec = [['Материал', p.material], ['Хэмжээ', 'Өндөр ' + p.h + ' · Өргөн ' + p.w + ' · Зузаан ' + p.d + ' см'], ['Жин', p.weight]];
+  if (p.ravnai) spec.push(['Равнай', 'Равнайлаагүй. Равнайлуулах талаар зөвлөж өгнө.']);
+  var cta = ordering ? '<button class="btn" data-act="add" data-slug="' + slug + '">' + (p.verb || 'Сагсанд нэмэх') + '</button>'
+    : '<button class="btn" data-act="ask" data-slug="' + slug + '">Асуулт асуух</button>';
+  return '<article class="pd"><div class="pd-stage' + (hot.on && p.hot ? ' hot-on' : '') + '" id="stage">' +
+    '<div class="st-top"><button class="ib" data-act="back" aria-label="Буцах">' + ic('back') + '</button>' +
+      (ordering ? '<a class="ib" data-cart href="#/cart" aria-label="Сагс">' + ic('bag') + (n ? '<span class="cnt num">' + n + '</span>' : '') + '</a>' : '') + '</div>' +
+    '<div class="gal" id="gal">' + imgs.map(function (im, i) {
+      var d = DIM[im[0]];
+      return '<div class="sl"><div class="fig" style="--ar:' + (d[0] / d[1]).toFixed(4) + ';--k:' + p.k + '">' +
+        img(im[0], false, p.name + ', ' + VIEW[im[1]].toLowerCase(), i ? '' : ' loading="eager"') +
+        (i === 0 && p.hot ? p.hot.map(function (h, j) { return '<button class="hd' + (j === hot.i ? ' on' : '') + '" data-act="hot" data-i="' + j + '" style="left:' + h[0] + '%;top:' + h[1] + '%" aria-label="' + esc(h[2]) + '">' + (j + 1) + '</button>'; }).join('') : '') +
+        '</div></div>';
+    }).join('') + '</div>' +
+    '<div class="st-bot"><div class="dots" id="dots">' + (imgs.length > 1 ? imgs.map(function (_, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') : '') +
+      '<span id="vlab">' + VIEW[imgs[0][1]] + '</span></div>' +
+      (p.hot ? '<button class="hot-t" data-act="hot-toggle" aria-pressed="' + hot.on + '"><i></i>Утга бэлгэдэл</button>' : '') + '</div>' +
+    (p.hot ? '<div class="hcap" id="hcap"></div>' : '') + '</div>' +
+
+  '<div class="pd-sheet paper"><div class="grab"></div><div class="eb">' + TIERS[p.tier].name + '</div><h1 class="serif">' + esc(p.name) + '</h1>' +
+    '<div class="pd-kind">' + esc(p.kind) + '</div><p class="pd-sum">' + esc(p.sum) + '</p>' +
+    '<div class="pd-price"><b class="num">' + money(price) + '</b><span class="stock' + (p.stock === 'pre_order' ? ' pre' : '') + '">' + STOCK[p.stock] + '</span></div>' +
+    (p.variants ? '<div class="vars" role="group" aria-label="Төрөл">' + p.variants.map(function (x) {
+      return '<button class="var" data-act="variant" data-id="' + x.id + '" aria-pressed="' + (x.id === v.id) + '"><span>' + x.label + '</span><small>' + x.note + '</small><b class="num">' + money(x.price) + '</b></button>';
+    }).join('') + '</div>' : '') +
+    '<section class="blk"><h2>Хэмжээ, материал</h2><dl class="spec">' + spec.map(function (s) { return '<div><dt>' + s[0] + '</dt><dd>' + esc(s[1]) + '</dd></div>'; }).join('') + '</dl>' +
+      '<div class="scale" aria-label="Хэмжээг төсөөлөхөд">' +
+        '<figure>' + (big ? '<svg class="per" viewBox="0 0 40 132" style="height:' + Math.round(refCm * u) + 'px"><circle cx="20" cy="11" r="9"/><path d="M6 131V46a14 14 0 0 1 28 0v85"/></svg>'
+          : '<div class="ref" style="height:' + Math.round(refCm * u) + 'px;width:' + Math.round(7.2 * u) + 'px"></div>') + '<figcaption class="num">' + (big ? 'Хүн · 170 см' : 'Гар утас · 15 см') + '</figcaption></figure>' +
+        '<figure>' + img(imgs[0][0], true, '', ' style="height:' + Math.max(18, Math.round(p.h * u)) + 'px"') + '<figcaption class="num">Энэ эдлэл · ' + p.h + ' см</figcaption></figure></div></section>' +
+    '<section class="blk"><h2>' + p.aboutT + '</h2>' + p.about.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</section>' +
+    '<section class="blk"><h2>' + p.careT + '</h2><ol class="steps">' + p.care.map(function (t, i) { return '<li><b>' + (i + 1) + '</b><span>' + esc(t) + '</span></li>'; }).join('') + '</ol></section>' +
+    '<section class="blk"><h2>Хамт тавигддаг эдлэл</h2><div class="pairs">' + p.pairs.map(function (s) { var x = BY[s];
+      return '<a class="pair" href="#/p/' + s + '">' + tile(x) + '<h3>' + esc(x.name) + '</h3><div class="c-meta">' + TIERS[x.tier].name + '</div><div class="c-price num">' + priceText(x) + '</div></a>'; }).join('') + '</div></section>' +
+    (ordering ? '<section class="ask"><h2>Асуух зүйл байна уу?</h2><p>Хэмжээ, материал, равнайн талаар асуувал бид утсаар эргэн холбогдоно.</p>' +
+      '<button class="btn ghost" data-act="ask" data-slug="' + slug + '">Асуулт асуух</button></section>' : '') +
+    '<p class="sample">Prototype F · энэ хуудасны нэр, үнэ, хэмжээ, тайлбар нь жишээ өгөгдөл.</p></div>' +
+  '<div class="buybar"><div><small>' + (p.stock === 'pre_order' ? 'Захиалгаар' : 'Үнэ') + '</small><b class="num">' + money(price) + '</b></div>' + cta + '</div></article>';
+}
+
+/* search: Cyrillic and Latin transliteration, one typo tolerated */
+var TR = { 'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'j', 'з': 'z', 'и': 'i', 'й': 'i', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'ө': 'o', 'п': 'p', 'р': 'r',
+  'с': 's', 'т': 't', 'у': 'u', 'ү': 'u', 'ф': 'f', 'х': 'h', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh', 'ъ': '', 'ы': 'i', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya' };
+function norm(s) {
+  s = String(s).toLowerCase().replace(/[а-яёөү]/g, function (c) { return TR[c] == null ? c : TR[c]; });
+  return s.replace(/kh/g, 'h').replace(/th/g, 't').replace(/w/g, 'v').replace(/y/g, 'i').replace(/c(?!h)/g, 'ts').replace(/([aeiou])\1+/g, '$1').replace(/[^a-z0-9 ]+/g, ' ').trim();
+}
+function lev1(a, b) {
+  if (a === b) return true; if (Math.abs(a.length - b.length) > 1) return false;
+  var i = 0, j = 0, e = 0;
+  while (i < a.length && j < b.length) { if (a[i] === b[j]) { i++; j++; } else { if (++e > 1) return false; if (a.length > b.length) i++; else if (a.length < b.length) j++; else { i++; j++; } } }
+  return e + (a.length - i) + (b.length - j) <= 1;
+}
+P.forEach(function (p) { p.hay = norm(p.name + ' ' + p.kind + ' ' + p.tags + ' ' + TIERS[p.tier].name).split(' '); });
+function find(q) {
+  var qs = norm(q).split(' ').filter(Boolean); if (!qs.length) return [];
+  return P.filter(function (p) {
+    return qs.every(function (t) {
+      return p.hay.some(function (h) { return h.indexOf(t) === 0 || (t.length >= 4 && (lev1(h.slice(0, t.length), t) || lev1(h.slice(0, t.length - 1), t) || lev1(h.slice(0, t.length + 1), t))); });
+    });
+  });
+}
+var POPULAR = ['Ногоон Дарь эх', 'бойпор', 'хүж', 'зурмал бурхан', 'тахилын цөгц'];
+function searchBody(q) {
+  if (!q.trim()) {
+    return '<div class="sgroup"><div class="eb">Түгээмэл хайлт</div>' + POPULAR.map(function (t) { return '<button class="sterm" data-act="term" data-t="' + esc(t) + '">' + t + ic('arrow') + '</button>'; }).join('') + '</div>' +
+      '<div class="sgroup"><div class="eb">Тахилын ширээгээр</div>' + Object.keys(TIERS).map(function (k) { return '<a class="sterm" href="#/shop?tier=' + k + '">' + TIERS[k].name + ic('arrow') + '</a>'; }).join('') + '</div>';
+  }
+  var r = find(q);
+  if (!r.length) return '<div class="empty"><h2>«' + esc(q) + '» олдсонгүй</h2><p>Өөр үгээр хайж үзээрэй. Латинаар бичсэн ч болно, жишээ нь «boipor», «dari eh».</p><a class="btn" href="#/shop">Бүх эдлэлийг үзэх</a></div>';
+  return '<div class="sgroup"><div class="eb num">' + r.length + ' эдлэл</div>' + r.map(function (p) {
+    return '<a class="sres" href="#/p/' + p.slug + '">' + tile(p) + '<div><strong>' + esc(p.name) + '</strong><div class="c-meta">' + esc(p.kind) + '</div><div class="c-price num">' + priceText(p) + '</div></div></a>';
+  }).join('') + '</div>';
+}
+function vSearch(q) {
+  return '<header class="ph"><div class="eb">Хайх</div></header><div class="sbox">' + ic('search') +
+    '<input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" placeholder="Бурхан, хүж, бойпор…" aria-label="Эдлэл хайх" value="' + esc(q.q || '') + '">' +
+    '<button data-act="clearq" aria-label="Арилгах">' + ic('x') + '</button></div><div id="sres">' + searchBody(q.q || '') + '</div>';
+}
+
+function vCart() {
+  if (!ordering) return '<div class="pp-page paper"><div class="empty"><h2>Онлайн захиалга түр хаалттай</h2><p>Эдлэлийн талаар асуух зүйл байвал эдлэлийн хуудаснаас «Асуулт асуух»-ыг дарна уу.</p><a class="btn" href="#/shop">Дэлгүүр үзэх</a></div></div>';
+  if (!cart.length) return '<div class="pp-page paper"><header class="pp-head"><h1 class="serif">Сагс</h1></header><div class="empty"><h2>Сагс хоосон байна</h2><p>Сонирхсон эдлэлээ сагсанд нэмээд, утсаараа захиалаарай.</p><a class="btn" href="#/shop">Дэлгүүр үзэх</a></div></div>';
+  var total = cart.reduce(function (s, c) { return s + priceOf(c) * c.qty; }, 0);
+  return '<div class="pp-page paper"><header class="pp-head"><h1 class="serif">Сагс</h1></header><div class="pp-body" style="padding:14px var(--g) 40px">' +
+    cart.map(function (c, i) { var p = BY[c.slug];
+      return '<div class="citem"><a href="#/p/' + c.slug + '" class="tile" style="--s:' + p.s + '">' + img(lineImg(c), true, '') + '</a><div><strong>' + esc(lineName(c)) + '</strong>' +
+        '<div class="c-meta">' + esc(p.variants ? p.name : p.kind) + '</div><div class="c-price num">' + money(priceOf(c)) + '</div>' +
+        '<div class="qty"><button data-act="qty" data-i="' + i + '" data-d="-1" aria-label="Хасах">−</button><span class="num">' + c.qty + '</span><button data-act="qty" data-i="' + i + '" data-d="1" aria-label="Нэмэх">+</button></div></div>' +
+        '<button class="rm" data-act="rm" data-i="' + i + '" aria-label="Сагснаас хасах">' + ic('x') + '</button></div>';
+    }).join('') +
+    '<div class="sum"><div><span>Нийт</span><b class="num">' + money(total) + '</b></div></div>' +
+    '<p class="note">Төлбөрөө дэлгүүрт ирж авахдаа төлнө. Хүргэлт одоогоор байхгүй.</p><a class="btn wide" href="#/checkout">Захиалга өгөх</a></div></div>';
+}
+function vCheckout() {
+  if (!cart.length && co.step < 3) return vCart();
+  var total = cart.reduce(function (s, c) { return s + priceOf(c) * c.qty; }, 0), b;
+  if (co.step === 1) b = '<h1 class="serif">Холбоо барих</h1><p class="note">Бүртгүүлэх шаардлагагүй. Захиалгыг утасны дугаараар тань баталгаажуулна.</p>' +
+    '<div class="fld" id="f-name"><label for="name">Нэр</label><input id="name" autocomplete="name" value="' + esc(co.name) + '"><span class="err">Нэрээ оруулна уу.</span></div>' +
+    '<div class="fld" id="f-phone"><label for="phone">Утасны дугаар</label><input id="phone" class="num" inputmode="numeric" autocomplete="tel-national" maxlength="8" value="' + esc(co.phone) + '">' +
+    '<span class="hint">8 оронтой дугаар. Энэ дугаарт баталгаажуулах код илгээнэ.</span><span class="err">8 оронтой дугаар оруулна уу.</span></div>' +
+    '<label class="chk" id="f-ok"><input type="checkbox" id="ok"><span>Захиалгын талаар холбогдох зорилгоор нэр, утасны дугаарыг минь ашиглахыг зөвшөөрч байна.</span></label>' +
+    '<button class="btn wide" data-act="co1">Код авах</button>';
+  else if (co.step === 2) b = '<h1 class="serif">Баталгаажуулах</h1><p class="note"><span class="num">' + esc(co.phone) + '</span> дугаарт 6 оронтой код илгээлээ.</p>' +
+    '<div class="fld" id="f-code"><label for="code">Код</label><input id="code" class="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6">' +
+    '<span class="hint">Prototype: дурын 6 цифр оруулна.</span><span class="err">6 оронтой кодоо оруулна уу.</span></div>' +
+    '<button class="btn wide" data-act="co2">Захиалга баталгаажуулах · ' + money(total) + '</button>' +
+    '<p class="note" style="margin-top:16px"><button class="tlink" data-act="co-back">Дугаараа засах</button></p>';
+  else b = '<div class="done-mark">' + ic('check') + '</div><h1 class="serif">Захиалгыг хүлээн авлаа</h1>' +
+    '<p class="note" style="margin-top:14px">Захиалгын дугаар <b class="num" style="color:var(--ink)">NG-1110-042</b></p>' +
+    '<dl class="spec" style="margin-bottom:26px"><div><dt>Дараагийн алхам</dt><dd>Бэлэн болмогц <span class="num">' + esc(co.phone) + '</span> дугаарт мессеж илгээнэ.</dd></div>' +
+    '<div><dt>Авах газар</dt><dd>Улаанбаатар хот (жишээ хаяг) · Өдөр бүр 10:00–19:00</dd></div><div><dt>Төлбөр</dt><dd>Дэлгүүрт ирж авахдаа төлнө.</dd></div></dl>' +
+    '<a class="btn wide" href="#/">Нүүр хуудас руу</a>';
+  return '<div class="pp-page paper"><header class="pp-head">' + (co.step < 3 ? '<a class="back" href="#/cart">' + ic('back') + 'Сагс</a>' : '') +
+    '<div class="stepper num">Алхам ' + co.step + ' / 3</div><div class="bar"><i style="width:' + (co.step * 33.4) + '%"></i></div></header>' +
+    '<div class="pp-body" style="padding:0 var(--g) 48px">' + b + '</div></div>';
+}
+function vGuide(id) {
+  var g = GUIDES[id] || GUIDES.shiree;
+  return '<div class="pp-page paper"><article class="art"><a class="back" href="#/" style="margin-top:14px">' + ic('back') + 'Нүүр</a><div class="eb">Мэдлэг · ' + g.m + '</div>' +
+    '<h1 class="serif">' + g.t + '</h1>' + g.body + '<aside>Ёс заншил нь урсгал, багш бүрд бага зэрэг ялгаатай байдаг. Эргэлзсэн зүйлээ лам багшаасаа лавлаарай. <br>Prototype F · жишээ агуулга, мэргэжлийн хүнээр хянуулна.</aside></article></div>';
+}
+
+/* ---------- sheets ---------- */
+function openSheet(html) { sheet.innerHTML = '<div class="grab"></div><button class="x" data-act="close" aria-label="Хаах">' + ic('x') + '</button>' + html; layer.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeSheet() { layer.classList.remove('open'); document.body.style.overflow = ''; }
+function filterSheet() {
+  var o = function (name, val, label, on, type) { return '<label class="opt"><input type="' + (type || 'checkbox') + '" name="' + name + '" value="' + val + '"' + (on ? ' checked' : '') + '>' + label + '</label>'; };
+  openSheet('<h2>Шүүх</h2><form id="ff"><div class="fgroup" style="margin-top:14px"><h3>Материал</h3>' + Object.keys(MAT).map(function (k) { return o('mat', k, MAT[k], F.mats[k]); }).join('') + '</div>' +
+    '<div class="fgroup"><h3>Үнэ</h3>' + o('price', '', 'Бүгд', !F.price, 'radio') + Object.keys(PRICE).map(function (k) { return o('price', k, PRICE[k], F.price === k, 'radio'); }).join('') + '</div>' +
+    '<div class="fgroup"><h3>Бэлэн байдал</h3>' + o('stock', '1', 'Зөвхөн бэлэн байгаа', F.stock) + '</div>' +
+    '<button class="btn wide" type="submit" style="margin-top:10px">Үзүүлэх</button></form>');
+}
+function askSheet(slug) {
+  var p = BY[slug];
+  openSheet('<h2>Асуулт асуух</h2><p class="note" style="margin-bottom:18px">' + esc(p.name) + ' · ' + esc(p.kind) + '</p>' +
+    '<div class="fld" id="a-phone"><label for="aphone">Утасны дугаар</label><input id="aphone" class="num" inputmode="numeric" autocomplete="tel-national" maxlength="8">' +
+    '<span class="hint">8 оронтой дугаар. Бид энэ дугаарт залгаж хариулна.</span><span class="err">8 оронтой дугаар оруулна уу.</span></div>' +
+    '<div class="fld" id="a-text"><label for="atext">Асуулт</label><textarea id="atext" maxlength="500"></textarea><span class="err">Асуултаа бичнэ үү.</span></div>' +
+    '<button class="btn wide" data-act="ask-send">Илгээх</button>');
+}
+
+/* ---------- router ---------- */
+function route() {
+  var h = location.hash.replace(/^#\/?/, ''), i = h.indexOf('?'), q = {};
+  (i < 0 ? '' : h.slice(i + 1)).split('&').forEach(function (kv) { if (kv) { var a = kv.split('='); q[decodeURIComponent(a[0])] = decodeURIComponent((a[1] || '').replace(/\+/g, ' ')); } });
+  return { parts: (i < 0 ? h : h.slice(0, i)).split('/').filter(Boolean), q: q };
+}
+function render(keepScroll) {
+  var r = route(), a = r.parts[0] || 'home', html;
+  if (a === 'shop') html = vShop(r.q);
+  else if (a === 'p') html = vProduct(r.parts[1]);
+  else if (a === 'search') html = vSearch(r.q);
+  else if (a === 'cart') html = vCart();
+  else if (a === 'checkout') html = vCheckout();
+  else if (a === 'guide') html = vGuide(r.parts[1]);
+  else { a = 'home'; html = vHome(); }
+  document.body.className = 'r-' + a + (a === 'p' ? ' no-tabs' : a === 'checkout' ? ' focus' : '');
+  app.innerHTML = html; drawTabs(); closeSheet();
+  if (!keepScroll) { app.classList.remove('enter'); void app.offsetWidth; app.classList.add('enter'); }
+  if (a === 'home') setTimeout(function () { firstHome = false; }, 50);
+  if (a === 'p') afterProduct(r.parts[1]);
+  if (a === 'search') { var q = $('#q'); if (q && !r.q.q && matchMedia('(min-width:960px)').matches) q.focus(); }
+  reveal();
+}
+function onRoute() {
+  var h = location.hash || '#/', back = stack.length > 1 && stack[stack.length - 2] === h;
+  if (stack.length) scrolls[stack[stack.length - 1]] = window.scrollY;
+  if (back) stack.pop(); else stack.push(h);
+  toastEl.classList.remove('on');
+  if (route().parts[0] !== 'p') { hot.on = false; hot.i = 0; }
+  if (route().parts[0] !== 'checkout' && co.step === 3) co = { step: 1, name: '', phone: '' };
+  render();
+  window.scrollTo(0, back ? (scrolls[h] || 0) : 0);
+}
+function reveal() {
+  var els = $$('.rv');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+  els.forEach(function (e) { io.observe(e); });
+}
+function drawHot(p) {
+  var c = $('#hcap'); if (!c || !p.hot) return; var h = p.hot[hot.i];
+  c.innerHTML = '<strong><span class="num" style="color:var(--gold);font:500 13px var(--sans);margin-right:10px">' + (hot.i + 1) + ' / ' + p.hot.length + '</span>' + h[2] + '</strong>' +
+    '<div class="nav"><button data-act="hot-step" data-d="-1" aria-label="Өмнөх">' + ic('back') + '</button><button data-act="hot-step" data-d="1" aria-label="Дараах">' + ic('arrow') + '</button></div><p>' + h[3] + '</p>';
+  $$('.hd').forEach(function (d, i) { d.classList.toggle('on', i === hot.i); });
+}
+function afterProduct(slug) {
+  var p = BY[slug], g = $('#gal'); if (!p || !g) return;
+  var v = p.variants ? (p.variants.filter(function (x) { return x.id === sel[slug]; })[0] || p.variants[0]) : null, imgs = v ? v.imgs : p.imgs;
+  drawHot(p);
+  var pr = $('.pd-price'), bb = $('.buybar');
+  if (pr && bb && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { bb.classList.toggle('sp', !es[0].isIntersecting); }, { rootMargin: '0px 0px -80px 0px' }).observe(pr);
+  g.addEventListener('scroll', function () {
+    var i = Math.round(g.scrollLeft / g.clientWidth);
+    $$('#dots i').forEach(function (d, j) { d.classList.toggle('on', i === j); });
+    var l = $('#vlab'); if (l && imgs[i]) l.textContent = VIEW[imgs[i][1]];
+  }, { passive: true });
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', function (e) {
+  var t = e.target.closest('[data-act]'); if (!t) return;
+  var act = t.getAttribute('data-act'), r = route(), slug = r.parts[1], p = BY[slug];
+  if (act === 'close') closeSheet();
+  else if (act === 'back') { if (stack.length > 1) history.back(); else location.hash = '#/shop'; }
+  else if (act === 'filter') filterSheet();
+  else if (act === 'clearf') { F.mats = {}; F.price = ''; F.stock = false; render(true); }
+  else if (act === 'unchip') {
+    var k = t.getAttribute('data-k');
+    if (k === 'for') { location.hash = '#/shop'; return; }
+    if (k === 'price') F.price = ''; else if (k === 'stock') F.stock = false; else F.mats[k.slice(4)] = false;
+    render(true);
+  }
+  else if (act === 'variant') { sel[slug] = t.getAttribute('data-id'); var y = window.scrollY; render(true); window.scrollTo(0, y); }
+  else if (act === 'hot-toggle') { hot.on = !hot.on; $('#gal').scrollTo({ left: 0 }); $('#stage').classList.toggle('hot-on', hot.on); t.setAttribute('aria-pressed', hot.on); drawHot(p); }
+  else if (act === 'hot') { hot.i = +t.getAttribute('data-i'); drawHot(p); }
+  else if (act === 'hot-step') { hot.i = (hot.i + +t.getAttribute('data-d') + p.hot.length) % p.hot.length; drawHot(p); }
+  else if (act === 'add') {
+    var v = p.variants ? (sel[slug] || p.variants[0].id) : null, line = cart.filter(function (c) { return c.slug === slug && c.variant === v; })[0];
+    if (line) line.qty++; else cart.push({ slug: slug, variant: v, qty: 1 });
+    saveCart(); var c = $('[data-cart]'); if (c) c.innerHTML = ic('bag') + '<span class="cnt num">' + cartCount() + '</span>';
+    toast('<span>Сагсанд нэмлээ</span><a href="#/cart">Сагс үзэх</a>');
+  }
+  else if (act === 'qty') { var i = +t.getAttribute('data-i'); cart[i].qty = Math.max(1, cart[i].qty + +t.getAttribute('data-d')); saveCart(); render(true); }
+  else if (act === 'rm') { cart.splice(+t.getAttribute('data-i'), 1); saveCart(); render(true); }
+  else if (act === 'ask') askSheet(t.getAttribute('data-slug'));
+  else if (act === 'ask-send') {
+    var ph = /^\d{8}$/.test($('#aphone').value.trim()), tx = $('#atext').value.trim().length > 2;
+    $('#a-phone').classList.toggle('bad', !ph); $('#a-text').classList.toggle('bad', !tx);
+    if (ph && tx) openSheet('<div class="done-mark" style="margin-top:14px">' + ic('check') + '</div><h2>Асуултыг хүлээн авлаа</h2><p class="note" style="margin:10px 0 22px">Ажлын цагаар таны дугаарт залгаж хариулна.</p><button class="btn wide" data-act="close">Хаах</button>');
+    else ($('.fld.bad input, .fld.bad textarea') || {}).focus && $('.fld.bad input, .fld.bad textarea').focus();
+  }
+  else if (act === 'co1') {
+    co.name = $('#name').value.trim(); co.phone = $('#phone').value.trim();
+    var okN = co.name.length > 1, okP = /^\d{8}$/.test(co.phone), okC = $('#ok').checked;
+    $('#f-name').classList.toggle('bad', !okN); $('#f-phone').classList.toggle('bad', !okP); $('#f-ok').style.color = okC ? '' : 'var(--err)';
+    if (okN && okP && okC) { co.step = 2; render(); window.scrollTo(0, 0); var cd = $('#code'); if (cd) cd.focus(); }
+    else { var bad = $('.fld.bad input'); if (bad) bad.focus(); }
+  }
+  else if (act === 'co-back') { co.step = 1; render(); }
+  else if (act === 'co2') {
+    var ok = /^\d{6}$/.test($('#code').value.trim()); $('#f-code').classList.toggle('bad', !ok);
+    if (ok) { co.step = 3; cart = []; saveCart(); render(); window.scrollTo(0, 0); }
+  }
+  else if (act === 'term') { var q = $('#q'); q.value = t.getAttribute('data-t'); $('#sres').innerHTML = searchBody(q.value); }
+  else if (act === 'clearq') { var qi = $('#q'); qi.value = ''; $('#sres').innerHTML = searchBody(''); qi.focus(); }
+  else if (act === 'ordering') { ordering = !ordering; store.set('ngf-ordering', ordering); render(true); }
+});
+document.addEventListener('input', function (e) {
+  if (e.target.id === 'q') $('#sres').innerHTML = searchBody(e.target.value);
+  if (e.target.id === 'phone' || e.target.id === 'aphone' || e.target.id === 'code') e.target.value = e.target.value.replace(/\D/g, '');
+});
+document.addEventListener('change', function (e) { if (e.target.getAttribute('data-act') === 'sort') { F.sort = e.target.value; render(true); } });
+document.addEventListener('submit', function (e) {
+  if (e.target.id !== 'ff') return; e.preventDefault();
+  F.mats = {}; $$('input[name=mat]:checked', e.target).forEach(function (i) { F.mats[i.value] = true; });
+  F.price = ($('input[name=price]:checked', e.target) || {}).value || ''; F.stock = !!$('input[name=stock]:checked', e.target);
+  render(true); window.scrollTo(0, 0);
+});
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
+window.addEventListener('hashchange', onRoute);
+onRoute();
+})();
+</script>
+</body>
+</html>

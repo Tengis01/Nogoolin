@@ -12,6 +12,7 @@ Earlier contract text is not deleted; superseded items are marked, not removed.
 
 | Date | Change |
 |---|---|
+| 2026-11-10 | §3: background rule and delivery amended by D-15 (photos are delivered as alpha cut-outs and sit directly on the page background). Previous wording kept |
 | 2026-10-30 | §2 marked deferred by D-11 (native mobile deferred, PWA first). Contract text unchanged |
 | 2026-10-27 | Added §3 Product photography standard (D-09); title now includes product photography. §1 and §2 unchanged |
 | 2026-10-21 | §1: added "Sourcing the model" options and status (Meshy, Hunyuan3D-2, photogrammetry) |
@@ -173,16 +174,26 @@ the gallery and are too small on mobile. Use them only for marketing.
       ≥2000 px long side for zoom)
 - [ ] Object centred, filling ~80–85% of the frame height
 - [ ] Camera at the object's mid-height; same light setup for every product
-- [ ] Background: plain, consistent, and matched to the C paper tone, or
-      removed (transparent). Pure #FFFFFF boxes clash with the C paper
-      background
+- [ ] Background: **removed (transparent alpha cut-out)**. The photo sits
+      directly on the page background, with no panel, tile colour or gradient
+      behind it (hard rule D-15, 2026-11-10; only exception: the home hero).
+      Shoot on a plain, evenly lit ground so the cut-out is clean: no white
+      remnants between arms, handles or under the base, and no light halo on
+      the edge.
+      *Previous (2026-10-27):* "Background: plain, consistent, and matched to
+      the C paper tone, or removed (transparent). Pure #FFFFFF boxes clash with
+      the C paper background"
 - [ ] No text, rulers or dimension lines in the photo. Size, weight and
       material go in product fields (FR-PROD-190); the UI may draw a
       dimension overlay from those fields (FR-PUB-260)
 
 ### Delivery
 
-- Format: WebP (or AVIF), target ≤ 300 KB per image after export
+- Format: WebP (or AVIF) **with an alpha channel** (D-15), target ≤ 300 KB
+  per image after export. *Previous (2026-10-27):* "Format: WebP (or AVIF),
+  target ≤ 300 KB per image after export"
+- Keep the object's own contact shadow out of the file: the UI draws a soft
+  shadow under the cut-out
 - Filename: `<slug>-<nn>-<view>.webp`, e.g. `green-tara-01-front.webp`
 - Alt text: "<product name> — <view>" (NFR-SEO-330)
 

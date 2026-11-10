@@ -1,0 +1,219 @@
+{
+ "canvas": [
+  1280,
+  1600
+ ],
+ "floor": 0.94,
+ "max_h": 0.88,
+ "max_w": 0.86,
+ "images": {
+  "brass-censer-pierced-lid-01-front.webp": {
+   "product": "brass-censer-pierced-lid",
+   "object_box": [
+    89,
+    684,
+    1190,
+    1504
+   ],
+   "fill_h": 0.512,
+   "fill_w": 0.86,
+   "kb": 68,
+   "thumb_kb": 18
+  },
+  "brass-censer-pierced-lid-02-top-open.webp": {
+   "product": "brass-censer-pierced-lid",
+   "object_box": [
+    103,
+    684,
+    1176,
+    1504
+   ],
+   "fill_h": 0.512,
+   "fill_w": 0.838,
+   "kb": 96,
+   "thumb_kb": 18
+  },
+  "elephant-censer-enamel-01-front.webp": {
+   "product": "elephant-censer-enamel",
+   "object_box": [
+    89,
+    410,
+    1190,
+    1504
+   ],
+   "fill_h": 0.684,
+   "fill_w": 0.86,
+   "kb": 235,
+   "thumb_kb": 37
+  },
+  "elephant-censer-enamel-02-side.webp": {
+   "product": "elephant-censer-enamel",
+   "object_box": [
+    89,
+    534,
+    1190,
+    1504
+   ],
+   "fill_h": 0.606,
+   "fill_w": 0.86,
+   "kb": 227,
+   "thumb_kb": 32
+  },
+  "green-tara-gilded-01-front.webp": {
+   "product": "green-tara-gilded",
+   "object_box": [
+    167,
+    96,
+    1112,
+    1504
+   ],
+   "fill_h": 0.88,
+   "fill_w": 0.738,
+   "kb": 307,
+   "thumb_kb": 44
+  },
+  "green-tara-gilded-02-side.webp": {
+   "product": "green-tara-gilded",
+   "object_box": [
+    308,
+    96,
+    972,
+    1504
+   ],
+   "fill_h": 0.88,
+   "fill_w": 0.519,
+   "kb": 168,
+   "thumb_kb": 26
+  },
+  "green-tara-gilded-03-back.webp": {
+   "product": "green-tara-gilded",
+   "object_box": [
+    233,
+    96,
+    1047,
+    1504
+   ],
+   "fill_h": 0.88,
+   "fill_w": 0.636,
+   "kb": 248,
+   "thumb_kb": 37
+  },
+  "hex-censer-elephant-finial-01-front.webp": {
+   "product": "hex-censer-elephant-finial",
+   "object_box": [
+    89,
+    294,
+    1190,
+    1504
+   ],
+   "fill_h": 0.756,
+   "fill_w": 0.86,
+   "kb": 182,
+   "thumb_kb": 32
+  },
+  "hex-censer-elephant-finial-02-top-open.webp": {
+   "product": "hex-censer-elephant-finial",
+   "object_box": [
+    89,
+    759,
+    1190,
+    1504
+   ],
+   "fill_h": 0.466,
+   "fill_w": 0.86,
+   "kb": 113,
+   "thumb_kb": 19
+  },
+  "incense-set-lus-savdag-01-front.webp": {
+   "product": "incense-set-lus-savdag",
+   "object_box": [
+    89,
+    842,
+    1190,
+    1504
+   ],
+   "fill_h": 0.414,
+   "fill_w": 0.86,
+   "kb": 90,
+   "thumb_kb": 16
+  },
+  "incense-set-ochirvaani-01-front.webp": {
+   "product": "incense-set-ochirvaani",
+   "object_box": [
+    89,
+    803,
+    1190,
+    1504
+   ],
+   "fill_h": 0.438,
+   "fill_w": 0.86,
+   "kb": 102,
+   "thumb_kb": 19
+  },
+  "incense-set-shambala-01-front.webp": {
+   "product": "incense-set-shambala",
+   "object_box": [
+    89,
+    834,
+    1190,
+    1504
+   ],
+   "fill_h": 0.419,
+   "fill_w": 0.86,
+   "kb": 98,
+   "thumb_kb": 18
+  },
+  "offering-bowl-elephant-stand-01-top.webp": {
+   "product": "offering-bowl-elephant-stand",
+   "object_box": [
+    220,
+    96,
+    1059,
+    1504
+   ],
+   "fill_h": 0.88,
+   "fill_w": 0.655,
+   "kb": 126,
+   "thumb_kb": 24
+  },
+  "rosewood-censer-01-front.webp": {
+   "product": "rosewood-censer",
+   "object_box": [
+    89,
+    213,
+    1190,
+    1504
+   ],
+   "fill_h": 0.807,
+   "fill_w": 0.86,
+   "kb": 86,
+   "thumb_kb": 18
+  },
+  "rosewood-censer-02-top-open.webp": {
+   "product": "rosewood-censer",
+   "object_box": [
+    89,
+    625,
+    1190,
+    1504
+   ],
+   "fill_h": 0.549,
+   "fill_w": 0.86,
+   "kb": 76,
+   "thumb_kb": 16
+  },
+  "shakyamuni-thangka-01-front.webp": {
+   "product": "shakyamuni-thangka",
+   "object_box": [
+    179,
+    96,
+    1100,
+    1504
+   ],
+   "fill_h": 0.88,
+   "fill_w": 0.72,
+   "kb": 219,
+   "thumb_kb": 26
+  }
+ }
+}

@@ -10,6 +10,35 @@
 
 *(empty)*
 
+## Next — Prototype G v1.1: owner decision → real UI (added 2026-11-10)
+
+State: `docs/nogoolin-prototype-g.html` v1.1 is built and verified; the owner
+liked the mobile view and asked for four fixes, all done. E (v1.1 + admin), F
+and G all stay in `docs/` for comparison. Only D-15 is decided so far.
+
+- [ ] **Owner:** review G v1.1 on a phone (390 px) and on desktop; say what
+      still needs changing.
+- [ ] **Owner decision: which prototype is the base for the real UI?** E v1.1
+      (current D-12/D-13 direction) or G v1.1. If G: record a D-xx and update,
+      with history: design.md tokens (`--paper #F7F1E5`, fonts Cormorant +
+      Onest, left-aligned text instead of the 2026-11-08 «justified» choice),
+      AGENTS.md «Preserve v4 tokens» rule, SRS NFR-MAINT-460 (one palette +
+      radius) and the register (DES-10 → approved).
+- [ ] **Owner decision: wording proposals** from F/G: «шашны эдлэл», «бойпор»
+      (for хүжийн сав), «зурмал бурхан (танка)» (for тангад зураг), «алтан
+      шармал» (for алтадмал), «равнай», «Залж авах» on deity pages. If accepted
+      they go to DES-06 microcopy and the SRS glossary.
+- [ ] **Content review:** the altar order, равнай and mudra notes in F/G are
+      sample text; a knowledgeable person must check them before real use.
+- [ ] **Not in G yet:** the admin prototype (exists only in E, `#/admin`), the
+      order-status page («Захиалгаа шалгах»), and the 3D intro (G starts at the
+      intro's last frame and links to E's intro).
+- [ ] After the decision: step 5 below («Real UI in `apps/web`» via OpenSpec)
+      uses the chosen prototype as its reference.
+- Assets: D-15 needs clean alpha cut-outs (ASSET_SPECS §3, amended 2026-11-10).
+  The current `docs/prototype-f-assets/` files were cleaned by script and still
+  show a few specks.
+
 ## Next — docs sync + PH1 exit (added 2026-10-30, docs-only, no code)
 
 Audit 2026-10-30: code unchanged since `885e591` (2026-10-14); core docs
@@ -60,6 +89,213 @@ below are about course work that is not yet reflected here.
 - Rule (owner, 2026-10-30): just enough documentation. Do **not** write the
   ~12 «planned» register docs proactively; write one only when a phase needs it.
   Diagram changes go only into the Sem10 files (re-run `render.sh` there).
+
+## Next — Research R-01: е-баримт, НӨАТ, хувийн мэдээлэл (added 2026-11-08, PLAN ONLY — not started)
+
+Owner request 2026-11-08. A separate, broad research task: Mongolian legal and tax
+requirements before real ordering goes live. Sources: official government sites
+only (legalinfo.mn, ebarimt.mn, mta.gov.mn, burtgel.gov.mn, the personal-data
+authority) plus their official guides. Every claim cites the law, article and
+URL with the date read. Not legal advice; mark anything uncertain for a
+lawyer/accountant to confirm.
+- [ ] 1. Business form: register as an individual entrepreneur vs an LLC;
+      steps, cost, time, registration body, tax registration and the obligations
+      of each.
+- [ ] 2. VAT: registration threshold and when it becomes mandatory; reselling
+      goods **bought without VAT** (no input VAT): how output VAT works and what
+      happens if the seller is not VAT-registered.
+- [ ] 3. е-баримт: who must issue it (VAT payers and non-payers); the
+      integration options (POS API / PosAPI, agent, manual); what the store needs
+      (TIN, cash register, merchant registration); issuing for orders paid at
+      pickup; refunds and cancellations.
+- [ ] 4. Personal data (Хүний хувийн мэдээлэл хамгаалах тухай хууль): consent text,
+      purpose limitation, retention. Is **7 days** allowed for phone/name, and
+      for what? Check the Accounting/Tax law retention periods for sales records
+      (orders and е-баримт are likely to need years). Propose a retention table:
+      OTP codes, SMS logs, order records, questions.
+- [ ] 5. (Optional) Payment and SMS providers: Bonum (owner's preference: no base
+      fee, contract) vs QPay, covering fees, contract, API docs and settlement;
+      the SMS/OTP provider verify.mn, covering price, API and delivery
+      reports.
+- Output: `docs/research/R-01-ebarimt-vat-privacy.md` (Mongolian), a summary
+  table of decisions the owner must make, and SRS §8 updates after review.
+
+## Next — Prototype E v1.1 → Admin prototype → real UI (added 2026-11-08; step 1 done 2026-11-08)
+
+Owner feedback 2026-11-08 + mobile audit (`scratch/nogoolin-e/qa-mobile-audit.js`,
+320/360/390 px, 8 routes: 0 overflow, 0 console errors; issues below).
+Mobile first: most customers are expected to order by phone. Design at 360 px,
+then widen; test 320 / 360 / 390 / 768 / 1440 px on every step.
+
+**Owner decisions 2026-11-08:**
+- Colours are fixed: remove the floating «Өнгө» palette button and the palette
+  switcher. Ship one palette (the v4 tokens with the dark jade button, D-12).
+  The prototype state toggles (slow, errors, SMS, order) move to a small footer
+  link «Prototype тохиргоо». They are prototype-only.
+- Text is justified on web and mobile (paragraph text, see 1.1).
+
+- [x] **1. Prototype E v1.1 (design fixes).**
+  - [x] 1.1 Justify long text: descriptions, leads, «Бидний тухай», notices,
+        usage steps. Add `text-wrap: pretty`. Not for headings, buttons, labels,
+        prices, card names, tables or form hints. Mongolian hyphenation is
+        likely unsupported, so measure word gaps at 360 px. Show the owner
+        justified vs left-aligned screenshots before keeping it on mobile.
+  - [x] 1.2 «Бүх бүтээгдэхүүн» / «Бүгдийг үзэх»: on mobile only an arrow on
+        the same line, right after the section heading (44 px target,
+        accessible name kept). Desktop keeps text + arrow.
+  - [x] 1.3 Price and size become always-visible dual-thumb range sliders, not
+        collapsible checkbox groups. Price step 5,000₮; size (longest side)
+        0–60 cm, step 1. Number fields under the slider. Live result count
+        while dragging, URL `?price=35000-420000` on release. Keyboard arrows;
+        28 px thumbs with 44 px targets. Active filter shows as «35,000–420,000₮ ×».
+  - [x] 1.4 Border radius tokens: `--radius-sm` 6px (inputs, checkboxes),
+        `--radius` 10px (buttons, panels), `--radius-lg` 16px (popup, sheets).
+        No pills. No radius on product cut-outs. Apply to every module.
+  - [x] 1.5 Less blank space beside product images: object up to ≈88% of the
+        canvas height, ≈6–8% side margin, one step smaller card gap. Views of
+        one product keep one scale (needed for the hover turn).
+  - [x] 1.6 Remove the «Өнгө» FAB + palette switcher. Footer link
+        «Prototype тохиргоо» opens the state panel.
+  - [x] 1.7 Mobile audit fixes:
+    - detail page: sticky bottom bar «price + Сагсанд нэмэх» (CTA is
+      ≈1 screen below the photo now);
+    - breadcrumb on mobile → one «← Бүтээгдэхүүн» back link, 44 px (now 2
+      lines, 34 px links);
+    - every input/select ≥16px (sort select is 15.5px → iOS zoom);
+    - checkout step indicator → one line «Алхам 1/3 · …» + thin progress bar;
+      collapsible order summary at the top «2 бараа · 3,926,000₮ ▾»;
+    - consent checkbox row ≥44 px (box is 22 px); phone fields
+      `inputmode=tel autocomplete=tel`, SMS code `one-time-code`; full-width CTAs;
+    - inquiry page leftovers: «Хүсэлтийн бүтээгдэхүүн», «Хүсэлт», «Хүсэлт
+      илгээх», «Онлайн төлбөр, хүргэлт идэвхгүй…» → «Асуулт» wording;
+    - cart: one total and one primary «Захиалах» (now duplicated); remove = 44 px
+      «×» at line top-right; sticky bar hides while the summary is visible;
+    - 1–2 item categories on mobile show as a small grid, not a near-empty row;
+    - header hides on scroll down, returns on scroll up (cart badge stays);
+    - quick-view sheet: drag handle + swipe down to close (× stays);
+    - prototype/technical notes (e.g. «Prototype: D-09-ийн дагуу Tier A…»)
+      only inside the prototype panel, never in customer copy;
+    - sticky bars respect `env(safe-area-inset-bottom)`.
+  - [x] 1.8 QA: `qa-mobile-audit.js` (no overflow, targets ≥44, inputs ≥16,
+        text ≥14, nothing covered by fixed elements, heading + link on one
+        line) + existing lead/shop/order/chrome/intro scripts; vision review.
+- [x] **2. Admin prototype** (same file, route `#/admin`, own layout; works on
+      mobile: drawer menu, orders as a card list).
+      Sections: Хянах самбар · Бүтээгдэхүүн (list; edit form with D-09
+      structured fields, variants, price, stock, featured; photo slots per view
+      front/side/back/detail/base, Tier A 4–5 / Tier B 2 checklist, floor-line
+      preview, «hover эргэлт идэвхтэй» when ≥2 views) · Ангилал · Захиалга
+      (status Хүлээн авсан → Бэлтгэж байна → Авахад бэлэн → Авсан / Цуцалсан,
+      fake SMS on «Авахад бэлэн») · Асуулт (inbox) · Тохиргоо · Үйлдлийн түүх
+      (append-only). All states: loading, empty, error, saving, success.
+      **«Онлайн захиалга» toggle:** on → «Сагс» menu + «Сагсанд нэмэх» on
+      popup/detail; off → both hidden, «Асуулт асуух» becomes primary,
+      `#/cart`/`#/checkout` show «Онлайн захиалга түр хаалттай», cart contents
+      kept, admin still lists open orders. Confirm dialog, audit entry, site
+      updates live (`ng:settings`). QA: toggle on/off reflects on the site;
+      admin order status shows on «Захиалгаа шалгах»; product edit updates price.
+- [x] **3. QA + report.** Figma re-capture **stopped** (owner 2026-11-08): a fully
+      interactive Figma prototype needs a Full seat (code-layer import); flat page
+      captures are not wanted. The HTML file is the interactive prototype.
+- [x] **4. Decisions:** D-13 (ordering toggle in admin, one fixed palette,
+      no palette switcher), SRS update with version + history (guest order,
+      OTP, pickup, FR-WISH-110 change, admin setting); amend AGENTS.md rules
+      «preserve v4 tokens» and `delivery_enabled` only with owner approval.
+- [ ] **5. Real UI in `apps/web`** via OpenSpec (2026-11-10: wait for the
+      owner's E-vs-G choice, see «Prototype G v1.1» at the top of the queue): read the current public pages
+      and `/admin` scaffold first; order: tokens + header → products page →
+      cart/order UI → admin. Mock data first.
+- [ ] **6. API:** orders, OTP (choose SMS gateway), `ordering_enabled` setting
+      checked in the service layer (not only hidden in UI), migrations with
+      explicit grants, integration tests.
+- Owner, in parallel: product photos (every view same camera height, light,
+  scale), Green Tara 3D model.
+
+**Still to confirm with the owner (defaults used if no answer):** justify on
+mobile if word gaps get large (default: keep left-aligned on mobile, show
+screenshots); admin in the same file `#/admin` (default: yes); toggle name
+«Онлайн захиалга» (default: yes).
+
+## Next — Prototype E: product page, card motion, guest order (added 2026-11-01; built 2026-11-04, awaiting owner review)
+
+> Note 2026-11-10: per the log entries of 2026-11-04 and 2026-11-08 this plan was
+> built (Prototype E v1.0, then v1.1 + admin). The unchecked boxes below were
+> never ticked; they are the original plan text, not open work.
+
+Design prototype only: one self-contained HTML file + asset folder, mock data,
+all states faked (same rules as Prototype D). Builds on
+`docs/nogoolin-prototype-d.html`. Do the steps in this order; each step is
+browser-checked at 1440 and 375 px before the next one starts.
+
+**Motion rule (owner, 2026-11-01):** the Hangtime-style «rail» is NOT copied.
+No swinging, swaying, collisions, neighbour push or cursor-follow — wrong for
+sacred goods (and WF-MO-01). The one signature motion is a calm **turn**:
+side view → front view on hover. Hover **second-image crossfade** and hover
+**zoom-up** are allowed. Products sit in a plain single row, no rail graphic.
+
+- [ ] **0. Owner decisions, then record them** (no build work before this).
+      New D-xx in `DECISIONS.md`, SRS v2 bump + change history (keep-history
+      rule). Conflicts to resolve explicitly, not by assumption:
+      - guest order vs current scope: inquiry-only, `delivery_enabled=false`,
+        cart = saved list, FR-WISH-110 login gate, D-wording ban on
+        «Сагс»/«Захиалах» in Prototype D;
+      - v4 button colour `#0BB555` → dark jade (AGENTS.md says preserve v4
+        tokens, so this is an amendment);
+      - menu «Ангилал» removed (category becomes a filter group);
+      - output name: Prototype E file vs revising D;
+      - price bands, height bands, pickup-until-delivery, SMS code vs staff call,
+        keep or drop the old inquiry flow (as «Асуулт асуух»).
+- [ ] **1. Chrome.** Prototype C header (knot logo + «НОГООЛИН», text nav,
+      active underline). Nav = Нүүр · Бүтээгдэхүүн · Бидний тухай. Search with
+      no border: rest = icon + placeholder (≥4.5:1), hover = 1px underline
+      fades in, focus = 2px underline + suggestions; mobile = icon → full
+      overlay. Primary button = dark jade (≈`#12392D`, white text ≈12.7:1,
+      measure exact value from the owner's reference). Re-run contrast for
+      all palettes.
+- [ ] **2. Images blend into the page.** Alpha WebP cut-outs for all
+      products (no grey box), CSS soft contact shadow, every view on one
+      shared floor line, same centre and scale across views (required for the
+      turn in step 4). Check edges on gold/turquoise detail; record sizes.
+- [ ] **3a. «Бүтээгдэхүүн» page — left filter sidebar (checkboxes).**
+      Groups: Ангилал, Материал (from `material`), Үнэ (3 bands), Өндөр (from
+      `height_cm`), Бэлэн байдал. OR within a group, AND across groups.
+      Counts per option; 0 = disabled but still ≥4.5:1. Desktop applies
+      instantly; URL sync (`?cat=&mat=…`, Back works, shareable). Active
+      filters as text «Гууль ×» + «Бүгдийг арилгах» (no pills). Collapsible
+      groups, sticky panel. Real `<input type=checkbox>`, 44 px rows, focus
+      ring. Mobile: «Шүүлтүүр (n)» → full-screen sheet with sticky
+      «N бүтээгдэхүүн харах». Unit-test the filter logic.
+- [ ] **3b. Results area.** No filter: one heading + one row per category
+      («Хүж · 3», «Бүгдийг үзэх →»), ≈2 rows per desktop screen, 4 cards +
+      half of the 5th visible; mobile 1.6 cards with swipe. One category
+      checked: that category as a 2-row grid. Other filters: grouped rows,
+      empty categories hidden. Empty state = FR-PUB-150 text + clear button.
+      Sort top-right. Loading: first 2 rows eager, rest lazy +
+      `content-visibility:auto`; 480 px thumbs only.
+- [ ] **4. Card motion.** Multi-view product: hover = calm side → front turn
+      (aligned-view crossfade, ≈350 ms ease-out); 3+ images = horizontal
+      pointer scrub with a thin segment indicator. Single-image product:
+      hover zoom 1.00 → 1.05 (≈450 ms). Extra views load on pointer
+      approach only. Touch: swipe inside the card. Keyboard focus = same as
+      hover. Reduced motion: instant swap, no zoom. Forbidden: swing, sway,
+      collision, neighbour push, cursor-follow, auto-rotate.
+- [ ] **5. Quick-view popup on click.** Large gallery, price, material,
+      dimensions (structured fields), «Сагсанд нэмэх», «Дэлгэрэнгүй хуудас →».
+      URL changes, Esc/Back close, focus trap and return; mobile = full-height
+      bottom sheet; short (≈400 ms) grow-from-card transition.
+- [ ] **6. Guest order flow (faked, only if step 0 approves it).** Cart in
+      localStorage, labelled «Энэ төхөөрөмж дээр хадгалагдсан» → phone
+      (`^\d{8}$`, D-10) → address or store pickup → full total up front (no
+      surprise fees) → fake SMS code → fake QPay/transfer → confirmation with
+      order number → order lookup by phone + number + code. Consent text for
+      personal data; note И-баримт as open. All error states shown.
+- [ ] **7. QA + report.** Playwright at 1440/375 × palettes: console, no
+      overflow, text ≥14 px, filters/Back, hover/focus/touch, popup a11y,
+      order states, image request count. Mongolian report with sizes,
+      contrast table, gaps and open questions.
+
+Later, not in E: 360° photo spin for selected Tier A products (D-09, PH8);
+3D GLB stays intro-only.
 
 ## Backlog (Phase 3 order — ⚠ highest-risk phase, read design.md first)
 
@@ -132,6 +368,193 @@ Kept verbatim from the backlog (moved 2026-10-30):
       (trigger) / `reducedMotion` (bool), event `finished`)
 
 ## Log (append after every task, newest first)
+
+### 2026-11-10 — Docs synced after Prototype F/G
+- **Result:** register v1.8 (DES-08 D/E, DES-09 F, DES-10 G v1.1; D and E were
+  missing from the register before), ASSET_SPECS §3 amended by D-15 (alpha
+  cut-outs, previous wording kept), queue section «Prototype G v1.1: owner
+  decision → real UI» added at the top. Nothing committed.
+- **Next:** the queue's first open items (owner review and E-vs-G decision).
+
+### 2026-11-10 — Prototype G v1.1 (owner's four fixes) + D-15
+- **Owner feedback on G v1.0:** «much better», mobile liked. Four fixes asked:
+  remove the count beside the arrow in tier rows; product photo background must
+  equal the page background as a hard rule; redo the desktop «Зорилгоор сонгох /
+  Мэдлэг» section; redo the desktop «Дэлгүүр» page. Owner chose a left filter
+  column for desktop and «everywhere except the hero» as the rule's scope.
+- **Result:** `docs/nogoolin-prototype-g.html` v1.1. (1) Arrows without counts
+  in the altar rows and shop category headers; «Бүх 5 эдлэлийг үзэх». (2) Tiles
+  have no fill, gradient or radius; altar band, product stage and sheets all use
+  `--paper`; **D-15** recorded in DECISIONS.md and noted in design.md.
+  (3) Desktop: four purpose cards with a representative product, three guide
+  cards with an excerpt. (4) Desktop shop: sticky left column (tier links,
+  material, price, stock; applies on change), three-column grid; mobile keeps
+  tabs + filter sheet.
+- **Verified (Playwright, Chromium):** D-15 check: 0 violations at 390 and
+  1440 px × 9 routes; desktop filter column (live filter, clear, tier link);
+  320/360/390/1440 px × 10 routes without overflow or small tap targets; flow
+  test passes; 0 console errors.
+- **Next:** owner review of G v1.1.
+
+### 2026-11-10 — Prototype G built (owner feedback on F)
+- **Owner feedback on F:** the dominant black-green is cold and hollow and does
+  not suit deity objects; the structural fixes, wording and mobile view are
+  better, yet E still felt better as a familiar shop. Owner chose: warm light
+  ground + jade, and from E: the green header, a bright background, lists
+  grouped by category, products right on the home page.
+- **Result:** `docs/nogoolin-prototype-g.html` (single file, mock data; reuses
+  `docs/prototype-f-assets/`). F is kept for comparison. Design artifact only:
+  **no decision recorded, no SRS / design.md / AGENTS change**. G = F's
+  structure (tab bar, altar navigation, «Утга бэлгэдэл», size comparison,
+  search, guest order, wording) on warm paper `#F7F1E5`, with jade `#1B4634`
+  only for the header, hero, primary buttons and active states. Home: jade hero
+  → «Онцлох эдлэл» grid with prices → altar → purpose/guides → store. Shop
+  «Бүгд»: one section per tier (Шүтээн / Тахил / Хүж), flat grid when a tier,
+  filter or sort is active. Mobile header hides on scroll down.
+- **Verified (Playwright, Chromium):** 320/360/390/1440 px × 10 routes: no
+  horizontal overflow, no tap target under 44 px, 0 console errors; flow test
+  passes; 12 text/background pairs ≥ 5.1:1 (WCAG AA).
+- **Open for owner:** same wording and content review as F; a one-item tier
+  («Тахил») leaves half a row empty on mobile; proper alpha cut-outs still needed.
+- **Next:** owner review of E vs F vs G; record a decision only after a choice.
+
+### 2026-11-10 — Prototype F built (owner challenge: free of existing rules)
+- **Request:** owner asked for a new prototype not bound by the current palette,
+  style or rules; mobile PWA first; careful wording («шашны эдлэл», not «ариун
+  эдлэл»); the site after the 3D intro must stop feeling like a generic web shop.
+- **Result:** `docs/nogoolin-prototype-f.html` (single file, mock data) and
+  `docs/prototype-f-assets/` (16 cut-outs re-cropped from the E assets, white
+  floor and enclosed white background removed for a dark ground). Design artifact
+  only: **no decision recorded, no SRS / design.md / AGENTS change**.
+  Concept «Үзмэрийн танхим»: dark hall for looking, warm paper for reading and
+  ordering; app-style bottom tab bar; home continues the intro's last frame;
+  navigation by the altar («Тахилын ширээ»: Шүтээн / Тахил / Хүж) and by purpose;
+  product page = sticky stage + paper sheet, numbered «Утга бэлгэдэл» notes on
+  the statue, size comparison, «Хамт тавигддаг эдлэл»; search with Latin
+  transliteration; cart → phone → code → pickup; «Асуулт асуух» sheet; ordering
+  toggle in the footer panel. Fonts: Cormorant + Onest.
+- **Verified (Playwright, Chromium):** 320/360/390/1440 px × 10 routes: no
+  horizontal overflow, no tap target under 44 px, 0 console errors; flow test
+  (tier filter, variant, cart, validation, checkout, search, ordering off, ask)
+  passes. The 3D intro itself is not rebuilt: F starts at the intro's final frame.
+- **Open for owner:** wording proposals (бойпор, зурмал бурхан (танка), алтан
+  шармал, равнай, «Залж авах»); religious copy is sample text and needs review by
+  a knowledgeable person; cut-outs need proper alpha masks (a few specks remain);
+  text is left-aligned here, which differs from the 2026-11-08 «justified» choice.
+- **Next:** owner review of F vs E; if F is chosen, record a decision and update
+  design.md / SRS with history before any `apps/web` work.
+
+### 2026-11-08 — SRS v2.7 (owner answers D-14)
+- **Result:** SRS v2.7, traceability v2.7, register v1.7. Guest ordering stays
+  Should; `ordering_enabled` defaults to false (owner). OTP values follow NIST SP
+  800-63B / OWASP (FR-ORD-170/171, NFR-SEC-253/270). Cancellation: one
+  «Захиалга цуцлагдсан» line with a fixed reason and an SMS (FR-ORD-120/230/240/320,
+  FR-ADM-620/640). FR-WISH-100…150 → Won't (legacy) and the `/cart` API is marked
+  legacy. The price slider stays linear. §8 adds verify.mn (SMS), Bonum vs QPay
+  (future payment), R-01 pointers and a proposed retention table. Counts: leaves
+  294; Must 178 · Should 75 · Could 12 · Won't 29.
+- **Open for owner:** the «Бусад» cancel reason (an internal note is required and
+  never shown to the customer); the NIST long-term failed-attempt counter (hourly
+  SMS cap allows ~25 guesses/phone/h).
+- **Next:** research R-01, or step 5 (real UI in `apps/web` via OpenSpec).
+
+### 2026-11-08 — Step 4: SRS v2.6, traceability v2.6, register v1.6, AGENTS + design amendments
+- **Result:** SRS v2.6 MINOR encodes D-12/D-13: guest order with OTP and store
+  pickup (FR-ORD), `ordering_enabled` (FR-SET-150/230), delivery locked
+  (FR-SET-240), admin order management (FR-ADM-600–640), filters and ranges
+  (FR-PUB-180–182/190), hover and quick view (FR-PUB-600–620), the saved list is
+  legacy (FR-WISH-110 Won't), mobile-first (NFR-USE-230/240, NFR-COMP-200), one
+  palette + radius (NFR-MAINT-460). 34 new IDs; changed ones keep «Өмнөх (v2.5)»
+  lines (38). Leaves 262 → 294, traceability rows match (294). AGENTS.md
+  (delivery/ordering rule, v4 button amendment) and design.md (`--act` #1B4634,
+  previous values kept) amended with the owner's approval.
+- **Open for owner (SRS §8):** SMS gateway, И-баримт, personal-data retention,
+  price-slider scale, whether «Цуцалсан» is a timeline step, ordering priority
+  Should vs Must, the proposed OTP values (5 min, 5 tries, 5 SMS/phone/h, 10/IP/h),
+  `ordering_enabled` default false, legacy FR-WISH-120…150. The DB needs
+  migrations: a status enum, and nullable `orders.customer_id`/`address`.
+- **Next:** step 5, real UI in `apps/web` via OpenSpec.
+
+### 2026-11-08 — Admin prototype (step 2) built; Figma updates stopped
+- **Result:** `docs/nogoolin-prototype-e.html` (566,920 B) now includes `#/admin`:
+  dashboard, orders (6 sample orders, status flow, fake SMS, cancel with reason),
+  products (list, edit form with D-09 fields, variants, photo slots, floor-line
+  preview, validation, save/archive, edits reflected on the site), categories
+  (order, edit), questions inbox, settings («Онлайн захиалга» toggle with
+  confirmation, delivery locked off, store info and SMS template), append-only
+  audit log. Ordering off hides the cart menu and «Сагсанд нэмэх», makes «Асуулт
+  асуух» primary and shows a closed state on `#/cart` and `#/checkout`; the
+  change is live across tabs.
+- **Verified on the final file:** admin QA 0 fails, admin-catalog QA 0 fails,
+  shop and checkout QA 0 fails, mobile audit 195/195, intro 1440+360 OK, shop unit
+  11/11, 0 console errors.
+- **Decision D-13** recorded. Figma: interactive prototype not possible on the
+  Starter/View seat, so updates stop.
+- **Open** (requests in the work dir `~/.local/share/nogoolin-proto/e/REQUESTS-*.md`,
+  fix in real code): cancelled-order timeline step, store info from settings not
+  used in checkout, small runtime wrappers around data.js and shop.js (data
+  reindex hook, `ng:catalog` rebuild), `[data-save]` handler scope.
+- **Next:** step 4 (SRS + AGENTS amendments, owner approval), then step 5 (real UI
+  in `apps/web` via OpenSpec).
+
+### 2026-11-08 — Prototype E v1.1 built (step 1)
+- **Result:** `docs/nogoolin-prototype-e.html` (421,475 B) rebuilt; images regenerated
+  (object ≤88% height, 7% side margin, floor 94%; v1.0 images kept in the work dir).
+  Range sliders for price/size (URL `price=lo-hi`, legacy values mapped), radius
+  tokens 6/10/16, justified prose (Chrome hyphenates Mongolian: max space 23 px,
+  p90 12 px at 360), arrow-only section links on mobile, 1–2 item categories as a
+  grid, quick-view drag-to-close, sticky detail buy bar, mobile back link,
+  «Асуулт» wording, palette fixed to v4 (FAB + switcher removed, panel via footer
+  «Prototype тохиргоо»), header hides on scroll, checkout one-line stepper +
+  collapsible summary, 44 px remove «×», tel/one-time-code inputs, theme-color #1B4634.
+- **Verified:** mobile audit 195/195 (320/360/390 × 8 routes: no overflow, targets
+  ≥44, inputs ≥16, text ≥14, no fixed overlap, heading+link one line, no FAB, no
+  «Хүсэлт»); shop QA (360/320/1440) and checkout QA pass with 0 console errors;
+  shop unit 11/11; intro 1440+360 (r128, skip 128–167 ms, final → home, reduced motion).
+- **Work dir moved** to `~/.local/share/nogoolin-proto/e/` (scratch was pruned twice).
+- **Open:** price slider is linear 0–3.85M₮ (most items in the first 13% of the
+  track: owner to choose log/stepped scale); one 40 px scroll band in the mobile
+  cart shows two «Захиалах»; unused palettes still in tokens.css.
+- **Next:** step 2, the admin prototype.
+
+### 2026-11-08 — Prototype E feedback + mobile audit → plan v1.1
+- **Result:** owner feedback recorded as queue «Prototype E v1.1 → Admin
+  prototype → real UI» above: range sliders, radius tokens, tighter image
+  margins, justified text, arrow-only «Бүх бүтээгдэхүүн» on mobile, remove the
+  «Өнгө» palette button (colours fixed), admin page with «Онлайн захиалга» toggle.
+- **Mobile audit** (320/360/390, 8 routes): 0 overflow, 0 console errors. Found:
+  the FAB covers content and sticky CTAs, the detail CTA is far below the photo,
+  breadcrumb links are 34 px, the sort select is 15.5px (iOS zoom), the checkout
+  stepper wraps, the consent box is 22 px, the inquiry page still says «Хүсэлт»,
+  the cart has a duplicate total/CTA, and 1-item rows look empty.
+- **Next:** step 1 (v1.1). Nothing changed in code yet.
+
+### 2026-11-04 — Prototype E built (HTML) and captured to Figma
+- **Result:** `docs/nogoolin-prototype-e.html` (404,310 B) + `docs/prototype-e-assets/`
+  (34 files, ≈3.0 MB, alpha cut-outs on a shared floor line). Steps 0–6 of the queue
+  above done as a design prototype (D-12): C-style header + borderless search + cart
+  badge; «Бүтээгдэхүүн» page with checkbox filters, one row per category, hover
+  turn/crossfade/zoom, quick view (`?qv=`); faked guest order (cart → phone → pickup →
+  SMS 123456 → order number → lookup); inquiry kept as «Асуулт асуух».
+- **Verified (Playwright, file://, 1440 + 375):** lead smoke 24/24, shop QA all logged
+  checks OK, order 51 PASS «ALL PASS», chrome all OK + contrast AA on 4 palettes
+  (min 4.52 v4 dark muted), intro 47/50 (3 fails = one run where cdnjs three.js loaded
+  late; re-run loaded r128), shop unit 9/9, no console errors.
+- **Figma:** draft file «Nogoolin · Prototype E»
+  <https://www.figma.com/design/k2S7LkjEMoPbR63UHaprDA> — 4 flat captures (home,
+  products, quick view, cart) via code-to-canvas; no components, no hover states.
+- **Open:** sample data has 1 product in most categories; swipe/reduced-motion on
+  cards not scripted; SRS/delivery/v4-token conflicts listed in D-12 still open.
+- **Next:** owner review in Figma/HTML.
+
+### 2026-11-01 — Prototype D delivered; Prototype E planned
+- **Result:** `docs/nogoolin-prototype-d.html` (≈292 KB) + `docs/prototype-d-assets/`
+  built and browser-checked (intro 50/50, pages 63/63, chrome/search 149/149,
+  search unit 37/37, contrast 48/48 AA). Not committed.
+- **Plan:** Prototype E queued above (filter sidebar, single-row results,
+  calm turn/crossfade/zoom card motion, quick view, guest order). Owner
+  rejected rail swing/sway physics. Nothing started.
+- **Next:** owner answers step 0, record D-xx, then step 1.
 
 ### 2026-10-30 — Audit H1/H2 fixed; deploy jobs deferred to PH7
 - **Done:**

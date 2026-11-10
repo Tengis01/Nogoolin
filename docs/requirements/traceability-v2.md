@@ -1,6 +1,6 @@
 # Traceability v2
 
-**Doc ID:** REQ-02 · **Хувилбар:** v2.5 draft · **Огноо:** 2026-10-30 (v2.4: 2026-10-30, v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-02 · **Хувилбар:** v2.7 draft · **Огноо:** 2026-11-08 (v2.6: 2026-11-08, v2.5: 2026-10-30, v2.4: 2026-10-30, v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ хүснэгт [SRS v2](srs-v2.md)-ийн leaf шаардлага бүрийг эх, архитектур/ADR, код, тесттэй холбоно. Энэ нь G4-ийн суурь ([зорилго](../project/project-goals.md#g4--чанар-ба-traceability)).
 
@@ -15,6 +15,8 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v2.7 | 2026-11-08 | SRS v2.7 (D-14). Шинэ эсвэл хасагдсан мөр 0 (leaf 294 = SRS-ийн leaf 294). Өөрчлөгдсөн мөр (өмнөх утга → шинэ): FR-WISH-120, 130, 140, 150 — Priority «Must» → «Won't», Arch/ADR «—» → «D-14 (legacy)»; FR-WISH-110 — Arch/ADR «D-12, D-13» → «D-12, D-13, D-14»; FR-ORD-170 — Source «D-12, D-13» → «D-12, D-13, D-14; NIST SP 800-63B-4, OWASP», Arch/ADR «D-13 (SMS gateway open)» → «D-13, D-14 (SMS gateway open; candidate verify.mn)»; FR-ORD-171 — Source «D-13» → «D-13, D-14; NIST SP 800-63B-4, OWASP», Arch/ADR «D-13» → «D-13, D-14»; NFR-SEC-253 — Source «D-13» → «D-13, D-14; NIST SP 800-63B-4, OWASP», Arch/ADR «D-13, NFR-SEC-250» → «D-13, D-14, NFR-SEC-250»; NFR-SEC-270 — Source «D-13» → «D-13, D-14; NIST SP 800-63B-4, OWASP», Arch/ADR «D-13» → «D-13, D-14»; FR-ORD-230 — Arch/ADR «D-13 (SMS gateway open)» → «D-13, D-14 (SMS gateway open; candidate verify.mn)»; FR-ORD-120 — Arch/ADR «ADR-002, D-12, D-13» → «ADR-002, D-12, D-13, D-14»; FR-ORD-240, FR-ORD-320, FR-ADM-640, FR-SET-150 — Arch/ADR «D-13» → «D-13, D-14»; FR-ADM-620 — Arch/ADR «D-13, NFR-SEC-500» → «D-13, D-14, NFR-SEC-500»; FR-PUB-181 — Arch/ADR «D-13» → «D-13, D-14 (linear)». Code, Test, Verif. status өөрчлөгдөөгүй (тест ажиллуулаагүй). |
+| v2.6 | 2026-11-08 | SRS v2.6 (D-12, D-13). Шинэ мөр: FR-ORD-111, 150, 160, 170, 171, 180, 190, 230, 240, 310, 320; FR-SET-150, 230, 240; FR-ADM-350, 510, 520, 610…640; FR-PUB-180…182, 190, 430, 610, 620; NFR-SEC-253, 270; NFR-USE-240; NFR-MAINT-460. Өөрчлөгдсөн мөр (өмнөх утга): FR-ORD-110…140, 210, 300 — Priority «Won't» → «Should», Test «—» → «planned», Verif. status «deferred» → «planned» (300: «partial»), Arch/ADR «ADR-002» → «ADR-002, D-12, D-13»; FR-WISH-110 — Priority «Must» → «Won't» (legacy), Arch/ADR «—» → «D-12, D-13»; NFR-USE-230 — Priority «Should» → «Must», Source «WCAG 2.5.5» → «WCAG 2.5.5; D-13»; FR-PROD-260 — Verif. status «test exists» → «partial (409 planned)»; FR-PUB-420 — Code «(no order UI)» → «(no delivery/payment UI)»; FR-PUB-120, 130, 410, FR-ADM-340, FR-SET-130, 210, FR-AUD-110, 150, NFR-SEC-260, 500, NFR-COMP-200 — Arch/ADR-д D-12/D-13 нэмсэн (өмнөх утга «—» байсан бол D-12/D-13-аар солигдсон, бусад нь өмнөх утга + D-xx). Prototype E нь хэрэгжилтийн нотолгоо биш тул шинэ мөрийн Code «—». |
 | v2.5 | 2026-10-30 | NFR-SEC-210, NFR-REL-210: Code, Test багана H1/H2-оор, Verif. status «passed (local, 2026-10-30)» (өмнө нь «written, skipped without DB»). NFR-MAINT-320: Test-д `db-errors.test.ts` (CI-д ажилладаг), status «gap» хэвээр. |
 | v2.4 | 2026-10-30 | NFR-SEC-350, FR-SET-220, FR-AUD-130: Code-д migration 0008, Test-д `rls.integration.test.ts`, Verif. status «passed (local, 2026-10-30)». Өмнөх утгууд: NFR-SEC-350 «planned / not run», FR-SET-220 «planned / unknown», FR-AUD-130 «planned / not run». |
 | v2.3 | 2026-10-30 | D-11: FR-PWA-110…130, 210…250, 310 болон NFR-PERF-350, NFR-SEC-260, NFR-COMP-600 мөр нэмсэн. Native mobile-ийн мөрүүд өөрчлөгдөөгүй (Priority «Won't» хэвээр; phase-ийг SRS-ээс үзнэ). |
@@ -57,16 +59,16 @@
 | FR-INQ-320 | Should | P0 FR-INQ-006; v1.0 FR-08 | — | backend/api/src/repositories/supabase/inquiry.repository.ts | backend/api/tests/inquiry-cart.integration.test.ts (date filter planned) | partial |
 | FR-INQ-330 | Must | P0 FR-INQ-005; v1.0 FR-09 | — | backend/api/src/services/inquiry.service.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
 | FR-INQ-340 | Could | project-goals G2 | — | — | planned | not run |
-| FR-WISH-110 | Must | v1.0 FR-10; M2 FR-02 | — | apps/web/src/app/wishlist/page.tsx | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
-| FR-WISH-120 | Must | v1.0 FR-11 | — | backend/api/src/controllers/cart.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
-| FR-WISH-130 | Must | v1.0 FR-12 | — | backend/api/src/repositories/supabase/cart.repository.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
-| FR-WISH-140 | Must | v1.0 FR-13 | — | apps/web/src/components/public/wishlist-grid.tsx | backend/api/tests/inquiry-cart.integration.test.ts (A/B planned) | partial |
-| FR-WISH-150 | Must | v1.0 FR-14 | — | backend/api/src/controllers/cart.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts (A/B planned) | partial |
-| FR-AUD-110 | Must | P0 FR-AUD-001 | — | backend/api/src/services/product.service.ts | planned | not run |
+| FR-WISH-110 | Won't | v1.0 FR-10; M2 FR-02 | D-12, D-13, D-14 | apps/web/src/app/wishlist/page.tsx | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
+| FR-WISH-120 | Won't | v1.0 FR-11 | D-14 (legacy) | backend/api/src/controllers/cart.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
+| FR-WISH-130 | Won't | v1.0 FR-12 | D-14 (legacy) | backend/api/src/repositories/supabase/cart.repository.ts | backend/api/tests/inquiry-cart.integration.test.ts | written, skipped without DB |
+| FR-WISH-140 | Won't | v1.0 FR-13 | D-14 (legacy) | apps/web/src/components/public/wishlist-grid.tsx | backend/api/tests/inquiry-cart.integration.test.ts (A/B planned) | partial |
+| FR-WISH-150 | Won't | v1.0 FR-14 | D-14 (legacy) | backend/api/src/controllers/cart.controller.ts | backend/api/tests/inquiry-cart.integration.test.ts (A/B planned) | partial |
+| FR-AUD-110 | Must | P0 FR-AUD-001 | D-13 | backend/api/src/services/product.service.ts | planned | not run |
 | FR-AUD-120 | Must | P0 FR-AUD-002 | 04-er §3.11 | supabase/migrations/20260716154417_init_schema.sql | planned (inspection) | not run |
 | FR-AUD-130 | Must | P0 FR-AUD-003 | 08-security §6.12 | supabase/migrations/20260716154420_rls_policies.sql, 20261030120000_explicit_table_grants.sql | planned (grant inspection done) | not run |
 | FR-AUD-140 | Should | P0 FR-AUD-004 | — | — | planned | not run |
-| FR-AUD-150 | Must | P0 FR-AUD-005 | ADR-002 | — | planned | not run |
+| FR-AUD-150 | Must | P0 FR-AUD-005 | ADR-002, D-13 | — | planned | not run |
 | FR-AUD-160 | Should | code (UC-ADM-011) | — | backend/api/src/hooks/auth.ts | planned | not run |
 | NFR-SEC-110 | Must | P0 NFR-SEC-001 | 09-deployment | backend/api/src/plugins/helmet.ts | planned | not run |
 | NFR-SEC-120 | Should | P0 NFR-SEC-012 | 08-security §3 | — | planned | not run |
@@ -78,7 +80,9 @@
 | NFR-SEC-240 | Must | plan F-05 | — | apps/web/src/app/products/[slug]/page.tsx | planned | not run |
 | NFR-SEC-251 | Must | P0 NFR-SEC-002 | 08-security §4.3 | backend/api/src/plugins/rate-limit.ts | planned | not run |
 | NFR-SEC-252 | Must | P0 NFR-SEC-002 | ADR-005 | supabase/config.toml | planned | not run |
-| NFR-SEC-260 | Must | D-11 | D-11 | — | planned | planned |
+| NFR-SEC-253 | Must | D-13, D-14; NIST SP 800-63B-4, OWASP | D-13, D-14, NFR-SEC-250 | — | planned | planned |
+| NFR-SEC-260 | Must | D-11 | D-11, D-13 | — | planned | planned |
+| NFR-SEC-270 | Must | D-13, D-14; NIST SP 800-63B-4, OWASP | D-13, D-14 | — | planned | planned |
 | NFR-SEC-310 | Must | P0 NFR-SEC-009 | 08-security §5.5 | backend/api/src/app.ts | backend/api/tests/api.integration.test.ts | written, skipped without DB |
 | NFR-SEC-320 | Must | P0 NFR-SEC-010; v1.0 NFR-01; M2 NFR-01 | 08-security §9 | backend/api/src/repositories/supabase/cart.repository.ts | backend/api/tests/inquiry-cart.integration.test.ts (A/B matrix planned) | partial |
 | NFR-SEC-330 | Must | P0 NFR-SEC-013 | ADR-005 | supabase/config.toml | planned (inspection) | not run |
@@ -86,7 +90,7 @@
 | NFR-SEC-350 | Must | review (new) | 08-security §6.4 | supabase/migrations/20260716154420_rls_policies.sql, 20261030120000_explicit_table_grants.sql | backend/api/tests/rls.integration.test.ts | passed (local, 2026-10-30) |
 | NFR-SEC-410 | Must | P0 NFR-SEC-005 | 08-security §11 | backend/api/src/config/env.ts | planned (secret scan) | not run |
 | NFR-SEC-420 | Must | v1.0 §6 | ADR-005 | backend/api/src/lib/supabase.ts | planned (inspection) | not run |
-| NFR-SEC-500 | Should | v1.0 §6 | — | backend/api/src/app.ts | planned (inspection) | not run |
+| NFR-SEC-500 | Should | v1.0 §6 | D-13 | backend/api/src/app.ts | planned (inspection) | not run |
 | NFR-REL-110 | Should | P0 NFR-REL-001 | 09-deployment | — | planned | not run |
 | NFR-REL-120 | Should | P0 NFR-REL-002 | 09-deployment | backend/api/src/controllers/health.controller.ts | planned | not run |
 | NFR-REL-130 | Should | P0 NFR-REL-006 | 09-deployment | — | planned | not run |
@@ -117,7 +121,7 @@
 | FR-PROD-230 | Must | FR-PROD-004 | — | `product.service.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-240 | Must | FR-PROD-006 | — | `product.repository.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-250 | Should | FR-PROD-011 | — | `product.service.ts` | `api.integration.test.ts` | test exists |
-| FR-PROD-260 | Should | FR-PROD-011 | — | `product.service.ts` | `api.integration.test.ts` | test exists |
+| FR-PROD-260 | Should | FR-PROD-011 | D-13 | `product.service.ts` | `api.integration.test.ts` | partial (409 planned) |
 | FR-PROD-310 | Must | FR-PROD-004 | ADR-005 | `product.repository.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-320 | Must | FR-PROD-012 | — | `product.schema.ts` | `api.integration.test.ts` | test exists |
 | FR-PROD-330 | Must | FR-PROD-013 | — | `product.schema.ts` | `api.integration.test.ts` | test exists |
@@ -133,12 +137,16 @@
 | FR-MEDIA-220 | Won't | FR-MEDIA-008/011 | D-07 | — | — | deferred |
 | FR-MEDIA-230 | Won't | FR-MEDIA-011 | ADR-001, D-07 | — | — | deferred |
 | FR-PUB-110 | Must | FR-PUB-001 | ADR-006 | `apps/web/src/app/products/(list)/page.tsx` | planned | planned |
-| FR-PUB-120 | Must | FR-PUB-002/008 | — | `apps/web/src/components/public/category-chips.tsx` | planned | planned |
-| FR-PUB-130 | Must | FR-PUB-005 | — | `category-chips.tsx` | planned | planned |
+| FR-PUB-120 | Must | FR-PUB-002/008 | D-12 | `apps/web/src/components/public/category-chips.tsx` | planned | planned |
+| FR-PUB-130 | Must | FR-PUB-005 | D-12 | `category-chips.tsx` | planned | planned |
 | FR-PUB-140 | Must | FR-PUB-014 | — | `product.service.ts` | `api.integration.test.ts` | test exists |
 | FR-PUB-150 | Must | WF-LIST-06 | — | `(list)/page.tsx` | planned | planned |
 | FR-PUB-160 | Should | WF-LIST-07 | — | `(list)/page.tsx` | planned | planned |
 | FR-PUB-170 | Should | code | — | `apps/web/src/components/public/pagination.tsx` | planned | planned |
+| FR-PUB-180 | Should | D-12, D-13 | D-12 | — | planned | planned |
+| FR-PUB-181 | Should | D-12, D-13 | D-13, D-14 (linear) | — | planned | planned |
+| FR-PUB-182 | Should | D-09, D-12, D-13 | D-09, D-12 | — | planned | planned |
+| FR-PUB-190 | Should | D-12 | D-12 | — | planned (demonstration) | planned |
 | FR-PUB-210 | Must | FR-PUB-003/007 | ADR-006 | `apps/web/src/app/products/[slug]/page.tsx` | planned | planned |
 | FR-PUB-220 | Must | FR-PUB-004 | — | `product-gallery.tsx`, `product-tabs.tsx` | planned | planned |
 | FR-PUB-230 | Must | UC-G-004 | — | `apps/web/src/app/products/[slug]/not-found.tsx` | planned | planned |
@@ -147,34 +155,58 @@
 | FR-PUB-260 | Could | D-09 | D-09 | — | planned | planned |
 | FR-PUB-310 | Must | FR-PUB-006 | D-08 | `apps/web/src/app/page.tsx` (placeholder) | planned | planned |
 | FR-PUB-320 | Should | WF-HOME-01 | D-01, D-08 | — | planned | planned |
-| FR-PUB-410 | Must | FR-PUB-009 | ADR-002 | `backend/api/src/controllers/settings.controller.ts` | planned | planned |
-| FR-PUB-420 | Must | FR-PUB-010, FR-SET-005 | ADR-002 | (no order UI) | planned (inspection) | inspection pending |
+| FR-PUB-410 | Must | FR-PUB-009 | ADR-002, D-13 | `backend/api/src/controllers/settings.controller.ts` | planned | planned |
+| FR-PUB-420 | Must | FR-PUB-010, FR-SET-005 | ADR-002, D-13 | (no delivery/payment UI) | planned (inspection) | inspection pending |
+| FR-PUB-430 | Must | D-13 | D-13 | — | planned | planned |
 | FR-PUB-500 | Won't | FR-PUB-012 | — | — | — | deferred |
+| FR-PUB-610 | Could | D-12, D-13 | D-12, WF-MO-01 | — | planned (demonstration) | planned |
+| FR-PUB-620 | Should | D-12, D-13 | D-12 | — | planned | planned |
 | FR-ADM-110 | Must | FR-ADM-002 | — | `apps/web/src/app/admin/layout.tsx` | planned | planned |
 | FR-ADM-120 | Must | FR-ADM-001 | — | `admin/layout.tsx`, `backend/api/src/hooks/auth.ts` | `api.integration.test.ts` (API 403) | partial |
 | FR-ADM-200 | Should | FR-ADM-003 | — | `apps/web/src/app/admin/page.tsx` (placeholder) | planned | planned |
 | FR-ADM-310 | Must | FR-ADM-004 | — | `apps/web/src/components/admin/product-table.tsx` | planned | planned |
 | FR-ADM-320 | Must | FR-ADM-004 | — | `product-form.tsx` | planned | planned |
 | FR-ADM-330 | Must | FR-ADM-004, FR-PROD-002, FR-PUB-015 | — | — (missing) | planned | planned |
-| FR-ADM-340 | Must | FR-ADM-004 | — | `product-table.tsx` | planned | planned |
+| FR-ADM-340 | Must | FR-ADM-004 | D-13 | `product-table.tsx` | planned | planned |
+| FR-ADM-350 | Should | D-09, D-13 | D-09, D-13 | — | planned | planned |
 | FR-ADM-400 | Must | FR-ADM-005 | — | `apps/web/src/components/admin/category-table.tsx` | planned | planned |
 | FR-ADM-500 | Won't | FR-ADM-007 | ADR-002 | — | — | deferred |
+| FR-ADM-510 | Should | D-13 | D-13 | — | planned | planned |
+| FR-ADM-520 | Should | D-13 | ADR-002, D-13 | — | planned (inspection) | planned |
+| FR-ADM-610 | Should | D-13 | D-13 | — | planned | planned |
+| FR-ADM-620 | Should | D-13 | D-13, D-14, NFR-SEC-500 | — | planned | planned |
+| FR-ADM-630 | Should | D-13 | D-13 | — | planned | planned |
+| FR-ADM-640 | Should | D-13 | D-13, D-14 | — | planned | planned |
 | FR-ADM-710 | Must | FR-ADM-008, guide F-02 | — | `product-table.tsx`, `category-table.tsx` | planned (inspection) | partial |
 | FR-ADM-720 | Must | guide §5 | — | `apps/web/src/components/admin/ui.tsx` | planned | planned |
 | FR-ADM-730 | Should | FR-ADM-008 | — | `ui.tsx` | planned (inspection) | inspection pending |
 | FR-SET-110 | Must | FR-SET-001 | ADR-002, ADR-011 | `supabase/migrations/20260716154417_init_schema.sql` | planned (inspection) | inspection pending |
 | FR-SET-120 | Must | FR-SET-002 | ADR-002 | `supabase/migrations/20260716154422_seed_system_settings.sql` | planned | planned |
-| FR-SET-130 | Must | FR-SET-003 | ADR-005 | `supabase/migrations/20260716154420_rls_policies.sql` | planned | planned |
+| FR-SET-130 | Must | FR-SET-003 | ADR-005, D-13 | `supabase/migrations/20260716154420_rls_policies.sql` | planned | planned |
 | FR-SET-140 | Won't | FR-SET-006 | — | — | — | deferred |
-| FR-SET-210 | Must | FR-SET-004, FR-ORD-008 | ADR-002 | (no order route) | planned | partial |
+| FR-SET-150 | Must | D-13 | D-13, D-14 | — | planned | planned |
+| FR-SET-210 | Must | FR-SET-004, FR-ORD-008 | ADR-002, D-13 | (no order route) | planned | partial |
 | FR-SET-220 | Must | RLS review | ADR-002, ADR-005 | `rls_policies.sql`, `20261030120000_explicit_table_grants.sql` | backend/api/tests/rls.integration.test.ts | passed (local, 2026-10-30) |
-| FR-ORD-110 | Won't | FR-ORD-001 | ADR-002 | — | — | deferred |
-| FR-ORD-120 | Won't | FR-ORD-002 | ADR-002 | `init_schema.sql` | — | deferred |
-| FR-ORD-130 | Won't | FR-ORD-003 | ADR-002 | `init_schema.sql` | — | deferred |
-| FR-ORD-140 | Won't | FR-ORD-004 | ADR-002 | `init_schema.sql` | — | deferred |
-| FR-ORD-210 | Won't | FR-ORD-005 | ADR-002 | `rls_policies.sql` | — | deferred |
+| FR-SET-230 | Must | D-13 | D-13, NFR-MAINT-110 | — | planned | planned |
+| FR-SET-240 | Must | D-13 | ADR-002, D-13 | — | planned | planned |
+| FR-ORD-110 | Should | FR-ORD-001; D-12, D-13 | ADR-002, D-12, D-13 | — | planned | planned |
+| FR-ORD-111 | Should | D-13 | D-13 | — | planned | planned |
+| FR-ORD-120 | Should | FR-ORD-002; D-13 | ADR-002, D-12, D-13, D-14 | `init_schema.sql` (migration needed) | planned | planned |
+| FR-ORD-130 | Should | FR-ORD-003; D-13 | ADR-002, D-12, D-13 | `init_schema.sql` | planned | planned |
+| FR-ORD-140 | Should | FR-ORD-004; D-13 | ADR-002, D-12, D-13 | `init_schema.sql` (enum migration needed) | planned | planned |
+| FR-ORD-150 | Should | D-12, D-13 | D-12, D-13 | — | planned | planned |
+| FR-ORD-160 | Should | D-10, D-12, D-13 | D-10, D-13 | `packages/validation-schemas/src/common.ts` (`phoneSchema`) | planned | planned |
+| FR-ORD-170 | Should | D-12, D-13, D-14; NIST SP 800-63B-4, OWASP | D-13, D-14 (SMS gateway open; candidate verify.mn) | — | planned | planned |
+| FR-ORD-171 | Should | D-13, D-14; NIST SP 800-63B-4, OWASP | D-13, D-14 | — | planned | planned |
+| FR-ORD-180 | Should | D-12, D-13 | ADR-002, D-13 | — | planned | planned |
+| FR-ORD-190 | Should | D-13 | D-13 | — | planned | planned |
+| FR-ORD-210 | Should | FR-ORD-005; D-13 | ADR-002, D-12, D-13 | `rls_policies.sql` | planned | planned |
 | FR-ORD-220 | Won't | FR-ORD-006 | ADR-002 | `init_schema.sql` | — | deferred |
-| FR-ORD-300 | Won't | FR-ORD-007 | ADR-002 | `rls_policies.sql` | — | deferred |
+| FR-ORD-230 | Should | D-13 | D-13, D-14 (SMS gateway open; candidate verify.mn) | — | planned | planned |
+| FR-ORD-240 | Should | D-13 | D-13, D-14 | — | planned | planned |
+| FR-ORD-300 | Should | FR-ORD-007; D-13 | ADR-002, D-12, D-13 | `rls_policies.sql` | planned | partial |
+| FR-ORD-310 | Should | D-12, D-13 | D-13, NFR-SEC-320 | — | planned | planned |
+| FR-ORD-320 | Should | D-13 | D-13, D-14 | — | planned | planned |
 | FR-PWA-110 | Must | D-11 | D-11 | — | planned (inspection) | planned |
 | FR-PWA-120 | Should | D-11 | D-11 | — | planned | planned |
 | FR-PWA-130 | Could | D-11 | D-11 | — | planned | planned |
@@ -252,7 +284,8 @@
 | NFR-USE-180 | Should | guide §3 | — | — | planned | not checked |
 | NFR-USE-210 | Must | D-05 | — | `layout.tsx:13` | planned (inspection) | not executed |
 | NFR-USE-220 | Must | guide §2 | — | `apps/web/src` | planned | not checked |
-| NFR-USE-230 | Should | WCAG 2.5.5 | — | — | planned | not checked |
+| NFR-USE-230 | Must | WCAG 2.5.5; D-13 | D-13 | — | planned | not checked |
+| NFR-USE-240 | Should | D-13 | D-13 | — | planned | planned |
 | NFR-USE-310 | Should | G1 | — | — | planned (usability protocol) | not measured |
 | NFR-USE-320 | Should | G2 | — | — | planned (usability protocol) | not measured |
 | NFR-MAINT-110 | Must | NFR-MAIN-001 | ADR-003, ADR-007 | `backend/api/src` | planned (inspection) | not executed |
@@ -271,10 +304,11 @@
 | NFR-MAINT-430 | Should | F-10 | D-08 | — | planned | not implemented |
 | NFR-MAINT-440 | Should | F-12 | — | `apps/web/src/components/public` | planned | not implemented |
 | NFR-MAINT-450 | Must | G4 | — | `docs/requirements/traceability-v2.md` | planned (analysis) | not executed |
+| NFR-MAINT-460 | Should | D-12, D-13 | D-08, D-13 (amends v4 `--act`) | — | planned (inspection) | planned |
 | NFR-MAINT-610 | Won't | FR-MOB-008 | — | `apps/mobile/lib/auth-store.ts` | planned (inspection) | not executed |
 | NFR-MAINT-620 | Won't | FR-MOB-009 | — | `apps/mobile/lib/api.ts` | planned (inspection) | not executed |
 | NFR-COMP-100 | Must | NFR-COM-001 | — | — | planned | not checked |
-| NFR-COMP-200 | Must | NFR-COM-002 | D-08 | — | planned | not checked (production) |
+| NFR-COMP-200 | Must | NFR-COM-002 | D-08, D-13 | — | planned | not checked (production) |
 | NFR-COMP-310 | Won't | NFR-COM-003, FR-MOB-001 | ADR-004 | `apps/mobile/package.json` | planned | not checked |
 | NFR-COMP-320 | Won't | NFR-COM-004, FR-MOB-001 | ADR-004 | `apps/mobile/package.json` | planned | not checked |
 | NFR-COMP-410 | Must | NFR-COM-005 | ADR-003 | `backend/api/src` | planned | not checked |

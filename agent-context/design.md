@@ -8,6 +8,10 @@
 > **highest precedence** on any conflict (07 > 02-requirements > prototypes).
 > All values are exact — no "approximate" values, no hardcoded hex outside tokens.
 
+> **Amendment 2026-11-08 (D-12/D-13, owner):** the action colour is dark jade `#1B4634` instead of
+> neon `#0BB555`. There is one fixed palette (no switcher), and radius tokens are 6 / 10 / 16 px.
+> The reference is Prototype E, `docs/nogoolin-prototype-e.html`. Previous values are kept inline below.
+
 ## Palette v4 — "Dark intro + white catalog"
 
 **Dark (intro/hero) zone:**
@@ -29,9 +33,9 @@
 | `--paper-alt` | `#F6F8F5` | alternate sections (info strip) |
 | `--ink` | `#17352A` | headings/text — **never pure black #000** |
 | `--muted` | `#6B7D72` | secondary text |
-| `--act` | `#0BB555` | THE single action color (CTA, links, hover, tags) |
-| `--act-text` | `#042F1C` | text on `--act` backgrounds |
-| `--act-hover` | `#12C963` | primary button hover |
+| `--act` | `#1B4634` | THE single action color (CTA, links, hover, tags) — **amended D-12/D-13 (2026-11-08)**. *Previous:* `#0BB555` |
+| `--act-text` | `#F5F2E6` | text on `--act` backgrounds (9.49:1) — *Previous:* `#042F1C` |
+| `--act-hover` | `#245842` | primary button hover — *Previous:* `#12C963` |
 | `--saff-deep` | `#A9861B` | saffron on white (prices, eyebrows — #F2C94C vanishes on light) |
 | `--hair` | `rgba(20,56,42,.12)` | hairlines (white zone) |
 
@@ -99,6 +103,11 @@ instantly · no WebGL → static hero (gradient + halo SVG) · returning visitor
   transitions `.3s ease`.
 - Product cards: image 4/3.4, category tag pill, 2-line-clamped name, serif
   price `--saff-deep` (`12,300,000₮` format), "360°" badge top-right if 3D.
+- **Product photo background (hard rule, D-15, added 2026-11-10):** a product
+  photo sits directly on the page background: no panel, tile colour, gradient or
+  rounded box behind it, in every list and page. Only exception: the home hero.
+  The v4 line above («image 4/3.4, … hairline border» cards) stays as the record
+  of the earlier convention; where the two conflict, D-15 wins.
 - Grid: max 1200px, padding 5vw; breakpoints 880px (nav→burger), 700px (hero mobile).
 - Nav: transparent overlay on `/` hero; solid white sticky on all other pages.
 - Pagination 12/page; filters/search reflected in URL query (shareable).

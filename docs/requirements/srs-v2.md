@@ -1,6 +1,6 @@
 # Nogoolin Software Requirements Specification v2
 
-**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.5 draft · **Огноо:** 2026-10-30 (v2.4: 2026-10-30, v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** REQ-01 · **Төрөл:** Developer · **Стандарт:** ISO/IEC/IEEE 29148 бүтэц, NFR-ийн ангилал нь ISO/IEC 25010 · **Хувилбар:** v2.7 draft · **Огноо:** 2026-11-08 (v2.6: 2026-11-08, v2.5: 2026-10-30, v2.4: 2026-10-30, v2.3: 2026-10-30, v2.2: 2026-10-30, v2.1: 2026-10-27, v2.0: 2026-10-18) · **Owner:** Тэнгис
 
 ## Баримтын төлөв
 
@@ -20,6 +20,8 @@
 
 | Хувилбар | Огноо | Төрөл | Өөрчлөлт |
 |---|---|---|---|
+| v2.7 | 2026-11-08 | MINOR | D-14 (owner-ийн v2.6 §8-ийн хариулт, 2026-11-08). **Priority:** зочны захиалга Should хэвээр (§4.14-ийн тайлбар); FR-WISH-120…150 Must → Won't (legacy), FR-WISH-100 Must → Won't — хэрэглэгчийн бүртгэл (customer account) бий болох хүртэл хойшлогдсон; §1.2, §1.4, §2.2, §3.1, §3.2-ийн `/cart` API legacy гэж тэмдэглэгдсэн, FR-USER-140-д тэмдэглэл. **FR-SET-150:** `ordering_enabled=false` default нь owner-ийн шийдвэр (санал биш). **OTP (NIST SP 800-63B-4, OWASP):** FR-ORD-170, FR-ORD-171, NFR-SEC-253, NFR-SEC-270 — 6 оронтой санамсаргүй нэг удаагийн код, 5 мин, шинэ код өмнөхийг хүчингүй болгоно, нэг кодод 5 оролдлого, дахин илгээх 60 s, утас 5/цаг, IP 10/цаг, hash-аар хадгалж логт бичихгүй; утгууд санал биш, шийдвэр. §1.5-д эх сурвалж. **Цуцлалт:** FR-ORD-120, FR-ORD-230, FR-ORD-240, FR-ORD-320, FR-ADM-620, FR-ADM-640 — timeline-ийн алхам биш, нэг «Захиалга цуцлагдсан» мөр, тогтмол жагсаалтын шалтгаан (бараа дууссан · хэрэглэгч хүссэн · авах хугацаа хэтэрсэн · бусад; хүргэлттэй үед «хүргэх боломжгүй»), admin шалтгаан заавал сонгоно, дотоод тэмдэглэл (`cancel_note`) захиалагчид харагдахгүй, «Бусад»-д заавал, цуцлахад SMS. **FR-PUB-181:** scale шугаман (owner шаталсныг татгалзсан), statement өөрчлөгдөөгүй. **§8:** 5 асуулт шийдэгдсэн гэж тэмдэглэгдсэн (устгаагүй): priority/default, OTP-ийн утгууд, үнийн scale, цуцалсан төлөв, FR-WISH. Нээлттэй хэвээр, шинэчлэгдсэн: SMS gateway (нэр дэвшигч verify.mn), е-баримт/НӨАТ/бизнесийн бүртгэл ба хадгалах хугацаа → судалгаа R-01. Шинэ: онлайн төлбөр (Bonum ↔ QPay, шинэ FR-гүй), хувийн мэдээллийн хадгалах хугацааны **санал** хүснэгт (шаардлага биш), «Бусад» шалтгааны харагдах байдал, NIST-ийн урт хугацааны оролдлогын тоолуур, FR-USER-140-ийн хадгалсан хэсэг. NFR-SEC-500-д тэмдэглэл. §1.2, §1.4, §1.5 (NIST, OWASP, R-01), §2.2, §2.4, §2.5, §3.1, §3.2, §4.14-ийн тайлбар, §7.2–7.4 шинэчлэгдсэн. Өмнөх утгууд «Өмнөх (v2.6)» мөрүүдэд. Шинэ ID байхгүй; leaf Must 182 → 178, Won't 25 → 29. |
+| v2.6 | 2026-11-08 | MINOR | D-12, D-13 (Prototype E v1.1 + admin prototype): зочны захиалга энэ release-ийн хүрээнд орсон. **FR-ORD:** бүртгэлгүй, дэлгүүрээс очиж авах захиалга — сагс төхөөрөмж дээр, нэр + утас `^\d{8}$` (D-10) + SMS нэг удаагийн код (OTP), хувийн мэдээллийн зөвшөөрөл, батлахаас өмнө бүтэн нийт дүн (далд төлбөргүй), төлбөр дэлгүүрт, захиалгын дугаар, утас + дугаар + OTP-оор шалгах, 5 төлөв, «Авахад бэлэн» үед SMS. FR-ORD-100…140, 200, 210, 300 өөрчлөгдсөн (Won't/PH8 → Should/PH5, planned); шинэ FR-ORD-111, 150, 160, 170, 171, 180, 190, 230, 240, 310, 320. **FR-SET:** «Онлайн захиалга» `ordering_enabled` (шинэ FR-SET-150, 230, 240); FR-SET-130, 200, 210, 220 өөрчлөгдсөн — захиалгын хаалт `ordering_enabled`, хүргэлт `delivery_enabled=false`-ээр түгжээтэй хэвээр. **FR-ADM:** шинэ 350, 510, 520, 600…640; FR-ADM-340, 710 өөрчлөгдсөн. **FR-PUB:** шинэ 180…182, 190, 430, 600…620; FR-PUB-120, 130, 400, 410, 420 өөрчлөгдсөн. **FR-WISH-110:** account-д суурилсан хадгалсан жагсаалт legacy (Won't this release); FR-WISH-100-д тэмдэглэл. **FR-INQ-100:** UI шошго «Асуулт асуух». FR-PROD-260, FR-AUD-110, FR-AUD-150 өөрчлөгдсөн. **NFR:** шинэ NFR-SEC-253, NFR-SEC-270, NFR-USE-240, NFR-MAINT-460; NFR-SEC-260, NFR-SEC-500, NFR-USE-230, NFR-COMP-200 өөрчлөгдсөн. Үйлдлийн өнгө v4 `#0BB555` → `#1B4634` (NFR-MAINT-460; AGENTS.md, `design.md`-ийн owner amendment 2026-11-08-тай нийцүүлсэн). §1.2, §1.4, §1.5, §2.2–2.5, §3.1, §3.2, §7.2–7.4, §8 шинэчлэгдсэн. Өмнөх утгууд «Өмнөх (v2.5)» мөрүүдэд. Prototype E нь mock өгөгдөлтэй дизайны artifact тул шинэ, өөрчлөгдсөн бүх шаардлага planned (эсвэл код байгаа хэсэгтээ partial). |
 | v2.5 | 2026-10-30 | MINOR | Аудит H1/H2 засвар: NFR-SEC-210-ийн statement-д path param нэмсэн, NFR-REL-210/NFR-SEC-210-д нотолгоо. NFR-MAINT-320: owner CI-д Supabase нэмэхгүй гэж шийдсэн, partial хэвээр, §8-д асуулт. NFR-PORT-140: deploy job PH7 хүртэл хаалттай. Өмнөх утгууд «Өмнөх (v2.4)» мөрүүдэд. |
 | v2.4 | 2026-10-30 | MINOR | C1 засвар (migration 0008 explicit table grants): NFR-SEC-350, FR-SET-220 unknown → implemented; FR-AUD-130-ийн service_role тайлбар; FR-USER-220-д тэмдэглэл. Өмнөх status бүр «Өмнөх (v2.3)» мөрөнд. §7.2-ийн тоо, §7.4, §8-ийн холбогдох мөрүүдийг шийдэгдсэн гэж тэмдэглэсэн (устгаагүй). |
 | v2.3 | 2026-10-30 | MINOR | D-11: энэ release-ийн mobile туршлага нь PWA. Шинэ §4.15 FR-PWA (12 блок, 9 leaf), NFR-PERF-350, NFR-SEC-260, NFR-COMP-600. Native mobile хойшлогдсон: FR-MOB-*, NFR-COMP-300…320, NFR-MAINT-600…620, NFR-REL-230, NFR-PORT-150-ийн Phase «PH8» → «Future (D-11)» (priority, status өөрчлөгдөөгүй). §1.2-ийн хүснэгт: «Mobile app (Expo) — G6, дараагийн release» → «Native mobile — D-11 gate», PWA мөр нэмэгдсэн. §4.12-ийн тайлбарын өмнөх текст «Өмнөх (v2.2)» мөрөнд. §7.2, §7.3, §8 шинэчлэгдсэн. |
@@ -56,12 +58,19 @@
 | Click-intro, C дизайн (D-08) | ✅ | |
 | Admin panel (`/admin`) | ✅ | |
 | Fastify REST API, Supabase | ✅ | |
-| Inquiry, wishlist, profile (web) | ✅ | |
+| Inquiry («Асуулт асуух»), profile (web) | ✅ | |
+| Зочны захиалга: сагс төхөөрөмж дээр, SMS код, дэлгүүрээс очиж авах, төлбөр дэлгүүрт (D-12, D-13) | ✅ `ordering_enabled`-ээр нээж/хаана | Хүргэлт, онлайн төлбөр |
+| Admin: захиалгын удирдлага, «Онлайн захиалга» тохиргоо (D-13) | ✅ | Хүргэлтийн тохиргоо (түгжээтэй) |
+| Account-д суурилсан хадгалсан жагсаалт (wishlist) | legacy (код хэвээр), бүх FR-WISH Won't (D-14) | Хэрэглэгчийн бүртгэлтэй хамт эргэж авч үзнэ |
 | PWA: суулгах, offline, үзсэн каталог (D-11) | ✅ G7 | Push мэдэгдэл |
 | Native mobile app (Expo) | | D-11 gate: G7 PWA амжилттай болсны дараа (G6) |
-| Захиалга, хүргэлт, төлбөр | | `delivery_enabled=false` |
+| Хүргэлт, хүргэгч оноох, онлайн төлбөр | | `delivery_enabled=false` |
 | Бүтээгдэхүүн бүрийн 360° viewer | | D-07 |
 | Зургаар хайх, EN хэл | | PH8, D-05 |
+
+**Өмнөх (v2.5):** мөрүүд «Inquiry, wishlist, profile (web) | ✅» ба «Захиалга, хүргэлт, төлбөр | | `delivery_enabled=false`» байсан. D-12/D-13-аар очиж авах захиалга энэ release-д орж, хүргэлт, төлбөр дараа хэвээр.
+
+**Өмнөх (v2.6):** wishlist-ийн мөр «legacy (код хэвээр) | (хоосон)» байсан. v2.7 (D-14): энэ release-д хэрэглэгчийн профайл (customer account)-д суурилсан шинэ функц байхгүй; захиалгыг утас + SMS кодоор шууд баталгаажуулна.
 
 Ирээдүйн шаардлагууд бүртгэлд **үлдэнэ**. Тэдгээрийг `Won't (this release)` гэж тэмдэглэнэ. Ингэснээр архитектур тэдгээрийг хаахгүй, ID нь тогтвортой үлдэнэ.
 
@@ -86,18 +95,29 @@
 | Customer | Нэвтэрсэн хэрэглэгч (role `customer`) |
 | Admin | Каталог болон inquiry удирдах эрхтэй хэрэглэгч (role `admin`) |
 | Inquiry | Бүтээгдэхүүний тухай нэр, утас, зурвастай асуулга. Захиалга биш. |
-| Wishlist | Нэвтэрсэн хэрэглэгчийн хадгалсан бүтээгдэхүүн. API-д `/cart` гэж нэрлэгдсэн ч checkout биш. |
+| Wishlist | Нэвтэрсэн хэрэглэгчийн хадгалсан бүтээгдэхүүн. API-д `/cart` гэж нэрлэгдсэн ч checkout биш. v2.6-аас legacy (FR-WISH-110); v2.7-оос бүх FR-WISH Won't (D-14). |
+| Сагс | Зочны захиалгын сагс: тухайн browser-ийн local storage-д, бүртгэлгүй (FR-ORD-150). Wishlist биш. |
+| Очиж авах (pickup) | Захиалагч барааг дэлгүүрээс өөрөө авч, төлбөрөө тэнд төлөх арга. Энэ release-ийн цорын ганц арга. |
+| OTP | SMS-ээр илгээх 6 оронтой, 5 минут хүчинтэй, нэг удаагийн код. Захиалагчийн утсыг баталгаажуулна (FR-ORD-170, NIST SP 800-63B-ийн out-of-band secret). |
+| Захиалгын дугаар | Захиалгын хүн уншихуйц дугаар, жишээ `NG-261108-1234` (FR-ORD-111) |
+| `ordering_enabled` | Admin-ы «Онлайн захиалга» тохиргоо. `false` үед сагс, захиалга нуугдана (FR-SET-150) |
 | Нийтлэгдсэн (published) | Нийтэд харагдах төлөвтэй бүтээгдэхүүн |
 | Intro | Нүүрний click-driven 4 алхамт 3D интро (D-08) |
 | GLB | Интрогийн 3D загварын файл (Green Tara) |
 | Lab / field metric | Lab: хяналттай орчинд хэмжсэн (Lighthouse). Field: бодит хэрэглэгчээс хэмжсэн. |
 | S1–S4 | Алдааны түвшин (S1 = critical). [Quality](../README.md#quality--quality)-д тодорхойлогдоно. |
 
+**Өмнөх (v2.6):** OTP «SMS-ээр илгээх 6 оронтой, хугацаатай, нэг удаагийн код. Захиалагчийн утсыг баталгаажуулна.»; Wishlist-ийн мөр «… v2.6-аас legacy (FR-WISH-110).»-оор төгссөн.
+
 ### 1.5 Эх сурвалж
 
 - [Phase 0 шаардлага](../phase-0/02-requirements.md), [use case](../phase-0/03-use-cases.md), [security](../phase-0/08-security.md), [wireframe](../phase-0/07-uiux-wireframes.md)
 - [SRS v1.0](srs-v1.0.md), [M2 шаардлага](requirements.md), [Scope Charter](scope-charter.md)
-- [Шийдвэрүүд](../../agent-context/DECISIONS.md) ADR-001…011, D-01…D-08
+- [Шийдвэрүүд](../../agent-context/DECISIONS.md) ADR-001…012, D-01…D-14
+- [Prototype E](../nogoolin-prototype-e.html) (D-12, D-13): дэлгүүр болон admin-ы дизайны лавлагаа, mock өгөгдөлтэй. Хэрэгжилтийн нотолгоо биш.
+- (v2.7, OTP-ийн утгууд, D-14) NIST SP 800-63B-4 «Digital Identity Guidelines: Authentication and Authenticator Management» (2025-08), §3.1.3 Out-of-Band Authenticators, §3.2.2 Rate Limiting — https://pages.nist.gov/800-63-4/sp800-63b.html (2026-11-08-нд уншсан): нууц код ≥ 6 оронтой, approved random bit generator, ≤ 10 минут хүчинтэй, нэг л удаа хүлээн авна, < 64 bit кодод буруу оролдлогын хязгаар (≤ 100), шинэ код буруу оролдлогын тоог тэглэхгүй; PSTN (SMS) нь «restricted» authenticator.
+- (v2.7) OWASP Cheat Sheet Series: [Authentication](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html), [Forgot Password](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html), [Multifactor Authentication](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html): санамсаргүй, нэг удаагийн, богино хугацаатай код; hash-аар хадгалах; rate limit; хэрэглэгч байгаа эсэхийг илчлэхгүй ижил хариу.
+- Судалгаа R-01 (`agent-context/TASKS.md` «Research R-01», төлөвлөгөө, эхлээгүй): е-баримт, НӨАТ, бизнесийн бүртгэл, хувийн мэдээллийн хадгалах хугацаа, SMS/төлбөрийн үйлчилгээ үзүүлэгч. §8-ийн холбогдох асуултууд үүнийг хүлээнэ.
 - 2026-10-18-ны одоогийн код
 - Owner-ийн vault `00-Vault/ADVANCED-WEB-GUIDE.md` (repo-оос гадуур): UI төлөв, гүйцэтгэлийн хэмжилт, escaping
 - ISO/IEC/IEEE 29148:2018, ISO/IEC 25010:2023 (бүтэц, ангиллын лавлагаа)
@@ -117,14 +137,17 @@ Web болон mobile нь нэг REST API ашиглана (ADR-007).
 ### 2.2 Гол үйлдлүүд
 
 - Зочин интрогоор орж нүүр, жагсаалт, хайлт, дэлгэрэнгүй хуудсаар бараа олно.
-- Зочин бүртгүүлэлгүй inquiry илгээнэ.
-- Customer нэвтэрч wishlist болон inquiry түүхээ харна.
-- Admin бүтээгдэхүүн, ангилал, зураг, inquiry, тохиргоог удирдана.
+- Зочин бүртгүүлэлгүй inquiry («Асуулт асуух») илгээнэ.
+- (v2.6) `ordering_enabled=true` үед зочин сагсандаа бараа хийж, нэр, утсаа SMS кодоор баталгаажуулан дэлгүүрээс очиж авах захиалга өгнө. Захиалгаа утас + дугаар + кодоор шалгана.
+- Customer нэвтэрч inquiry түүхээ харна. Wishlist нь legacy (v2.6); v2.7-оос бүх FR-WISH Won't (D-14).
+- Admin бүтээгдэхүүн, ангилал, зураг, inquiry, захиалга, тохиргоог («Онлайн захиалга») удирдана.
+
+**Өмнөх (v2.5):** «Customer нэвтэрч wishlist болон inquiry түүхээ харна.» «Admin бүтээгдэхүүн, ангилал, зураг, inquiry, тохиргоог удирдана.»
 
 ### 2.3 Хэрэглэгч ба сегмент
 
 [Төслийн зорилго §4](../project/project-goals.md#4-сегмент--зорилго--нотлох-ui)-ийг үз:
-- **Guest:** олох, мэдээлэл авах.
+- **Guest:** олох, мэдээлэл авах, (v2.6) очиж авах захиалга өгөх, явцаа шалгах.
 - **Inquiry хэрэглэгч:** асуух, баталгаа авах.
 - **Admin:** удирдах, хариулах.
 - **Хөгжүүлэгч:** шалгах.
@@ -138,9 +161,10 @@ Web болон mobile нь нэг REST API ашиглана (ADR-007).
 |---|---|
 | Ганц хөгжүүлэгч, семестрийн ачаалал | Хүрээ хатуу. WIP ≤ 2. |
 | Free/starter tier (Supabase, Vercel, Railway) | Хэмжээ, connection-ий хязгаартай. Launch-ийн өмнө тооцно (PH7). |
-| `delivery_enabled=false` (ADR-002) | Захиалгын бүтэц schema/API-д байж болно, гэхдээ идэвхгүй. |
+| `delivery_enabled=false` (ADR-002) | Хүргэлт идэвхгүй, admin UI-д түгжээтэй (FR-SET-240). v2.6: очиж авах захиалгыг `ordering_enabled` тусад нь хаана. Өмнөх (v2.5): «Захиалгын бүтэц schema/API-д байж болно, гэхдээ идэвхгүй.» |
 | D-07 | Бүтээгдэхүүн бүрийн 3D viewer байхгүй. Зөвхөн зургийн gallery. |
-| D-08 | Concept C нь үндсэн дизайн. v4 token-ууд шилжилт дуусах хүртэл production-д хүчинтэй. |
+| D-08 | Concept C нь үндсэн дизайн. v4 token-ууд шилжилт дуусах хүртэл production-д хүчинтэй. v2.6 (D-13): нэг тогтмол палитр, үндсэн товч `#1B4634` (өмнө нь `#0BB555`), радиус 6/10/16 px — NFR-MAINT-460; AGENTS.md, `design.md`-д owner amendment (2026-11-08). |
+| SMS gateway (D-13) | OTP, «Авахад бэлэн» мэдэгдэл гадны SMS үйлчилгээнээс хамаарна. Сонгоогүй (§8). v2.7 (D-14): нэр дэвшигч verify.mn, R-01-ээр шалгана. |
 | Монгол хэл (D-05) | UI зөвхөн MN. Бүтэц нь i18n-д бэлэн. |
 | Нууц утга | Client bundle болон repo-д орохгүй. |
 
@@ -151,7 +175,8 @@ Web болон mobile нь нэг REST API ашиглана (ADR-007).
 | Owner бодит фото (≥ 3 / бүтээгдэхүүн) болон GLB-г 2026-12-15 гэхэд өгнө | G1/G3-ийн огноо хойшилно ([R1](../project/project-goals.md#7-таамаг-ба-эрсдэл)) |
 | Admin нь энгийн цахим бичиг үсэгтэй | Админы заавар хэрэгтэй болно |
 | Хэрэглэгчид гол төлөв mobile browser-оор орно | Responsive web болон mobile perf нь Must хэвээр |
-| Launch-д төлбөр шаардлагагүй | Төлбөрийн шаардлага PH8-аас урагшилна |
+| Launch-д төлбөр шаардлагагүй (төлбөрийг дэлгүүрт авахдаа төлнө, D-13) | Төлбөрийн шаардлага PH8-аас урагшилна. v2.7 (D-14): ирээдүйн онлайн төлбөрийн нэр дэвшигч Bonum ↔ QPay (§8, R-01) |
+| SMS gateway PH5-ийн төгсгөлөөс өмнө сонгогдож ажиллана | `ordering_enabled=false`-ээр launch хийж, «Асуулт асуух» үндсэн суваг болно (FR-PUB-430). Энэ нь owner-ийн шийдвэр (D-14): захиалга унтраалттай үед ч сайт каталог, асуулгатай нээгдэнэ |
 | Тест local Supabase-тай ажиллана | DB-гүй үед integration тест pass гэж тооцогдохгүй (NFR-MAINT) |
 
 ## 3. Гадаад интерфэйс
@@ -161,13 +186,17 @@ Web болон mobile нь нэг REST API ашиглана (ADR-007).
 | Хуудас | Гол элемент |
 |---|---|
 | Intro / нүүр | 4 алхамт click-intro, skip, Эхлэх; дараа нь hero, ангилал, онцлох бүтээгдэхүүн |
-| Жагсаалт `/products` | Ангиллын шүүлтүүр, олон бичигтэй хайлт, карт |
-| Дэлгэрэнгүй `/products/[slug]` | Gallery, үнэ, тайлбар, хэрэглэх заавар, inquiry form, wishlist товч |
+| Жагсаалт `/products` | Ангиллын шүүлтүүр, олон бичигтэй хайлт, карт. v2.6: шүүлтүүрийн sidebar, ангилал тус бүр нэг мөр, quick view (FR-PUB-180…190, 600) |
+| Дэлгэрэнгүй `/products/[slug]` | Gallery, үнэ, тайлбар, хэрэглэх заавар, inquiry form, wishlist товч (legacy, FR-WISH Won't — D-14) |
 | Auth | Нэвтрэх, бүртгүүлэх, нууц үг сэргээх/шинэчлэх |
-| Profile, wishlist | Inquiry түүх, хадгалсан бүтээгдэхүүн |
-| `/admin` | Бүтээгдэхүүн, ангилал, зураг, inquiry inbox, тохиргоо |
+| Profile, wishlist | Inquiry түүх, хадгалсан бүтээгдэхүүн (wishlist нь legacy, D-14) |
+| Сагс, checkout `/cart`, `/checkout` (v2.6, planned) | Сагс, нэр, утас, зөвшөөрөл, SMS код, нийт дүн, очиж авах (FR-ORD-150…190) |
+| Захиалга `/order/{дугаар}`, `/order-status` (v2.6, planned) | Баталгаа, захиалга шалгах, явц (FR-ORD-111, 310, 320) |
+| `/admin` | Бүтээгдэхүүн, ангилал, зураг, inquiry inbox, тохиргоо. v2.6: захиалга, «Онлайн захиалга» (FR-ADM-510…640) |
 
-Харагдах байдлын эх: [Prototype C](../nogoolin-prototype-c.html) (D-08). Wireframe v2 нь PH2-т гарна.
+Харагдах байдлын эх: [Prototype C](../nogoolin-prototype-c.html) (D-08); v2.6-аас [Prototype E](../nogoolin-prototype-e.html) (D-12, D-13). Wireframe v2 нь PH2-т гарна.
+
+**Өмнөх (v2.6):** «Дэлгэрэнгүй» мөр «… inquiry form, wishlist товч», «Profile, wishlist» мөр «Inquiry түүх, хадгалсан бүтээгдэхүүн» (legacy тэмдэглэлгүй).
 
 ### 3.2 Программын интерфэйс (`/api/v1`, 2026-10-18-ны код)
 
@@ -179,12 +208,16 @@ Web болон mobile нь нэг REST API ашиглана (ADR-007).
 | `GET /settings/public` | Нийтийн | Нийтийн тохиргоо (жишээ нь `delivery_enabled`) |
 | `POST /inquiries` | Guest / customer | Inquiry үүсгэх |
 | `GET /inquiries/mine` | Customer | Өөрийн inquiry |
-| `GET /cart`, `POST /cart`, `DELETE /cart/:productId` | Customer | Wishlist |
+| `GET /cart`, `POST /cart`, `DELETE /cart/:productId` | Customer | Wishlist — **legacy** (v2.7, D-14: FR-WISH Won't; код хэвээр, шинэ хэрэглээ нэмэхгүй; захиалгын сагс биш, FR-ORD-150) |
 | `GET /admin/ping` | Admin | Эрх шалгах |
 | `GET/POST /admin/categories`, `PATCH/DELETE /admin/categories/:id` | Admin | Ангиллын CRUD |
 | `GET/POST /admin/products`, `PATCH/DELETE /admin/products/:id` | Admin | Бүтээгдэхүүний CRUD (`?hard=`) |
 | `POST /admin/products/:id/images`, `PATCH/DELETE /admin/products/:id/images/:imageId` | Admin | Зураг |
 | `GET /admin/inquiries`, `PATCH /admin/inquiries/:id/status` | Admin | Inquiry inbox |
+
+**Төлөвлөсөн (v2.6, кодонд байхгүй):** `POST /orders/otp` (код илгээх), `POST /orders` (захиалах), `POST /orders/lookup` (шалгах), `GET /admin/orders`, `GET /admin/orders/:no`, `PATCH /admin/orders/:no/status`, `PATCH /admin/settings/ordering_enabled`. Нэр нь санал; API-02-оор эцэслэнэ.
+
+**Өмнөх (v2.6):** `/cart` мөрийн зорилго «Wishlist» (legacy тэмдэглэлгүй).
 
 Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит route-уудтай нийцүүлэх ажил PH2-т (API-02).
 
@@ -394,6 +427,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** `/profile` хуудас нь нэвтэрсэн хэрэглэгчийн нэр, email, inquiry түүх (FR-INQ-210), хадгалсан бүтээгдэхүүний товч жагсаалт (FR-WISH-140), гарах товчийг нэг дор харуулна **shall**. Admin бол «Админ хэсэг» холбоос нэмж харуулна **shall**. Нэвтрээгүй бол `/login?next=/profile` руу шилжүүлнэ **shall**.
 - **Rationale:** G2-ийн хэрэглэгчийн дараагийн алхмыг нэг газар төвлөрүүлнэ.
 - **Source:** Phase0 roadmap Phase 4 «Basic user profile»; code `apps/web/src/app/profile/page.tsx`
+- **Тэмдэглэл (v2.7, D-14):** «Хадгалсан бүтээгдэхүүн» хэсэг нь FR-WISH-140-ийг дагана; FR-WISH Won't (legacy) тул энэ хэсгийг сайжруулах, шинээр холбох ажил энэ release-д хийхгүй. Statement, priority өөрчлөгдөөгүй; хэсгийг нуух эсэхийг хэрэгжүүлэлтийн үед owner-оос асууна (§8).
 - **Priority · Phase · Status:** Should · PH4 · implemented (`apps/web/src/app/profile/page.tsx`)
 - **Verification:** Test — anon, customer, admin гурван нөхцөлөөр шалгана.
 - **Acceptance:** anon үед redirect хийгдэнэ. customer үед гурван хэсэг харагдаж admin холбоос байхгүй. admin үед admin холбоос харагдана. Хуудас `noindex` байна.
@@ -649,11 +683,13 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Acceptance:** Мөр хэвээр, `status=archived`, нийтэд `404`.
 
 #### FR-PROD-260 — Бүрмөсөн устгах
-**Statement:** Систем бүтээгдэхүүнийг зөвхөн `?hard=true` тодорхой параметртэй хүсэлтээр, UI-ийн баталгаажуулалтын дараа (FR-ADM-710) бүрмөсөн устгана **shall**. Мөн `PRODUCT_HARD_DELETE` audit бичлэг үүсгэнэ **shall**.
-- **Source:** Phase0 FR-PROD-011 («hard delete shall require explicit confirmation»)
-- **Priority · Phase · Status:** Should · PH3 · implemented
-- **Verification:** Test — «DELETE product … ?hard=true removes»
-- **Acceptance:** Мөр устсан; audit-д `hard=true` metadata.
+**Statement:** Систем бүтээгдэхүүнийг зөвхөн `?hard=true` тодорхой параметртэй хүсэлтээр, UI-ийн баталгаажуулалтын дараа (FR-ADM-710) бүрмөсөн устгана **shall**. Мөн `PRODUCT_HARD_DELETE` audit бичлэг үүсгэнэ **shall**. Захиалгын мөрд (`order_items`) холбогдсон бүтээгдэхүүнийг бүрмөсөн устгахгүй, `409`-ийг шалтгаантай буцаана **shall**.
+- **Rationale:** v2.6 (D-13): захиалгын түүх бүтээгдэхүүнийг иш татна. Admin UI-д устгах нь архивлах (FR-ADM-340).
+- **Source:** Phase0 FR-PROD-011 («hard delete shall require explicit confirmation»); D-13
+- **Өмнөх (v2.5):** Statement-д `409`-ийн өгүүлбэр байгаагүй. Status «Should · PH3 · implemented».
+- **Priority · Phase · Status:** Should · PH3 · partial (hard delete implemented; `order_items`-тэй үеийн `409` planned — одоогийн FK `order_items.product_id` нь DB алдаа өгөх боловч API-ийн `409` гэрээ байхгүй)
+- **Verification:** Test — «DELETE product … ?hard=true removes»; захиалгатай бүтээгдэхүүн → `409` (planned)
+- **Acceptance:** Мөр устсан; audit-д `hard=true` metadata. Захиалгатай бүтээгдэхүүн устахгүй, `409`.
 
 #### FR-PROD-300 — Бүтээгдэхүүн хайх, шүүх, хуудаслах (API)
 **Statement:** API нь бүтээгдэхүүний жагсаалтыг шүүлтүүр, эрэмбэ, хуудаслалттай буцаана **shall**.
@@ -807,20 +843,22 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **States:** loading — `loading.tsx` skeleton; empty — FR-PUB-150; error — FR-PUB-150; success — картын grid.
 
 #### FR-PUB-120 — Ангиллаар шүүх
-**Statement:** Зочин ангиллын chip сонгоход систем `/products?category={slug}` URL-аар зөвхөн тухайн ангиллын бүтээгдэхүүнийг харуулж, сонгосон chip-ийг идэвхтэй төлөвтэй харуулна **shall**.
-- **Rationale:** Phase 0-ийн `/categories/[slug]` URL (FR-PUB-008) хэрэгжээгүй. Одоогийн query-string загвар нь хуваалцах боломжтой бөгөөд sitemap-тай нийцдэг.
-- **Source:** Phase0 FR-PUB-002, FR-PUB-008; `category-chips.tsx`, `sitemap.ts`
-- **Priority · Phase · Status:** Must · PH3 · implemented
-- **Verification:** Test — chip дарахад URL болон тоо өөрчлөгдөхийг шалгах
-- **Acceptance:** Хариунд өөр ангиллын бүтээгдэхүүн байхгүй. URL-ыг шинэ tab-д нээхэд ижил үр дүн гарна.
+**Statement:** `/products` хуудасны шүүлтүүрийн «Ангилал» бүлэгт (FR-PUB-180) зочин нэг буюу хэд хэдэн ангиллын checkbox сонгоход систем `/products?category={slug}[,{slug}…]` URL-аар зөвхөн сонгосон ангиллын бүтээгдэхүүнийг харуулж, сонголтыг checkbox-ийн төлвөөр харуулна **shall**. «Ангилал» үндсэн цэсэнд байхгүй (цэс: Нүүр · Бүтээгдэхүүн · Бидний тухай) **shall**.
+- **Rationale:** Phase 0-ийн `/categories/[slug]` URL (FR-PUB-008) хэрэгжээгүй. Одоогийн query-string загвар нь хуваалцах боломжтой бөгөөд sitemap-тай нийцдэг. D-12 (1)(2): ангилал нь цэснээс шүүлтүүрийн бүлэг болсон.
+- **Source:** Phase0 FR-PUB-002, FR-PUB-008; `category-chips.tsx`, `sitemap.ts`; D-12; Prototype E `#/products`
+- **Өмнөх (v2.5):** «Зочин ангиллын chip сонгоход систем `/products?category={slug}` URL-аар зөвхөн тухайн ангиллын бүтээгдэхүүнийг харуулж, сонгосон chip-ийг идэвхтэй төлөвтэй харуулна **shall**.» Must · PH3 · implemented.
+- **Priority · Phase · Status:** Must · PH5 · partial (нэг ангиллын `?category=` шүүлт implemented, `category-chips.tsx`; олон сонголт, checkbox UI, API-ийн олон `category_slug` planned)
+- **Verification:** Test — нэг ба хоёр ангилал сонгоход URL болон тоо өөрчлөгдөхийг шалгах
+- **Acceptance:** Хариунд сонгоогүй ангиллын бүтээгдэхүүн байхгүй; хоёр ангилал сонгоход хоёулангийнх нь бараа (OR). URL-ыг шинэ tab-д нээхэд ижил үр дүн гарна.
 - **States:** busy — шилжилтийн үед хуучин үр дүн нуугдахгүй; empty — FR-PUB-150.
 
 #### FR-PUB-130 — Ангиллын жагсаалт харуулах
-**Statement:** Каталогийн хуудас бүх идэвхтэй ангиллыг нэг мөрөнд chip хэлбэрээр харуулна **shall**. Багтахгүй бол хэвтээ scroll хийгдэнэ **shall** (WF-LIST, D-01-ийн тооноос үл хамаарна).
-- **Source:** Phase0 FR-PUB-005; WF-HOME-01 «single-row rule»
-- **Priority · Phase · Status:** Must · PH3 · implemented
-- **Verification:** Demonstration — 390 px өргөнд 10 ангилалтай үед мөр шилжихгүй
-- **Acceptance:** Chip-ууд нэг мөрөнд, хуудас хэвтээ scroll үүсгэхгүй.
+**Statement:** Шүүлтүүрийн «Ангилал» бүлэг бүх идэвхтэй ангиллыг checkbox жагсаалтаар, FR-CAT-160-ийн эрэмбээр харуулна **shall**. Идэвхгүй ангилал жагсаалтад орохгүй **shall**.
+- **Source:** Phase0 FR-PUB-005; WF-HOME-01 «single-row rule»; D-12 (1)(2)
+- **Өмнөх (v2.5):** «Каталогийн хуудас бүх идэвхтэй ангиллыг нэг мөрөнд chip хэлбэрээр харуулна **shall**. Багтахгүй бол хэвтээ scroll хийгдэнэ **shall** (WF-LIST, D-01-ийн тооноос үл хамаарна).» Must · PH3 · implemented. Verification: 390 px, 10 ангилал. Нүүрний ангиллын мөр (FR-PUB-320) хэвээр.
+- **Priority · Phase · Status:** Must · PH5 · planned (одоо chip мөр implemented)
+- **Verification:** Demonstration — 360 ба 1440 px өргөнд 10 ангилалтай үед
+- **Acceptance:** Бүх идэвхтэй ангилал жагсаалтад, идэвхгүй нь байхгүй. 360 px-д хуудас хэвтээ scroll үүсгэхгүй.
 
 #### FR-PUB-140 — Олон бичгийн хайлт
 **Statement:** Зочин хайлтын талбарт кирилл, латин галиг эсвэл англи үг оруулахад систем `name`, `name_en`, `search_tags`-аас нэгэн зэрэг хайна **shall**. Латин оролтыг кирилл рүү хөрвүүлж, хоёр хэлбэрийн илэрцийг нэгтгэн буцаана **shall**.
@@ -854,6 +892,40 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Priority · Phase · Status:** Should · PH3 · implemented
 - **Verification:** Test — 13 бүтээгдэхүүн, 2-р хуудас
 - **Acceptance:** 2-р хуудасны URL-д `category` болон `q` хадгалагдана.
+
+#### FR-PUB-180 — Шүүлтүүрийн sidebar
+**Statement:** `/products` хуудас шүүлтүүрийн sidebar-ыг (> 700 px өргөнд зүүн талд, ≤ 700 px-д «Шүүлтүүр» товчоор нээгдэх sheet-д) харуулна **shall**. Бүлгүүд: «Ангилал» (FR-PUB-120), «Материал» (FR-PROD-190-ийн `material` утгууд), «Бэлэн байдал» (FR-PROD-140) checkbox, «Үнэ» (FR-PUB-181), «Хэмжээ» (FR-PUB-182) range. Бүлэг доторх сонголт OR, бүлэг хооронд AND-аар нийлнэ **shall**. Идэвхтэй шүүлтүүр URL-д хадгалагдаж, тоо нь харагдаж, «Шүүлтүүр цэвэрлэх» нэг товчоор бүгд арилна **shall**.
+- **Rationale:** D-12 (2). Бараа олох (G1, NFR-USE-310).
+- **Source:** Owner шийдвэр D-12 (2026-11-03), D-13; Prototype E `#/products`. Шинэ шаардлага, хуучин ID-гүй.
+- **Priority · Phase · Status:** Should · PH5 · planned (API-д `material`, үнэ, хэмжээний шүүлтүүр байхгүй; FR-PROD-320-ийг өргөтгөнө)
+- **Verification:** Test — OR/AND нийлэлтийг fixture-ээр; reload; 360 px-д sheet-ийг гараар (Tab, Escape)
+- **Acceptance:** 1) Илэрц бүх идэвхтэй нөхцөлийг хангаж, тоо нь FR-PUB-160-тай таарна. 2) Reload эсвэл хуваалцсан URL ижил шүүлтүүрийг сэргээнэ. 3) Sheet нь FR-ADM-720-ийн dialog зан төлөвтэй.
+- **States:** busy — хуучин илэрц шинэ хариу ирэх хүртэл харагдана; empty — FR-PUB-150.
+
+#### FR-PUB-181 — Үнийн range
+**Statement:** «Үнэ» шүүлтүүр нь доод, дээд хоёр бариултай range slider болон ижил утгатай хоёр тоон оролттой байна **shall**. Хязгаар нь нийтлэгдсэн бүтээгдэхүүний хамгийн бага ба их үнэ (MNT) **shall**. Бариул бүр гарын сумаар алхмаар хөдөлж, `aria-valuetext`-д «50,000₮» хэлбэрийн утгатай байна **shall**. Доод утга дээд утгаас их байж болохгүй **shall**.
+- **Rationale:** D-13: D-12-ийн 3 үнийн checkbox (50,000₮ хүртэл / 50,000–250,000₮ / 250,000₮+) range болсон. Scale нь шугаман (D-14, owner 2026-11-08: шаталсан scale-ийг татгалзсан).
+- **Өмнөх (v2.6):** Rationale-ийн сүүлийн өгүүлбэр «Шугаман эсвэл шаталсан scale нь нээлттэй (§8).» Statement өөрчлөгдөөгүй.
+- **Source:** D-12 (2), D-13, D-14; Prototype E `#/products`
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — гар болон тоон оролтоор утга тавьж илэрц, URL-ыг шалгах
+- **Acceptance:** Range доторх үнэтэй бараа л илэрнэ. Утга URL-д хадгалагдана. Доод > дээд оролт засагдана.
+
+#### FR-PUB-182 — Хэмжээний range (хамгийн урт тал)
+**Statement:** «Хэмжээ» шүүлтүүр нь бүтээгдэхүүний хамгийн урт тал `max(height_cm, width_cm, depth_cm)`-аар (см) шүүх range slider болон тоон оролттой байна **shall**. Хэмжээний шүүлт идэвхтэй үед хэмжээгүй бүтээгдэхүүн илэрцэд орохгүй, идэвхгүй үед орно **shall**.
+- **Rationale:** D-12 (2): «тавиурт багтах уу» гэдгийг нэг тоогоор шийднэ. D-09-ийн бүтэцтэй талбараас тооцно.
+- **Source:** D-09, D-12, D-13; Prototype E (`longest()`)
+- **Priority · Phase · Status:** Should · PH5 · planned (FR-PROD-190-аас хамаарна)
+- **Verification:** Test — 3 хэмжээтэй ба 1 хэмжээгүй fixture
+- **Acceptance:** 32 × 24 × 18 см бараа 30–40 см range-д орж, 15–30 см-д орохгүй. Хэмжээгүй бараа идэвхтэй range-д 0.
+
+#### FR-PUB-190 — Ангилал тус бүр нэг мөр
+**Statement:** Ангиллын шүүлт идэвхгүй үед `/products`-ийн илэрц ангилал бүрийг гарчигтай нэг мөр болгон харуулна **shall**. Мөр багтахгүй бол тухайн мөр дотроо (хуудас биш) хэвтээ scroll хийгдэж, гарчиг нь тухайн ангиллын шүүлтийг нээх холбоостой байна **shall**.
+- **Rationale:** D-12 (2): нэг харцаар бүх ангиллыг харуулна.
+- **Source:** D-12; Prototype E `#/products`
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Demonstration — 360 ба 1440 px
+- **Acceptance:** Мөр бүр нэг ангилал. Хуудасны `scrollWidth ≤ innerWidth`. Мөрийн карт бүр Tab-аар хүрэгдэнэ.
 
 #### FR-PUB-200 — Бүтээгдэхүүний дэлгэрэнгүй
 **Statement:** Зочин бүтээгдэхүүний slug URL-аар шийдвэр гаргахад хэрэгтэй бүх мэдээллийг харна **shall**.
@@ -940,25 +1012,37 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Acceptance:** Мөр шилжихгүй, холбоос бүр зөв шүүлтүүрийг нээнэ.
 
 #### FR-PUB-400 — Хүргэлтийн toggle-ийн нийтийн илрэл
-**Statement:** Нийтийн давхарга `delivery_enabled`-ийн одоогийн утгыг мэдэж, түүнээс хамаарч захиалгын UI-г харуулах эсвэл нуух ёстой **shall**.
-- **Source:** Phase0 FR-PUB-009, 010, FR-SET-005; ADR-002
-- **Priority · Phase · Status:** Must · PH3 · implemented
+**Statement:** Нийтийн давхарга `delivery_enabled` болон `ordering_enabled`-ийн одоогийн утгыг мэдэж, түүнээс хамаарч хүргэлт, захиалгын UI-г харуулах эсвэл нуух ёстой **shall**.
+- **Source:** Phase0 FR-PUB-009, 010, FR-SET-005; ADR-002; D-13
+- **Өмнөх (v2.5):** «Нийтийн давхарга `delivery_enabled`-ийн одоогийн утгыг мэдэж, түүнээс хамаарч захиалгын UI-г харуулах эсвэл нуух ёстой **shall**.» Must · PH3 · implemented.
+- **Priority · Phase · Status:** Must · PH3 · partial (`ordering_enabled` planned)
 - **Verification:** children
 
 #### FR-PUB-410 — Нийтийн тохиргооны endpoint
-**Statement:** `GET /api/v1/settings/public` нь нэвтрэлтгүйгээр `{ data: { delivery_enabled: boolean } }`-ийг `200`-тай буцаана **shall**.
-- **Source:** Phase0 FR-PUB-009; `backend/api/src/controllers/settings.controller.ts`
-- **Priority · Phase · Status:** Must · PH3 · implemented
+**Statement:** `GET /api/v1/settings/public` нь нэвтрэлтгүйгээр `{ data: { delivery_enabled: boolean, ordering_enabled: boolean } }`-ийг `200`-тай буцаана **shall**.
+- **Source:** Phase0 FR-PUB-009; `backend/api/src/controllers/settings.controller.ts`; D-13
+- **Өмнөх (v2.5):** «… `{ data: { delivery_enabled: boolean } }`-ийг `200`-тай буцаана **shall**.» Must · PH3 · implemented. Acceptance: «`200`, `delivery_enabled=false`.»
+- **Priority · Phase · Status:** Must · PH5 · partial (`delivery_enabled` implemented; `ordering_enabled` planned)
 - **Verification:** Test — token-гүй GET (planned; одоогийн integration suite-д байхгүй)
-- **Acceptance:** `200`, `delivery_enabled=false`.
+- **Acceptance:** `200`, `delivery_enabled=false`, `ordering_enabled` нь DB-ийн утгатай тэнцүү.
 
 #### FR-PUB-420 — Захиалгын UI нуух
-**Statement:** `delivery_enabled=false` үед web болон mobile нь сагс, checkout, захиалга өгөх UI-г огт харуулахгүй байна **shall**.
-- **Rationale:** Энэ release-д захиалгын UI огт байхгүй тул шаардлага хангагдсан. PH8-д UI нэмэхдээ FR-PUB-410-ийг уншиж байж харуулах ёстой. Wishlist нь сагс биш (FR-WISH).
-- **Source:** Phase0 FR-PUB-010, FR-SET-005
-- **Priority · Phase · Status:** Must · PH3 · implemented (UI байхгүй)
-- **Verification:** Inspection — нийтийн route-ууд болон component-уудад checkout/order UI байхгүй
-- **Acceptance:** «Сагсанд хийх», «Захиалах», «Checkout» элемент нийтийн хуудсанд байхгүй.
+**Statement:** `delivery_enabled=false` үед web болон mobile нь хүргэлтийн сонголт, хүргэлтийн хаяг, онлайн төлбөрийн UI-г харуулахгүй байна **shall**. Сагс, checkout-ыг харуулах эсэхийг `ordering_enabled` (FR-PUB-430) шийднэ **shall**.
+- **Rationale:** D-13: сагс ба очиж авах checkout нь хүргэлтээс тусдаа. Хүргэлт, төлбөрийн UI одоо байхгүй тул эхний өгүүлбэр хангагдсан. Wishlist нь сагс биш (FR-WISH).
+- **Source:** Phase0 FR-PUB-010, FR-SET-005; D-13
+- **Өмнөх (v2.5):** «`delivery_enabled=false` үед web болон mobile нь сагс, checkout, захиалга өгөх UI-г огт харуулахгүй байна **shall**.» Rationale: «Энэ release-д захиалгын UI огт байхгүй тул шаардлага хангагдсан. PH8-д UI нэмэхдээ FR-PUB-410-ийг уншиж байж харуулах ёстой.» Acceptance: «"Сагсанд хийх", "Захиалах", "Checkout" элемент нийтийн хуудсанд байхгүй.» Must · PH3 · implemented (UI байхгүй).
+- **Priority · Phase · Status:** Must · PH3 · implemented (хүргэлт, төлбөрийн UI байхгүй)
+- **Verification:** Inspection — нийтийн route, component-уудад хүргэлт, хаяг, картын төлбөрийн UI байхгүй
+- **Acceptance:** «Хүргэлт» сонголт, хаягийн талбар, онлайн төлбөрийн элемент нийтийн хуудсанд 0.
+
+#### FR-PUB-430 — Захиалга хаалттай үеийн UI
+**Statement:** `ordering_enabled=false` үед нийтийн UI сагсны цэс болон «Сагсанд нэмэх» товчийг нууж, «Асуулт асуух»-ыг бүтээгдэхүүний үндсэн (primary) үйлдэл болгоно **shall**. Энэ үед `/cart`, `/checkout`-ыг нээвэл «Онлайн захиалга түр хаалттай» төлөвийг «Асуулт асуух» болон «Захиалгаа шалгах» холбоостой харуулна **shall**. Сагсны агуулгыг устгахгүй **shall** (FR-ORD-150). `ordering_enabled=true` болмогц сагс, «Сагсанд нэмэх» буцаж харагдана **shall**.
+- **Rationale:** D-13 (3): admin захиалгыг кодын өөрчлөлтгүйгээр хаана; хэрэглэгчийн сагс алдагдахгүй.
+- **Source:** Owner шийдвэр D-13 (2026-11-08); Prototype E (`data-ordering`). Шинэ шаардлага.
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — toggle `false`/`true`-ээр нүүр, жагсаалт, дэлгэрэнгүй, `/cart`, `/checkout`
+- **Acceptance:** `false`: сагсны элемент 0, «Асуулт асуух» primary, хаалттай төлөв, сагсны storage хэвээр. `true`: бүгд сэргэнэ.
+- **States:** disabled — «Онлайн захиалга түр хаалттай» + дараагийн алхмын 2 холбоос.
 
 #### FR-PUB-500 — Зургаар хайх
 **Statement:** Зочин зураг байршуулж эсвэл авч, үзэгдлийн хувьд төстэй бүтээгдэхүүнийг (pgvector embedding) хайх боломжтой байна **may**.
@@ -968,12 +1052,36 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Demonstration — PH8-д
 - **Acceptance:** PH8-д тодорхойлно.
 
+#### FR-PUB-600 — Бүтээгдэхүүний карт ба quick view
+**Statement:** Жагсаалтын бүтээгдэхүүний карт нь тайван hover харагдац болон шуурхай харах (quick view) цонхтой байна **shall**.
+- **Source:** D-12 (3), D-13
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** children
+
+#### FR-PUB-610 — Картын hover хөдөлгөөн
+**Statement:** `hover: hover` төхөөрөмж дээр hover эсвэл keyboard focus үед карт зургийн тоонд тохирох нэг хөдөлгөөнийг харуулна **may**: ≥ 3 харагдацтай бол хажуу талаас нүүр тал руу тайван эргэх, 2 зурагтай бол хоёр дахь зураг руу crossfade, 1 зурагтай бол ≤ 1.05 дахин томрох. Савлах, найгах, мөргөлдөх, хөрш картыг түлхэх, курсорыг дагах, автоматаар эргэх хөдөлгөөн хэрэглэхгүй **shall** (WF-MO-01). `prefers-reduced-motion: reduce` үед хөдөлгөөнгүй **shall**.
+- **Rationale:** D-12 (3), TASKS-ийн owner-ийн хөдөлгөөний дүрэм (2026-11-01): ариун барааг савлуулахгүй.
+- **Source:** D-12, D-13; WF-MO-01; Prototype E `#/products`
+- **Priority · Phase · Status:** Could · PH5 · planned
+- **Verification:** Demonstration — 1440 px-д hover, Tab; reduce emulation. Test — хоёр дахь зураг LCP-ийн хүсэлтэд ороогүй (NFR-PERF-420).
+- **Acceptance:** Карт бүр нэг төрлийн хөдөлгөөнтэй. Хориотой хөдөлгөөн 0. Reduce үед transition 0. Touch төхөөрөмж дээр hover-ээс хамаарсан агуулга байхгүй.
+
+#### FR-PUB-620 — Quick view
+**Statement:** Картыг дарахад бүтээгдэхүүний үндсэн зураг, нэр, үнэ, нөөцийн төлөв, хэмжээ (FR-PUB-250), дэлгэрэнгүй хуудасны холбоос болон `ordering_enabled`-ээс хамаарч «Сагсанд нэмэх» эсвэл «Асуулт асуух» товчтой quick view цонх нээгдэнэ **shall**. Цонх нь FR-ADM-720-ийн dialog зан төлөвтэй (нэр, `aria-modal`, Escape, focus буцаалт) байна **shall**. Картын нэр нь `/products/{slug}` руу `<a href>` хэвээр байж, шинэ tab болон crawl ажиллана **shall**.
+- **Rationale:** D-12 (3). Жагсаалтаас гаралгүй шийдвэр гаргана; SEO холбоос алдагдахгүй (NFR-SEO-310).
+- **Source:** D-12, D-13; Prototype E
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — Playwright: click → dialog, Escape → focus карт руу; axe; ctrl+click → шинэ tab-д дэлгэрэнгүй
+- **Acceptance:** 1) Цонхонд 6 элемент. 2) Escape-ийн дараа focus картад. 3) axe «dialog name» алдаа 0.
+
 ### 4.7 Асуулга (FR-INQ)
 
 #### FR-INQ-100 — Асуулга илгээх
 **Statement:** Зочин эсвэл нэвтэрсэн хэрэглэгч бүтээгдэхүүний талаар бүртгүүлэлгүйгээр асуулга илгээж, хүлээн авсан гэсэн баталгаа авна **shall**.
-- **Rationale:** Захиалга идэвхжээгүй үед борлуулалтын цорын ганц суваг (G2).
-- **Source:** Phase0 FR-INQ-001…003, 007; v1.0 FR-01…05; M2 FR-01
+- **Rationale:** Захиалгагүйгээр мэдээлэл авах, утсаар холбогдох суваг; `ordering_enabled=false` үед борлуулалтын цорын ганц суваг (G2).
+- **UI шошго (v2.6):** Нийтийн UI-д энэ үйлдлийг «Асуулт асуух» гэж нэрлэнэ (D-12, D-13). `ordering_enabled=false` үед энэ нь бүтээгдэхүүний үндсэн үйлдэл (FR-PUB-430). Шаардлага, API (`/inquiries`) өөрчлөгдөөгүй.
+- **Өмнөх (v2.5):** Rationale «Захиалга идэвхжээгүй үед борлуулалтын цорын ганц суваг (G2).»
+- **Source:** Phase0 FR-INQ-001…003, 007; v1.0 FR-01…05; M2 FR-01; D-12, D-13 (шошго)
 - **Priority · Phase · Status:** Must · PH4 · implemented
 - **Verification:** children
 
@@ -1130,24 +1238,30 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 
 #### FR-WISH-100 — Wishlist
 **Statement:** Нэвтэрсэн хэрэглэгч нийтлэгдсэн бүтээгдэхүүнийг хадгалж, жагсаалтаа харж, хасна **shall**. Wishlist нь тоо хэмжээ, нийт үнэ, checkout агуулахгүй **shall**.
-- **Rationale:** Шийдвэр гаргахаас өмнө бараагаа хадгалах (G2). Сагс/захиалга (ORD) PH8 хүртэл идэвхгүй.
-- **Source:** v1.0 FR-10…14; M2 FR-02; roadmap Phase 4 «Wishlist / cart draft»; migration `20260726120000_inquiry_customer_and_cart.sql`
-- **Priority · Phase · Status:** Must · PH4 · implemented
+- **Rationale:** Шийдвэр гаргахаас өмнө бараагаа хадгалах (G2).
+- **Тэмдэглэл (v2.6):** D-12/D-13-аар энэ release-д хэрэглэгчид харагдах «Сагс» нь зочны захиалгын сагс (FR-ORD-150). Account-д суурилсан хадгалсан жагсаалт (энэ area) **legacy**: код, API, тест устгахгүй, гэхдээ шинэ entry point нэмэхгүй (FR-WISH-110). FR-WISH-120…150-ийн priority-г owner батлах хүртэл өөрчлөөгүй (§8).
+- **Тэмдэглэл (v2.7, D-14):** Owner шийдсэн (2026-11-08): FR-WISH-100…150 бүгд **Won't (legacy)**. Хэрэглэгчийн бүртгэл (customer account, профайл) бий болох хүртэл хойшлогдсон: энэ release-д хэрэглэгчийн профайлд суурилсан шинэ функц байхгүй, захиалгыг утас + SMS кодоор шууд баталгаажуулна (FR-ORD-170). Код, API (`/api/v1/cart`), тест устгахгүй; status нь кодын бодит төлөвийг (implemented/partial) хэвээр харуулна.
+- **Өмнөх (v2.5):** Rationale «Шийдвэр гаргахаас өмнө бараагаа хадгалах (G2). Сагс/захиалга (ORD) PH8 хүртэл идэвхгүй.»
+- **Өмнөх (v2.6):** Priority · Phase · Status «Must · PH4 · implemented».
+- **Source:** v1.0 FR-10…14; M2 FR-02; roadmap Phase 4 «Wishlist / cart draft»; migration `20260726120000_inquiry_customer_and_cart.sql`; D-14
+- **Priority · Phase · Status:** Won't (this release) · PH4 · implemented (legacy)
 - **Verification:** children
 
 #### FR-WISH-110 — Нэвтрэлт шаардах
-**Statement:** Зочин `/wishlist` нээхэд систем `/login?next=/wishlist` руу шилжүүлнэ **shall**. Зочин бүтээгдэхүүн дээрх «Хадгалах» товч дарахад `/login?next=<одоогийн зам>` руу шилжүүлнэ **shall**. Token-гүй `GET/POST/DELETE /api/v1/cart*` хүсэлт бүрд `401` буцаана **shall**.
-- **Rationale:** Wishlist нь хувийн өгөгдөл.
-- **Source:** v1.0 FR-10; code `apps/web/src/app/wishlist/page.tsx:22`, `apps/web/src/components/public/save-button.tsx:56`
-- **Priority · Phase · Status:** Must · PH4 · implemented (`apps/web/src/app/wishlist/page.tsx`)
+**Statement:** Нэвтрэлт шаарддаг хадгалсан жагсаалт (wishlist) нь энэ release-д legacy бөгөөд хэрэглэгчид харагдах сагс, захиалга нь нэвтрэлтээс хамаарахгүй (FR-ORD-100, FR-ORD-150). `/wishlist` хуудас үлдвэл зочинд `/login?next=/wishlist` руу шилжүүлнэ **shall**. «Хадгалах» товч нийтийн UI-д үлдвэл зочинд `/login?next=<одоогийн зам>` руу шилжүүлнэ **shall**. Token-гүй `GET/POST/DELETE /api/v1/cart*` (wishlist, захиалгын сагс биш) хүсэлт бүрд `401` буцаана **shall**.
+- **Rationale:** Wishlist нь хувийн өгөгдөл. D-12/D-13: «сагс = хадгалсан жагсаалт» загвар орлогдсон; захиалгын сагс төхөөрөмж дээр, бүртгэлгүй.
+- **Source:** v1.0 FR-10; code `apps/web/src/app/wishlist/page.tsx:22`, `apps/web/src/components/public/save-button.tsx:56`; D-12, D-13
+- **Өмнөх (v2.5):** «Зочин `/wishlist` нээхэд систем `/login?next=/wishlist` руу шилжүүлнэ **shall**. Зочин бүтээгдэхүүн дээрх «Хадгалах» товч дарахад `/login?next=<одоогийн зам>` руу шилжүүлнэ **shall**. Token-гүй `GET/POST/DELETE /api/v1/cart*` хүсэлт бүрд `401` буцаана **shall**.» Must · PH4 · implemented.
+- **Priority · Phase · Status:** Won't (this release) · PH4 · implemented (legacy: `apps/web/src/app/wishlist/page.tsx`; код устгахгүй)
 - **Verification:** Test — `inquiry-cart.integration.test.ts` («cart routes require auth → 401 anon») + page redirect шалгалт.
 - **Acceptance:** Гурван endpoint `401`. Хуудас болон товчны redirect нь зөв `next`-тэй.
 
 #### FR-WISH-120 — Хадгалах
 **Statement:** Нэвтэрсэн хэрэглэгч нийтлэгдсэн бүтээгдэхүүнийг хадгалахад систем `(user_id, product_id)` мөр үүсгэж `201` буцаана **shall**. Draft, archived эсвэл байхгүй бүтээгдэхүүнд `404` буцаана **shall**.
 - **Rationale:** Зөвхөн зочинд харагдах бүтээгдэхүүнийг хадгална.
-- **Source:** v1.0 FR-11; M2 FR-02; code `backend/api/src/services/cart.service.ts`
-- **Priority · Phase · Status:** Must · PH4 · implemented (`backend/api/src/controllers/cart.controller.ts`)
+- **Source:** v1.0 FR-11; M2 FR-02; code `backend/api/src/services/cart.service.ts`; D-14 (legacy)
+- **Өмнөх (v2.6):** Priority · Phase · Status «Must · PH4 · implemented (`backend/api/src/controllers/cart.controller.ts`)».
+- **Priority · Phase · Status:** Won't (this release) · PH4 · implemented (legacy: `backend/api/src/controllers/cart.controller.ts`; код устгахгүй)
 - **Verification:** Test — `inquiry-cart.integration.test.ts` («POST /cart draft product → 404», «unknown product → 404»)
 - **Acceptance:** published → `201` + 1 мөр. draft/unknown → `404`, мөр үүсэхгүй.
 - **States:**
@@ -1158,16 +1272,18 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-WISH-130 — Давхардлыг хориглох
 **Statement:** Нэг хэрэглэгч нэг бүтээгдэхүүнийг давтан хадгалахад систем хамгийн ихдээ нэг `(user_id, product_id)` мөр хадгална **shall**. Давтсан хүсэлт ч амжилттай (`201`) хариу авна **shall**.
 - **Rationale:** Idempotent хадгалалт. Давхар карт харуулахгүй.
-- **Source:** v1.0 FR-12; M2 FR-02; code `supabase/migrations/20260726120000_inquiry_customer_and_cart.sql` (`unique (user_id, product_id)`), `backend/api/src/repositories/supabase/cart.repository.ts:55-85`
-- **Priority · Phase · Status:** Must · PH4 · implemented (`backend/api/src/repositories/supabase/cart.repository.ts`)
+- **Source:** v1.0 FR-12; M2 FR-02; code `supabase/migrations/20260726120000_inquiry_customer_and_cart.sql` (`unique (user_id, product_id)`), `backend/api/src/repositories/supabase/cart.repository.ts:55-85`; D-14 (legacy)
+- **Өмнөх (v2.6):** Priority · Phase · Status «Must · PH4 · implemented (`backend/api/src/repositories/supabase/cart.repository.ts`)».
+- **Priority · Phase · Status:** Won't (this release) · PH4 · implemented (legacy: `backend/api/src/repositories/supabase/cart.repository.ts`; код устгахгүй)
 - **Verification:** Test — `inquiry-cart.integration.test.ts` («add published product (idempotent)»)
 - **Acceptance:** Хоёр POST хоёул `201` буцаана. DB болон `GET /cart`-ийн тоо 1 байна.
 
 #### FR-WISH-140 — Wishlist жагсаах
 **Statement:** `GET /api/v1/cart` нь зөвхөн баталгаажсан хэрэглэгчийн хадгалсан бүтээгдэхүүнийг `created_at desc` дарааллаар нэр, үндсэн зураг, үнэ, stock status-тай буцаана **shall**. `/wishlist` хуудас тэдгээрийг карт хэлбэрээр харуулна **shall**.
 - **Rationale:** Хадгалсан бараагаа буцаж олох.
-- **Source:** v1.0 FR-13; code `backend/api/src/repositories/supabase/cart.repository.ts:45-50`, `apps/web/src/components/public/wishlist-grid.tsx`
-- **Priority · Phase · Status:** Must · PH4 · implemented (`apps/web/src/components/public/wishlist-grid.tsx`)
+- **Source:** v1.0 FR-13; code `backend/api/src/repositories/supabase/cart.repository.ts:45-50`, `apps/web/src/components/public/wishlist-grid.tsx`; D-14 (legacy)
+- **Өмнөх (v2.6):** Priority · Phase · Status «Must · PH4 · implemented (`apps/web/src/components/public/wishlist-grid.tsx`)».
+- **Priority · Phase · Status:** Won't (this release) · PH4 · implemented (legacy: `apps/web/src/components/public/wishlist-grid.tsx`; код устгахгүй)
 - **Verification:** Test — A/B хэрэглэгч, хоёр огноо, хоосон бүртгэлийн fixture дээр шалгана. Одоогийн тест нь хоосон болон нэмэлтийг шалгадаг. Ownership-ийн A/B тест planned.
 - **Acceptance:** A-ийн хариунд зөвхөн A-ийн бараа байна. Дараалал зөв. Талбарууд бүрэн.
 - **States:**
@@ -1178,8 +1294,9 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-WISH-150 — Wishlist-ээс хасах
 **Statement:** `DELETE /api/v1/cart/{productId}` нь баталгаажсан хэрэглэгчийн тухайн мөрийг устгаж `204` буцаана **shall**. Байхгүй мөрийг дахин устгахад мөн `204` буцаана **shall**. Бусад хэрэглэгчийн мөрийг өөрчлөхгүй **shall**. UI картыг шууд арилгана **shall**.
 - **Rationale:** Idempotent устгалт. Хадгалсан бараа буцаан нэмж болдог тул баталгаажуулах dialog шаардлагагүй.
-- **Source:** v1.0 FR-14; M2 FR-02; code `backend/api/src/repositories/supabase/cart.repository.ts:88-97`, `apps/web/src/lib/wishlist-store.ts`
-- **Priority · Phase · Status:** Must · PH4 · implemented (`backend/api/src/controllers/cart.controller.ts`)
+- **Source:** v1.0 FR-14; M2 FR-02; code `backend/api/src/repositories/supabase/cart.repository.ts:88-97`, `apps/web/src/lib/wishlist-store.ts`; D-14 (legacy)
+- **Өмнөх (v2.6):** Priority · Phase · Status «Must · PH4 · implemented (`backend/api/src/controllers/cart.controller.ts`)».
+- **Priority · Phase · Status:** Won't (this release) · PH4 · implemented (legacy: `backend/api/src/controllers/cart.controller.ts`; код устгахгүй)
 - **Verification:** Test — A, B хоёр ижил бүтээгдэхүүн хадгалсан үед A хоёр удаа DELETE хийнэ.
 - **Acceptance:** Хоёр DELETE хоёул `204`. A-д 0, B-д 1 мөр үлдэнэ.
 - **States:**
@@ -1252,11 +1369,22 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **States:** loading — form skeleton; error — ачаалах эсвэл хадгалах алдааны шалтгаан; busy — хадгалах товч disabled; success — «Хадгалагдлаа».
 
 #### FR-ADM-340 — Жагсаалтаас төлөв солих
-**Statement:** Жагсаалтын мөр бүрээс «Нийтлэх/Нийтлэлээс авах», «Архивлах», «Бүрмөсөн устгах» үйлдлийг хийх боломжтой байна **shall**. Үйлдлийн дараа жагсаалт дахин ачаалагдана **shall**.
-- **Source:** `product-table.tsx`
-- **Priority · Phase · Status:** Must · PH3 · implemented
+**Statement:** Жагсаалтын мөр бүрээс «Нийтлэх/Нийтлэлээс авах», «Устгах (архивлах)», архивласан мөрөнд «Сэргээх» үйлдлийг хийх боломжтой байна **shall**. Admin UI нь бүтээгдэхүүнийг бүрмөсөн устгах үйлдэл санал болгохгүй **shall** (FR-PROD-260). Үйлдлийн дараа жагсаалт дахин ачаалагдана **shall**.
+- **Rationale:** D-13: устгах = архивлах; сайтаас нуугдаж, захиалгын түүх хадгалагдаж, дараа сэргээж болно.
+- **Source:** `product-table.tsx`; D-13; Prototype E `#/admin/products`
+- **Өмнөх (v2.5):** «Жагсаалтын мөр бүрээс «Нийтлэх/Нийтлэлээс авах», «Архивлах», «Бүрмөсөн устгах» үйлдлийг хийх боломжтой байна **shall**. Үйлдлийн дараа жагсаалт дахин ачаалагдана **shall**.» Must · PH3 · implemented.
+- **Priority · Phase · Status:** Must · PH5 · partial (`product-table.tsx`: нийтлэх, архивлах implemented; «Сэргээх» товч болон UI-аас «Бүрмөсөн устгах»-ыг хасах planned)
 - **Verification:** Demonstration
 - **Acceptance:** Үйлдэл бүрийн дараа мөрийн төлөв шинэчлэгдэнэ. Алдаа гарвал мөр хуучин төлөвтэйгээ үлдэж, шалтгаан харагдана.
+
+#### FR-ADM-350 — Бүтээгдэхүүний form: хэмжээ ба зургийн слот
+**Statement:** Бүтээгдэхүүн үүсгэх, засах form (FR-ADM-320, FR-ADM-330) нь FR-PROD-190-ийн `height_cm`, `width_cm`, `depth_cm`, `weight_g`, `material` талбарыг нэгжтэй (см, г) оролтоор харуулж, «Хамгийн урт тал: N см»-ийг (FR-PUB-182) шууд тооцож харуулна **shall**. Зургийн хэсэг нь D-09-ийн харагдац тус бүрт слоттой байна **shall**: нарийн хийцтэй (Tier A) бараанд нүүр, хажуу, ар тал, ойрын дэлгэрэнгүй, ул; энгийн бараанд нүүр, хажуу. Слотын төрөл (`view`) зургийн бичлэгт (FR-MEDIA-130) хадгалагдаж, `sort_order`, alt текст нь слотоос үүснэ **shall**. Шаардлагатай слот хоосон үед «Нийтлэх»-ээс өмнө анхааруулга харуулна **shall**.
+- **Rationale:** D-09 (зураг авалтын стандарт, бүтэцтэй талбар), D-13 (4). Admin контентыг стандартын дагуу оруулна (G1).
+- **Source:** D-09; D-13; `agent-context/ASSET_SPECS.md` §3; Prototype E `#/admin/products`. Шинэ шаардлага.
+- **Priority · Phase · Status:** Should · PH5 · planned (FR-PROD-190-ийн migration, `product_images.view` багана байхгүй)
+- **Verification:** Test — талбар оруулж хадгалах, слот бүрт зураг байршуулах, хоосон слоттой нийтлэх
+- **Acceptance:** 1) 32/24/18 оруулахад «Хамгийн урт тал: 32 см». 2) Слотын зураг зөв `view`-тэй хадгалагдана. 3) Хоосон слотын анхааруулга слотын нэрийг заана.
+- **States:** busy — слот бүрт явцын хувь; error — слот дээр шалтгаан + «Дахин оролдох».
 
 #### FR-ADM-400 — Ангиллын удирдлагын UI
 **Statement:** `/admin/categories` нь ангиллыг бүтээгдэхүүний тоотойгоор жагсааж, үүсгэх, засах, идэвхжүүлэх/идэвхгүй болгох, хоосон ангиллыг устгах боломжийг өгнө **shall**. Бүтээгдэхүүнтэй ангиллын устгах товч идэвхгүй байна **shall**.
@@ -1270,9 +1398,67 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 **Statement:** Admin тохиргооны хуудаснаас `delivery_enabled`-ийг асаах/унтраах боломжтой байна **shall**. Асаахаас өмнө FR-ADM-710-ийн баталгаажуулалтыг харуулна **shall**.
 - **Rationale:** Захиалга/хүргэлт PH8. Энэ release-д toggle-ийг асаах шаардлагагүй, утга нь `false` seed-ээр тогтсон.
 - **Source:** Phase0 FR-ADM-007; `admin/layout.tsx` («Тохиргоо (Phase 5)» placeholder холбоос)
+- **Тэмдэглэл (v2.6):** Энэ release-д тохиргооны хуудас «Онлайн захиалга»-тай (FR-ADM-510) нээгдэж, хүргэлт нь түгжээтэй харагдана (FR-ADM-520). Хүргэлтийг асаах (энэ шаардлага) PH8 хэвээр.
 - **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
 - **Verification:** Test — PH8-д
 - **Acceptance:** PH8-д.
+
+#### FR-ADM-510 — «Онлайн захиалга» тохиргооны UI
+**Statement:** `/admin/settings` хуудас «Онлайн захиалга» (`ordering_enabled`) switch-ийг одоогийн утга болон нөлөөний тайлбартай («Унтраавал сагс, „Сагсанд нэмэх" нуугдаж, „Асуулт асуух" үндсэн болно. Сагсан дахь бараа хадгалагдана.») харуулна **shall**. Солихоос өмнө FR-ADM-710-ийн баталгаажуулалт гарна **shall**. Утгыг API-аар хадгалж, амжилттай болсны дараа л switch-ийн төлөв солигдоно **shall**. Өөрчлөлт бүр audit-д бичигдэнэ (FR-AUD-150) **shall**.
+- **Rationale:** D-13 (3).
+- **Source:** Owner шийдвэр D-13 (2026-11-08); Prototype E `#/admin/settings`. Шинэ шаардлага.
+- **Priority · Phase · Status:** Should · PH5 · planned (admin settings endpoint байхгүй, FR-SET-130)
+- **Verification:** Test — асаах, унтраах, баталгаажуулалтыг болих, API алдаа
+- **Acceptance:** 1) «Болих» үед утга өөрчлөгдөхгүй. 2) Амжилттай үед нийтийн хариу FR-SET-150-ийн хугацаанд шинэчлэгдэж, audit-д 1 мөр. 3) API алдааны үед switch хуучин төлөвтэй.
+- **States:** busy — switch disabled, «Хадгалж байна…»; error — «Хадгалж чадсангүй. Дахин оролдоно уу.»; success — «Хадгалагдлаа».
+
+#### FR-ADM-520 — Хүргэлтийн түгжээтэй тохиргоо
+**Statement:** Тохиргооны хуудас «Хүргэлт» тохиргоог идэвхгүй (disabled) control-оор, «Унтраалттай. Хүргэлт идэвхжих хүртэл түгжээтэй.» тайлбартай харуулна **shall**. Түүнийг UI-аас өөрчлөх боломжгүй **shall** (FR-SET-240).
+- **Rationale:** D-13 (3); ADR-002.
+- **Source:** D-13; Prototype E `#/admin/settings`
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Inspection — control `disabled`, тайлбар `aria-describedby`-аар холбогдсон
+- **Acceptance:** Control дарагдахгүй, API хүсэлт явахгүй.
+
+#### FR-ADM-600 — Захиалгын удирдлагын UI
+**Statement:** Admin захиалгыг жагсааж, шүүж, хайж, дэлгэрэнгүйг нь харж, төлөв сольж, шалтгаантай цуцлах интерфэйстэй байна **shall**.
+- **Source:** D-13 (4); FR-ORD-200
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** children
+
+#### FR-ADM-610 — Захиалгын жагсаалт, шүүлт, хайлт
+**Statement:** `/admin/orders` нь захиалгыг шинэ нь эхэндээ дарааллаар дугаар, захиалагчийн нэр, маскалсан утас (`9911····`), барааны тоо, нийт дүн, төлөв, огноотой хүснэгтээр хуудаслан харуулна **shall**. Admin төлөвөөр шүүж, захиалгын дугаар, нэр эсвэл бүтэн утасны дугаараар хайна **shall**.
+- **Source:** D-13; Prototype E `#/admin/orders`
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — 5 төлөвийн fixture; дугаар, утсаар хайх
+- **Acceptance:** Шүүлт, хайлт бүр зөвхөн тохирох мөрийг үлдээнэ. Жагсаалтад бүтэн утас 0.
+- **States:** loading; empty — «Захиалга алга» (шүүлтүүр идэвхтэй бол «Шүүлтүүрт тохирох захиалга алга» + «Шүүлтүүр арилгах»); error — мессеж + дахин ачаалах.
+
+#### FR-ADM-620 — Захиалгын дэлгэрэнгүй
+**Statement:** Захиалгын дэлгэрэнгүй хуудас бараа бүрийн нэр, тоо, нэгжийн үнэ, нийт дүн, захиалагчийн нэр, утас, төлвийн түүх (огноо, admin), цуцалсан бол шалтгааны шошго (FR-ORD-240), дотоод тэмдэглэл болон цуцлалтын SMS-ийн төлвийг харуулна **shall**. Бүтэн утасны дугаар зөвхөн энэ хуудсанд `tel:` холбоостой харагдаж, жагсаалт, мэдэгдэл, toast-д маскалсан байна **shall**.
+- **Rationale:** Хувийн мэдээллийг шаардлагатай газар л харуулна (NFR-SEC-500).
+- **Source:** D-13; Prototype E (`maskPhone`); D-14 (цуцлалтын шалтгаан, SMS)
+- **Өмнөх (v2.6):** Statement-ийн эхний өгүүлбэр «… төлвийн түүх (огноо, admin), цуцалсан бол шалтгааныг харуулна **shall**.»
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Inspection — бүтэн утас харагдах газрууд; Test — мэдэгдэж буй fixture
+- **Acceptance:** Талбарууд бүрэн. Бүтэн утас нэг л хуудсанд.
+- **States:** loading; error — «Захиалга олдсонгүй» + жагсаалт руу буцах.
+
+#### FR-ADM-630 — Төлөв солих
+**Statement:** Дэлгэрэнгүй болон жагсаалт нь одоогийн төлвөөс дараагийн зөвшөөрөгдсөн алхмын товчийг («Бэлтгэж эхлэх», «SMS илгээж бэлэн болгох», «Авсан гэж тэмдэглэх») харуулна **shall**. «Авахад бэлэн» болгохоос өмнө илгээх SMS-ийн текстийг харуулсан баталгаажуулалт гарна **shall**. FR-ORD-210-ийн хориотой шилжилтийн товч харагдахгүй **shall**.
+- **Source:** D-13; FR-ORD-140, FR-ORD-230
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — төлөв бүрт харагдах товчийн жагсаалт
+- **Acceptance:** Төлөв бүрт зөвхөн зөвшөөрөгдсөн дараагийн алхам. «Авсан», «Цуцалсан»-д төлөв солих товч 0.
+- **States:** busy — товч disabled; error — inline мессеж, төлөв хуучнаараа; success — badge шинэчлэгдэнэ.
+
+#### FR-ADM-640 — Цуцлах UI
+**Statement:** «Цуцлах» нь баталгаажуулах цонх (FR-ADM-710, FR-ADM-720) нээнэ **shall**. Цонх нь FR-ORD-240-ийн тогтмол жагсаалтаас шалтгааныг заавал сонгох radio бүлэг («Бараа дууссан», «Хэрэглэгч хүссэн», «Авах хугацаа хэтэрсэн», «Бусад»), анхдагч сонголтгүй, болон «Дотоод тэмдэглэл (захиалагчид харагдахгүй)» гэсэн текст талбартай (≤ 300 тэмдэгт) байна **shall**. Шалтгаан сонгоогүй, эсвэл «Бусад» сонгоод тэмдэглэл хоосон үед батлах товч идэвхгүй **shall**. Цонх захиалагчид очих SMS-ийн текстийг урьдчилан харуулж, «Цуцалсныг буцаах боломжгүй. Захиалагчид SMS очиж, „Захиалгаа шалгах" хэсэгт „Захиалга цуцлагдсан" гэж харагдана.» гэсэн impact, reversibility-тэй байна **shall**.
+- **Source:** D-13; FR-ORD-240; Prototype E admin; D-14 (тогтмол шалтгаан, SMS)
+- **Өмнөх (v2.6):** «„Цуцлах" нь шалтгааны заавал талбартай баталгаажуулах цонх (FR-ADM-710, FR-ADM-720) нээнэ **shall**. Шалтгаан хоосон үед батлах товч идэвхгүй **shall**. Цонх „Цуцалсныг буцаах боломжгүй. Захиалагч „Захиалгаа шалгах" хэсэгт цуцлагдсаныг харна." гэсэн impact, reversibility-тэй байна **shall**.» Verification «шалтгаангүй, шалтгаантай, Escape»; Acceptance «Шалтгаангүй цуцлалт 0. Escape → өөрчлөлтгүй.»
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — шалтгаангүй; шалтгаан бүр; «Бусад» + хоосон тэмдэглэл; Escape; radio бүлгийг гараар сонгох
+- **Acceptance:** Шалтгаангүй цуцлалт 0. «Бусад» + хоосон тэмдэглэлээр цуцлалт 0. Escape → өөрчлөлтгүй. Radio бүлэг `fieldset`/`legend`-тэй.
 
 #### FR-ADM-700 — Буцаах боломжгүй/хор хөнөөлтэй үйлдлийн баталгаажуулалт
 **Statement:** Admin өгөгдөл устгах, нийтээс нуух эсвэл системийн зан төлөвийг өөрчлөх үйлдэл хийхээс өмнө систем баталгаажуулалт асууна **shall**.
@@ -1283,7 +1469,7 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 
 #### FR-ADM-710 — Баталгаажуулалтын агуулга
 **Statement:** Дараах үйлдэлд баталгаажуулах цонх 4 зүйлийг харуулна **shall**:
-- үйлдлүүд: бүтээгдэхүүн архивлах, бүтээгдэхүүн бүрмөсөн устгах, ангилал устгах, зураг устгах, `delivery_enabled` солих (PH8);
+- үйлдлүүд: бүтээгдэхүүн архивлах, бүтээгдэхүүн бүрмөсөн устгах (API-д л, FR-ADM-340), ангилал устгах, зураг устгах, `ordering_enabled` солих, захиалга цуцлах, `delivery_enabled` солих (PH8);
 - **action:** юу хийгдэх, объектын нэр;
 - **impact:** нийтийн сайтад юу өөрчлөгдөх, хамт устах зургийн тоо;
 - **risk:** анхаарах зүйл;
@@ -1291,7 +1477,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Source:** Phase0 FR-ADM-008; `product-table.tsx`, `category-table.tsx`
 - **Priority · Phase · Status:** Must · PH3 · partial. Бүтээгдэхүүн/ангиллын текстэд action болон reversibility байна. Зургийн тоо (impact) болон зураг устгах баталгаажуулалт байхгүй.
 - **Verification:** Inspection — үйлдэл бүрийн цонхны текстийг 4 элементийн checklist-ээр
-- **Acceptance:** 5 үйлдэл тус бүрийн цонхонд 4 элемент бүгд байна. Жишээ: «"Ногоон Дарь Эх"-ийг бүрмөсөн устгах уу? 4 зураг хамт устана. Нийтийн холбоос 404 болно. Буцаах боломжгүй.»
+- **Өмнөх (v2.5):** үйлдлүүд «бүтээгдэхүүн архивлах, бүтээгдэхүүн бүрмөсөн устгах, ангилал устгах, зураг устгах, `delivery_enabled` солих (PH8)»; acceptance «5 үйлдэл». v2.6-д `ordering_enabled` солих, захиалга цуцлах нэмэгдсэн (D-13).
+- **Acceptance:** UI-д байгаа үйлдэл тус бүрийн цонхонд 4 элемент бүгд байна. Жишээ: «"Ногоон Дарь Эх"-ийг бүрмөсөн устгах уу? 4 зураг хамт устана. Нийтийн холбоос 404 болно. Буцаах боломжгүй.»
 
 #### FR-ADM-720 — Баталгаажуулах цонхны зан төлөв
 **Statement:** Баталгаажуулах цонх нь дараахыг хангана **shall**:
@@ -1337,7 +1524,8 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 #### FR-SET-130 — Зөвхөн admin өөрчилнө
 **Statement:** Систем `system_settings`-ийн update-ийг зөвхөн admin-д зөвшөөрнө **shall**. Customer эсвэл anon-ийн update нь мөрийг өөрчлөхгүй **shall**.
 - **Source:** Phase0 FR-SET-003; RLS `system_settings_update_admin`. Admin API endpoint байхгүй.
-- **Priority · Phase · Status:** Must · PH3 · partial (RLS бий; admin update endpoint PH8)
+- **Өмнөх (v2.5):** Status «Must · PH3 · partial (RLS бий; admin update endpoint PH8)».
+- **Priority · Phase · Status:** Must · PH3 · partial (RLS бий; admin update endpoint PH5 — зөвхөн `ordering_enabled`, FR-ADM-510, FR-SET-240)
 - **Verification:** Test — customer session-ээр Supabase update оролдох
 - **Acceptance:** Customer update → 0 мөр өөрчлөгдөнө.
 
@@ -1348,29 +1536,57 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Test — PH8-д: toggle солиод 60 s хүртэл 5 s тутам GET хийх
 - **Acceptance:** ≤ 60 s-д шинэ утга.
 
+#### FR-SET-150 — `ordering_enabled` тохиргоо
+**Statement:** Систем `system_settings`-д «Онлайн захиалга» (`ordering_enabled`, boolean) тохиргоог migration-аар `false` утгатай seed хийнэ **shall**. `GET /api/v1/settings/public` нь түүнийг буцаана (FR-PUB-410) **shall**. Admin өөрчилснөөс хойш 60 секундийн дотор нийтийн хариу шинэ утгыг буцаана **shall**.
+- **Rationale:** D-13 (3): захиалгыг кодын өөрчлөлтгүйгээр нээж, хаана (SMS gateway бэлэн биш, дэлгүүрийн ачаалал). `false` default нь admin-ыг санаатайгаар нээхийг шаардана. D-14: захиалга унтраалттай үед ч сайт каталог, «Асуулт асуух»-тай нээгдэнэ (FR-PUB-430).
+- **Source:** Owner шийдвэр D-13 (2026-11-08); default `false`, admin асаана — owner шийдвэр D-14 (2026-11-08). Шинэ шаардлага, хуучин ID-гүй.
+- **Өмнөх (v2.6):** Source «Owner шийдвэр D-13 (2026-11-08). Default утга нь санал (§8). Шинэ шаардлага, хуучин ID-гүй.» Statement өөрчлөгдөөгүй.
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — `supabase db reset` → `ordering_enabled=false`; admin асаагаад 60 s дотор 5 s тутам public GET
+- **Acceptance:** Seed-ийн дараа `false`. Өөрчлөлт ≤ 60 s-д нийтэд харагдана.
+
 #### FR-SET-200 — Хүргэлтийн хаалт
-**Statement:** `delivery_enabled=false` үед систем ямар ч замаар шинэ захиалга үүсгэхийг зөвшөөрөхгүй байна **shall**.
-- **Rationale:** ADR-002, `delivery_enabled=false` хүчинтэй.
-- **Source:** Phase0 FR-SET-004, FR-ORD-008, NFR-SCA-003
+**Statement:** `delivery_enabled=false` үед систем ямар ч замаар хүргэлттэй захиалга үүсгэхийг зөвшөөрөхгүй байна **shall**. Дэлгүүрээс очиж авах захиалгыг `ordering_enabled` (FR-SET-150, FR-SET-230) тусад нь хаана **shall**.
+- **Rationale:** ADR-002, `delivery_enabled=false` хүчинтэй. D-13: очиж авах захиалга нь хүргэлтээс тусдаа.
+- **Source:** Phase0 FR-SET-004, FR-ORD-008, NFR-SCA-003; D-13
+- **Өмнөх (v2.5):** «`delivery_enabled=false` үед систем ямар ч замаар шинэ захиалга үүсгэхийг зөвшөөрөхгүй байна **shall**.»
 - **Priority · Phase · Status:** Must · PH3 · partial
 - **Verification:** children
 
 #### FR-SET-210 — API-ийн захиалгын хаалт
-**Statement:** `delivery_enabled=false` үед захиалга үүсгэх API (`POST /api/v1/orders`) нь `403` болон `FEATURE_DISABLED` кодтой алдааг буцааж, мөр үүсгэхгүй **shall**.
-- **Rationale:** Энэ release-д захиалгын route огт бүртгэгдээгүй (хүсэлт `404`). Энэ нь хаалтыг хангаж байгаа ч Phase 0-ийн `403` гэрээтэй таарахгүй. PH8-д route нэмэхдээ service-ийн хаалтыг заавал оруулна.
-- **Source:** Phase0 FR-SET-004, FR-ORD-008; `supabase/migrations/20260716154420_rls_policies.sql` (тайлбар: «gate enforced at the SERVICE layer»)
-- **Priority · Phase · Status:** Must · PH8 · partial (route байхгүй → захиалга үүсэхгүй; `403` хэрэгжээгүй)
-- **Verification:** Test — `POST /api/v1/orders` → энэ release-д `404`, PH8-аас `403` (toggle false)
-- **Acceptance:** Аль ч тохиолдолд `orders` хүснэгтэд мөр нэмэгдэхгүй.
+**Statement:** Захиалга үүсгэх API (`POST /api/v1/orders`) нь `ordering_enabled=false` үед, эсвэл `delivery_enabled=false` үед `fulfilment=delivery` хүсэлтэд `403` болон `FEATURE_DISABLED` кодтой алдааг буцааж, мөр үүсгэхгүй **shall**.
+- **Rationale:** Одоогоор захиалгын route бүртгэгдээгүй (хүсэлт `404`) тул хаалт хангагдаж байгаа ч `403` гэрээтэй таарахгүй. Route нэмэхдээ хоёр хаалтыг service давхаргад заавал оруулна (FR-SET-230, FR-SET-240).
+- **Source:** Phase0 FR-SET-004, FR-ORD-008; `supabase/migrations/20260716154420_rls_policies.sql` (тайлбар: «gate enforced at the SERVICE layer»); D-13
+- **Өмнөх (v2.5):** «`delivery_enabled=false` үед захиалга үүсгэх API (`POST /api/v1/orders`) нь `403` болон `FEATURE_DISABLED` кодтой алдааг буцааж, мөр үүсгэхгүй **shall**.» Must · PH8 · partial. Verification: «энэ release-д `404`, PH8-аас `403` (toggle false)».
+- **Priority · Phase · Status:** Must · PH5 · partial (route байхгүй → захиалга үүсэхгүй; `403` хэрэгжээгүй)
+- **Verification:** Test — route-гүй үед `404`; route нэмсний дараа `ordering_enabled=false` → `403`, `fulfilment=delivery` → `403`
+- **Acceptance:** Хаалттай аль ч тохиолдолд `orders` хүснэгтэд мөр нэмэгдэхгүй.
 
 #### FR-SET-220 — DB түвшний захиалгын хаалт
-**Statement:** `delivery_enabled=false` үед нэвтэрсэн customer Supabase client-ээр `orders` эсвэл `order_items`-д шууд insert хийх оролдлого амжилтгүй болно **shall**.
+**Statement:** Тохиргооноос үл хамааран anon эсвэл нэвтэрсэн customer Supabase client-ээр `orders` эсвэл `order_items`-д шууд insert хийх оролдлого амжилтгүй болно **shall**. Захиалгыг зөвхөн API service (FR-SET-230-ийн хаалттай) үүсгэнэ **shall**.
 - **Rationale:** RLS `orders_insert_own` нь toggle-ийг шалгадаггүй тул API-г тойрох зам нээлттэй байж болзошгүй (table grants-аас хамаарна). Consistency (FR-SET-210) болон defense in depth.
 - **Source:** `20260716154420_rls_policies.sql` (`orders_insert_own`), `20260719104500_table_grants.sql`
-- **Priority · Phase · Status:** Must · PH3 · implemented (`supabase/migrations/20261030120000_explicit_table_grants.sql`: `orders`, `order_items`, `delivery_assignments`-д API role-уудад grant байхгүй; test `backend/api/tests/rls.integration.test.ts` — `42501`). Захиалгын функц хэрэгжих үед тусдаа migration-оор grant нэмж, энэ хаалтыг `delivery_enabled`-ийн service-ийн хаалтаар орлуулна.
+- **Priority · Phase · Status:** Must · PH3 · implemented (`supabase/migrations/20261030120000_explicit_table_grants.sql`: `orders`, `order_items`, `delivery_assignments`-д API role-уудад grant байхгүй; test `backend/api/tests/rls.integration.test.ts` — `42501`). Зочны захиалга API service-ээр явдаг тул захиалгын функц хэрэгжихэд anon/authenticated-д insert grant нэмэхгүй.
+- **Өмнөх (v2.5):** Statement «`delivery_enabled=false` үед нэвтэрсэн customer Supabase client-ээр `orders` эсвэл `order_items`-д шууд insert хийх оролдлого амжилтгүй болно **shall**.» Status-ийн төгсгөл: «Захиалгын функц хэрэгжих үед тусдаа migration-оор grant нэмж, энэ хаалтыг `delivery_enabled`-ийн service-ийн хаалтаар орлуулна.»
 - **Өмнөх (v2.3):** Status «Must · PH3 · unknown (not checked: grants-ийн бодит үр дүнг runtime дээр шалгаагүй)».
 - **Verification:** Test — customer JWT-ээр `supabase.from('orders').insert(...)`
 - **Acceptance:** Insert амжилтгүй (RLS эсвэл permission алдаа), мөр нэмэгдэхгүй.
+
+#### FR-SET-230 — `ordering_enabled`-ийн API хаалт
+**Statement:** `ordering_enabled=false` үед API-ийн service давхарга захиалга үүсгэх болон checkout-ын OTP илгээх хүсэлтийг `403 FEATURE_DISABLED`-ээр татгалзаж, мөр үүсгэхгүй, SMS илгээхгүй **shall**. Хаалт нь зөвхөн UI-д биш, service давхаргад байна **shall**. Захиалга шалгах (FR-ORD-310) болон admin-ы захиалгын удирдлага хаалттай үед ч ажиллана **shall**.
+- **Rationale:** D-13: UI-г тойрсон шууд API хүсэлт ч захиалга үүсгэх ёсгүй (NFR-MAINT-110).
+- **Source:** Owner шийдвэр D-13 (2026-11-08). Шинэ шаардлага.
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — toggle `false`: UI-гүй шууд захиалга, OTP хүсэлт → `403`, `orders` мөр 0, SMS mock дуудлага 0; lookup ба admin төлөв солих → ажиллана
+- **Acceptance:** Дээрх 3 нөхцөл бүгд хангагдана.
+
+#### FR-SET-240 — Хүргэлтийн түгжээ
+**Statement:** Энэ release-д `delivery_enabled`-ийг өөрчлөх admin API endpoint байхгүй, admin UI-д түгжээтэй (FR-ADM-520) байна **shall**. API нь `fulfilment=delivery`-тэй захиалгыг `403 FEATURE_DISABLED`-ээр татгалзана **shall**.
+- **Rationale:** ADR-002; AGENTS.md: owner зөвшөөрөх хүртэл `delivery_enabled=false`. D-13 (3): хүргэлт нь түгжээтэй, идэвхгүй тохиргоо.
+- **Source:** D-13; ADR-002
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Inspection — settings endpoint нь зөвхөн `ordering_enabled`-ийг өөрчилнө; Test — `fulfilment=delivery` → `403`
+- **Acceptance:** `delivery_enabled`-ийг API-аар өөрчлөх зам 0. Хүргэлттэй захиалга 0.
 
 ### 4.11 Нээлтийн интро (FR-INTRO)
 
@@ -1638,10 +1854,11 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** children
 
 #### FR-AUD-110 — Өөрчлөх үйлдлийг бүртгэх
-**Statement:** Admin бүтээгдэхүүн, ангилал, зураг, inquiry-ийн төлөвийг үүсгэх, засах, устгах үйлдэл бүр амжилттай болсны дараа систем нэг audit мөр нэмнэ **shall**.
+**Statement:** Admin бүтээгдэхүүн, ангилал, зураг, inquiry-ийн төлөв, захиалгын төлөв (цуцлах шалтгаан орно), тохиргоог үүсгэх, засах, устгах үйлдэл бүр амжилттай болсны дараа систем нэг audit мөр нэмнэ **shall**.
+- **Өмнөх (v2.5):** «Admin бүтээгдэхүүн, ангилал, зураг, inquiry-ийн төлөвийг үүсгэх, засах, устгах үйлдэл бүр амжилттай болсны дараа систем нэг audit мөр нэмнэ **shall**.» Захиалга, тохиргоо D-13-аар нэмэгдсэн.
 - **Rationale:** Хариуцлага, алдааны шинжилгээ.
 - **Source:** Phase0 FR-AUD-001; code `backend/api/src/services/product.service.ts:153`, `media.service.ts:190`, `category.service.ts`, `inquiry.service.ts`
-- **Priority · Phase · Status:** Must · PH3 · implemented (`backend/api/src/services/product.service.ts`). Үндсэн бичилт ба audit бичилт нь атомик биш (кодын тайлбар).
+- **Priority · Phase · Status:** Must · PH3 · implemented (`backend/api/src/services/product.service.ts`; захиалга, тохиргооны хэсэг planned). Үндсэн бичилт ба audit бичилт нь атомик биш (кодын тайлбар).
 - **Verification:** Test — CRUD үйлдэл бүрийн дараа `audit_logs`-ийн мөрийн тоог шалгана (planned).
 - **Acceptance:** Амжилттай үйлдэл бүрт яг 1 мөр нэмэгдэнэ. Бүтэлгүй (4xx) үйлдэлд мөр нэмэгдэхгүй.
 
@@ -1671,11 +1888,12 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Acceptance:** Эхний хуудсанд шинэ 20 мөр гарна. Filter ажиллана. customer → `403`.
 - **States:** loading, empty («Бүртгэл алга»), error (дахин ачаалах).
 
-#### FR-AUD-150 — Delivery toggle-ийг үргэлж бүртгэх
-**Statement:** `delivery_enabled` тохиргоог өөрчлөх үйлдэл бүр хуучин болон шинэ утгатай audit мөр үүсгэнэ **shall**. Audit бичилт бүтэлгүйтвэл тохиргооны өөрчлөлтийг буцаана **shall**.
-- **Rationale:** Хүргэлтийг идэвхжүүлэх нь бизнесийн өндөр нөлөөтэй шийдвэр (ADR-002).
-- **Source:** Phase0 FR-AUD-005; FR-SET-007
-- **Priority · Phase · Status:** Must · PH8 · planned (admin settings endpoint байхгүй; `backend/api/src/services/settings.service.ts` нь зөвхөн унших)
+#### FR-AUD-150 — Захиалга, хүргэлтийн toggle-ийг үргэлж бүртгэх
+**Statement:** `ordering_enabled` болон `delivery_enabled` тохиргоог өөрчлөх үйлдэл бүр хуучин болон шинэ утгатай audit мөр үүсгэнэ **shall**. Audit бичилт бүтэлгүйтвэл тохиргооны өөрчлөлтийг буцаана **shall**.
+- **Rationale:** Хүргэлтийг идэвхжүүлэх нь бизнесийн өндөр нөлөөтэй шийдвэр (ADR-002). D-13: захиалгыг нээх, хаах нь audit-д бичигдэнэ.
+- **Source:** Phase0 FR-AUD-005; FR-SET-007; D-13
+- **Өмнөх (v2.5):** Гарчиг «Delivery toggle-ийг үргэлж бүртгэх». Statement «`delivery_enabled` тохиргоог өөрчлөх үйлдэл бүр хуучин болон шинэ утгатай audit мөр үүсгэнэ **shall**. …» Must · PH8 · planned.
+- **Priority · Phase · Status:** Must · PH5 · planned (`ordering_enabled` — PH5, `delivery_enabled` — PH8; admin settings endpoint байхгүй; `backend/api/src/services/settings.service.ts` нь зөвхөн унших)
 - **Verification:** Test — toggle-ийг асаах, унтраах; audit бичилтийг хүчээр алдаатай болгох.
 - **Acceptance:** Өөрчлөлт бүрт `metadata.old`/`metadata.new`-тэй 1 мөр нэмэгдэнэ. Audit алдааны үед тохиргоо хуучнаараа үлдэнэ.
 
@@ -1689,55 +1907,131 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 
 ### 4.14 Захиалга (FR-ORD)
 
-> Энэ хэсгийн шаардлагууд архитектурын бүрэн байдлын төлөө бүртгэгдэв. Захиалгын хүснэгтүүд (`orders`, `order_items`, `delivery_assignments`) болон RLS нь migration-д идэвхгүй байдлаар бий (ADR-002). Хэрэгжүүлэлт нь `delivery_enabled=true` болсны дараа PH8-д хийгдэнэ.
+> **v2.6 (D-12, D-13):** Энэ release-д зочин бүртгэлгүйгээр **дэлгүүрээс очиж авах** захиалга өгнө. Захиалгыг admin `ordering_enabled`-ээр (FR-SET-150) нээж, хаана. Хүргэлт, хүргэгч оноох, онлайн төлбөр идэвхгүй хэвээр (`delivery_enabled=false`, ADR-002). Захиалгын хүснэгтүүд (`orders`, `order_items`, `delivery_assignments`) болон RLS migration-д бий, гэхдээ одоогийн schema зочны захиалгад тохирохгүй (`orders.customer_id`, `address` нь `not null`) тул шинэ migration хэрэгтэй (append-only). [Prototype E](../nogoolin-prototype-e.html) нь mock өгөгдөлтэй дизайны лавлагаа, хэрэгжилтийн нотолгоо биш. Захиалгын priority нь Should: `ordering_enabled=false`-ээр launch хийж болох бөгөөд inquiry (Must) нь баталгаат суваг хэвээр (§8).
+>
+> **v2.7 (D-14):** Owner баталсан (2026-11-08): зочны захиалга **Should** хэвээр — захиалга унтраалттай үед ч сайт нээгдэж, каталог болон «Асуулт асуух»-ыг харуулна. `ordering_enabled`-ийн default `false`, admin асаана (FR-SET-150). OTP-ийн утгууд NIST SP 800-63B-4, OWASP-ийг дагана (FR-ORD-170, FR-ORD-171, NFR-SEC-253, NFR-SEC-270). Цуцлалт нь timeline-ийн алхам биш (FR-ORD-240, FR-ORD-320). Төлбөр энэ release-д дэлгүүрт хэвээр (FR-ORD-180 өөрчлөгдөөгүй); онлайн төлбөр, е-баримт нь §8 / R-01.
+>
+> **Өмнөх (v2.5):** «Энэ хэсгийн шаардлагууд архитектурын бүрэн байдлын төлөө бүртгэгдэв. Захиалгын хүснэгтүүд (`orders`, `order_items`, `delivery_assignments`) болон RLS нь migration-д идэвхгүй байдлаар бий (ADR-002). Хэрэгжүүлэлт нь `delivery_enabled=true` болсны дараа PH8-д хийгдэнэ.»
 
 #### FR-ORD-100 — Захиалга өгөх
-**Statement:** `delivery_enabled=true` үед нэвтэрсэн customer захиалга өгөх боломжтой байна **shall**.
-- **Source:** Phase0 FR-ORD-001…004
-- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
+**Statement:** `ordering_enabled=true` үед зочин бүртгэл, нэвтрэлтгүйгээр сагсандаа бараа хийж, утсаа SMS кодоор баталгаажуулан дэлгүүрээс очиж авах захиалга өгнө **shall**. Захиалга өгөх, шалгахад нэвтрэлт шаардахгүй **shall**.
+- **Rationale:** D-12 (6), D-13. Бүртгэл үүсгэлгүйгээр бараагаа нөөцлөнө; төлбөр, хүргэлтгүй тул эрсдэл бага.
+- **Source:** Owner шийдвэр D-12 (2026-11-03), D-13 (2026-11-08); Phase0 FR-ORD-001…004; Prototype E `#/cart`, `#/checkout`, `#/order/<no>`, `#/order-status`
+- **Өмнөх (v2.5):** «`delivery_enabled=true` үед нэвтэрсэн customer захиалга өгөх боломжтой байна **shall**.» Won't (this release) · PH8 · deferred.
+- **Priority · Phase · Status:** Should · PH5 · planned
 - **Verification:** children
 
 #### FR-ORD-110 — Захиалга үүсгэх
-**Statement:** `delivery_enabled=true` үед нэвтэрсэн customer хүчинтэй захиалга илгээхэд систем захиалгыг `status=pending`-тэй хадгалж `201`-ийг буцаана **shall**.
-- **Source:** Phase0 FR-ORD-001
-- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
-- **Verification:** Test — PH8
-- **Acceptance:** `201`, нэг `orders` мөр.
+**Statement:** `ordering_enabled=true` үед зочин OTP-оор (FR-ORD-170) баталгаажсан утастай хүчинтэй захиалгыг `POST /api/v1/orders`-оор илгээхэд систем захиалгыг `status=received` («Хүлээн авсан»), `fulfilment=pickup`-тайгаар `orders` болон `order_items`-д нэг transaction-оор хадгалж, `201` болон захиалгын дугаарыг (FR-ORD-111) буцаана **shall**. Баталгаажаагүй утас, хүчингүй сагс эсвэл хаалттай тохиргооны (FR-SET-230) үед мөр үүсгэхгүй **shall**.
+- **Source:** Phase0 FR-ORD-001; D-12, D-13
+- **Өмнөх (v2.5):** «`delivery_enabled=true` үед нэвтэрсэн customer хүчинтэй захиалга илгээхэд систем захиалгыг `status=pending`-тэй хадгалж `201`-ийг буцаана **shall**.» Won't (this release) · PH8 · deferred. Acceptance «`201`, нэг `orders` мөр.»
+- **Priority · Phase · Status:** Should · PH5 · planned (захиалгын route байхгүй)
+- **Verification:** Test — API integration: баталгаажсан хүсэлт → `201`; OTP-гүй → `401`; `ordering_enabled=false` → `403 FEATURE_DISABLED`; ижил хүсэлтийг давтах
+- **Acceptance:** 1) `201`, нэг `orders` мөр, сагсны мөр бүрт нэг `order_items` мөр. 2) Алдааны үед хэсэгчилсэн мөр үлдэхгүй. 3) Нэг баталгаажуулалтаар хоёр захиалга үүсэхгүй (давтан илгээлт idempotent).
+- **States:** busy — «Захиалж байна…», товч disabled; error — FR-ORD-160/171-ийн мессеж, сагс хэвээр; success — FR-ORD-111.
+
+#### FR-ORD-111 — Захиалгын дугаар ба баталгааны хуудас
+**Statement:** Систем захиалга бүрт давтагдашгүй, хүн уншихуйц дугаар (`NG-YYMMDD-NNNN`, жишээ `NG-261108-1234`) олгоно **shall**. Амжилттай захиалгын дараа `/order/{дугаар}` хуудас дугаар, бараа, нийт дүн, дэлгүүрийн хаяг, «Төлбөрийг дэлгүүрт авахдаа төлнө», «Авахад бэлэн болмогц SMS ирнэ» мэдэгдэл, «Захиалгаа шалгах» (FR-ORD-310) холбоосыг харуулна **shall**. Энэ хуудас зөвхөн захиалга өгсөн browser-ийн session-д шууд нээгдэж, бусад үед FR-ORD-310 руу шилжүүлнэ **shall**.
+- **Rationale:** Дугаар нь утсаар асуух, дэлгүүрт авахад хэрэглэгдэнэ. Дугаар таах замаар бусдын захиалгыг харахаас сэргийлнэ.
+- **Source:** D-13; Prototype E `#/order/<no>`. Шинэ шаардлага, хуучин ID-гүй.
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — нэг өдрийн 2 захиалга → өөр дугаар; DOM-д элементүүд; өөр browser-ээр URL нээх
+- **Acceptance:** 1) Дугаар `^NG-\d{6}-\d{4}$`, DB-д unique. 2) Хуудсанд 7 элемент. 3) Өөр browser-ээр нээхэд захиалгын мэдээлэл харагдахгүй, FR-ORD-310 руу шилжинэ.
 
 #### FR-ORD-120 — Захиалгын талбар
-**Statement:** Захиалга бүр `customer_id`, `customer_name`, `phone`, `address`, `status`, `total_amount`-ийг хадгална **shall**.
-- **Source:** Phase0 FR-ORD-002; `init_schema.sql` (`orders`)
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial (schema бий)
-- **Verification:** Inspection — schema
-- **Acceptance:** Багана бүгд байна.
+**Statement:** Захиалга бүр `order_no`, `customer_name`, `phone` (`^\d{8}$`, D-10), `fulfilment` (энэ release-д зөвхөн `pickup`), `status`, `total_amount`, `consent_at` (FR-ORD-160), `cancel_reason` (сонголттой; зөвхөн `cancelled` үед заавал, FR-ORD-240-ийн тогтмол утгын аль нэг), `cancel_note` (сонголттой, дотоод), `created_at`-ийг хадгална **shall**. `customer_id` нь сонголттой (зочны захиалгад `null`), `address` нь зөвхөн `fulfilment=delivery` үед заавал **shall**.
+- **Source:** Phase0 FR-ORD-002; `init_schema.sql` (`orders`); D-12, D-13; D-14 (цуцлалтын шалтгааны жагсаалт)
+- **Өмнөх (v2.5):** «Захиалга бүр `customer_id`, `customer_name`, `phone`, `address`, `status`, `total_amount`-ийг хадгална **shall**.» Won't (this release) · PH8 · partial (schema бий).
+- **Өмнөх (v2.6):** «… `consent_at` (FR-ORD-160), `cancel_reason` (сонголттой), `created_at`-ийг хадгална **shall**.» (`cancel_reason` нь чөлөөт текст, `cancel_note` байгаагүй.)
+- **Priority · Phase · Status:** Should · PH5 · planned (одоогийн schema-д `order_no`, `fulfilment`, `consent_at`, `cancel_reason`, `cancel_note` байхгүй; `customer_id`, `address` нь `not null`)
+- **Verification:** Inspection — шинэ migration; Test — `customer_id=null`, хаяггүй pickup захиалга insert амжилттай; `fulfilment=delivery` + хаяггүй → алдаа; `cancelled` + `cancel_reason`-гүй эсвэл жагсаалтад байхгүй утга → алдаа
+- **Acceptance:** Багана бүгд байна. Pickup захиалга хаяггүй хадгалагдана.
 
 #### FR-ORD-130 — Захиалгын мөр
-**Statement:** Захиалга нь 1 буюу түүнээс олон мөртэй (`product_id`, `quantity` ≥ 1, `unit_price`) байна **shall**. `total_amount` нь Σ(`quantity` × `unit_price`)-тэй тэнцэнэ **shall**.
-- **Rationale:** Phase 0-д нийлбэрийн дүрэм байгаагүй (Complete).
-- **Source:** Phase0 FR-ORD-003; `order_items`
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial (schema бий)
-- **Verification:** Test — PH8
-- **Acceptance:** Мөргүй захиалга → `400`. Нийлбэр зөрвөл → `400`.
+**Statement:** Захиалга нь 1 буюу түүнээс олон мөртэй (`product_id`, `quantity` 1–9, `unit_price`) байна **shall**. Сервер `unit_price`-ийг захиалга үүсгэх үеийн нийтлэгдсэн үнээс авч, client-ийн илгээсэн үнийг ашиглахгүй **shall**. `total_amount` нь Σ(`quantity` × `unit_price`)-тэй тэнцэнэ **shall**. Нийтлэгдээгүй эсвэл `out_of_stock` бүтээгдэхүүнтэй мөрийг татгалзана **shall**.
+- **Rationale:** Phase 0-д нийлбэрийн дүрэм байгаагүй (Complete). Client-ийн үнийг авбал хуурамч үнээр захиалах боломжтой. 9 нь prototype-ийн `CART_MAX_QTY`.
+- **Source:** Phase0 FR-ORD-003; `order_items`; D-13; Prototype E (`CART_MAX_QTY = 9`)
+- **Өмнөх (v2.5):** «Захиалга нь 1 буюу түүнээс олон мөртэй (`product_id`, `quantity` ≥ 1, `unit_price`) байна **shall**. `total_amount` нь Σ(`quantity` × `unit_price`)-тэй тэнцэнэ **shall**.» Won't (this release) · PH8 · partial (schema бий). Acceptance «Мөргүй захиалга → `400`. Нийлбэр зөрвөл → `400`.»
+- **Priority · Phase · Status:** Should · PH5 · planned (schema бий; тоо хэмжээний хязгаар, серверийн үнийн дүрэм байхгүй)
+- **Verification:** Test — client үнийг өөрчилж илгээх; `quantity=10`; draft болон out_of_stock бараа
+- **Acceptance:** Мөргүй захиалга → `400`. `quantity=10` → `400`. DB-д серверийн үнэ хадгалагдана. Out_of_stock → `409`, мессеж барааны нэрийг заана.
 
 #### FR-ORD-140 — Захиалгын төлөв
-**Statement:** Захиалгын `status` нь зөвхөн `pending`, `confirmed`, `delivering`, `completed`, `cancelled` утгатай байна **shall**.
-- **Source:** Phase0 FR-ORD-004
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial (schema бий)
-- **Verification:** Inspection
-- **Acceptance:** Өөр утга DB-д хүлээн авагдахгүй.
+**Statement:** Захиалгын `status` нь зөвхөн `received` («Хүлээн авсан»), `preparing` («Бэлтгэж байна»), `ready` («Авахад бэлэн»), `picked_up` («Авсан»), `cancelled` («Цуцалсан») утгатай байна **shall**. Хэвийн дараалал нь Хүлээн авсан → Бэлтгэж байна → Авахад бэлэн → Авсан; «Авсан»-аас бусад төлөвөөс «Цуцалсан» руу шилжиж болно **shall**. «Авсан», «Цуцалсан» нь эцсийн төлөв **shall**.
+- **Rationale:** D-13 (admin prototype-ийн төлөвийн урсгал). Очиж авахад `delivering` хэрэггүй; хүргэлт идэвхжихэд (PH8) нэмнэ.
+- **Source:** Phase0 FR-ORD-004; D-13
+- **Өмнөх (v2.5):** «Захиалгын `status` нь зөвхөн `pending`, `confirmed`, `delivering`, `completed`, `cancelled` утгатай байна **shall**.» Won't (this release) · PH8 · partial (schema бий).
+- **Priority · Phase · Status:** Should · PH5 · planned (DB enum `order_status` хуучин утгатай; migration хэрэгтэй)
+- **Verification:** Inspection — enum/check; Test — хориотой шилжилт (FR-ORD-210)
+- **Acceptance:** Өөр утга DB-д хүлээн авагдахгүй. API-ийн утга ба Монгол шошго 1:1.
+
+#### FR-ORD-150 — Сагсыг төхөөрөмж дээр хадгалах
+**Statement:** Сагс нь бүртгэлгүй, зөвхөн тухайн browser-ийн local storage-д (`product_id`, `quantity`) хадгалагдана **shall**. Зочин `/cart`-д мөр бүрийн тоог 1–9 хооронд өөрчилж, мөрийг хасна **shall**. Хуудас дахин ачаалах, browser хаах, `ordering_enabled` унтрахад сагсны агуулга хадгалагдана **shall**. Сагсыг харуулахдаа үнэ, нөөцийг API-аас дахин уншиж, нийтлэгдээгүй эсвэл дууссан барааг «Одоо захиалах боломжгүй» гэж тэмдэглэн нийт дүнгээс хасна **shall**. Амжилттай захиалгын дараа сагс хоосорно **shall**.
+- **Rationale:** D-12 (6): бүртгэлгүй, сагс browser-т. Сагсанд хувийн мэдээлэл хадгалахгүй.
+- **Source:** D-12, D-13; Prototype E `#/cart`. Шинэ шаардлага, хуучин ID-гүй.
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — Playwright: 2 бараа нэмж reload; тоо 0 ба 10; fixture бараа draft болсны дараа сагс нээх
+- **Acceptance:** 1) Reload-ийн дараа ижил агуулга. 2) Тоо 1–9-өөс гарахгүй. 3) Draft болсон бараа нийт дүнд орохгүй, тэмдэглэгээтэй. 4) Storage-д нэр, утас байхгүй.
+- **States:** empty — «Сагс хоосон байна» + «Бүтээгдэхүүн үзэх»; error — «Үнийг шалгаж чадсангүй. Дахин оролдоно уу.», checkout товч disabled; disabled — FR-PUB-430; success — мөрүүд + нийт дүн.
+
+#### FR-ORD-160 — Checkout-ын талбар ба зөвшөөрөл
+**Statement:** `/checkout` нь зөвхөн нэр (trim хийсний дараа ≥ 2 тэмдэгт), утас (яг 8 цифр, `^\d{8}$`, D-10) болон хувийн мэдээллийн зөвшөөрлийн checkbox-той байна **shall**. Checkbox анхдагчаар сонгогдоогүй, текст нь мэдээллийг юунд ашиглахыг (захиалгын талаар холбогдох, явцыг SMS-ээр мэдэгдэх) хэлнэ **shall**. Зөвшөөрөлгүй эсвэл буруу талбартай үед SMS код илгээхгүй **shall**. API нь ижил дүрмээр дахин шалгаж, зөрчилтэй үед `400 VALIDATION_ERROR` буцаана **shall**. Email, хаяг асуухгүй **shall**.
+- **Rationale:** Хамгийн бага өгөгдөл (NFR-SEC-500). Утасны дүрэм inquiry-тэй ижил (`phoneSchema`-г `order.schema.ts` аль хэдийн ашигладаг, D-10).
+- **Source:** D-10, D-12, D-13; Prototype E `#/checkout`; `packages/validation-schemas/src/common.ts` (`phoneSchema`)
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — нэр 1 тэмдэгт, утас `9911223`, `+976 99112233`, зөвшөөрөлгүй — form болон API-г тус тусад
+- **Acceptance:** 1) Тохиолдол бүрт талбарын Монгол мессеж (`aria-describedby`), SMS илгээгдэхгүй. 2) API `400`, мөр үүсэхгүй. 3) Form-д email, хаягийн input байхгүй.
+- **States:** error — талбарын мессеж + алдааны хураангуй; busy — FR-ORD-170.
+
+#### FR-ORD-170 — SMS нэг удаагийн код (OTP)
+**Statement:** Checkout-ын талбар зөв үед систем тухайн утас руу 6 оронтой, криптографын санамсаргүй (NFR-SEC-270), нэг удаагийн кодыг SMS-ээр илгээнэ **shall**. Код илгээгдсэнээс хойш 5 минут хүчинтэй, нэг л удаа ашиглагдана **shall**. Тухайн утас, зорилгод шинэ код олгоход өмнөх код тэр даруй хүчингүй болно **shall**. Зөв код оруулсны дараа л захиалга үүснэ (FR-ORD-110) **shall**. UI нь кодыг маскалсан утас руу илгээснийг («9911···· дугаарт 6 оронтой код илгээлээ») харуулна **shall**.
+- **Rationale:** D-12 (6), D-13. Утас нь захиалагчийн цорын ганц таних тэмдэг тул эзэмшлийг баталгаажуулж, бусдын дугаараар хуурамч захиалга өгөхөөс сэргийлнэ. NIST SP 800-63B-4 §3.1.3-ийн дээд хязгаараас (≤ 10 мин) хатуу: 5 минут.
+- **Source:** D-12, D-13; Prototype E `#/checkout` (алхам 2); D-14 (owner 2026-11-08): NIST SP 800-63B-4 §3.1.3, OWASP Authentication / Forgot Password / MFA cheat sheet (§1.5).
+- **Өмнөх (v2.6):** Statement-д «6 оронтой, санамсаргүй, нэг удаагийн кодыг» гэж бичигдсэн, «шинэ код өмнөхийг хүчингүй болгоно» өгүүлбэр байгаагүй. Source «… 5 минут нь санал (§8).» Verification-д шинэ код олгосны дараах хуучин кодын тохиолдол байгаагүй.
+- **Priority · Phase · Status:** Should · PH5 · planned (SMS gateway сонгоогүй; нэр дэвшигч verify.mn, §8)
+- **Verification:** Test — SMS provider mock: зөв код → захиалга; буруу → `400`; 5 минутын дараа → `410 CODE_EXPIRED`; ашигласан кодыг дахин → татгалзсан; дахин илгээсний дараа хуучин код → татгалзсан
+- **Acceptance:** 1) Код 6 цифр. 2) Хугацаа дууссан, ашигласан эсвэл шинэ кодоор орлогдсон код захиалга үүсгэхгүй. 3) Код API хариу, лог, URL-д гарахгүй (NFR-SEC-270).
+- **States:** busy — «Код илгээж байна…»; error — «Код буруу байна», «Кодын хугацаа дууссан — дахин илгээнэ үү», «SMS илгээж чадсангүй. Дахин оролдоно уу.»; success — захиалга илгээгдэнэ.
+
+#### FR-ORD-171 — Код дахин илгээх ба оролдлогын хязгаар
+**Statement:** «Кодыг дахин илгээх» товч өмнөх илгээлтээс 60 секундийн дараа идэвхжиж, хүлээх хугацааг («Кодыг дахин илгээх (42 сек)») харуулна **shall**. API нь 60 секундээс өмнөх дахин илгээх хүсэлтэд SMS илгээхгүй **shall**. Нэг кодод 5 буруу оролдлогын дараа систем тухайн кодыг хүчингүй болгож, шинэ код авахыг шаардана **shall**. NFR-SEC-253-ийн хязгаар хэтэрвэл `429 RATE_LIMIT_EXCEEDED` буцааж, хүлээх хугацааг заасан мессеж («Хэт олон оролдлого хийлээ. 1 минутын дараа дахин оролдоно уу.») харуулна **shall**. Оруулсан нэр, утас хадгалагдана **shall**.
+- **Rationale:** Код таах (10⁶ хувилбар), SMS-ийн зардал, spam-аас хамгаална. Нэг утсанд цагт хамгийн ихдээ 5 код × 5 оролдлого = 25 буруу оролдлого боломжтой (NFR-SEC-253). NIST SP 800-63B-4 §3.2.2, §3.1.3.2 нь шинэ код олгоход тэглэгддэггүй, дараалсан буруу оролдлогын тоолуурыг (≤ 100) шаарддаг; цагийн хязгаар дангаараа үүнийг урт хугацаанд хангахгүй тул ийм тоолуур нэмэх эсэх нь §8-д нээлттэй.
+- **Source:** D-13; Prototype E (`RESEND_S = 60`); D-14 (owner 2026-11-08): NIST SP 800-63B-4 §3.2.2, OWASP Authentication cheat sheet (§1.5).
+- **Өмнөх (v2.6):** Statement-д API талын 60 s хаалтын өгүүлбэр байгаагүй. Source «D-13; Prototype E (`RESEND_S = 60`). 5 оролдлого нь санал (§8).» Rationale «Код таах (10⁶ хувилбар), SMS-ийн зардал, spam-аас хамгаална.»
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — 60 s-ээс өмнө дахин илгээх (UI disabled, API `429`); 6 дахь оролдлого
+- **Acceptance:** 1) Товч 60 s `aria-disabled`; тоолуур screen reader-т секунд тутам зарлагдахгүй. 2) 5 буруу оролдлогын дараа зөв код ч татгалзагдана. 3) Мессежид HTTP код байхгүй (NFR-USE-220).
+
+#### FR-ORD-180 — Зөвхөн очиж авах, төлбөр дэлгүүрт
+**Statement:** `delivery_enabled=false` үед checkout нь хүргэлтийн сонголтгүй, «Дэлгүүрээс очиж авна» гэсэн нэг арга болон дэлгүүрийн хаягийг харуулна **shall**. Энэ release-д онлайн төлбөр байхгүй; checkout болон баталгааны хуудас «Төлбөрийг дэлгүүрт авахдаа төлнө» гэж бичнэ **shall**. API нь `fulfilment=delivery` хүсэлтийг татгалзана (FR-SET-240) **shall**.
+- **Rationale:** D-12 (6): хүргэлт бий болох хүртэл зөвхөн очиж авна. ADR-002.
+- **Source:** D-12, D-13; ADR-002; Prototype E `#/checkout`
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Inspection — checkout-д хүргэлт, хаяг, картын талбар байхгүй; Test — `fulfilment=delivery` → `403`
+- **Acceptance:** Хүргэлт, онлайн төлбөрийн элемент 0. Дэлгүүрийн хаяг харагдана.
+
+#### FR-ORD-190 — Нийт дүн, далд төлбөргүй
+**Statement:** Захиалгыг батлахаас өмнө checkout нь мөр бүрийн нэр, тоо, нэгжийн үнэ, мөрийн дүн болон нийт дүнг MNT-ээр харуулна **shall**. Нийт дүн нь FR-ORD-130-ийн Σ-тэй тэнцэж, хүргэлт, үйлчилгээний хураамж зэрэг нэмэлт төлбөр агуулахгүй **shall**. Серверийн үнэ харуулсан үнээс өөр болсон бол систем захиалга үүсгэхгүйгээр шинэ дүнг харуулж, дахин батлуулна **shall**.
+- **Rationale:** D-13: далд төлбөргүй. Дэлгүүрт төлөх дүн checkout-д харсантай ижил.
+- **Source:** D-13; Prototype E `#/checkout`
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — checkout нээсний дараа admin үнийг солиод захиалах
+- **Acceptance:** 1) UI-ийн нийт дүн = DB-ийн `total_amount`. 2) Нэмэлт төлбөрийн мөр 0. 3) Үнэ өөрчлөгдсөн үед `409`, шинэ дүн харагдаж, мөр үүсэхгүй.
 
 #### FR-ORD-200 — Захиалгын удирдлага (admin)
-**Statement:** Admin захиалгыг харах, төлөв солих, хүргэгч оноох боломжтой байна **shall**.
-- **Source:** Phase0 FR-ORD-005, 006
-- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
+**Statement:** Admin захиалгыг харах, хайх, төлөв солих, шалтгаантай цуцлах боломжтой байна **shall**. Хүргэгч оноох нь хүргэлт идэвхжсэний дараа (FR-ORD-220) **shall**.
+- **Source:** Phase0 FR-ORD-005, 006; D-13
+- **Өмнөх (v2.5):** «Admin захиалгыг харах, төлөв солих, хүргэгч оноох боломжтой байна **shall**.» Won't (this release) · PH8 · deferred.
+- **Priority · Phase · Status:** Should · PH5 · planned (UI нь FR-ADM-600)
 - **Verification:** children
 
 #### FR-ORD-210 — Захиалга харах ба төлөв солих
-**Statement:** Admin бүх захиалгыг шинэ нь эхэндээ дарааллаар харж, `status`-ийг солих боломжтой байна **shall**. Солилт бүр audit бичлэг үүсгэнэ **shall**.
-- **Source:** Phase0 FR-ORD-005; RLS `orders_update_admin`
-- **Priority · Phase · Status:** Won't (this release) · PH8 · deferred
-- **Verification:** Test — PH8
-- **Acceptance:** Customer-ийн update → `403`.
+**Statement:** Admin API нь захиалгыг шинэ нь эхэндээ дарааллаар буцааж, `status`-ийг зөвхөн FR-ORD-140-ийн зөвшөөрөгдсөн шилжилтээр солино **shall**. Хориотой шилжилтэд (жишээ `picked_up → preparing`, `cancelled → *`) `409` буцаана **shall**. Шилжилтийн дүрмийг service давхаргад шалгана **shall**. Солилт бүр хуучин, шинэ төлөвтэй audit бичлэг үүсгэнэ **shall** (FR-AUD-110).
+- **Source:** Phase0 FR-ORD-005; RLS `orders_update_admin`; D-13
+- **Өмнөх (v2.5):** «Admin бүх захиалгыг шинэ нь эхэндээ дарааллаар харж, `status`-ийг солих боломжтой байна **shall**. Солилт бүр audit бичлэг үүсгэнэ **shall**.» Won't (this release) · PH8 · deferred. Acceptance «Customer-ийн update → `403`.»
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — зөвшөөрөгдсөн ба хориотой шилжилт бүр; anon/customer; audit мөр
+- **Acceptance:** Зөвшөөрөгдсөн → `200` + 1 audit мөр. Хориотой → `409`, төлөв хэвээр. Customer → `403`, anon → `401`.
 
 #### FR-ORD-220 — Хүргэгч оноох
 **Statement:** Admin захиалгад хүргэгч (delivery staff) оноох боломжтой байна **shall**.
@@ -1746,12 +2040,48 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Test — PH8
 - **Acceptance:** Оноолт `delivery_assignments`-д хадгалагдана.
 
+#### FR-ORD-230 — «Авахад бэлэн» SMS мэдэгдэл
+**Statement:** Захиалга `ready` төлөвт шилжихэд систем захиалагчийн утас руу захиалгын дугаар, «авахад бэлэн» мэдээлэл, дэлгүүрийн хаягтай нэг SMS илгээнэ **shall**. SMS-ийн загвар `{no}` орлуулагчтай байна **shall**. SMS илгээлт бүтэлгүйтвэл төлөвийн өөрчлөлт хадгалагдаж, admin-д «SMS илгээгдсэнгүй — утсаар холбогдоно уу» гэж харуулж, дахин илгээх боломж өгнө **shall**. `ready` болон `cancelled` (FR-ORD-240)-аас бусад төлөвийн өөрчлөлтөд SMS илгээхгүй **shall**.
+- **Rationale:** D-13: захиалагч дэлгүүрт хэзээ очихоо мэднэ. D-14: цуцлалтыг ч SMS-ээр мэдэгдэнэ.
+- **Source:** D-13; Prototype E admin (`smsReady` загвар, «SMS илгээж бэлэн болгох»); D-14
+- **Өмнөх (v2.6):** Сүүлийн өгүүлбэр «Бусад төлөвийн өөрчлөлтөд SMS илгээхгүй **shall**.» Status «planned (SMS gateway §8)».
+- **Priority · Phase · Status:** Should · PH5 · planned (SMS gateway §8; нэр дэвшигч verify.mn)
+- **Verification:** Test — SMS provider mock: `ready` → 1 SMS, `preparing`, `picked_up` → 0; provider алдаа → төлөв `ready` + анхааруулга
+- **Acceptance:** 1) SMS-д захиалгын дугаар орсон. 2) Нэг шилжилтэд давхар SMS 0. 3) Алдааны үед admin-д мэдэгдэл ба retry.
+
+#### FR-ORD-240 — Шалтгаантай цуцлах
+**Statement:** Admin «Авсан»-аас бусад төлөвтэй захиалгыг цуцлахдаа шалтгааныг тогтмол жагсаалтаас заавал сонгоно **shall**: `out_of_stock` («Бараа дууссан»), `customer_request` («Хэрэглэгч хүссэн»), `pickup_expired` («Авах хугацаа хэтэрсэн»), `other` («Бусад»). Admin дотоод тэмдэглэл (≤ 300 тэмдэгт) нэмж болох бөгөөд `other` сонгосон үед тэмдэглэл заавал **shall**. Систем шалтгааныг `cancel_reason`-д, тэмдэглэлийг `cancel_note`-д болон хоёуланг audit-д хадгална **shall**. Дотоод тэмдэглэл захиалагчид (FR-ORD-320, SMS) хэзээ ч харагдахгүй **shall**. Цуцалсны дараа систем захиалагчийн утас руу захиалгын дугаар, «цуцлагдсан» мэдээлэл, шалтгааны шошготой нэг SMS илгээнэ **shall**; SMS бүтэлгүйтвэл цуцлалт хадгалагдаж, FR-ORD-230-ийн адил admin-д анхааруулга, дахин илгээх боломж өгнө **shall**. Цуцлахаас өмнө FR-ADM-710-ийн баталгаажуулалт гарна **shall**. Хүргэлт идэвхжих үед (PH8) жагсаалтад `delivery_unavailable` («Хүргэх боломжгүй») нэмэгдэнэ; энэ release-д уг утга байхгүй **shall**.
+- **Rationale:** D-14: захиалагч яагаад цуцлагдсаныг ойлгомжтой, тогтмол үгээр мэднэ; чөлөөт текст нь хувийн/дотоод мэдээлэл задруулах, үг хэллэг зөрөх эрсдэлтэй тул захиалагчид зөвхөн шошго очно. «Бусад»-д тэмдэглэл заавал — дотоод бүртгэлд шалтгаан алдагдахгүй.
+- **Source:** D-13; Prototype E admin; D-14 (owner 2026-11-08: тогтмол шалтгаан, SMS). Тэмдэглэлийг захиалагчаас нуух, «Бусад»-д заавал болгох нь шаардлага бичигчийн сонголт (owner-ийн «бусад»-ыг болгоомжтой харуулах заавар) — §7.4.
+- **Өмнөх (v2.6):** «Admin „Авсан"-аас бусад төлөвтэй захиалгыг цуцлахдаа шалтгааныг (хоосон биш, ≤ 300 тэмдэгт) заавал оруулна **shall**. Систем шалтгааныг `cancel_reason`-д болон audit-д хадгална **shall**. Цуцлахаас өмнө FR-ADM-710-ийн баталгаажуулалт гарна **shall**.» Verification «шалтгаангүй → `400`; `picked_up` → `409`; амжилттай → audit-д шалтгаан». Acceptance «Шалтгаангүй цуцлалт 0. Цуцалсан захиалгын төлөв дахин өөрчлөгдөхгүй.»
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — шалтгаангүй → `400`; жагсаалтад байхгүй утга → `400`; `other` + тэмдэглэлгүй → `400`; `picked_up` → `409`; амжилттай → audit-д шалтгаан, SMS mock 1 дуудлага (тэмдэглэлгүй); provider алдаа → `cancelled` + анхааруулга
+- **Acceptance:** 1) Шалтгаангүй цуцлалт 0. 2) Цуцалсан захиалгын төлөв дахин өөрчлөгдөхгүй. 3) SMS болон lookup хариунд `cancel_note` 0. 4) Нэг цуцлалтад SMS ≤ 1.
+
 #### FR-ORD-300 — Өөрийн захиалгыг л харах
-**Statement:** Customer зөвхөн өөрийн `customer_id`-тай захиалгыг уншина **shall**. Өөр хэрэглэгчийн захиалга хариунд орохгүй **shall**.
-- **Source:** Phase0 FR-ORD-007; RLS `orders_select_own_or_admin`
-- **Priority · Phase · Status:** Won't (this release) · PH8 · partial (RLS бий)
-- **Verification:** Test — A/B customer, PH8
+**Statement:** Захиалгыг зөвхөн admin болон тухайн захиалагч (FR-ORD-310-ийн баталгаажуулалтаар) уншина **shall**. `customer_id`-тай захиалгыг customer зөвхөн өөрийн `customer_id`-аар уншина **shall**. Өөр захиалгын мэдээлэл хариунд орохгүй **shall**.
+- **Source:** Phase0 FR-ORD-007; RLS `orders_select_own_or_admin`; D-12, D-13
+- **Өмнөх (v2.5):** «Customer зөвхөн өөрийн `customer_id`-тай захиалгыг уншина **shall**. Өөр хэрэглэгчийн захиалга хариунд орохгүй **shall**.» Won't (this release) · PH8 · partial (RLS бий).
+- **Priority · Phase · Status:** Should · PH5 · partial (customer-ийн RLS бий; зочны баталгаажуулалт planned)
+- **Verification:** Test — A/B захиалга: A-ийн утас + B-ийн дугаар → олдохгүй; anon шууд DB select → 0 мөр
 - **Acceptance:** A-ийн хариунд B-ийн захиалга байхгүй.
+
+#### FR-ORD-310 — Захиалгаа шалгах
+**Statement:** `/order-status` хуудсанд зочин утас (8 цифр) болон захиалгын дугаар оруулж, тухайн утас руу илгээсэн OTP-г (FR-ORD-170, FR-ORD-171) баталгаажуулсны дараа л захиалгын төлөв, бараа, нийт дүнг харна **shall**. Утас ба дугаар таарахгүй үед систем захиалга байгаа эсэхийг илчлэхгүй, таарсантай ижил хариу («Мэдээлэл таарвал SMS код ирнэ») өгч, SMS илгээхгүй **shall**. `ordering_enabled=false` үед ч энэ хуудас ажиллана **shall**.
+- **Rationale:** D-12, D-13: бүртгэлгүй захиалагч явцаа шалгана. Дугаар таах замаар бусдын мэдээлэл харахаас сэргийлнэ (NFR-SEC-320).
+- **Source:** D-13; Prototype E `#/order-status`. Шинэ шаардлага.
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — зөв хос + OTP → төлөв; буруу хос → ижил хариу, SMS 0; OTP-гүй → өгөгдөл 0
+- **Acceptance:** 1) OTP-гүйгээр захиалгын өгөгдөл API хариунд 0. 2) Таарсан, таараагүй хосын хариу (текст, статус код) ижил. 3) Захиалга хаалттай үед хуудас ажиллана.
+- **States:** busy; error — «Код буруу байна», хязгаар (FR-ORD-171); success — FR-ORD-320.
+
+#### FR-ORD-320 — Явцын timeline
+**Statement:** Баталгаажсан шалгалтын хариу нь FR-ORD-140-ийн 4 алхмыг (Хүлээн авсан → Бэлтгэж байна → Авахад бэлэн → Авсан) дараалан, одоогийн алхмыг текстээр (өнгөөр дангаар бус) тэмдэглэн харуулна **shall**. «Цуцалсан» нь timeline-ийн алхам биш **shall**: цуцлагдсан захиалгад timeline-ийн оронд «Захиалга цуцлагдсан» гэсэн нэг мөр, FR-ORD-240-ийн шалтгааны шошго (жишээ «Шалтгаан: Бараа дууссан») болон цуцалсан огноог харуулна **shall**. `other` үед шошго «Бусад» байх бөгөөд дотоод тэмдэглэл (`cancel_note`) харагдахгүй **shall**.
+- **Source:** D-13; Prototype E `#/order-status`; D-14 (owner 2026-11-08: timeline-ийн алхам биш, нэг мөр + шалтгаан).
+- **Өмнөх (v2.6):** Statement-ийн сүүлийн өгүүлбэр «„Цуцалсан" захиалгад timeline-ийн оронд „Цуцалсан" төлөв болон цуцалсан огноог харуулна **shall**.» Source «… Цуцлалтыг timeline-ийн алхам болгох эсэх нь нээлттэй (§8).» Acceptance «Одоогийн алхам `aria-current="step"`-тэй. Цуцалсан захиалгад дараагийн алхам харагдахгүй.»
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — төлөв бүрийн fixture, шалтгаан бүрийн цуцалсан fixture (`other` + тэмдэглэлтэй); axe
+- **Acceptance:** 1) Одоогийн алхам `aria-current="step"`-тэй. 2) Цуцалсан захиалгад timeline-ийн алхам 0, «Захиалга цуцлагдсан» мөр 1, шалтгааны шошго харагдана. 3) `cancel_note`-ийн текст DOM болон API хариунд 0.
 
 ### 4.15 PWA (FR-PWA)
 
@@ -2142,13 +2472,32 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Inspection (Supabase Auth rate limit тохиргоо) ба Test — 6 буруу нэвтрэлт хийнэ.
 - **Acceptance:** 6 дахь оролдлого татгалзагдана.
 
+#### NFR-SEC-253 — SMS кодын илгээлтийн хязгаар
+**Statement:** API нь OTP SMS илгээлтийг нэг утасны дугаарт 1 цагт 5, нэг IP-д 1 цагт 10 удаагаар, нэг утсанд дараалсан илгээлтийн хооронд 60 секундээс доошгүй байхаар хязгаарлаж, хэтэрсэн хүсэлтэд SMS илгээхгүйгээр `429 RATE_LIMIT_EXCEEDED` буцаана **shall**. Хязгаарын утгууд env-ээр тохируулагдах бөгөөд production-ий default нь дээрх утгууд **shall**.
+- **Rationale:** SMS нь мөнгөтэй. Бусдын дугаар руу spam илгээх (SMS pumping), код таахаас хамгаална (FR-ORD-171).
+- **Source:** D-13; NFR-SEC-250; D-14 (owner 2026-11-08): NIST SP 800-63B-4 §3.2.2, OWASP Authentication / Forgot Password cheat sheet (§1.5).
+- **Өмнөх (v2.6):** «API нь OTP SMS илгээлтийг нэг утасны дугаарт 1 цагт 5, нэг IP-д 1 цагт 10 удаагаар хязгаарлаж, хэтэрсэн хүсэлтэд SMS илгээхгүйгээр `429 RATE_LIMIT_EXCEEDED` буцаана **shall**. Хязгаарын утгууд env-ээр тохируулагдана **shall**.» Source «D-13; NFR-SEC-250. Утгууд нь санал (§8).»
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Test — хязгаарыг багасгасан env-ээр утас ба IP тус бүр; нэг утсанд 60 s дотор 2 дахь хүсэлт
+- **Acceptance:** max+1 дэх хүсэлт `429`; SMS provider mock-ийн дуудлага max-аас хэтрэхгүй; 60 s дотор 2 дахь SMS 0.
+
 #### NFR-SEC-260 — Service worker-ийн cache-ийн хил
-**Statement:** Service worker нь дараах хүсэлтийн хариуг хэзээ ч cache-д хадгалахгүй **shall**: `/admin*`, `/profile`, `/wishlist`, `/login`, `/signup`, `/auth/*`, `/reset-password`, `/update-password` хуудас; `Authorization` header-тэй хүсэлт; GET биш хүсэлт; API-ийн `/cart`, `/inquiries/mine`, `/admin/*`. Хувийн өгөгдөл зөвхөн network-оос ирнэ **shall**.
+**Statement:** Service worker нь дараах хүсэлтийн хариуг хэзээ ч cache-д хадгалахгүй **shall**: `/admin*`, `/profile`, `/wishlist`, `/login`, `/signup`, `/auth/*`, `/reset-password`, `/update-password`, `/checkout`, `/order/*`, `/order-status` хуудас; `Authorization` header-тэй хүсэлт; GET биш хүсэлт; API-ийн `/cart`, `/inquiries/mine`, `/orders*`, `/admin/*`. Хувийн өгөгдөл зөвхөн network-оос ирнэ **shall**.
+- **Өмнөх (v2.5):** Жагсаалтад `/checkout`, `/order/*`, `/order-status` хуудас болон API `/orders*` байгаагүй (D-13-аар нэмэгдсэн).
 - **Rationale:** D-11. Хуваалцсан төхөөрөмж дээр гарсны (sign out) дараа өөр хүн хувийн мэдээлэл, admin өгөгдлийг offline-оор харахаас сэргийлнэ (NFR-SEC-320).
 - **Source:** Owner шийдвэр D-11 (2026-10-30).
 - **Priority · Phase · Status:** Must · PH5 · planned
 - **Verification:** Test — Playwright: admin болон customer-ээр нэвтэрч хамгаалагдсан хуудсуудаар орсны дараа Cache Storage-ийн бүх URL-ийг жагсааж, дээрх замуудын аль нь ч байхгүйг шалгана.
 - **Acceptance:** Хамгаалагдсан зам, хувийн API-ийн аль ч хариу Cache Storage-д 0. Offline үед эдгээр хуудас FR-PWA-220-ийн offline хуудсыг харуулна.
+
+#### NFR-SEC-270 — Нэг удаагийн кодын хадгалалт
+**Statement:** Систем OTP-г криптографын санамсаргүй генератороор (CSPRNG) үүсгэж, зөвхөн hash хэлбэрээр утас, зорилго (`checkout` эсвэл `lookup`), дуусах хугацаа, буруу оролдлогын тоотой хадгална **shall**. Тухайн утас, зорилгод шинэ код олгоход өмнөх кодын мөр хүчингүй болно **shall**. Кодыг API хариу, лог (SMS provider-ийн хүсэлт/хариуны лог орно), analytics, URL-д бичихгүй **shall**. Нэг зорилгын код өөр зорилгод хүчингүй **shall**.
+- **Rationale:** DB эсвэл лог алдагдсан ч хүчинтэй код задрахгүй. NIST SP 800-63B-4 §3.1.3 (approved random bit generator, нэг удаа хүлээн авах), OWASP Forgot Password cheat sheet (token-ийг hash-аар хадгалах, нэг удаагийн).
+- **Source:** D-13 (FR-ORD-170). Шинэ шаардлага. D-14 (owner 2026-11-08): NIST, OWASP (§1.5).
+- **Өмнөх (v2.6):** «Систем OTP-г криптографын санамсаргүй генератороор үүсгэж, зөвхөн hash хэлбэрээр утас, зорилго (`checkout` эсвэл `lookup`), дуусах хугацаатай хадгална **shall**. Кодыг API хариу, лог, analytics, URL-д бичихгүй **shall**. Нэг зорилгын код өөр зорилгод хүчингүй **shall**.» Source «D-13 (FR-ORD-170). Шинэ шаардлага.»
+- **Priority · Phase · Status:** Must · PH5 · planned
+- **Verification:** Inspection — OTP service, лог тохиргоо, SMS client-ийн лог; Test — DB-д plain код байхгүй, `lookup` код checkout-д татгалзагдана, дахин илгээсний дараа хуучин код татгалзагдана
+- **Acceptance:** DB, лог, хариунд plain код 0. Зорилго солих оролдлого амжилтгүй. Нэг утас, зорилгод хүчинтэй код ≤ 1.
 
 #### NFR-SEC-300 — Нэвтрэлт ба эрхийн хяналт
 **Statement:** Систем хамгаалагдсан өгөгдөлд хандах бүрд баталгаажуулалт, эрх, эзэмшлийг шалгана **shall**.
@@ -2226,10 +2575,12 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Acceptance:** Bundle-д service key олдохгүй.
 
 #### NFR-SEC-500 — Хувийн мэдээллийн хэрэглээ
-**Statement:** Inquiry-ийн утас болон нэрийг зөвхөн тухайн асуулгад хариулах зорилгоор admin-д харуулна **shall**. Нийтийн хуудас, лог, analytics-д дамжуулахгүй **shall**. API-ийн info түвшний лог request body-г бичихгүй **shall**.
+**Statement:** Inquiry болон захиалгын утас, нэрийг зөвхөн тухайн асуулгад хариулах, захиалгыг биелүүлэх зорилгоор admin-д харуулна **shall**. Захиалгын мэдээллийг checkout-ын зөвшөөрлийн (FR-ORD-160) хүрээнд л ашиглана **shall**. Нийтийн хуудас, лог, analytics-д дамжуулахгүй **shall**. API-ийн info түвшний лог request body-г бичихгүй **shall**. Owner тогтоосон хадгалах хугацаа (§8) дууссан мөрийн нэр, утсыг устгах эсвэл нэргүй болгоно **shall**.
+- **Өмнөх (v2.5):** «Inquiry-ийн утас болон нэрийг зөвхөн тухайн асуулгад хариулах зорилгоор admin-д харуулна **shall**. Нийтийн хуудас, лог, analytics-д дамжуулахгүй **shall**. API-ийн info түвшний лог request body-г бичихгүй **shall**.» Захиалга, зөвшөөрөл, хадгалах хугацаа D-12/D-13-аар нэмэгдсэн.
 - **Rationale:** Хэрэглэгчийн итгэлцэл. Хамгийн бага өгөгдөл цуглуулах зарчим.
+- **Тэмдэглэл (v2.7, D-14):** Хадгалах хугацааг owner хараахан тогтоогоогүй. §8-д **санал** болгосон хүснэгт бий (шаардлага биш), R-01-ийн хуулийн шалгалтын дараа батална. Statement өөрчлөгдөөгүй.
 - **Source:** v1.0 §6; code `backend/api/src/app.ts` (production logger `info`)
-- **Priority · Phase · Status:** Should · PH4 · partial (лог тохиргоог body-гүй гэж үзсэн; хадгалах хугацааны бодлого байхгүй)
+- **Priority · Phase · Status:** Should · PH4 · partial (лог тохиргоог body-гүй гэж үзсэн; хадгалах хугацааны бодлого, захиалгын хэсэг planned)
 - **Verification:** Inspection — лог болон analytics тохиргоог шалгана.
 - **Acceptance:** Production логт утасны дугаар 0 удаа гарна.
 
@@ -2393,11 +2744,20 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Acceptance:** Алдааны текстэд `4xx`/`5xx`, `Error:`, `undefined` 0.
 
 #### NFR-USE-230 — Хүрэлцэх хэмжээ
-**Statement:** ≤ 700 px өргөнтэй дэлгэцэд товш, холбоос зэрэг хүрэх элементийн бай ≥ 44 × 44 CSS px байна **shall**.
-- **Source:** WCAG 2.5.5 (AAA, зөвлөмж)
-- **Priority · Phase · Status:** Should · PH5 · unknown (not checked)
-- **Verification:** Inspection — 390 px viewport-д bounding box хэмжих script.
-- **Acceptance:** Гол 3 урсгалын хүрэх элемент бүр ≥ 44 × 44.
+**Statement:** Бүх өргөнд товч, холбоос, checkbox, slider-ийн бариул зэрэг хүрэх элементийн бай ≥ 44 × 44 CSS px байна **shall** (догол мөр доторх текст холбоосоос бусад).
+- **Source:** WCAG 2.5.5 (AAA, зөвлөмж); D-13 (mobile-first)
+- **Өмнөх (v2.5):** «≤ 700 px өргөнтэй дэлгэцэд товш, холбоос зэрэг хүрэх элементийн бай ≥ 44 × 44 CSS px байна **shall**.» Should · PH5 · unknown. Verification 390 px.
+- **Priority · Phase · Status:** Must · PH5 · unknown (not checked)
+- **Verification:** Inspection — 360 ба 1440 px viewport-д bounding box хэмжих script.
+- **Acceptance:** Гол 3 урсгал болон захиалгын урсгалын хүрэх элемент бүр ≥ 44 × 44.
+
+#### NFR-USE-240 — Оролтын фонтын хэмжээ
+**Statement:** Текст оруулах бүх талбар (`input`, `textarea`, `select`) ≥ 16 CSS px фонттой байна **shall**.
+- **Rationale:** iOS Safari 16 px-ээс бага фонттой талбарт focus хийхэд хуудсыг автоматаар томруулдаг. D-13: mobile-first.
+- **Source:** D-13; Prototype E (`font-size: max(16px, …)`). Шинэ шаардлага.
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Test — 360 px-д бүх талбарын computed `font-size`-ийг script-ээр
+- **Acceptance:** Талбар бүрийн computed font-size ≥ 16 px.
 
 #### NFR-USE-300 — Usability зорилт
 **Statement:** Гол даалгаврын usability хэмжүүр нь `docs/quality/usability-protocol.md`-ийн аргаар хэмжигдэнэ; хэмжигдэх хүртэл «зорилт — хэмжигдээгүй» төлөвтэй байна **shall**.
@@ -2559,6 +2919,15 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Verification:** Analysis — traceability-ийн хоосон «Test» нүдийг тоолох script.
 - **Acceptance:** Must мөрийн хоосон Test нүд 0.
 
+#### NFR-MAINT-460 — Нэг тогтмол палитр, үндсэн товчны өнгө, радиус
+**Statement:** Web app нь нэг тогтмол өнгөний палитр (v4 token) ашиглаж, хэрэглэгчид палитр солих UI санал болгохгүй **shall**. Үйлдлийн өнгө (`--act`, үндсэн товч) нь `#1B4634` (бараан хаш), түүн дээрх текст `#F5F2E6` **shall**. Радиусын token нь 6, 10, 16 px гэсэн гурван утгатай, component-ууд зөвхөн эдгээрийг ашиглана **shall**.
+- **Rationale:** D-12 (5), D-13 (1)(2). `#F5F2E6` / `#1B4634` ялгарал 9.49:1 (`design.md`) нь NFR-USE-130-ийг хангана.
+- **Source:** D-12, D-13; `agent-context/design.md` (amendment 2026-11-08: `--act`, `--act-text`, `--act-hover`); AGENTS.md (v4 token-ы owner amendment 2026-11-08); Prototype E v1.1 (`--radius-sm/--radius/--radius-lg`)
+- **Өмнөх (v4 token, түгжсэн):** `--act` = `#0BB555` («THE single action color»), `--act-text` = `#042F1C`, `--act-hover` = `#12C963`; радиус token шаардлагад байгаагүй (prototype E v1.0: `--radius: 2px`). AGENTS.md-ийн «Preserve v4 tokens» дүрэм болон `design.md` нь 2026-11-08-нд owner-ийн amendment-ээр шинэчлэгдсэн (хуучин утга тэдгээрт хадгалагдсан).
+- **Priority · Phase · Status:** Should · PH5 · planned
+- **Verification:** Inspection — token файл; `apps/web/src`-д палитр солигч 0; Test — axe `color-contrast`
+- **Acceptance:** 1) Үндсэн товчны computed background `rgb(27, 70, 52)`. 2) Палитр солих UI 0. 3) Token файлаас гадуурх радиус утга 0 (NFR-MAINT-410). 4) NFR-MAINT-430-ийн 0 px regression нь энэ өөрчлөлтийн дараах baseline-тай харьцуулна.
+
 #### NFR-MAINT-600 — Mobile stack-ийн хязгаарлалт
 **Statement:** Mobile app нь web-тэй ижил хэрэгслийн сонголтыг дагана **shall**.
 - **Source:** Phase0 FR-MOB-008, FR-MOB-009
@@ -2589,10 +2958,11 @@ Spec-ийн эх нь [Phase 0 OpenAPI](../phase-0/06-api-spec.yaml). Бодит
 - **Acceptance:** 4 browser × 3 урсгал = 12 амжилттай; browser-ийн хувилбарыг тайланд бичнэ.
 
 #### NFR-COMP-200 — Responsive
-**Statement:** Web app нь 375–1440 px өргөнд хэвтээ scroll-гүй, бүх функц ашиглагдахуйц байна **shall**.
-- **Source:** Phase0 NFR-COM-002
-- **Priority · Phase · Status:** Must · PH5 · partial (prototype C 390/1440-д шалгагдсан; production C хэрэгжээгүй)
-- **Verification:** Test — Playwright 375, 390, 768, 1024, 1440 px.
+**Statement:** Web app нь 360 px дизайны суурь өргөнтэй (mobile-first) бөгөөд 320–1440 px өргөнд хэвтээ scroll-гүй, бүх функц ашиглагдахуйц байна **shall**.
+- **Source:** Phase0 NFR-COM-002; D-13
+- **Өмнөх (v2.5):** «Web app нь 375–1440 px өргөнд хэвтээ scroll-гүй, бүх функц ашиглагдахуйц байна **shall**.» Verification «Playwright 375, 390, 768, 1024, 1440 px».
+- **Priority · Phase · Status:** Must · PH5 · partial (prototype C 390/1440, prototype E 375/1440-д шалгагдсан; production-д хэрэгжээгүй)
+- **Verification:** Test — Playwright 320, 360, 390, 768, 1024, 1440 px.
 - **Acceptance:** Viewport бүрд `document.documentElement.scrollWidth ≤ innerWidth`; гол 3 урсгал дуусна.
 
 #### NFR-COMP-300 — Mobile OS
@@ -2835,20 +3205,22 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 
 Багц түвшинд нэмж шалгах зүйлс: traceability, ID давхардал, хуучин ID-ийн бүрэн mapping, хүрээ.
 
-### 7.2 Багц түвшний автомат шалгалтын үр дүн (2026-10-18)
+### 7.2 Багц түвшний автомат шалгалтын үр дүн (2026-10-18, тоо 2026-11-08-нд дахин тоолсон, v2.7)
 
 | Шалгалт | Үр дүн |
 |---|---|
-| Шаардлагын тоо | 326 блок, үүнээс 262 leaf шаардлага (2026-10-27: D-09-ийн 3 leaf; 2026-10-30: D-11-ийн FR-PWA 12 блок/9 leaf, NFR 3 нэмэгдсэн) |
-| ID давхардал | 0 |
+| Шаардлагын тоо | 360 блок, үүнээс 294 leaf шаардлага (2026-10-27: D-09-ийн 3 leaf; 2026-10-30: D-11-ийн FR-PWA 12 блок/9 leaf, NFR 3 нэмэгдсэн; 2026-11-08: D-12/D-13-ийн 34 блок/32 leaf нэмэгдсэн). v2.7 (D-14): шинэ ID 0, тоо өөрчлөгдөөгүй. Өмнөх (v2.5): 326 блок, 262 leaf. |
+| ID давхардал | 0 (2026-11-08-нд v2.7-ийн файл дээр дахин шалгасан) |
 | Хуучин ID-ийн mapping | 202 / 202. Phase 0: 177, v1.0: 20, M2: 5. Тоолоогүй ID 0. ([mapping](id-mapping.md)) |
-| Mapping-ийн тодорхойлогдоогүй шинэ ID | 0 |
+| Mapping-ийн тодорхойлогдоогүй шинэ ID | 0. D-09…D-13-ийн шинэ ID-ууд хуучин ID-гүй («Шинэ шаардлага» гэж Source-д). |
 | Traceability-ийн мөр | Leaf бүрт 1 ([traceability](traceability-v2.md)) |
 | Олон утгатай үгийн script | Илэрсэн 2 statement-ийг зассан. Үлдсэн 0. |
 
-**Leaf шаардлагын priority:** Must 176 · Should 45 · Could 11 · Won't (this release) 30.
+**Тоолох арга (2026-11-08):** `#### <ID> — …` гарчиг бүр нэг блок; `Verification: children`-гүй блок нь leaf; priority, status-ийг `Priority · Phase · Status` мөрийн эхний ба гурав дахь талбараас script-ээр уншсан. Script v2.5-ийн файл дээр 326/262 болон доорх v2.5-ийн тоог яг давтсан. v2.7: ижил script v2.6-ийн файл дээр 360/294 болон v2.6-ийн priority, status-ийн тоог яг давтсны дараа v2.7-ийн файлыг тоолсон.
 
-**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 138 · partial 34 · planned 57 · deferred 12 · unknown 21.
+**Leaf шаардлагын priority:** Must 178 · Should 75 · Could 12 · Won't (this release) 29. Өмнөх (v2.6): Must 182 · Should 75 · Could 12 · Won't 25 (зөрүү: FR-WISH-120, 130, 140, 150 Must → Won't, D-14). Өмнөх (v2.5): Must 176 · Should 45 · Could 11 · Won't 30.
+
+**Хэрэгжилтийн төлөв (кодоос, тест ажиллуулаагүй):** implemented 133 · partial 35 · planned 95 · deferred 10 · unknown 21 (v2.7-д өөрчлөгдөөгүй: FR-WISH-ийн status кодын бодит төлөв, implemented (legacy) хэвээр). Өмнөх (v2.5): implemented 138 · partial 34 · planned 57 · deferred 12 · unknown 21. Implemented-ийн бууралт нь код өөрчлөгдсөнөөс биш, D-12/D-13-аар statement өргөжсөн шаардлагууд partial/planned болсноос: FR-PROD-260, FR-PUB-120, FR-PUB-130, FR-PUB-410, FR-ADM-340 (5).
 
 ### 7.3 Area-аар
 
@@ -2859,24 +3231,28 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | FR | CAT | 11 | 9 | 5 |
 | FR | PROD | 22 | 19 | 15 |
 | FR | MEDIA | 12 | 10 | 7 |
-| FR | PUB | 22 | 18 | 11 |
+| FR | PUB | 30 | 25 | 12 |
 | FR | INQ | 16 | 13 | 10 |
-| FR | WISH | 6 | 5 | 5 |
-| FR | ADM | 15 | 12 | 9 |
-| FR | SET | 8 | 6 | 5 |
+| FR | WISH | 6 | 5 | 0 |
+| FR | ADM | 23 | 19 | 9 |
+| FR | SET | 11 | 9 | 8 |
 | FR | INTRO | 21 | 18 | 16 |
 | FR | MOB | 12 | 9 | 0 |
 | FR | AUD | 7 | 6 | 4 |
-| FR | ORD | 9 | 7 | 0 |
+| FR | ORD | 20 | 18 | 0 |
 | FR | PWA | 12 | 9 | 4 |
 | NFR | PERF | 26 | 20 | 14 |
-| NFR | SEC | 24 | 19 | 17 |
+| NFR | SEC | 26 | 21 | 19 |
 | NFR | REL | 9 | 7 | 2 |
-| NFR | USE | 16 | 13 | 9 |
-| NFR | MAINT | 23 | 18 | 11 |
+| NFR | USE | 17 | 14 | 10 |
+| NFR | MAINT | 24 | 19 | 11 |
 | NFR | COMP | 10 | 8 | 6 |
 | NFR | PORT | 6 | 5 | 3 |
 | NFR | SEO | 14 | 11 | 10 |
+
+**Өмнөх (v2.5), өөрчлөгдсөн мөрүүд:** PUB 22/18/11 · WISH 6/5/5 · ADM 15/12/9 · SET 8/6/5 · ORD 9/7/0 · SEC 24/19/17 · USE 16/13/9 · MAINT 23/18/11. Бусад area өөрчлөгдөөгүй.
+
+**Өмнөх (v2.6), өөрчлөгдсөн мөр:** WISH 6/5/4 (D-14: FR-WISH-120…150 Must → Won't). Бусад area өөрчлөгдөөгүй.
 
 ### 7.4 Review-ийн бүртгэл (илэрсэн асуудал ба шийдэл)
 
@@ -2898,7 +3274,7 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | NFR-REL-110/120 | Unambiguous | «≥ 99% uptime» хэмжих арга, хугацаа заагаагүй | Сар бүр, 5 минутын давтамжтай гадны monitor гэж тодорхой болгов. |
 | NFR-REL-120 | Consistent | Phase0 нь Railway-г заасан. Hosting-ийн эцсийн сонголт PH7-д хийгдэнэ. | Hosting-ийн нэрийг хасаж, endpoint-ээр хэмжинэ гэж бичив. |
 | NFR-REL-130 | Unambiguous | «where available» гэдэг олон утгатай | ≥ 7 хоног өдөр тутмын backup + сэргээх туршилт болгов. PITR-г `may` болгов. |
-| FR-WISH-* | Consistent | API замын нэр `/cart` боловч функц нь wishlist. Ирээдүйн ORD сагстай зөрчилдөнө. | Шаардлагад «wishlist» гэж нэрлэв. Endpoint-ийн нэрийг өөрчлөх эсэх нь OPEN. |
+| FR-WISH-* | Consistent | API замын нэр `/cart` боловч функц нь wishlist. Ирээдүйн ORD сагстай зөрчилдөнө. | Шаардлагад «wishlist» гэж нэрлэв. Endpoint-ийн нэрийг өөрчлөх эсэх нь OPEN. v2.7 (D-14): `/cart` API legacy гэж §3.2-т тэмдэглэсэн; нэр солих асуулт FR-WISH Won't тул ач холбогдол багассан, хэрэглэгчийн бүртгэл эргэж ирэхэд шийднэ. |
 | FR-USER-120 | Verifiable | `full_name`-ийн дээд урт кодонд тодорхойгүй | 100 тэмдэгт гэж санал болгов. **OPEN** (кодонд хязгаар нэмэх эсвэл owner батлах). |
 | NFR-SEC-140 | Complete | Web (Next.js)-ийн security header шалгагдаагүй | Status `partial` (web unknown). PH6-д шалгана. |
 | FR-CAT-210 | Unambiguous | Phase 0 CAT-007 «any authenticated guest or customer» нь өөртэйгөө зөрчилдсөн (guest нь нэвтрээгүй) | Нэвтрэлт шаардахгүй гэж тодорхой бичсэн (код) |
@@ -2943,7 +3319,21 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 | NFR-USE-150 | Consistent | NFR-ACC-005 ↔ NFR-SEO-009 давхцал | Хоёуланг хадгална: USE-150 нь хүртээмжийн, SEO-ийнх нь хайлтын системийн тал. Нэг тестээр хоёуланг шалгана. Шийдэгдсэн. |
 | FR-MOB-520 | Consistent | FR-MOB-006 ↔ NFR-REL-005 давхцал | FR-MOB-520 нь функц, NFR-REL-230 нь чанарын шалгуур. Cross-ref хийсэн. Шийдэгдсэн. |
 | NFR-USE-320 | Consistent | G2 «≤ 2 мин» нь FR-INQ-тэй холбоотой | Хэмжүүр нь USE-д, функц нь FR-INQ-100-д. Шийдэгдсэн. |
-| NFR-COMP-200 | Unambiguous | Доод өргөн 375 px; C prototype 390 px-д шалгагдсан; 320 px төхөөрөмж | OPEN — 320 px хүртэл бууруулах эсэх |
+| NFR-COMP-200 | Unambiguous | Доод өргөн 375 px; C prototype 390 px-д шалгагдсан; 320 px төхөөрөмж | OPEN — 320 px хүртэл бууруулах эсэх **Шийдэгдсэн 2026-11-08 (D-13):** 360 px суурь, 320–1440 px тест. |
+| FR-ORD-* / FR-SET-200…240 | Consistent | v2.5: захиалга `delivery_enabled=false`-ээр бүрэн хаалттай, FR-ORD бүгд Won't/PH8 ↔ D-12/D-13: зочны очиж авах захиалга энэ release-д | Захиалгын хаалтыг `ordering_enabled` (FR-SET-150/230) болгож, `delivery_enabled` нь зөвхөн хүргэлтийг хаана (FR-SET-200/210/240). Хүргэлт түгжээтэй хэвээр тул AGENTS.md-ийн `delivery_enabled=false` дүрэм зөрчигдөхгүй. Priority Should. **OPEN** — owner priority, `ordering_enabled` default. **Шийдэгдсэн 2026-11-08 (D-14):** Should хэвээр, default `false`, admin асаана. |
+| FR-WISH-110 / FR-ORD-150 | Consistent | Хэрэглэгчид харагдах «сагс» = login шаарддаг wishlist (API `/cart`) ↔ D-12: сагс төхөөрөмж дээр, бүртгэлгүй | Сагс = FR-ORD-150; wishlist legacy (FR-WISH-110 Won't). FR-WISH-120…150-ийн priority, «Хадгалах» товч **OPEN**. **Шийдэгдсэн 2026-11-08 (D-14):** FR-WISH-100…150 бүгд Won't (legacy), хэрэглэгчийн бүртгэл бий болох хүртэл. «Хадгалах» товч FR-WISH-110-ийн дагуу legacy (шинэ entry point нэмэхгүй). |
+| FR-PUB-420 | Consistent | «`delivery_enabled=false` үед сагс, checkout огт харуулахгүй» ↔ очиж авах checkout | Хүргэлт, төлбөрийн UI-д хязгаарлаж, сагсыг FR-PUB-430 (`ordering_enabled`) хариуцна. Шийдэгдсэн. |
+| FR-ORD-120 | Correct | `orders.customer_id`, `address` нь `not null` ↔ зочны pickup захиалга | Шинэ migration (append-only), planned. |
+| FR-ORD-310 / NFR-SEC-320 | Complete | Бүртгэлгүй захиалгын шалгалтаар дугаар таах (enumeration) эрсдэл | Утас + дугаар + OTP, таараагүй үед ижил хариу; FR-ORD-111 нь зөвхөн session-д. |
+| FR-PROD-260 / FR-ADM-340 | Consistent | Бүрмөсөн устгах ↔ захиалгын түүх (`order_items`) | UI-аас hard delete хасаж (устгах = архивлах), захиалгатай бүтээгдэхүүнд API `409`. |
+| NFR-MAINT-460 | Consistent | AGENTS.md «Preserve v4 tokens» (`#0BB555`) ↔ D-12/D-13 бараан хаш товч `#1B4634` | Amendment болгож хуучин утгыг хадгалсан. AGENTS.md, `design.md` 2026-11-08-нд owner-ийн amendment-ээр шинэчлэгдсэн. Шийдэгдсэн. |
+| FR-ORD-170/171, NFR-SEC-253 | Verifiable | Prototype нь зөвхөн дахин илгээх 60 s-ийг тодорхойлсон; кодын хугацаа, оролдлого, SMS хязгаар байхгүй | 5 мин, 5 оролдлого, утас 5/цаг, IP 10/цаг гэж санал болгосон. **OPEN** (owner). **Шийдэгдсэн 2026-11-08 (D-14):** утгууд батлагдсан, NIST SP 800-63B-4 / OWASP-ийг эх болгосон; «шинэ код өмнөхийг хүчингүй болгоно», API талын 60 s хаалт нэмэгдсэн. |
+| FR-PUB-181 | Consistent | D-12: үнийн 3 checkbox ↔ D-13/prototype E: range slider | Range-ийг дагасан, D-12-ийн хуваалтыг rationale-д хадгалсан. Scale **OPEN**. **Шийдэгдсэн 2026-11-08 (D-14):** шугаман (owner шаталсныг татгалзсан); statement өөрчлөгдөөгүй. |
+| FR-ORD-320 / FR-ORD-240 | Consistent | v2.6: цуцлалтыг timeline-ийн алхам болгох эсэх, шалтгааныг захиалагчид харуулах, SMS илгээх эсэх нээлттэй; `cancel_reason` чөлөөт текст | D-14: timeline-ийн алхам биш, нэг «Захиалга цуцлагдсан» мөр + тогтмол жагсаалтын шалтгаан, цуцлахад SMS. FR-ORD-120, 230, 240, 320, FR-ADM-620, 640 засагдсан. Шийдэгдсэн. |
+| FR-ORD-240 | Unambiguous | Owner: «бусад»-ыг харуулахдаа болгоомжтой байх; чөлөөт текстийг захиалагчид харуулах эсэх шаардлага бичигчийн сонголтод үлдсэн | Сонголт: захиалагчид зөвхөн шошго («Бусад»), дотоод тэмдэглэл (`cancel_note`) захиалагчид хэзээ ч харагдахгүй; «Бусад»-д тэмдэглэл заавал. **OPEN** — owner батлах (§8). |
+| FR-ORD-171 / NFR-SEC-253 | Correct | NIST SP 800-63B-4 §3.1.3.2: шинэ код олгоход дараалсан буруу оролдлогын тоолуур тэглэгдэхгүй (≤ 100). Owner-ийн утгууд кодод 5, утсанд цагт 5 SMS — цаг өнгөрөхөд тоолуур тэглэгдэнэ | Rationale-д ил бичсэн, урт хугацааны тоолуур нэмээгүй. **OPEN** (§8). |
+| FR-WISH-* / FR-USER-140 | Consistent | D-14: бүх FR-WISH Won't ↔ FR-USER-140 (Should, implemented) «Миний булан»-д хадгалсан бүтээгдэхүүний жагсаалт харуулдаг | FR-USER-140-ийн statement, priority-г өөрчлөөгүй, тэмдэглэл нэмсэн. Хэсгийг нуух эсэх **OPEN** (§8). |
+| FR-SET-150 | Correct | v2.6: default `false` нь «санал» гэж Source-д | D-14: owner-ийн шийдвэр болгосон. Шийдэгдсэн. |
 
 **Аюулгүй байдлын хоёр сэжигтэй асуудал** кодыг уншиж илрүүлсэн, runtime-д батлагдаагүй. F-05-ийн нэгэн адил тус бүрийг тусдаа task болгоно:
 - **NFR-SEC-350:** `users_update_own` RLS бодлогоор customer өөрийн `role`-ийг өөрчилж болзошгүй. **Батлагдаж, засагдсан 2026-10-30** (migration 0008).
@@ -2951,7 +3341,35 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 
 ## 8. Нээлттэй асуултууд
 
-Owner батлах ёстой. ID нь холбогдох шаардлагыг заана.
+Owner батлах ёстой. ID нь холбогдох шаардлагыг заана. Шийдэгдсэн асуултыг устгахгүй, «Шийдэгдсэн (огноо, D-xx)» гэж тэмдэглэнэ.
+
+**v2.7 (D-14), 2026-11-08 — шинээр нээгдсэн:**
+- **FR-ORD-240 / FR-ORD-320 — «Бусад» шалтгаан:** захиалагчид зөвхөн «Бусад» шошго харуулж, дотоод тэмдэглэлийг (заавал) нуух нь шаардлага бичигчийн сонголт. Owner батлах уу, эсвэл «Бусад»-д захиалагчид харагдах богино тайлбар (жишээ нь «Дэлгэрэнгүйг дэлгүүрээс лавлана уу» гэсэн тогтмол текст) нэмэх үү? SMS-ийн яг текстийг owner батлах.
+- **FR-ORD-171 / NFR-SEC-253 — урт хугацааны оролдлогын тоолуур:** NIST SP 800-63B-4 нь шинэ код олгоход тэглэгддэггүй дараалсан буруу оролдлогын тоолуур (≤ 100) шаарддаг. Утас тутамд ийм тоолуур (жишээ 24 цагт 20 буруу оролдлогын дараа түр хаах) нэмэх үү?
+- **FR-USER-140:** FR-WISH Won't болсон тул «Миний булан»-аас «Хадгалсан бүтээгдэхүүн» хэсгийг нуух уу, эсвэл legacy байдлаар үлдээх үү?
+- **Хувийн мэдээллийн хадгалах хугацаа — САНАЛ (шаардлага биш, R-01-ийн хуулийн шалгалтыг хүлээнэ):**
+
+  | Өгөгдөл | Санал болгож буй хугацаа | Дараа нь | Тайлбар |
+  |---|---|---|---|
+  | OTP код (hash) | Хугацаа дуусах эсвэл ашиглагдах үед | Устгана | NFR-SEC-270; код нь зорилгоо биелүүлсэн даруй хэрэггүй |
+  | SMS илгээлтийн лог (утас, огноо, төлөв, provider-ийн ID; кодгүй) | 7 хоног | Устгана | Хүргэлтийн асуудал, rate limit, зардлын тулгалт |
+  | Захиалгын бичлэг (нэр, утас, бараа, дүн, төлөв) ба е-баримт | Нягтлан бодох бүртгэлийн болон татварын хуулийн хугацаагаар (R-01-ээр тодорхойлно) | Устгах эсвэл нэргүй болгох (R-01) | Борлуулалтын баримт нь хуулиар олон жил хадгалагдах магадлалтай |
+  | Асуулга (inquiry: нэр, утас, зурвас) | 90 хоног | Устгах эсвэл нэргүй болгох | NFR-SEC-500; хариулсны дараа зорилго дуусна |
+
+  Owner «7 хоног болох уу?» гэж асуусан. Тэмдэглэл: Хүний хувийн мэдээлэл хамгаалах тухай хууль нь мэдээллийг зөвхөн зорилгод шаардлагатай хугацаанд хадгалахыг шаарддаг гэж ойлгож байгаа бол нягтлан бодох бүртгэлийн хууль борлуулалтын бичлэгийг илүү удаан хадгалахыг шаардах магадлалтай. Аль аль нь R-01-ээр (хууль, зүйл, URL-тай) шалгагдаагүй — хуулийн зөвлөгөө биш. Батлагдсаны дараа NFR-SEC-500-д шаардлага болгон оруулна.
+
+**v2.6 (D-12, D-13), 2026-11-08:**
+- **FR-ORD-170 / FR-ORD-230 — SMS gateway:** аль үйлчилгээ (оператор эсвэл aggregator), илгээгчийн нэр, нэг SMS-ийн зардал, сарын төсөв? Сонгогдох хүртэл `ordering_enabled=false`. **v2.7 (D-14), нээлттэй хэвээр:** нэр дэвшигч **verify.mn**; үнэ, API, хүргэлтийн тайлан (delivery report)-г R-01-ээр (`agent-context/TASKS.md` «Research R-01», 5-р алхам) шалгана.
+- **И-баримт:** дэлгүүрт төлбөр авахад И-баримтыг одоогийн кассаас өгөх үү, эсвэл систем захиалгын мэдээллийг И-баримт руу дамжуулах шаардлагатай юу? Энэ release-д системийн шаардлага бичээгүй. **v2.7 (D-14), нээлттэй хэвээр:** е-баримт, НӨАТ, бизнесийн бүртгэл (хувиараа бизнес эрхлэгч ↔ ХХК) нь судалгаа R-01-ийн 1–3-р алхам. Үр дүн хүртэл системийн шаардлага нэмэхгүй.
+- **(v2.7, D-14) Онлайн төлбөр (ирээдүй):** энэ release-д төлбөр дэлгүүрт хэвээр (FR-ORD-180, шаардлага өөрчлөгдөөгүй). Ирээдүйн нэр дэвшигч **Bonum** (owner-ийн сонголт; суурь төлбөргүй, гэрээгээр гэж мэдээлэгдсэн, судлагдаагүй) ↔ **QPay**: шимтгэл, гэрээ, API баримт, тооцоо хийх хугацааг R-01-ийн 5-р алхамаар харьцуулна. Шинэ FR нэмээгүй. Нээлттэй.
+- **NFR-SEC-500 / FR-ORD-160 — хадгалах хугацаа:** захиалгын нэр, утсыг «Авсан»/«Цуцалсан»-аас хойш хэр удаан хадгалах вэ (жишээ 12 сар), дараа нь устгах уу, нэргүй болгох уу? Зөвшөөрлийн текстийг owner батлах. **v2.7 (D-14), нээлттэй хэвээр:** дээрх санал хүснэгтийг үз; R-01-ийн 4-р алхамаар шалгана. Зөвшөөрлийн текст батлагдаагүй.
+- ~~**FR-PUB-181 — үнийн slider-ийн scale:** шугаман уу, шаталсан (бага үнэд нарийн, өндөрт том алхам) уу? Алхмын хэмжээ.~~ **Шийдэгдсэн 2026-11-08 (D-14):** шугаман (owner, 2026-11-08); шаталсан scale-ийг татгалзсан. Алхмын хэмжээ хэрэгжүүлэлтийн үед.
+- ~~**FR-ORD-320 — цуцалсан төлөв:** «Цуцалсан»-ыг timeline-ийн алхам болгох уу, эсвэл timeline-ийн оронд тусдаа төлөв (одоогийн санал) уу? Цуцалсан шалтгааныг захиалагчид харуулах уу, цуцлахад SMS илгээх үү?~~ **Шийдэгдсэн 2026-11-08 (D-14):** timeline-ийн алхам биш; timeline-ийн оронд нэг «Захиалга цуцлагдсан» мөр + тогтмол жагсаалтын шалтгаан (бараа дууссан · хэрэглэгч хүссэн · авах хугацаа хэтэрсэн · бусад; хүргэлт идэвхжихэд «хүргэх боломжгүй»); admin шалтгаан заавал сонгоно; цуцлахад SMS илгээнэ (FR-ORD-240, FR-ORD-320). «Бусад»-ын харагдах байдлыг дээрх v2.7-ийн асуултаас үз.
+- ~~**FR-ORD-100 / FR-SET-150 — priority ба default:** зочны захиалга Should (унтраалттай launch хийж болно) уу, launch-ийн Must уу? `ordering_enabled`-ийн seed `false` зөв үү?~~ **Шийдэгдсэн 2026-11-08 (D-14):** Should хэвээр — захиалга унтраалттай үед ч сайт каталог, «Асуулт асуух»-тай нээгдэнэ; seed `false`, admin асаана.
+- ~~**FR-ORD-170/171, NFR-SEC-253 — утгууд:** кодын хугацаа 5 мин, нэг кодод 5 оролдлого, утас 5/цаг, IP 10/цаг (санал).~~ **Шийдэгдсэн 2026-11-08 (D-14):** олон улсын практик (NIST SP 800-63B-4, OWASP): 6 оронтой санамсаргүй нэг удаагийн код, 5 мин, шинэ код өмнөхийг хүчингүй болгоно, нэг кодод 5 оролдлого, дахин илгээх 60 s, утас 5/цаг, IP 10/цаг, hash-аар хадгалж логт бичихгүй.
+- ~~**FR-WISH-120…150:** legacy wishlist-ийн priority-г Won't болгох уу? Нийтийн «Хадгалах» товч үлдэх үү?~~ **Шийдэгдсэн 2026-11-08 (D-14):** FR-WISH-100…150 бүгд Won't (legacy), хэрэглэгчийн бүртгэл бий болох хүртэл; энэ release-д хэрэглэгчийн профайл байхгүй, захиалгыг утас + OTP-оор шууд баталгаажуулна. «Хадгалах» товч FR-WISH-110-ийн дагуу legacy.
+
+**Өмнөх асуултууд:**
 
 - **NFR-MAINT-320 (2026-10-30):** owner CI-д Supabase асаахгүй гэж шийдсэн. PH7-д `DEPLOY_ENABLED` асаахаас өмнө deploy-ийн хаалтыг (integration тест skip-гүй) яаж хангах вэ? (local-д ажиллуулсан тестийн нотолгоо, CI-д Supabase, эсвэл шаардлагыг өөрчлөх)
 - **Хичээл:** «шаардлага шалгах 5 арга»-ын яг нэрс (§7.1). QA хичээлийн агуулга ирэхэд NFR болон PH6-ийг тааруулна.
@@ -2960,11 +3378,11 @@ Owner батлах ёстой. ID нь холбогдох шаардлагыг �
 - ~~**FR-INQ-140:** Mobile (G6) болон API нь web-ийн «яг 8 цифр»-ийг дагах уу, эсвэл API-ийн 8–15 тэмдэгт (+, зай, зураас) хэвээр үлдэх үү?~~ **Шийдэгдсэн 2026-10-30 (D-10):** бүгд яг 8 цифр.
 - **FR-INQ-330:** API нь шилжилтийн дарааллыг хатуу хориглох ёстой юу (жишээ нь `closed → new`-ийг хориглох)?
 - **FR-INQ (шинэ санаа):** G2-ийн «1 ажлын өдөрт хариулах»-ыг хангахын тулд шинэ асуулга ирэхэд admin-д мэдэгдэл (email/SMS/Telegram) хэрэгтэй юу? Одоо ямар ч мэдэгдэл байхгүй. FR-INQ-340 нь зөвхөн inbox доторх тэмдэглэгээ.
-- **FR-WISH-*:** `/api/v1/cart`-ийг ORD (PH8)-ээс өмнө `/wishlist` болгож нэрлэх үү?
+- **FR-WISH-*:** `/api/v1/cart`-ийг ORD (PH8)-ээс өмнө `/wishlist` болгож нэрлэх үү? v2.6: захиалга PH5 болсон, захиалгын API нь `/orders`; legacy wishlist-ийн `/cart` нэр төөрөгдөл үүсгэх эрсдэл нэмэгдсэн. v2.7 (D-14): FR-WISH бүгд Won't, `/cart` §3.2-т legacy гэж тэмдэглэгдсэн; хэрэглэгчийн бүртгэлийг эргэж авч үзэх үед шийднэ.
 - **FR-AUD-110/130:** Audit бичилтийг үндсэн өөрчлөлттэй атомик болгох (DB function/transaction) болон DB trigger-ээр append-only-г хатуужуулах уу?
 - **FR-USER-120:** `full_name`-ийн дээд урт (санал 100).
 - **NFR-REL-130:** Production Supabase tier (free tier-ийн backup хадгалалт, PITR байхгүй) ба backup бодлого.
-- **NFR-SEC-500:** Inquiry-ийн хувийн мэдээллийг хэр удаан хадгалах вэ (retention), устгах хүсэлтийг яаж шийдэх вэ?
+- **NFR-SEC-500:** Inquiry-ийн хувийн мэдээллийг хэр удаан хадгалах вэ (retention), устгах хүсэлтийг яаж шийдэх вэ? v2.7 (D-14): санал 90 хоног (дээрх санал хүснэгт), R-01-ийг хүлээнэ. Устгах хүсэлтийн журам нээлттэй.
 - FR-CAT-131: Идэвхгүй ангиллын published бүтээгдэхүүнийг нийтээс нуух уу, эсвэл «ангилалгүй» харагдах уу?
 - FR-PUB-120 / NFR-SEO-140: ангиллын URL `/products?category=` хэвээр байх уу, `/categories/[slug]` руу шилжих үү? Canonical болон SEO-д нөлөөлнө.
 - ~~FR-SET-220: `orders` руу customer-ийн шууд insert local stack дээр бодитоор боломжтой эсэхийг шалгах. Боломжтой бол RLS-д `delivery_enabled` шалгалт нэмэх. Энэ нь кодын өөрчлөлт.~~ **Шийдэгдсэн 2026-10-30:** grant байхгүй тул insert `42501` (migration 0008).
@@ -2978,7 +3396,7 @@ Owner батлах ёстой. ID нь холбогдох шаардлагыг �
 - FR-MOB-310: mobile интроны runtime — Rive (ADR-004) хэвээр үү, эсвэл C-ийн 3D-ийг expo-gl-ээр давтах уу? (G6) **Хойшлогдсон (D-11):** native mobile эхлэх үед шийднэ.
 - FR-PWA-230: offline cache-ийн хязгаар (хуудас 50, зураг 200) owner-т тохирох эсэх; offline үед үнэ хуучирсан байж болох тэмдэглэлийн текст.
 - FR-INTRO-140: алхам бүрийн 4 гол өгүүлбэр ба эцсийн уриаг owner батлах (prototype C-гийн текстүүд түр).
-- NFR-COMP-200: дэмжих доод өргөн 375 эсвэл 320 px?
+- ~~NFR-COMP-200: дэмжих доод өргөн 375 эсвэл 320 px?~~ **Шийдэгдсэн 2026-11-08 (D-13):** 360 px суурь, 320–1440 px тест.
 - NFR-COMP-100: Safari-г бодит iOS төхөөрөмж дээр шалгах уу, эсвэл Playwright WebKit хангалттай юу?
 - NFR-USE-310/320: usability-д оролцогч (дэлгүүрийн 5 үйлчлүүлэгч) олдох эсэх; олдохгүй бол «хэмжигдээгүй» хэвээр.
 - NFR-MAINT-210: commitlint-ийг CI-д нэмэх үү, эсвэл зөвхөн дүрэм болгон үлдээх үү?
