@@ -1,14 +1,16 @@
 # Nogoolin архитектурын баримт бичиг
 
-**arc42 v9 lean profile · ICSI438 Seminar 4 / M4 · Тэнгис · v0.1 draft · 2026-09-28**
+**arc42 v9 lean profile · ICSI438 Seminar 4 / M4 · Тэнгис · v0.2 draft · 2026-11-15 (v0.1: 2026-09-28)**
 
-Энэ баримт нь Nogoolin-ийн одоогийн код, Seminar 3-ын SRS болон шийдвэрийн бүртгэлийг нэг архитектурын зураглалд холбов. Arc42-ийн 12 хэсгийг хадгалж, §3, §5, §6-д C4 загварыг хэрэглэв. Week 04 Lab Assignment-ийн §1, §3, §5, гурван MADR, persona холбоо, ≥80% FR coverage болон UE-4 шаардлагыг энэ хувилбарт тусгав. Lecture 04 хараахан байхгүй.
+> **v0.2 (2026-11-15):** номын UE-4 дасгалын дурдлагыг хассан (ICSI438 Sem4 v0.2). Архитектурын агуулга өөрчлөгдөөгүй. Өмнөх (v0.1): «… ≥80% FR coverage болон UE-4 шаардлагыг энэ хувилбарт тусгав.»
+
+Энэ баримт нь Nogoolin-ийн одоогийн код, Seminar 3-ын SRS болон шийдвэрийн бүртгэлийг нэг архитектурын зураглалд холбов. Arc42-ийн 12 хэсгийг хадгалж, §3, §5, §6-д C4 загварыг хэрэглэв. Week 04 Lab Assignment-ийн §1, §3, §5, гурван MADR, persona холбоо, ≥80% FR coverage шаардлагыг энэ хувилбарт тусгав. Lecture 04 хараахан байхгүй.
 
 | Талбар | Утга |
 |---|---|
 | Төсөл | Nogoolin |
 | Зохиогч | Тэнгис |
-| Хувилбар | v0.1 draft |
+| Хувилбар | v0.2 draft |
 | Requirements baseline | [SRS v1.0 draft](../requirements/srs-v1.0.md), [20 мөртэй matrix](../requirements/traceability-matrix-v1.0.md) |
 | Public repository | <https://github.com/Tengis01/Nogoolin> |
 | Аргачлал | [arc42 v9](https://arc42.org/download/), [C4 model](https://c4model.com/) ба ADR |

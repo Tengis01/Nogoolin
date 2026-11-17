@@ -1,6 +1,6 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.8 draft · **Огноо:** 2026-11-10 (v1.7: 2026-11-08, v1.6: 2026-11-08, v1.5: 2026-10-30, v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.12 draft · **Огноо:** 2026-11-17 (v1.11: 2026-11-15, v1.10: 2026-11-10, v1.9: 2026-11-10, v1.8: 2026-11-10, v1.7: 2026-11-08, v1.6: 2026-11-08, v1.5: 2026-10-30, v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
 
@@ -8,6 +8,10 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v1.12 | 2026-11-17 | «Хичээлийн ажил»-ын Sem9 мөр: ADR-012 Proposed → Accepted (A), D-10, `8efd908`. ICSI438 семинаруудыг `56b7c4e`-тэй нийцүүлсэн: Sem2 v0.3, Sem3 v2.0, Sem4 v0.3, Sem5 v0.3, Sem7 v0.3, Sem9 v0.2, Sem10 v1.1. |
+| v1.11 | 2026-11-15 | ICSI438 семинаруудаас номын жишээ дасгал (Corg.ly, UE-1/3/4/5/7)-ыг хассан: ARC-01 v0.1 → v0.2 (UE-4 дурдлага), ARC-02 index-ээс UE-4 ADR холбоос. Семинарын хувилбар: Sem1 v1.1, Sem3 v1.1, Sem4 v0.2, Sem5 v0.2, Sem7 v0.2. |
+| v1.10 | 2026-11-10 | RES-02 (R-02: судлагдсан байдал) нэмсэн. |
+| v1.9 | 2026-11-10 | «Research» хэсэг, RES-01 (R-01 судалгаа: е-баримт, НӨАТ, бизнесийн хэлбэр, хувийн мэдээлэл) нэмсэн. |
 | v1.8 | 2026-11-10 | Design хүснэгтэд өмнө нь бүртгэгдээгүй байсан prototype D, E (DES-08), F (DES-09), G v1.1 (DES-10) нэмсэн. D-15 (барааны зураг хуудасны дэвсгэр дээр шууд сууна) бүртгэгдсэн: DES-01-ийн тайлбарт тэмдэглэсэн. |
 | v1.7 | 2026-11-08 | D-14 (owner-ийн SRS v2.6 §8-ийн хариулт: OTP, цуцлалт, wishlist legacy, R-01): REQ-01/REQ-02 v2.6 → v2.7. |
 | v1.6 | 2026-11-08 | D-12/D-13 (зочны захиалга, «Онлайн захиалга» тохиргоо): REQ-01/REQ-02 v2.5 → v2.6. |
@@ -52,6 +56,13 @@
 | PRJ-06 | Stakeholder ба persona | Process | Owner, багш | — | planned | Sem1 W01–W02, Sem2 | `project/stakeholders.md` (эх: [persona-and-pivot](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem2/wiki/persona-and-pivot.md)) |
 | PRJ-07 | Sprint review / metric memo | Process | Багш | — | planned | W12, W13 | `project/` |
 
+### Research — `research/`
+
+| Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
+|---|---|---|---|---|---|---|---|
+| RES-02 | R-02: судлагдсан байдал (ижил төстэй системүүд) | Process | Owner, багш | v0.1 | draft (дэлгэцийн зураг, нийгмийн сүлжээний хэсэг дутуу) | — | [research/R-02-related-work.md](research/R-02-related-work.md) |
+| RES-01 | R-01: е-баримт, НӨАТ, бизнесийн хэлбэр, хувийн мэдээлэл | Process | Owner, хөгжүүлэгч | v0.1 | draft (мэргэжлийн хүнээр нягтлаагүй) | — | [research/R-01-ebarimt-vat-privacy.md](research/R-01-ebarimt-vat-privacy.md) |
+
 ### Requirements — `requirements/`
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
@@ -71,7 +82,7 @@
 
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
-| ARC-01 | arc42 + C4 | Developer | Хөгжүүлэгч, reviewer | v0.1 | draft (PH2-т D-08/SRS v2-тай нийцүүлнэ). Доторх Sem4 C4 диаграм **frozen**: canonical нь ARC-07 | Sem4 | [architecture/arc42-nogoolin.md](architecture/arc42-nogoolin.md) |
+| ARC-01 | arc42 + C4 | Developer | Хөгжүүлэгч, reviewer | v0.2 | draft (PH2-т D-08/SRS v2-тай нийцүүлнэ). Доторх Sem4 C4 диаграм **frozen**: canonical нь ARC-07 | Sem4 | [architecture/arc42-nogoolin.md](architecture/arc42-nogoolin.md) |
 | ARC-02 | MADR (ADR-003, 005, 007, IF-01) | Developer | Хөгжүүлэгч | — | draft | Sem4 | [architecture/README.md](architecture/README.md) |
 | ARC-03 | Architecture traceability | Developer | Хөгжүүлэгч | — | draft | Sem4 | [architecture/architecture-traceability.md](architecture/architecture-traceability.md) |
 | ARC-04 | SDD загвар | Process | Баримт бичигч | v0.2 | approved | Sem2 | [architecture/sdd-template.md](architecture/sdd-template.md) |
@@ -146,7 +157,7 @@
 | W07 microcopy | DES-06 (planned) |
 | Sem7: Diátaxis баримтын сайт ([Pages `/sem7/`](https://icsi438-nogoolin-442a5f.gitlab.io/sem7/)), microcopy | Хичээлийн сайт. Microcopy нь DES-06 (planned); бусад нь албан ёсны баримтад шууд орохгүй. |
 | W09 DoD update | Roadmap v2-ийн phase DoD |
-| Sem9: ADR-012 inquiry-ийн утасны дүрэм ([draft](https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem9/adr-012-inquiry-phone-validation.md), Proposed) | ARC-02 (MADR). Owner шийдсэний дараа DECISIONS.md-д D-xx, SRS FR-INQ-140. |
+| Sem9: ADR-012 inquiry-ийн утасны дүрэм ([ADR](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem9/adr-012-inquiry-phone-validation.md), Accepted (A), 2026-11-03) | ARC-02 (MADR). D-10 (2026-10-30), SRS FR-INQ-140, код `8efd908`. |
 | Sem10 (W10): M8 diagram suite | ARC-07 (canonical диаграм). Өмнөх v1.1-д «W10 mkdocs/Vale/lychee → QA-04» гэж буруу бичигдсэн байсан; QA-04 нь хичээлийн W10-тай холбоогүй, planned хэвээр. |
 | W11 maintenance | DEV-03, OPS-02 |
 | W12–W13 metric memo, sprint review | PRJ-07 |
@@ -169,6 +180,7 @@
 docs/
   README.md        ← энэ бүртгэл
   project/         зорилго, roadmap, stakeholder
+  research/        судалгаа (R-01, R-02)
   requirements/    SRS v2, traceability, mapping (+ legacy v1.0, M2)
   architecture/    arc42, ADR, C4
   diagrams/        диаграмын заагч: canonical нь ARC-07 (Sem10), бусад нь frozen

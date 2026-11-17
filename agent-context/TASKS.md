@@ -10,6 +10,167 @@
 
 *(empty)*
 
+## Next — ICSI438 Sem11 Activity 02: run the release-note prompt on local Qwen (added 2026-11-17)
+
+Owner request 2026-11-17, not started. `ICSI438/sem11/release-notes-compare.md`
+has Run 1 (Gemini app, free: model not shown, so unverified) and Run 2 (GPT-OSS
+120B Medium, Antigravity; removed there on 2026-11-18). Copilot CLI 1.0.112 is
+installed and logged in, but Copilot Free does not include the chosen models.
+
+- [ ] Run the same prompt (`ICSI438/sem11/tmp/release-prompt.txt`, git-ignored,
+      extracted from §3 of the compare file) on `qwen3.5:9b-q4_K_M` via ollama,
+      from an empty directory, no tools. Record model tag + digest, temperature,
+      date; paste the answer verbatim as Run 3.
+- [ ] Check every claim against the git log and `git show` (same table format
+      as Run 1/2); fill the verification log row and add one line to §5.
+- [ ] Owner: review the human release note (agent draft) and the §5 conclusion.
+
+## Next — ICSI438 materials vs current Nogoolin: find stale places, prepare fixes (added 2026-11-15)
+
+Owner request 2026-11-15. Nogoolin changed a lot after the course pinned it:
+`product/` (and every course permalink) is at **`885e591`** (2026-10-14), while
+`main` is **`56b7c4e`** (2026-11-10): 13 commits, 25 code files, plus local
+uncommitted docs (register v1.11, arc42 v0.2, `docs/research/`). Goal: list
+every course place that is now stale, prepare the exact fix for each, and leave
+it ready to apply. This card prepares; applying needs the owner's go.
+
+What changed (source: `git log 885e591..56b7c4e`, DECISIONS.md, SRS v2.7):
+
+| Change | Commit / decision | Likely course impact |
+|---|---|---|
+| Phone rule exactly 8 digits | `8efd908`, D-10 | Sem5 YAML + report «8–15 drift», Sem9 ADR-012 «code not yet changed», Sem3 FR-03 note, Sem7 reference |
+| UUID path params → 400, DB errors mapped (no 500) | `0cb8a6b`, H1/H2 | Sem5 OpenAPI error responses, Sem7 public-api reference, Sem10 sequence |
+| Least-privilege table grants | `a75161e`, C1 | Sem4/Sem10 security notes (check only) |
+| Native mobile deferred, PWA | `3b604fe`, `c7f3fc8`, D-11 | Sem10 C4 container still shows «Mobile · Expo», Sem4 arc42, Sem2 charter Phase 6 (App Store), Sem3/6/7/9 mobile mentions |
+| Guest ordering, «Онлайн захиалга» setting | D-12, D-13, SRS v2.6–2.7 | Sem2 charter «orders postponed, delivery_enabled=false», Sem10 BPMN/sequence, Sem3/4/5/7 order mentions |
+| Media/photo rules | D-09, D-15 | Sem2 charter 360° text (already dated), Sem7 add-images how-to |
+| Deploy jobs deferred to PH7 | `fc38329` | Sem6 CI text (check) |
+| SRS v1.0 → v2.7 is canonical | SRS v2.x | Sem3/4/5/6 links to `srs-v1.0.md` (keep as history, add pointer) |
+| Prototypes D–G, D-08 Concept C | `56b7c4e`, D-08 | Sem7 microcopy patch target files may have moved (re-run `git apply --check`) |
+
+Grep 2026-11-15 in ICSI438 (files per seminar): `885e591` permalinks — Sem2 3,
+Sem3 1, Sem4 1, Sem5 1, Sem6 1, Sem7 9, Sem10 3; mobile/Expo — Sem10 8, Sem4 2,
+Sem6 3, Sem7 2, Sem9 3, Sem3 1; order/checkout — Sem3/4/7/10 2 each, Sem5/6 1;
+`8–15`/`phoneSchema` — Sem5 3, Sem9 2. Nogoolin register «Хичээлийн ажил» table:
+Sem9 row still says ADR-012 «Proposed» (fixed 2026-11-17, docs/README v1.12).
+
+- [x] 0. **Owner decisions:** (a) bump `product/` to `56b7c4e` (then Sem6 CI
+      re-checks JSDoc on new code) or keep `885e591`; (b) historical seminars:
+      rewrite to the current state, or keep the text and add a dated
+      «2026-11 төлөв» note with the new link (keep-history rule favours the note,
+      except for canonical docs such as Sem10 diagrams); (c) wait for the
+      Prototype E/G decision before touching Sem7 microcopy?
+      → 2026-11-17: (a) keep `product/` at `885e591`; (b) **rewrite to the
+      current state**; (c) wait. Reading (a)+(b) together: the submodule pin
+      and Sem6 CI stay; rewritten text cites GitHub permalinks at `56b7c4e`
+      instead of `885e591`; each changed doc keeps a version bump + history row
+      (keep-history rule). `sem7/tools/check-docs.mjs` and Sem5 `redocly lint`
+      read course files only, not `product/`, so they still apply.
+- [x] 1. **Inventory file:** write `ICSI438/tmp/nogoolin-sync-2026-11.md`
+      (git-ignored scratch) or a tracked note if the owner wants: one row per
+      stale place — file:line, current text, fact in Nogoolin (commit / file:line),
+      proposed new text, type (rewrite / dated note / link only).
+      → 2026-11-17 v0.1: 25 rows, 7 facts checked at `56b7c4e`. Finding: every
+      course page is permalinked to `885e591`, so with the pin kept most rows
+      need only a dated note; only Sem10 canonical C4 (Mobile → frozen/PWA) and
+      Sem4's unpinned `blob/main/…/srs-v1.0.md` links need a rewrite. Order text
+      is still true for code (no order API at `56b7c4e`).
+- [ ] 2. **Verify every proposed fact** against `56b7c4e` code or the
+      decision record (Use–Verify–Cite); unclear items marked `[VERIFY]`.
+      → 2026-11-17: F1–F7 verified; 4 rows still `[VERIFY]`. Owner caught a
+      miss: SRS v1.0 → v2.7 (D-14: FR-WISH Won't, id-mapping) — added F8/F9 and
+      rows 26–31 (Sem3 FR-10…14, Sem2/4/7/10 wishlist).
+- [ ] 3. **Prepare patches** per seminar, smallest first: links/notes →
+      Sem5 OpenAPI (phone, 400/409) → Sem10 canonical diagrams (Mobile → PWA,
+      guest order) → others. Keep version bumps + history rows.
+      → 2026-11-17: **Sem3 done (v2.0)**: owner chose to pick 15 FR + 5 NFR
+      from SRS v2.7 (`sem3/wiki/srs-m3.md`, `traceability-m3.md`), wishlist
+      replaced by catalog/order/PWA; PDF 18 p., 0 overfull/missing glyph.
+      Also done 2026-11-17: Sem5 v0.3 (YAML `^\d{8}$`, lint 0 err), Sem7 v0.3
+      (public-api `56b7c4e`, check-docs 70/70), Sem9 v0.2 (report = actual sprint
+      result via GitLab API), Sem10 v1.1 (C4 Mobile frozen / PWA planned / wishlist
+      legacy, render.sh), Sem2 v0.3 (charter), Sem4 v0.3 (22 SRS links →
+      permalink), Sem6 issue (deferred, D-11). All PDFs 0 overfull/missing glyph.
+      Not committed. Sem2 #25 done (NFR-03 → NFR-MAINT-320 partial). Sem7 tutorial/how-to
+      → `56b7c4e` done 2026-11-17 (check-docs 70/70); register Sem9 row done
+      (docs/README v1.12). Only open: Sem7 microcopy waits for Prototype E/G; Sem11.
+- [ ] 4. **Ready-check:** for each patch name the rebuild/verify command
+      (`build.py`, `render.sh`, `redocly lint`, `check-docs.mjs`,
+      `git apply --check` for the Sem7 microcopy diff) — run them only when applying.
+- [ ] 5. Nogoolin side: register Sem9 row (ADR-012 Accepted, D-10 implemented),
+      seminar→doc table for Sem10 team work; nothing in `product/`.
+- Out of scope: product code changes; commit/push; Sem9 retro (team MR).
+  Before starting, commit or confirm the 2026-11-15 cleanup so the two changes
+  do not mix in one diff.
+
+## Next — ICSI438 seminar cleanup: remove book exercises, bump versions, Use–Verify–Cite (added 2026-11-15)
+
+Owner request 2026-11-15. Update every earlier seminar so that it describes
+Nogoolin work only: take out the parts that are book/handout exercises
+(Corg.ly, UE-N), bump the version of each changed document, and apply
+Use–Verify–Cite to every seminar. Work happens in the ICSI438 repo
+(`/home/tengis/Documents/Tengis/ICSI438`), not in `product/`.
+
+Inventory (grep 2026-11-15 for `Corg.ly` / `UE-N`; recheck before editing):
+
+| Seminar | Exercise parts found | Note |
+|---|---|---|
+| Sem1 | `04_writer_in_the_middle` Corg.ly A–C annex, `wiki/UE1_Corgly_Roleplay.md` | Case is RAG chatbot, not Nogoolin. The 200-word reflection stays. |
+| Sem2 | «UE-2» in the `sem2_merged.tex` header; Scope Charter mentions | Check what UE-2 content is actually in the PDF. |
+| Sem3 | `wiki/ue3-corgly.md` (5 FR, AI alternative, diff, reflection) | Keep the Nogoolin Use–Verify–Cite table (`human-vs-ai-comparison.md`). |
+| Sem4 | `wiki/ue4-rework.md`, `wiki/ue4-refactoring-adr.md`, UE-4 Before SVG | Check whether the reflection depends on UE-4. |
+| Sem5 | `samples/*.py` (3 Corg.ly scripts), audit 3.6/5 is based on them | Removal changes the audit score and the report text. |
+| Sem6 | UE-6 was already replaced by the TypeScript factory service | Check for leftovers; the seeded ghost-API fixture is not an observed hallucination. |
+| Sem7 | `docs/how-to/corgly-slack.md` (UE-7), site nav/index | Removal changes `check-docs.mjs` 77/77 and the Pages site. |
+| Sem9, Sem10 | none found | Confirm only. |
+
+> 2026-11-15 progress: steps 1–5 done locally, **not committed/pushed**.
+> Removed: Sem1 UE-1 (v1.1, merged 6→5 p.), Sem3 UE-3 (v1.1, 17→15 p.),
+> Sem4 UE-4 (v0.2, 19→16 p.), Sem5 UE-5 samples (v0.2, 5→3 p., audit still
+> 3.6/5), Sem7 UE-7 how-to (v0.2, site rebuilt, check-docs 77→70 pass).
+> Sem2 UE-2 kept (it is the Nogoolin Scope Charter); Sem6/9/10 had no book
+> exercise. Every seminar README has a Use–Verify–Cite section and history;
+> removed parts linked at `301f878`. UVC findings: Sem1 PROJECT_BRIEF drift
+> was fixed upstream on 2026-09-15 (text dated); Sem3 Chinchilla cite
+> p.130–131 → p.123; Sem7 Chinchilla p.60 cite is weak (left, noted); Sem9
+> README ADR status Proposed → Accepted. Nogoolin: ARC-01 v0.2, register
+> v1.11, architecture/README UE-4 link replaced. Still open: commit/push +
+> Pages redeploy (live site still shows UE-7), Sem9 report PDF and retro,
+> `sem5/samples/__pycache__` (untracked) to delete by hand, COURSE-ROADMAP
+> lines that describe handout UE-N requirements left as-is.
+
+- [x] 0. **Owner decisions (2026-11-15):** remove everywhere (seminar files
+      and Nogoolin docs); the owner updates submitted material himself;
+      Sem1 included.
+- [x] 1. **Keep history (owner rule 2026-10-27).** Nothing is erased: the
+      removed part stays reachable in the previous version (GitLab commit
+      permalink or an «Өмнөх (vX)» note). Each changed document gets a version
+      bump and a change-history row that says what was removed and why.
+- [x] 2. **Per seminar:** remove the exercise parts from the table above from
+      the README, wiki, LaTeX/Markdown source and the report text; fix any
+      criteria table that counted them (mark as «removed in vX», not «done»).
+- [x] 3. **Use–Verify–Cite on every seminar** (protocol from Sem3
+      `human-vs-ai-comparison.md`):
+      - **Use:** say what was produced with AI or taken from the book/handout.
+      - **Verify:** check each factual claim against the handout, the book
+        page, and Nogoolin code at the pinned SHA. Unverified claims are
+        marked «not verified», never written as checked.
+      - **Cite:** handout/book page, GitHub permalink with SHA, or URL with
+        the date read. Add a short UVC log per seminar (like Sem6
+        `bhatti_audit_table.md`).
+- [x] 4. **Versions in sync:** seminar header version lines, `semN/README.md`,
+      COURSE-HOME / WEEKLY-PROGRESS, and this repo's register
+      (`docs/README.md`: version history row + «Хичээлийн ажил → албан ёсны
+      баримт» table).
+- [x] 5. **Rebuild and check:** each seminar's build (Sem1 `export_markdown.py`
+      + `build.sh`, Sem2 `build.py` without `--from-markdown`, …), then
+      `semN_merged.pdf`; Sem7 `check-docs.mjs`; links, page count, missing
+      glyphs. This also fixes the stale `semN_merged.pdf` links (handoff §5).
+- Same pass, if the owner agrees: Sem5/Sem6 README lines that say «no public
+  URL / no Pages» are outdated (Pages live since 2026-10-14).
+- Out of scope: Sem9 retro fix (team MR by Хүрэлсүх); `product/` edits.
+  No commit/push without the owner. Start only when the owner says so.
+
 ## Next — Prototype G v1.1: owner decision → real UI (added 2026-11-10)
 
 State: `docs/nogoolin-prototype-g.html` v1.1 is built and verified; the owner
@@ -90,7 +251,54 @@ below are about course work that is not yet reflected here.
   ~12 «planned» register docs proactively; write one only when a phase needs it.
   Diagram changes go only into the Sem10 files (re-run `render.sh` there).
 
-## Next — Research R-01: е-баримт, НӨАТ, хувийн мэдээлэл (added 2026-11-08, PLAN ONLY — not started)
+## Next — Research R-02: судлагдсан байдал (related work) (added 2026-11-10; v0.1 written 2026-11-10)
+
+> 2026-11-10: `docs/research/R-02-related-work.md` v0.1 covers items 1–6 from
+> web search and the home pages of seven foreign sites. Still open: social-media
+> shops in Mongolia (owner's knowledge), dated screenshots, per-site product-page
+> checks, two or three craft or museum shops as a design benchmark, academic
+> sources for the thesis. See its §8.
+
+Owner request 2026-11-10. Needed for the course report, the defence before the
+teacher and later the diploma thesis: where Nogoolin stands among similar
+systems, what it shares with them and what it deliberately does differently.
+
+- [ ] 1. **Mongolia:** are there online shops or catalogs for religious goods
+      (бурхан шүтээн, хүж, тахилын эдлэл)? Web sites, Facebook/Instagram shops,
+      marketplace sections (e.g. Shoppy, Zary, UBShop), monastery shops. For
+      each: URL, what it sells, catalog depth, product information (size,
+      material, meaning), ordering and payment, mobile experience.
+- [ ] 2. **If they exist: how Nogoolin differs.** If none exist: say so with the
+      searches that were run, and describe the nearest substitutes (social-media
+      sellers, physical shops).
+- [ ] 3. **Worldwide:** comparable sites for Buddhist and other religious goods
+      (e.g. dharma shops, thangka and statue galleries, museum shops), plus two
+      or three general «craft object» shops as a design benchmark. Pick 6–10.
+- [ ] 4. **Common pattern:** what almost all of them share (navigation, category
+      model, product page, photos, trust signals, checkout, mobile).
+- [ ] 5. **Distinctive features:** what only some do well (iconography notes,
+      consecration info, guides, 3D or spin views, size comparison).
+- [ ] 6. **Nogoolin's position:** a comparison table (rows: features; columns:
+      the sites + Nogoolin). Mark for each feature whether Nogoolin follows the
+      common pattern or tries to be different, and why. Candidates for «different»:
+      the 3D intro, «Тахилын ширээ» navigation, «Утга бэлгэдэл» notes, size
+      comparison, guest order with phone confirmation and store pickup, PWA,
+      D-15 photo rule. Candidates for «follows»: category grid, filters, cart,
+      search.
+- [ ] 7. **Limits and honesty:** screenshots with date; no claim that a feature
+      is unique unless the search supports it; note what could not be checked
+      (closed groups, apps).
+- Output: `docs/research/R-02-related-work.md` (Mongolian, RES-02 in the
+  register), written so that sections can be reused in the course report and
+  the thesis chapter «Судлагдсан байдал». Sources: the sites themselves, with
+  URL and date read. Start only when the owner says so.
+
+## Next — Research R-01: е-баримт, НӨАТ, хувийн мэдээлэл (added 2026-11-08; v0.1 written 2026-11-10, owner review pending)
+
+> 2026-11-10: `docs/research/R-01-ebarimt-vat-privacy.md` v0.1 covers items 1–5
+> below from the law texts on legalinfo.mn. The boxes stay open until the owner
+> has reviewed it and the «Нягтлах» list (§8) is checked with an accountant or
+> lawyer. SRS §8 is not updated yet.
 
 Owner request 2026-11-08. A separate, broad research task: Mongolian legal and tax
 requirements before real ordering goes live. Sources: official government sites
@@ -368,6 +576,49 @@ Kept verbatim from the backlog (moved 2026-10-30):
       (trigger) / `reducedMotion` (bool), event `finished`)
 
 ## Log (append after every task, newest first)
+
+### 2026-11-15 — ICSI438 seminar cleanup (book exercises, UVC, template)
+
+- **Done (course repo + this repo's docs, uncommitted):** removed the book's Corg.ly exercises
+  (UE-1/3/4/5/7) everywhere; seminar versions bumped with history and `301f878` permalinks;
+  Use–Verify–Cite section in every seminar README; Sem1/Sem2 brought to the course template
+  (NUM cover, margins, heading indent). Here: ARC-01 v0.2, register v1.11, architecture/README.
+  Sem10 now records the StudyMate US-3 sequence diagram (`1984279`).
+- **Verified:** all rebuilt PDFs have 0 overfull / missing glyph; `check-docs` 70/70;
+  `git diff --check` clean. Book citations checked against printed page numbers.
+- **Not done:** commit/push, Pages redeploy, Sem6/9/10 merged PDF rebuild, Sem9 retro fix.
+
+### 2026-11-10 — Research R-02 v0.1 (related work)
+- **Result:** `docs/research/R-02-related-work.md` (RES-02, register v1.10).
+  Mongolia: six searches found no dedicated online catalog for religious goods;
+  nearest are Улаанбаатар Буян (ritual services ordered online) and scattered
+  Unegui.mn listings; Facebook/Instagram shops are not searchable and three
+  marketplaces could not be read. Abroad: seven shops (Termatree, Art of Tibet,
+  Enlightenment Thangka, Butuzou, The Dharma Store, DharmaShop, Norbulingka)
+  share one pattern (type or deity menu, banner → tiles → product rows → reviews
+  → blog, online payment, worldwide shipping). None of the pages read showed a
+  3D intro, altar-based navigation, on-image meaning notes or a size comparison.
+  The doc lists which claims are safe to make and which are not.
+- **Limits:** home pages only, no screenshots, search engine is US-based.
+- **Next:** owner adds Mongolian social-media shops; screenshots; per-site checks.
+
+### 2026-11-10 — Research R-01 v0.1
+- **Result:** `docs/research/R-01-ebarimt-vat-privacy.md` (RES-01, register v1.9).
+  Law texts were downloaded from legalinfo.mn and read in full on 2026-11-10.
+  Main findings: the VAT threshold rises from 50M to 400M MNT on 2027-01-01
+  (law of 2026-06-26); every taxpayer must issue a payment receipt per sale
+  (General Tax Law 28.5), fine 2% of the previous month's revenue; reselling
+  goods bought without VAT as a VAT payer costs the full 10% of sales; sales
+  records must be kept until the 4-year limitation ends (10 years for a
+  company), so «delete after 7 days» cannot apply to order records, only to
+  name/phone after the order closes; order processing can rest on the contract
+  basis of the personal-data law; verify.mn works by the customer sending an SMS
+  (150₮, paid by the customer), which differs from FR-ORD-170/171.
+- **Limits:** not legal advice; eight points need an accountant or lawyer (§8);
+  the PosAPI 3.0 pages could not be fetched; Bonum and QPay fees are not public.
+  Perplexity was not used (paid API); built-in search plus direct download.
+- **Next:** owner reviews the six decisions in §2; then update SRS §8 (retention
+  table, OTP model) with history.
 
 ### 2026-11-10 — Docs synced after Prototype F/G
 - **Result:** register v1.8 (DES-08 D/E, DES-09 F, DES-10 G v1.1; D and E were
