@@ -10,20 +10,12 @@
 
 *(empty)*
 
-## Next — ICSI438 Sem11 Activity 02: run the release-note prompt on local Qwen (added 2026-11-17)
+## Done — ICSI438 Sem11 redone on local Qwen (2026-11-18)
 
-Owner request 2026-11-17, not started. `ICSI438/sem11/release-notes-compare.md`
-has Run 1 (Gemini app, free: model not shown, so unverified) and Run 2 (GPT-OSS
-120B Medium, Antigravity; removed there on 2026-11-18). Copilot CLI 1.0.112 is
-installed and logged in, but Copilot Free does not include the chosen models.
-
-- [ ] Run the same prompt (`ICSI438/sem11/tmp/release-prompt.txt`, git-ignored,
-      extracted from §3 of the compare file) on `qwen3.5:9b-q4_K_M` via ollama,
-      from an empty directory, no tools. Record model tag + digest, temperature,
-      date; paste the answer verbatim as Run 3.
-- [ ] Check every claim against the git log and `git show` (same table format
-      as Run 1/2); fill the verification log row and add one line to §5.
-- [ ] Owner: review the human release note (agent draft) and the §5 conclusion.
+Owner request 2026-11-18: redo Sem11 from scratch with `qwen3.5:9b-q4_K_M` (digest `6488c96f`, ollama 0.40.11,
+seed 42, temperature 0.2, thinking on); Gemini/GPT-OSS runs removed. Activity 01 (2 runs) and Activity 02
+(1 run) archived in `ICSI438/sem11/runs/`, runner `sem11/tools/run_qwen.py`. Owner reviewed 2026-11-18.
+Activity 03, Prompt Library and homework done; homework = PR #1 (validation-schemas README), merge pending.
 
 ## Next — ICSI438 materials vs current Nogoolin: find stale places, prepare fixes (added 2026-11-15)
 
