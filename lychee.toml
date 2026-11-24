@@ -1,0 +1,13 @@
+# lychee: TypeDoc-ийн үүсгэсэн site/ дахь холбоосыг шалгана (M9).
+# Дотоод холбоос: CI-д `--offline` горимоор, эвдэрвэл pipeline унана.
+# Гадаад холбоос: тусдаа job, зөвхөн анхааруулга (docs/README.md-ийн «Docs CI» хэсэг).
+include_fragments = "full"
+no_progress = true
+# TypeDoc media/ хавтаст хуулсан raw эх файлууд (phase-0 г.м.)-ын доторх
+# харьцангуй холбоос нь site бүтэцтэй таарахгүй; эдгээр нь legacy эх тул шалгахгүй.
+exclude_path = ["^site/media/"]
+# localhost жишээ (tutorial, OpenAPI server) нь CI-д ажиллахгүй.
+exclude_loopback = true
+max_retries = 2
+timeout = 20
+accept = ["200..=299", "429"]

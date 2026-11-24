@@ -1,0 +1,21 @@
+@startuml c4-context
+' US-1 · C4 Level 1 — Nogoolin болон гадаад систем
+!include <C4/C4_Context>
+
+Person(guest, "Зочин", "Каталог үзэж, inquiry илгээнэ")
+Person(customer, "Customer", "Нэвтэрч inquiry түүхээ харна")
+Person(admin, "Админ", "Inquiry inbox, бүтээгдэхүүн удирдана")
+
+System(nogoolin, "Nogoolin", "Шашны бараа үзүүлэх каталог, inquiry, admin (web/PWA)")
+
+System_Ext(supabase, "Supabase", "Auth, PostgreSQL, Storage")
+System_Ext(oauth, "OAuth providers", "Google / Facebook identity")
+
+Rel(guest, nogoolin, "Каталог үзэх, inquiry илгээх")
+Rel(customer, nogoolin, "Нэвтрэх, inquiry түүх")
+Rel(admin, nogoolin, "Inquiry status, бүтээгдэхүүн")
+Rel(nogoolin, supabase, "Auth, өгөгдөл, media")
+Rel(supabase, oauth, "OAuth нэвтрэлт")
+
+SHOW_LEGEND()
+@enduml

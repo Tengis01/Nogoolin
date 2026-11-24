@@ -1,0 +1,24 @@
+@startuml bpmn-process
+' US-5 · Inquiry боловсруулах бизнес процесс (FR-INQ-005: new → contacted → closed)
+|Зочин / Customer|
+start
+:Бүтээгдэхүүн дээр inquiry form бөглөх;
+|Nogoolin систем|
+:Нэр, утас шалгах, rate limit;
+if (Хүчинтэй юу?) then (үгүй)
+  |Зочин / Customer|
+  :Алдааны мессеж харах;
+  stop
+else (тийм)
+  |Nogoolin систем|
+  :Inquiry хадгалах (status = new);
+endif
+|Админ|
+:Inbox-оос шинэ inquiry харах;
+repeat
+  :Хэрэглэгч рүү утсаар холбогдох\n(системээс гадуур);
+  :Status → contacted (audit log);
+repeat while (Асуулт шийдэгдсэн үү?) is (үгүй) not (тийм)
+:Status → closed (audit log);
+stop
+@enduml

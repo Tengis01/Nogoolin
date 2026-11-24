@@ -1,0 +1,36 @@
+@startuml c4-container
+' US-2 · C4 Level 2 — c4-context.puml-ийн Nogoolin хайрцгийг задлав
+!include <C4/C4_Container>
+
+Person(guest, "Зочин", "Каталог, inquiry")
+Person(customer, "Customer", "Inquiry түүх")
+Person(admin, "Админ", "Inquiry inbox")
+
+System_Boundary(nogoolin, "Nogoolin") {
+  Container(web, "Web + Admin (PWA)", "Next.js 15, TypeScript", "Нийтийн каталог, inquiry form, /admin; PWA manifest, service worker төлөвлөсөн (D-11)")
+  Container(mobile, "Mobile — frozen (D-11)", "Expo, React Native", "Код хадгалагдсан; энэ release-д хөгжүүлэхгүй")
+  Container(api, "REST API", "Fastify 5, Node.js", "/api/v1 — Zod шалгалт, RBAC, rate limit")
+}
+
+System_Boundary(supabase, "Supabase (гадаад платформ)") {
+  Container_Ext(auth, "Supabase Auth", "GoTrue, JWT", "Session, OAuth")
+  ContainerDb_Ext(db, "PostgreSQL", "Postgres + RLS", "products, inquiries, users; cart_items (legacy, D-14)")
+  Container_Ext(storage, "Storage", "Object storage", "Бүтээгдэхүүний зураг, GLB")
+}
+System_Ext(oauth, "OAuth providers", "Google / Facebook")
+
+Rel(guest, web, "Үзэх, inquiry", "HTTPS")
+Rel(customer, web, "Нэвтэрч ашиглах", "HTTPS")
+Rel(customer, mobile, "Ашиглах (frozen)", "App")
+Rel(admin, web, "/admin", "HTTPS")
+Rel(web, api, "Дуудах", "JSON/REST, HTTPS")
+Rel(mobile, api, "Дуудах (frozen)", "JSON/REST, HTTPS")
+Rel(web, auth, "Нэвтрэх, session", "supabase-js, HTTPS")
+Rel(mobile, auth, "Нэвтрэх (frozen)", "supabase-js, HTTPS")
+Rel(api, auth, "JWT шалгах (getUser)", "HTTPS")
+Rel(api, db, "Унших/бичих", "supabase-js, PostgREST/HTTPS")
+Rel(api, storage, "Media URL, устгах", "HTTPS")
+Rel(auth, oauth, "OAuth нэвтрэлт", "OAuth 2.0")
+
+SHOW_LEGEND()
+@enduml

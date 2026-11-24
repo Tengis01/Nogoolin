@@ -1,0 +1,12 @@
+# Хориотой үг: уншигчид «амархан» гэж амлах, нотолгоогүй баталгаа өгөх үгс.
+extends: existence
+message: "'%s' гэдэг хориотой үг: уншигчид амлалт өгөхгүй, тодорхой бичнэ."
+level: error
+ignorecase: true
+tokens:
+  - амархан
+  - мэдээж
+  - ердөө л
+  - simply
+  - obviously
+  - just works

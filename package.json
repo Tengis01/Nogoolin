@@ -19,9 +19,11 @@
     "build": "pnpm -r --filter '!@nogoolin/mobile' build",
     "lint": "pnpm -r --filter '!@nogoolin/mobile' lint",
     "type-check": "pnpm -r --filter '!@nogoolin/mobile' type-check",
-    "test": "pnpm -r --filter '!@nogoolin/mobile' test"
+    "test": "pnpm -r --filter '!@nogoolin/mobile' test",
+    "docs": "typedoc"
   },
   "devDependencies": {
-    "supabase": "^2.109.1"
+    "supabase": "^2.109.1",
+    "typedoc": "0.28.14"
   }
 }

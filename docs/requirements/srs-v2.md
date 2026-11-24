@@ -105,7 +105,7 @@
 | Intro | Нүүрний click-driven 4 алхамт 3D интро (D-08) |
 | GLB | Интрогийн 3D загварын файл (Green Tara) |
 | Lab / field metric | Lab: хяналттай орчинд хэмжсэн (Lighthouse). Field: бодит хэрэглэгчээс хэмжсэн. |
-| S1–S4 | Алдааны түвшин (S1 = critical). [Quality](../README.md#quality--quality)-д тодорхойлогдоно. |
+| S1–S4 | Алдааны түвшин (S1 = critical). [Quality](../README.md)-д тодорхойлогдоно. |
 
 **Өмнөх (v2.6):** OTP «SMS-ээр илгээх 6 оронтой, хугацаатай, нэг удаагийн код. Захиалагчийн утсыг баталгаажуулна.»; Wishlist-ийн мөр «… v2.6-аас legacy (FR-WISH-110).»-оор төгссөн.
 
@@ -3178,7 +3178,7 @@ Launch-ийн өмнө бодит контентын зургуудын ≥ 90% 
 |---|---|---|
 | **Test (T)** | Оролт, гаралт нь автоматаар эсвэл гараар давтагдах ажиглалт | Тестийн файл, CI log, pass/fail |
 | **Inspection (I)** | Код, тохиргоо, баримтыг checklist-ээр унших (RLS, CI dependency, нууц утга) | Checklist + файл/мөр |
-| **Analysis (A)** | Хэмжилт, тооцоо, статистик (Lighthouse median, bundle size, GLB хэмжээ) | Raw sample, нөхцөл, median/min–max ([perf baseline](../README.md#quality--quality)) |
+| **Analysis (A)** | Хэмжилт, тооцоо, статистик (Lighthouse median, bundle size, GLB хэмжээ) | Raw sample, нөхцөл, median/min–max ([perf baseline](../README.md)) |
 | **Demonstration (D)** | Хүнээр ажиглах урсгал (usability task, intro-гийн мэдрэмж) | Task протокол, бичлэг эсвэл тэмдэглэл |
 
 **Хэмжилтийн дүрэм (бүх Analysis):**

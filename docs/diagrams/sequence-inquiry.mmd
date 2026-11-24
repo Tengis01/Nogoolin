@@ -1,0 +1,19 @@
+%% US-3 · Inquiry илгээх (POST /api/v1/inquiries)
+sequenceDiagram
+  autonumber
+  actor U as Зочин / Customer
+  participant W as Web (Next.js)
+  participant A as REST API (Fastify)
+  participant D as PostgreSQL (Supabase)
+  U->>W: Inquiry form бөглөж илгээх
+  W->>A: POST /api/v1/inquiries {customer_name, phone, message, product_id}
+  A->>A: optionalAuth, Zod шалгалт, rate limit
+  alt Буруу өгөгдөл эсвэл лимит хэтэрсэн
+    A-->>W: 400 VALIDATION_ERROR / 429
+    W-->>U: Алдааны мессеж
+  else Хүчинтэй
+    A->>D: INSERT inquiries (status = new, customer_id эсвэл NULL)
+    D-->>A: Шинэ inquiry мөр
+    A-->>W: 201 {data: inquiry}
+    W-->>U: Амжилттай илгээгдсэн
+  end
