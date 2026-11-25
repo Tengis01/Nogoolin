@@ -1,0 +1,60 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Nogoolin documentation",
+  "entryPoints": [
+    "backend/api/src/services/*.service.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "tsconfig": "backend/api/tsconfig.json",
+  "out": "site",
+  "readme": "docs/README.md",
+  "projectDocuments": [
+    "docs/requirements/srs-v2.md",
+    "docs/requirements/traceability-v2.md",
+    "docs/architecture/*.md",
+    "docs/architecture/adr/*.md",
+    "docs/api/README.md",
+    "docs/api/public-api.md",
+    "docs/user-guide/**/*.md",
+    "docs/diagrams/README.md"
+  ],
+  "highlightLanguages": [
+    "bash",
+    "console",
+    "css",
+    "html",
+    "javascript",
+    "json",
+    "jsonc",
+    "json5",
+    "yaml",
+    "tsx",
+    "typescript",
+    "sql"
+  ],
+  "markdownItOptions": {
+    "html": true,
+    "linkify": false
+  },
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "disableSources": true,
+  "treatWarningsAsErrors": true,
+  "validation": {
+    "notDocumented": true,
+    "invalidLink": true,
+    "notExported": false
+  },
+  "requiredToBeDocumented": [
+    "Function",
+    "Method",
+    "Interface",
+    "TypeAlias"
+  ],
+  "sort": [
+    "source-order"
+  ],
+  "navigationLinks": {
+    "GitHub": "https://github.com/Tengis01/Nogoolin"
+  }
+}

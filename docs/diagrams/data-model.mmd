@@ -1,0 +1,42 @@
+%% US-4 · Үндсэн домэйн (supabase/migrations-ээс). orders, delivery зэрэг ашиглагдаагүй хүснэгтийг оруулаагүй.
+erDiagram
+  CATEGORIES ||--o{ PRODUCTS : "агуулна"
+  PRODUCTS |o--o{ INQUIRIES : "асуулга авна"
+  USERS |o--o{ INQUIRIES : "илгээнэ (guest бол NULL)"
+  USERS ||--o{ CART_ITEMS : "хадгална"
+  PRODUCTS ||--o{ CART_ITEMS : "wishlist (legacy, D-14)"
+
+  USERS {
+    uuid id PK "auth.users.id"
+    varchar email UK
+    varchar full_name
+    enum role "customer | admin | delivery_staff"
+  }
+  CATEGORIES {
+    uuid id PK
+    varchar name
+    varchar slug UK
+    boolean is_active
+  }
+  PRODUCTS {
+    uuid id PK
+    uuid category_id FK
+    varchar name
+    varchar slug UK
+    numeric price
+    enum status "draft | published | archived"
+  }
+  INQUIRIES {
+    uuid id PK
+    uuid product_id FK "nullable"
+    uuid customer_id FK "nullable"
+    varchar customer_name
+    varchar phone
+    enum status "new | contacted | closed"
+  }
+  CART_ITEMS {
+    uuid id PK
+    uuid user_id FK
+    uuid product_id FK
+    timestamptz created_at "unique(user_id, product_id)"
+  }

@@ -10,6 +10,15 @@
 
 *(empty)*
 
+## Done — ICSI438 Sem12 / M9 docs-as-code (2026-11-24)
+
+PR #2 (`docs/m9-docs-as-code`): `docs/user-guide/` (Sem7 → Markdown), `docs/api/openapi.yaml` + `public-api.md`,
+Sem10 diagrams canonical in `docs/diagrams/`; TypeDoc site (`typedoc.json`, `pnpm run docs`, warnings as errors),
+Vale (`.vale.ini`), lychee (`lychee.toml`); register v1.13. Pipeline runs in ICSI438 `sem12/gitlab-ci.yml` on `product/`.
+Local checks 2026-11-24: build/lint/type-check/test 0; docs 0 warnings; Vale 0; lychee 0 broken (2854 links).
+Draft PR #3 (stacked): local-Qwen draft for `0cb8a6b` (BadRequest/ServerError), log `ICSI438/sem12/ai-log.md`.
+Next: owner reviews #3 and merges #2/#3; then repin `product/` to the merge commit and tag `docs-m9-v1.0`.
+
 ## Done — ICSI438 Sem11 redone on local Qwen (2026-11-18)
 
 Owner request 2026-11-18: redo Sem11 from scratch with `qwen3.5:9b-q4_K_M` (digest `6488c96f`, ollama 0.40.11,

@@ -1,6 +1,6 @@
 # Nogoolin documentation — Document Register
 
-**Doc ID:** DOC-00 · **Хувилбар:** v1.12 draft · **Огноо:** 2026-11-17 (v1.11: 2026-11-15, v1.10: 2026-11-10, v1.9: 2026-11-10, v1.8: 2026-11-10, v1.7: 2026-11-08, v1.6: 2026-11-08, v1.5: 2026-10-30, v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
+**Doc ID:** DOC-00 · **Хувилбар:** v1.13 draft · **Огноо:** 2026-11-24 (v1.12: 2026-11-17, v1.11: 2026-11-15, v1.10: 2026-11-10, v1.9: 2026-11-10, v1.8: 2026-11-10, v1.7: 2026-11-08, v1.6: 2026-11-08, v1.5: 2026-10-30, v1.4: 2026-10-30, v1.3: 2026-10-30, v1.2: 2026-10-30, v1.1: 2026-10-27, v1.0: 2026-10-18) · **Owner:** Тэнгис
 
 Энэ бол төслийн бүх **албан ёсны баримтын** нэгдсэн бүртгэл. Хичээлийн (ICSI438) хувилбар бүр нь [icsi438-nogoolin](https://gitlab.com/Tengis01/icsi438-nogoolin) repo-д `semN_merged.pdf` хэлбэрээр хэвээр үлдэнэ. Харин төслийн хүчинтэй хувилбар нь **зөвхөн энд** бүртгэгдэнэ.
 
@@ -8,6 +8,7 @@
 
 | Хувилбар | Огноо | Өөрчлөлт |
 |---|---|---|
+| v1.13 | 2026-11-24 | M9 docs-as-code (ICSI438 Sem12): `user-guide/` (Sem7 Diátaxis-аас Markdown), `api/openapi.yaml` + `api/public-api.md`, Sem10 диаграмын эхийг `diagrams/`-д canonical болгосон. TypeDoc site (`typedoc.json`, `pnpm run docs`), Vale (`.vale.ini`), lychee (`lychee.toml`). QA-04, DEV-02, API-02 planned → draft. [Docs CI](#docs-ci) хэсэг нэмсэн. |
 | v1.12 | 2026-11-17 | «Хичээлийн ажил»-ын Sem9 мөр: ADR-012 Proposed → Accepted (A), D-10, `8efd908`. ICSI438 семинаруудыг `56b7c4e`-тэй нийцүүлсэн: Sem2 v0.3, Sem3 v2.0, Sem4 v0.3, Sem5 v0.3, Sem7 v0.3, Sem9 v0.2, Sem10 v1.1. |
 | v1.11 | 2026-11-15 | ICSI438 семинаруудаас номын жишээ дасгал (Corg.ly, UE-1/3/4/5/7)-ыг хассан: ARC-01 v0.1 → v0.2 (UE-4 дурдлага), ARC-02 index-ээс UE-4 ADR холбоос. Семинарын хувилбар: Sem1 v1.1, Sem3 v1.1, Sem4 v0.2, Sem5 v0.2, Sem7 v0.2. |
 | v1.10 | 2026-11-10 | RES-02 (R-02: судлагдсан байдал) нэмсэн. |
@@ -87,7 +88,7 @@
 | ARC-03 | Architecture traceability | Developer | Хөгжүүлэгч | — | draft | Sem4 | [architecture/architecture-traceability.md](architecture/architecture-traceability.md) |
 | ARC-04 | SDD загвар | Process | Баримт бичигч | v0.2 | approved | Sem2 | [architecture/sdd-template.md](architecture/sdd-template.md) |
 | ARC-05 | ER, sequence диаграм (phase-0, `agent-context/diagrams/`) | Developer | Хөгжүүлэгч | — | **frozen** (өмнө нь legacy (эх)); canonical нь ARC-07 | — | [diagrams/README.md](diagrams/README.md), [phase-0/04](phase-0/04-er-diagram.md), [phase-0/05](phase-0/05-sequence-diagrams.md) |
-| ARC-07 | **M8 diagram suite (canonical):** C4 context/container, sequence-inquiry, data-model, bpmn-process | Developer | Хөгжүүлэгч, reviewer, багш | v1.0 (код `885e591`) | draft | Sem10 (W10) | [https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem10/docs/diagrams](https://gitlab.com/Tengis01/icsi438-nogoolin/-/tree/main/sem10/docs/diagrams), [Pages](https://icsi438-nogoolin-442a5f.gitlab.io/sem10/) |
+| ARC-07 | **M8 diagram suite (canonical):** C4 context/container, sequence-inquiry, data-model, bpmn-process | Developer | Хөгжүүлэгч, reviewer, багш | v1.0 (код `885e591`) | draft | Sem10 (W10) | [diagrams/README.md](diagrams/README.md) (2026-11-24-өөс энд; ICSI438 sem10 нь хичээлийн snapshot) |
 | ARC-06 | Security design | Developer | Хөгжүүлэгч | — | legacy (эх) | — | [phase-0/08-security.md](phase-0/08-security.md) |
 
 ### Design — `design/`
@@ -110,7 +111,8 @@
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
 | API-01 | OpenAPI (Phase 0) | Developer | Хөгжүүлэгч, client | — | legacy (одоогийн contract) | — | [phase-0/06-api-spec.yaml](phase-0/06-api-spec.yaml) |
-| API-02 | OpenAPI 3 (бодит route-тай нийцсэн) | Developer | Хөгжүүлэгч, client | — | planned (PH2; эх нь Sem5-ийн 5 route) | Sem5 | `api/openapi.yaml` (эх: [sem5/openapi](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem5/openapi/openapi.yaml)) |
+| API-02 | OpenAPI 3.0.3 (хэрэгжсэн 5 operation) | Developer | Хөгжүүлэгч, client | 0.1.0 | draft (PH2-т бүх route-ээр өргөтгөнө) | Sem5 | [api/openapi.yaml](api/openapi.yaml) |
+| API-04 | Public REST API reference (11 route) | Developer | Хөгжүүлэгч, client | — | draft (төлөвлөсөн урсгал, `56b7c4e`) | Sem7 | [api/public-api.md](api/public-api.md) |
 | API-03 | API workspace тэмдэглэл | Developer | Хөгжүүлэгч | — | draft | Sem5 | [api/README.md](api/README.md) |
 
 ### Developer — `developer/`
@@ -118,7 +120,7 @@
 | Doc ID | Нэр | Төрөл | Уншигч | Хувилбар | Төлөв | Эх семинар | Байршил |
 |---|---|---|---|---|---|---|---|
 | DEV-01 | Agent/хөгжүүлэгчийн дүрэм | Developer | AI agent, хөгжүүлэгч | — | approved | — | [../AGENTS.md](../AGENTS.md) |
-| DEV-02 | Code reference (TypeDoc, JSDoc) | Developer | Хөгжүүлэгч | — | planned (эх нь Sem6) | Sem6 | `developer/` (эх: [sem6/api-reference](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem6/api-reference.md)) |
+| DEV-02 | Code reference (TypeDoc, JSDoc) | Developer | Хөгжүүлэгч | — | draft (`backend/api/src/services`) | Sem6, Sem12 | `pnpm run docs` → `site/` ([Docs CI](#docs-ci)) |
 | DEV-03 | Local setup / contributing | Developer | Шинэ хөгжүүлэгч | — | planned | W11 | `developer/setup.md` |
 
 ### Quality — `quality/`
@@ -128,7 +130,7 @@
 | QA-01 | Тестийн стратеги, төлөвлөгөө, S1–S4 | Process | Хөгжүүлэгч, тестер | — | planned (PH6; QA хичээлийн агуулга ирэхэд) | QA хичээл | `quality/test-plan.md` |
 | QA-02 | Usability protocol | Process | Тестер | — | planned | — | `quality/usability-protocol.md` |
 | QA-03 | Perf baseline (raw sample) | Developer | Хөгжүүлэгч | — | planned (PH2) | — | `quality/perf-baseline.md` |
-| QA-04 | Docs CI (mkdocs, Vale, lychee) | Developer | Хөгжүүлэгч | — | planned | — | `mkdocs.yml`, CI |
+| QA-04 | Docs CI (TypeDoc, Vale, lychee) | Developer | Хөгжүүлэгч | — | draft | Sem12 (M9) | [Docs CI](#docs-ci) |
 | QA-05 | Кодын аудит: SRS v2 харьцуулалт, чанар, архитектур | Developer | Хөгжүүлэгч, reviewer | v1.2 | draft | — | [quality/code-audit-2026-10-27.md](quality/code-audit-2026-10-27.md) |
 
 ### Operations — `operations/`
@@ -160,6 +162,7 @@
 | Sem9: ADR-012 inquiry-ийн утасны дүрэм ([ADR](https://gitlab.com/Tengis01/icsi438-nogoolin/-/blob/main/sem9/adr-012-inquiry-phone-validation.md), Accepted (A), 2026-11-03) | ARC-02 (MADR). D-10 (2026-10-30), SRS FR-INQ-140, код `8efd908`. |
 | Sem10 (W10): M8 diagram suite | ARC-07 (canonical диаграм). Өмнөх v1.1-д «W10 mkdocs/Vale/lychee → QA-04» гэж буруу бичигдсэн байсан; QA-04 нь хичээлийн W10-тай холбоогүй, planned хэвээр. |
 | W11 maintenance | DEV-03, OPS-02 |
+| Sem12 (W12, M9): docs-as-code pipeline | QA-04, DEV-02, API-02, API-04, `user-guide/`. Pipeline нь ICSI438 GitLab-д `product/` submodule дээр ажиллана. |
 | W12–W13 metric memo, sprint review | PRJ-07 |
 
 ## Баримтын ойлгомжтой байдлын checklist
@@ -183,13 +186,32 @@ docs/
   research/        судалгаа (R-01, R-02)
   requirements/    SRS v2, traceability, mapping (+ legacy v1.0, M2)
   architecture/    arc42, ADR, C4
-  diagrams/        диаграмын заагч: canonical нь ARC-07 (Sem10), бусад нь frozen
+  diagrams/        canonical ARC-07 эх (.puml/.mmd) + rendered/*.svg; бусад нь frozen
+  .vale/           Vale style (glossary, хориотой үг)
   design/          DESIGN.md, components, microcopy, wireframe v2   (planned)
-  api/             OpenAPI
+  api/             OpenAPI, public API reference
+  user-guide/      tutorial, how-to (Diátaxis)
   developer/       code reference, setup                             (planned)
   quality/         тест, usability, perf                             (planned)
   operations/      runbook                                           (planned)
   phase-0/         legacy эх материал (01–10, EN/MN). Холбоосыг эвдэхгүйн тулд байранд нь үлдээв.
 ```
+
+## Docs CI
+
+Баримт нь код шиг хадгалагдаж, шалгагдаж, нийтлэгдэнэ (docs-as-code). Root-оос:
+
+| Алхам | Команд | Унах нөхцөл |
+|---|---|---|
+| Lint | `vale docs/` (эсвэл `docker run --rm -v "$PWD:/w" -w /w jdkato/vale docs/`) | Glossary-гийн нэр томьёо буруу, хориотой үг ([`.vale.ini`](../.vale.ini), `docs/.vale/styles/Nogoolin/`) |
+| Build | `pnpm run docs` → `site/` | JSDoc дутуу, эвдэрсэн дотоод холбоос/anchor (TypeDoc `treatWarningsAsErrors`) |
+| Link check | `lychee --config lychee.toml --offline site` | Дотоод холбоос, anchor эвдэрсэн |
+| Гадаад холбоос | `lychee --config lychee.toml site` | **Зөвхөн анхааруулга** (доорх шийдвэр) |
+
+- **Generator:** TypeDoc. Төсөл TypeScript тул JSDoc-оос үүсэх code reference ба Markdown баримтыг (`projectDocuments`) нэг сайтад нэгтгэсэн. MkDocs/Docusaurus-ийг ашиглаагүй.
+- **Гадаад холбоос warn:** GitHub/GitLab rate limit, түр зуурын сүлжээний алдаанаас болж pipeline худлаа унахаас сэргийлж, гадаад холбоосын job-ийг `allow_failure` болгосон. Дотоод холбоос нь хатуу шалгалттай.
+- **Хамрах хүрээ:** `phase-0/`, prototype HTML, master plan нь legacy/frozen тул Vale шалгахгүй; site-д `media/` болон raw файл хэлбэрээр хуулагдана.
+- **Pipeline:** ICSI438 GitLab repo нь Nogoolin-ийг `product/` submodule-аар pin хийж, lint → build → link check → deploy (GitLab Pages `/sem12/`) ажиллуулна. Pin-ийг MR-ээр шилжүүлснээр шинэ баримт нийтлэгдэнэ.
+- **Хувь нэмэр оруулах:** `main` дээр шууд commit хийхгүй. `docs/<сэдэв>` branch үүсгэж, дээрх гурван шалгалтыг локалд ажиллуулаад PR нээнэ. Нэг reviewer approve хийсний дараа merge хийнэ. AI-аар бичсэн текстийг Use → Verify → Cite log-той (tool, огноо, prompt) хамт PR-д холбоно; AI draft PR-ийг автоматаар merge хийхгүй.
 
 Хуучин баримтуудын 360° viewer, email талбар, cloud, stack-ийн тайлбарыг [шийдвэрүүд](../agent-context/DECISIONS.md) болон бодит кодтой тулгаж уншина.

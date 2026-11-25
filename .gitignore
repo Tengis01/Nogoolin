@@ -47,3 +47,6 @@ coverage/
 
 # Vercel
 .vercel/
+
+# TypeDoc documentation site (pnpm run docs)
+site/

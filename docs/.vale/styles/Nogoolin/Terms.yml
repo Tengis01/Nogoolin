@@ -1,0 +1,13 @@
+# Glossary: бүтээгдэхүүн, хэрэгслийн нэрийг нэг хэлбэрээр бичнэ.
+# «Ногоолин» (кирилл) нь хэрэглэгчид харагдах брэнд нэр тул зөвшөөрөгдөнө.
+# Domain, repo нэр (github.com, icsi438-nogoolin) дүрэмд хамаарахгүй.
+extends: substitution
+message: "'%s' гэж бичнэ, '%s' биш (glossary)."
+level: error
+ignorecase: false
+swap:
+  '(?<![-/.\w])nogoolin(?![-/.\w])': Nogoolin
+  '\b[Gg]ithub\b(?!\.com)': GitHub
+  '\b[Gg]itlab\b(?!\.(?:com|io))': GitLab
+  '\b(?:Typescript|typescript)\b': TypeScript
+  '\b(?:Open API|OpenApi)\b': OpenAPI
