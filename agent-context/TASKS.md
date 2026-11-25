@@ -18,6 +18,8 @@ Vale (`.vale.ini`), lychee (`lychee.toml`); register v1.13. Pipeline runs in ICS
 Local checks 2026-11-24: build/lint/type-check/test 0; docs 0 warnings; Vale 0; lychee 0 broken (2854 links).
 Draft PR #3 (stacked): local-Qwen draft for `0cb8a6b` (BadRequest/ServerError), log `ICSI438/sem12/ai-log.md`.
 Next: owner reviews #3 and merges #2/#3; then repin `product/` to the merge commit and tag `docs-m9-v1.0`.
+**2026-11-25:** owner reviewed #3 and merged #3 → #2 → #1 (`4c2e9c0`); tag `docs-m9-v1.0` on `4c2e9c0`.
+ICSI438 MR !3 merged (Pages `/sem12/` live); repin to `4c2e9c0` in ICSI438 MR !4.
 
 ## Done — ICSI438 Sem11 redone on local Qwen (2026-11-18)
 
