@@ -327,7 +327,10 @@ components:
         code: {type: string}
   responses:
     BadRequest:
-      description: Invalid query or JSON body.
+      description: >-
+        Invalid query, path parameter or JSON body (malformed UUID id → VALIDATION_ERROR),
+        or a database constraint caused by the request: foreign key → INVALID_REFERENCE,
+        invalid value or check violation → VALIDATION_ERROR.
       content:
         application/json:
           schema: {$ref: '#/components/schemas/Error'}
@@ -357,7 +360,7 @@ components:
           schema: {$ref: '#/components/schemas/Error'}
           example: {error: Too many requests, code: RATE_LIMIT_EXCEEDED}
     ServerError:
-      description: Unexpected server failure; no internal details are exposed.
+      description: Unexpected server failure, including unmapped database errors; the database message is never sent to the client.
       content:
         application/json:
           schema: {$ref: '#/components/schemas/Error'}
